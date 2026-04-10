@@ -427,116 +427,184 @@ export default function Home() {
   return (
     <>
       <Head>
-        <title>{appConfig.appName}</title>
+        <title>Exclusive Launchpad | {appConfig.appName}</title>
         <meta name="description" content="Feed público geral + launchpad exclusivo curado." />
       </Head>
       <Script src="https://telegram.org/js/telegram-web-app.js" strategy="beforeInteractive" />
       <main className={styles.shell}>
         <div className={`${styles.orb} ${styles.orbPrimary}`} />
         <div className={`${styles.orb} ${styles.orbWarm}`} />
-        <section className={styles.heroBlank}>
-          <div className={styles.terminalHeader}>
-             <p className={styles.eyebrow}>{telegramMessage}</p>
-             <Link href="#launch-form" className={styles.launchCta}>
-                [ start a new coin ]
-             </Link>
-             <div className={styles.terminalNav}>
-                <Link href="#market-feed" className={styles.terminalLink}>/board</Link>
-                <Link href="/exclusive" className={styles.terminalLink}>/launchpad-exclusivo</Link>
-                <Link href="/admin" className={styles.terminalLink}>/admin</Link>
-             </div>
-          </div>
-        </section>
-        <section className={styles.marketStrip} id="market-feed">
-          <div className={styles.marketHeader}>
+        
+
+        
+
+        <section className={styles.launchpadSection} id="exclusive-launchpad">
+          <div className={styles.launchpadHeader}>
             <div>
-              <p className={styles.eyebrow}>Feed público geral</p>
-              <h2 className={styles.marketTitle}>Board aberto estilo market feed</h2>
-              <p className={styles.marketIntro}>
-                Aqui entram os launches públicos. O launchpad exclusivo não se mistura
-                com esta fila.
+              <p className={styles.eyebrow}>Launchpad exclusivo</p>
+              <h2 className={styles.launchpadTitle}>
+                Campanhas curadas pelo admin com tarefas e recompensa
+              </h2>
+              <p className={styles.launchpadIntro}>
+                Só entram projetos publicados pelo admin. A wallet autenticada pode
+                enviar prova de tarefa para revisão manual.
               </p>
             </div>
-            <div className={styles.marketControls}>
-              <input
-                className={styles.marketSearch}
-                onChange={(event) => setFeedSearch(event.target.value)}
-                placeholder="Buscar por nome, ticker ou wallet"
-                value={feedSearch}
-              />
-              <div className={styles.marketCounter}>
-                {filteredPublicLaunches.length} listados
-              </div>
+            <div className={styles.launchpadMetaPanel}>
+              <p className={styles.launchpadMetaLabel}>Mode</p>
+              <p className={styles.launchpadMetaValue}>{appConfig.launchpad.mode}</p>
+              <p className={styles.launchpadMetaLabel}>Review</p>
+              <p className={styles.launchpadMetaValue}>
+                {appConfig.launchpad.submissionReview}
+              </p>
             </div>
           </div>
 
-          <div className={styles.marketTicker}>
-            <span>public feed</span>
-            <span>anyone can submit</span>
-            <span>fair launch (bonding curve)</span>
-            <span>fee 100% app</span>
-            <span>SHELL + USDC</span>
-          </div>
-
-          {publicFeedError ? (
-            <p className={styles.smallPrint}>{publicFeedError}</p>
-          ) : filteredPublicLaunches.length === 0 ? (
+          {launchpadError ? (
+            <p className={styles.smallPrint}>{launchpadError}</p>
+          ) : launchpadProjects.length === 0 ? (
             <p className={styles.smallPrint}>
-              Ainda não há launches públicos persistidos no backend.
+              Nenhuma campanha exclusiva publicada pelo admin ainda.
             </p>
           ) : (
-            <div className={styles.marketGrid}>
-              {filteredPublicLaunches.map((launch) => (
-                <article className={styles.marketCard} key={launch.id}>
-                  <div className={styles.marketCardTop}>
-                    <span className={styles.marketBadge}>public</span>
-                    <span className={styles.marketTime}>
-                      {formatShortDate(launch.createdAt)}
-                    </span>
-                  </div>
-                  <div className={styles.marketIdentity}>
-                    <div className={styles.marketToken}>{launch.coin.symbol}</div>
-                    <div className={styles.marketMeta}>
-                      <p className={styles.marketName}>{launch.coin.name}</p>
-                      <p className={styles.marketSub}>{compactWallet(launch.creatorWallet)}</p>
+            <div className={styles.launchpadList}>
+              {launchpadProjects.map((project) => (
+                <article className={styles.projectCard} key={project.id}>
+                  <div className={styles.projectHero}>
+                    <div>
+                      <span className={styles.projectBadge}>{project.badge}</span>
+                      <h3 className={styles.projectTitle}>{project.title}</h3>
+                      <p className={styles.projectShort}>{project.shortDescription}</p>
+                    </div>
+                    <div className={styles.projectReward}>
+                      <p className={styles.projectRewardLabel}>Reward pool</p>
+                      <p className={styles.projectRewardValue}>
+                        {project.rewardAmount || 0} {project.rewardToken || project.rewardLabel}
+                      </p>
                     </div>
                   </div>
-                  <p className={styles.marketDescription}>
-                    {truncateText(launch.coin.tagline || launch.coin.description, 120)}
+
+                  <div className={styles.projectStats}>
+                    <div>
+                      <p className={styles.marketStatLabel}>Tasks</p>
+                      <p className={styles.marketStatValue}>{project.taskCount}</p>
+                    </div>
+                    <div>
+                      <p className={styles.marketStatLabel}>Submissions</p>
+                      <p className={styles.marketStatValue}>{project.submissionCount}</p>
+                    </div>
+                    <div>
+                      <p className={styles.marketStatLabel}>Participants</p>
+                      <p className={styles.marketStatValue}>{project.participantCount}</p>
+                    </div>
+                    <div>
+                      <p className={styles.marketStatLabel}>Status</p>
+                      <p className={styles.marketStatValue}>{project.status}</p>
+                    </div>
+                  </div>
+
+                  <p className={styles.projectDescription}>
+                    {truncateText(project.description, 200)}
                   </p>
-                  <div className={styles.marketStats}>
-                    <div>
-                      <p className={styles.marketStatLabel}>Fee</p>
-                      <p className={styles.marketStatValue}>
-                        {launch.treasuryPayment.amount} {launch.treasuryPayment.tokenSymbol}
-                      </p>
-                    </div>
-                    <div>
-                      <p className={styles.marketStatLabel}>Risk</p>
-                      <p className={styles.marketStatValue}>
-                        {launch.riskProfile.status} / {launch.riskProfile.score}
-                      </p>
-                    </div>
-                    <div>
-                      <p className={styles.marketStatLabel}>Supply</p>
-                      <p className={styles.marketStatValue}>
-                        {formatNumberString(launch.coin.totalSupply)}
-                      </p>
-                    </div>
-                    <div>
-                      <p className={styles.marketStatLabel}>Mode</p>
-                      <p className={styles.marketStatValue}>
-                        Bonding Curve
-                      </p>
-                    </div>
+
+                  <div className={styles.projectActions}>
+                    <Link className={styles.secondaryLink} href={`/launchpad/${project.slug}`}>
+                      Abrir campanha
+                    </Link>
+                    <p className={styles.projectHint}>
+                      Tarefas, histórico e status da sua wallet ficam na página dedicada.
+                    </p>
+                  </div>
+
+                  <div className={styles.taskList}>
+                    {project.tasks.length === 0 ? (
+                      <p className={styles.smallPrint}>Projeto sem tarefas cadastradas ainda.</p>
+                    ) : (
+                      project.tasks.map((task) => {
+                        const submission = submissionMap[task.id];
+                        const taskState = taskStates[task.id];
+
+                        return (
+                          <div className={styles.taskCard} key={task.id}>
+                            <div className={styles.taskTop}>
+                              <div>
+                                <p className={styles.taskTitle}>{task.title}</p>
+                                <p className={styles.taskBody}>
+                                  {task.description || "Tarefa ativa do launchpad exclusivo."}
+                                </p>
+                              </div>
+                              <div className={styles.taskReward}>
+                                +{task.rewardPoints} {task.rewardLabel || "pts"}
+                              </div>
+                            </div>
+                            <div className={styles.taskMetaRow}>
+                              <span className={styles.taskMeta}>{task.taskType}</span>
+                              {task.targetUrl ? (
+                                <a
+                                  className={styles.taskLink}
+                                  href={task.targetUrl}
+                                  rel="noreferrer"
+                                  target="_blank"
+                                >
+                                  Abrir tarefa
+                                </a>
+                              ) : null}
+                              <span className={styles.taskMeta}>
+                                {task.submissionCount} submissions
+                              </span>
+                            </div>
+                            {session ? (
+                              <div className={styles.taskProofGrid}>
+                                <input
+                                  className={styles.field}
+                                  onChange={(event) => updateTaskProof(task.id, event.target.value)}
+                                  placeholder="Prova curta: username, link, tx, resumo"
+                                  value={taskProofs[task.id] || ""}
+                                />
+                                <div className={styles.taskActionRow}>
+                                  <button
+                                    className={styles.actionButton}
+                                    onClick={() => handleTaskSubmit(project.id, task.id)}
+                                    type="button"
+                                  >
+                                    Enviar prova
+                                  </button>
+                                  <span className={styles.taskSubmissionStatus}>
+                                    {submission
+                                      ? `Minha submission: ${submission.status}`
+                                      : "Sem submission nesta wallet"}
+                                  </span>
+                                </div>
+                              </div>
+                            ) : (
+                              <p className={styles.smallPrint}>
+                                Autentique a wallet para enviar prova de tarefa.
+                              </p>
+                            )}
+                            {taskState ? (
+                              <div
+                                className={`${styles.callout} ${
+                                  taskState.status === "success"
+                                    ? styles.success
+                                    : taskState.status === "error"
+                                      ? styles.error
+                                      : ""
+                                }`}
+                              >
+                                <p className={styles.calloutTitle}>Submission status</p>
+                                <p className={styles.calloutBody}>{taskState.message}</p>
+                              </div>
+                            ) : null}
+                          </div>
+                        );
+                      })
+                    )}
                   </div>
                 </article>
               ))}
             </div>
           )}
         </section>
-
-        {/* Launchpad Removido */}
 
         <section className={styles.workspace} id="launch-form">
           <div className={styles.formColumn}>
