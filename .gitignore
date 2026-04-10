@@ -1,0 +1,29 @@
+# Dependências
+node_modules/
+**/node_modules/
+
+# Variáveis de ambiente — NUNCA subir esses arquivos
+**/.env
+**/.env.local
+**/.env.production
+**/.env.production.local
+**/.env.development.local
+
+# Next.js build
+frontend/.next/
+frontend/out/
+
+# Dados locais de dev
+backend/data/dev-wallet.json
+backend/data/
+
+# Logs
+*.log
+npm-debug.log*
+
+# Sistema
+.DS_Store
+Thumbs.db
+
+# Vercel
+.vercel/

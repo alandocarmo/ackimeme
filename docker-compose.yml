@@ -1,0 +1,20 @@
+services:
+  db:
+    image: postgres:16-alpine
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: ackimeme
+    ports:
+      - "5432:5432"
+    volumes:
+      - ackimeme_postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d ackimeme"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  ackimeme_postgres_data:

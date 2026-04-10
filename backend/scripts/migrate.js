@@ -1,0 +1,13 @@
+require("dotenv").config();
+const { runMigrations, pingDatabase } = require("../src/db");
+
+async function main() {
+  await pingDatabase();
+  await runMigrations();
+  console.log("Database migrations applied.");
+}
+
+main().catch((error) => {
+  console.error(error);
+  process.exit(1);
+});
