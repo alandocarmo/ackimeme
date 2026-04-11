@@ -1,7 +1,6 @@
 const DEFAULT_APP_NAME = "AckiMeme";
 const DEFAULT_NETWORK = "Acki Nacki";
-const DEFAULT_SHELL_MIN_PAYMENT = 3;
-const DEFAULT_USDC_MIN_PAYMENT = 10;
+const DEFAULT_USDC_MIN_PAYMENT = 3; // $3 USDC flat fee for token creation
 const DEFAULT_AUTH_CHALLENGE_TTL_SECONDS = 5 * 60;
 const DEFAULT_SESSION_TTL_HOURS = 24;
 const DEFAULT_TELEGRAM_AUTH_MAX_AGE_SECONDS = 24 * 60 * 60;
@@ -29,14 +28,8 @@ function readCsv(value) {
 }
 
 function readCreationFeeOptions() {
+  // Only USDC accepted — $3 flat dApp fee. On-chain gas is paid by the minter separately.
   return [
-    {
-      tokenSymbol: "SHELL",
-      minimumAmount: readPositiveNumber(
-        process.env.CREATION_FEE_SHELL,
-        DEFAULT_SHELL_MIN_PAYMENT,
-      ),
-    },
     {
       tokenSymbol: "USDC",
       minimumAmount: readPositiveNumber(

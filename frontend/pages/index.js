@@ -474,8 +474,7 @@ export default function Home() {
             <span>public feed</span>
             <span>anyone can submit</span>
             <span>fair launch (bonding curve)</span>
-            <span>fee 100% app</span>
-            <span>SHELL + USDC</span>
+            <span>fee: $3 USDC</span>
           </div>
 
           {publicFeedError ? (
@@ -540,94 +539,38 @@ export default function Home() {
 
         <section className={styles.workspace} id="launch-form">
           <div className={styles.formColumn}>
-            <section className={styles.formSection}>
-              <div className={styles.sectionHeader}>
-                <div>
-                  <h2 className={styles.sectionTitle}>Wallet auth</h2>
-                  <p className={styles.sectionBody}>
-                    Login por challenge assinado, nonce de uso único e binding ao
-                    Telegram Mini App.
-                  </p>
-                </div>
-                <span className={styles.sectionTag}>Passo 0</span>
-              </div>
-              <div className={styles.fieldGrid}>
-                <label className={styles.fieldWrapWide}>
-                  <span className={styles.label}>Wallet address</span>
-                  <input
-                    className={styles.field}
-                    onChange={(event) => updateAuthField("walletAddress", event.target.value)}
-                    value={authForm.walletAddress}
-                  />
-                </label>
-                <label className={styles.fieldWrapWide}>
-                  <span className={styles.label}>Challenge message</span>
-                  <textarea
-                    className={`${styles.area} ${styles.mono}`}
-                    readOnly
-                    value={
-                      challenge?.message ||
-                      "Gere o challenge para obter a mensagem a ser assinada."
-                    }
-                  />
-                </label>
-                <label className={styles.fieldWrap}>
-                  <span className={styles.label}>Public key</span>
-                  <input
-                    className={`${styles.field} ${styles.mono}`}
-                    onChange={(event) => updateAuthField("publicKey", event.target.value)}
-                    value={authForm.publicKey}
-                  />
-                </label>
-                <label className={styles.fieldWrap}>
-                  <span className={styles.label}>Signature</span>
-                  <input
-                    className={`${styles.field} ${styles.mono}`}
-                    onChange={(event) => updateAuthField("signature", event.target.value)}
-                    value={authForm.signature}
-                  />
-                </label>
-              </div>
-              <div className={styles.actionRow}>
-                <button
-                  className={styles.actionButton}
-                  disabled={!authForm.walletAddress.trim()}
-                  onClick={handleCreateChallenge}
-                  type="button"
-                >
-                  Gerar challenge
-                </button>
-                <button
-                  className={styles.actionButtonMuted}
-                  disabled={!canVerifyWallet}
-                  onClick={handleVerifyWallet}
-                  type="button"
-                >
-                  Entrar com wallet
-                </button>
-                {session ? (
-                  <button
-                    className={styles.actionButtonMuted}
-                    onClick={handleLogout}
-                    type="button"
-                  >
-                    Encerrar sessão
+            {/* Wallet auth was moved to /auth */}
+            {session ? (
+              <section className={styles.formSection}>
+                <div className={styles.sectionHeader}>
+                  <div>
+                    <h2 className={styles.sectionTitle}>Wallet conectada</h2>
+                    <p className={styles.sectionBody}>
+                      {session.walletAddress.slice(0,8)}...{session.walletAddress.slice(-6)}
+                    </p>
+                  </div>
+                  <button className={styles.actionButtonMuted} onClick={handleLogout} type="button">
+                    Desconectar
                   </button>
-                ) : null}
-              </div>
-              <div
-                className={`${styles.callout} ${
-                  authState.status === "success"
-                    ? styles.success
-                    : authState.status === "error"
-                      ? styles.error
-                      : ""
-                }`}
-              >
-                <p className={styles.calloutTitle}>Auth status</p>
-                <p className={styles.calloutBody}>{authState.message}</p>
-              </div>
-            </section>
+                </div>
+              </section>
+            ) : (
+              <section className={styles.formSection}>
+                <div className={styles.sectionHeader}>
+                  <div>
+                    <h2 className={styles.sectionTitle}>Conecte sua wallet</h2>
+                    <p className={styles.sectionBody}>
+                      Autentique com sua wallet Acki Nacki para criar tokens no board.
+                    </p>
+                  </div>
+                </div>
+                <div className={styles.actionRow}>
+                  <Link className={styles.actionButton} href="/auth">
+                    [ connect wallet ]
+                  </Link>
+                </div>
+              </section>
+            )}
 
             <section className={styles.formSection}>
               <div className={styles.sectionHeader}>
@@ -725,8 +668,7 @@ export default function Home() {
                 <div>
                   <h2 className={styles.sectionTitle}>Fee e publish no feed</h2>
                   <p className={styles.sectionBody}>
-                    Taxa do app em SHELL ou USDC. Depois do request salvo, a coin
-                    entra no board público.
+                    Taxa do app: $3 USDC por token criado. Gas on-chain pago pelo criador.
                   </p>
                 </div>
                 <span className={styles.sectionTag}>Passo 2</span>

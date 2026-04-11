@@ -83,6 +83,10 @@ function taskToForm(task) {
 }
 
 export default function AdminPage() {
+  const [masterPassword, setMasterPassword] = useState("");
+  const [unlocked, setUnlocked] = useState(false);
+  const [unlockError, setUnlockError] = useState("");
+  const [sessionWallet, setSessionWallet] = useState("");
   const [adminToken, setAdminToken] = useState("");
   const [sessionToken, setSessionToken] = useState("");
   const [session, setSession] = useState(null);
@@ -97,7 +101,7 @@ export default function AdminPage() {
   const [projectForm, setProjectForm] = useState(INITIAL_PROJECT_FORM);
   const [taskForm, setTaskForm] = useState(INITIAL_TASK_FORM);
   const [reviewNotes, setReviewNotes] = useState({});
-  const [status, setStatus] = useState("Informe o admin token do backend.");
+  const [status, setStatus] = useState("Dashboard carregando...");
 
   useEffect(() => {
     if (typeof window === "undefined") {
@@ -114,11 +118,31 @@ export default function AdminPage() {
       .then((response) => {
         setSessionToken(storedToken);
         setSession(response.session);
+        setSessionWallet(response.session?.walletAddress || "");
+        // Auto-fill adminToken from session token for wallet-based admin auth
+        setAdminToken(storedToken);
       })
       .catch(() => {
         window.localStorage.removeItem(SESSION_STORAGE_KEY);
       });
   }, []);
+
+  function handleUnlock() {
+    const expected = process.env.NEXT_PUBLIC_ADMIN_MASTER_PASSWORD || "";
+    // Compare against env var. In production set NEXT_PUBLIC_ADMIN_MASTER_PASSWORD in Vercel.
+    if (!expected) {
+      // If no password configured, accept any input (dev mode)
+      setUnlocked(true);
+      setUnlockError("");
+      return;
+    }
+    if (masterPassword === expected) {
+      setUnlocked(true);
+      setUnlockError("");
+    } else {
+      setUnlockError("Senha incorreta.");
+    }
+  }
 
   function getAdminRequestOptions() {
     return {
@@ -288,6 +312,44 @@ export default function AdminPage() {
     } catch (error) {
       setStatus(error.message);
     }
+  }
+
+  // Gate: show password screen if not unlocked
+  if (!unlocked) {
+    return (
+      <>
+        <Head><title>AckiMeme Admin</title></Head>
+        <main style={gateStyles.page}>
+          <div style={gateStyles.card}>
+            <div style={gateStyles.logo}>⬡ AckiMeme</div>
+            <p style={gateStyles.label}>⚡ admin access</p>
+            {sessionWallet ? (
+              <p style={gateStyles.wallet}>
+                wallet: {sessionWallet.slice(0,8)}...{sessionWallet.slice(-6)}
+              </p>
+            ) : (
+              <p style={gateStyles.warn}>
+                ⚠ Conecte a wallet admin antes de acessar este painel.
+              </p>
+            )}
+            <input
+              style={gateStyles.input}
+              type="password"
+              placeholder="Senha master do admin"
+              value={masterPassword}
+              onChange={(e) => setMasterPassword(e.target.value)}
+              onKeyDown={(e) => e.key === "Enter" && handleUnlock()}
+              autoFocus
+            />
+            {unlockError && <p style={gateStyles.error}>{unlockError}</p>}
+            <button style={gateStyles.btn} onClick={handleUnlock}>
+              [ desbloquear painel ]
+            </button>
+            <Link href="/" style={gateStyles.back}>← voltar</Link>
+          </div>
+        </main>
+      </>
+    );
   }
 
   return (
@@ -853,3 +915,92 @@ export default function AdminPage() {
     </>
   );
 }
+
+const gateStyles = {
+  page: {
+    minHeight: "100vh",
+    background: "#09090b",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    fontFamily: '"ui-monospace","SFMono-Regular","Menlo","Monaco",monospace',
+    padding: "16px",
+  },
+  card: {
+    width: "100%",
+    maxWidth: "400px",
+    background: "#18181b",
+    border: "1px solid #f97316",
+    borderRadius: "4px",
+    padding: "40px 32px",
+    display: "flex",
+    flexDirection: "column",
+    gap: "0",
+  },
+  logo: {
+    fontSize: "20px",
+    color: "#86efac",
+    fontWeight: "bold",
+    marginBottom: "4px",
+  },
+  label: {
+    fontSize: "11px",
+    color: "#f97316",
+    textTransform: "uppercase",
+    letterSpacing: "0.14em",
+    marginBottom: "20px",
+    marginTop: "2px",
+  },
+  wallet: {
+    fontSize: "12px",
+    color: "#a1a1aa",
+    marginBottom: "16px",
+    background: "#27272a",
+    padding: "8px 12px",
+    borderRadius: "2px",
+  },
+  warn: {
+    fontSize: "12px",
+    color: "#fbbf24",
+    marginBottom: "16px",
+  },
+  input: {
+    width: "100%",
+    background: "#09090b",
+    border: "1px solid #27272a",
+    borderRadius: "2px",
+    color: "#f4f4f5",
+    fontFamily: "inherit",
+    fontSize: "13px",
+    padding: "12px 14px",
+    marginBottom: "10px",
+    boxSizing: "border-box",
+    outline: "none",
+  },
+  btn: {
+    width: "100%",
+    background: "transparent",
+    border: "1px solid #f97316",
+    color: "#f97316",
+    fontFamily: "inherit",
+    fontSize: "14px",
+    fontWeight: "bold",
+    padding: "13px",
+    cursor: "pointer",
+    borderRadius: "2px",
+    marginTop: "6px",
+  },
+  error: {
+    color: "#f87171",
+    fontSize: "12px",
+    marginBottom: "8px",
+  },
+  back: {
+    display: "block",
+    textAlign: "center",
+    marginTop: "20px",
+    color: "#71717a",
+    fontSize: "12px",
+    textDecoration: "none",
+  },
+};
