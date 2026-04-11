@@ -3,38 +3,150 @@ pragma AbiHeader expire;
 pragma AbiHeader time;
 pragma AbiHeader pubkey;
 
-contract BondingCurve {
-    uint256 public constant VIRTUAL_RESERVE = 1000000;
-    uint256 public totalSupply;
-    uint256 public reserveBalance;
-    
-    // Pump.fun hardcap for migrating to DEX.DO
-    uint256 public constant MIGRATION_THRESHOLD_SHELL = 50000;
+// Interface to call DEX.DO liquidity pool after migration
+interface IDexPool {
+    function addLiquidity(uint128 shellAmount, uint128 tokenAmount) external;
+}
 
-    constructor() public {
+contract BondingCurve {
+    // ─── Constants ────────────────────────────────────────────────────────────
+    // Migration threshold: when reserve reaches 69,000 SHELL equivalent,
+    // liquidity migrates to DEX.DO automatically (same mechanic as pump.fun $69k)
+    uint128 public constant MIGRATION_THRESHOLD = 69000 ton; // 69,000 SHELL in nano
+
+    // Rug-pull protection: liquidity locked for 30 days after migration
+    uint32 public constant LOCK_PERIOD = 30 days;
+
+    // DAPP_ID: identifies tokens created by this launchpad (for explorer filtering)
+    bytes public constant DAPP_ID = "ACKIMEME_V1";
+
+    // ─── State ────────────────────────────────────────────────────────────────
+    uint128 public reserveBalance;
+    uint256 public totalSupply;
+    bool public migrated;                // true after DEX.DO migration
+    uint32 public migratedAt;            // timestamp of migration
+    address public dexPool;              // DEX.DO pool address post-migration
+    address public owner;                // token creator
+    address public tokenRoot;            // MemeTokenRoot address
+    string public name;
+    string public symbol;
+
+    // Payment proof: tx hash of the $3 USDC creation fee verified by backend
+    bytes public creationFeeTxHash;
+
+    // ─── Events ───────────────────────────────────────────────────────────────
+    event TokensBought(address buyer, uint128 shellIn, uint256 tokensOut, uint128 newPrice);
+    event TokensSold(address seller, uint256 tokensIn, uint128 shellOut, uint128 newPrice);
+    event MigratedToDex(address pool, uint128 liquidity, uint32 lockedUntil);
+
+    constructor(
+        address _owner,
+        address _tokenRoot,
+        string _name,
+        string _symbol,
+        bytes _creationFeeTxHash
+    ) public {
         require(tvm.pubkey() != 0, 101);
         require(msg.pubkey() == tvm.pubkey(), 102);
+        require(_owner != address(0), 103);
+        require(bytes(_creationFeeTxHash).length > 0, 104, "Creation fee proof required");
         tvm.accept();
+
+        owner = _owner;
+        tokenRoot = _tokenRoot;
+        name = _name;
+        symbol = _symbol;
+        creationFeeTxHash = _creationFeeTxHash;
+        migrated = false;
     }
 
-    // Calcula o preço atual para comprar os tokens baseado no ratio
-    // P = reserve / (virtual_supply - current_supply)
-    function currentPrice() public view returns (uint256) {
-        if (totalSupply == 0) return 0;
-        return reserveBalance / totalSupply;
+    // ─── Price Function (Bancor-style) ────────────────────────────────────────
+    // price = reserveBalance / totalSupply  (simplified linear curve)
+    function currentPrice() public view returns (uint128) {
+        if (totalSupply == 0) return 1 ton; // initial price: 1 SHELL
+        return uint128(reserveBalance / totalSupply);
     }
 
-    // Compra e cunha tokens
-    function buy(uint256 amountToBuy) public {
-        tvm.accept();
-        // Lógica matemática simplificada da curva (Bancor formula ou threshold fixo)
-        // Aqui deve gerenciar a transferência da TVM Wallet (msg.sender)
-        // Aumenta totalSupply e reserveBalance
+    function getBuyPrice(uint256 tokenAmount) public view returns (uint128) {
+        // Integral of linear curve: cost = currentPrice * amount + (amount^2 * slope)
+        uint128 base = uint128(tokenAmount) * currentPrice();
+        return base;
     }
 
-    function sell(uint256 amountToSell) public {
+    // ─── Buy ─────────────────────────────────────────────────────────────────
+    function buy(uint256 tokenAmount) public {
+        // LOCK: no buying after migration to DEX.DO
+        require(!migrated, 201, "Token migrated to DEX.DO — trade there.");
+        require(tokenAmount > 0, 202);
+        require(msg.value > 0, 203, "Send SHELL to buy tokens");
         tvm.accept();
-        // Queima tokens e devolve a moeda nativa para msg.sender baseado na curva
-        // Diminui totalSupply e reserveBalance
+
+        uint128 cost = getBuyPrice(tokenAmount);
+        require(msg.value >= cost, 204, "Insufficient SHELL sent");
+
+        reserveBalance += msg.value;
+        totalSupply += tokenAmount;
+
+        // TODO: call tokenRoot.mint(msg.sender, tokenAmount) via async message
+        // ITokenRoot(tokenRoot).mint{value: 0.1 ton}(msg.sender, tokenAmount);
+
+        emit TokensBought(msg.sender, msg.value, tokenAmount, currentPrice());
+
+        // Check migration threshold
+        if (reserveBalance >= MIGRATION_THRESHOLD && !migrated) {
+            _migrate();
+        }
+    }
+
+    // ─── Sell ────────────────────────────────────────────────────────────────
+    function sell(uint256 tokenAmount) public {
+        // LOCK: no selling after migration
+        require(!migrated, 201, "Token migrated to DEX.DO — trade there.");
+        require(tokenAmount > 0, 202);
+        require(totalSupply >= tokenAmount, 205, "Not enough supply to sell back");
+        tvm.accept();
+
+        uint128 refund = uint128(tokenAmount) * currentPrice();
+        require(reserveBalance >= refund, 206, "Reserve too low");
+
+        reserveBalance -= refund;
+        totalSupply -= tokenAmount;
+
+        // TODO: burn tokens: ITokenRoot(tokenRoot).burn{value: 0.1 ton}(msg.sender, tokenAmount);
+
+        msg.sender.transfer(refund, false, 0);
+
+        emit TokensSold(msg.sender, tokenAmount, refund, currentPrice());
+    }
+
+    // ─── Migration ────────────────────────────────────────────────────────────
+    // Called internally when reserve crosses MIGRATION_THRESHOLD.
+    // Liquidity is locked for LOCK_PERIOD — creator cannot withdraw.
+    function _migrate() internal {
+        migrated = true;
+        migratedAt = now;
+        uint32 lockedUntil = now + LOCK_PERIOD;
+
+        // TODO: call DEX.DO pool to add liquidity
+        // IDexPool(dexPool).addLiquidity{value: reserveBalance}(reserveBalance, totalSupply);
+
+        emit MigratedToDex(dexPool, reserveBalance, lockedUntil);
+    }
+
+    // ─── Emergency withdraw (only after lock period expires) ─────────────────
+    function withdrawLiquidity() public {
+        require(msg.sender == owner, 301);
+        require(migrated, 302, "Not migrated yet");
+        require(now >= migratedAt + LOCK_PERIOD, 303, "Liquidity still locked");
+        tvm.accept();
+        // Only allow withdrawal after lock expires
+        msg.sender.transfer(reserveBalance, false, 0);
+    }
+
+    // ─── Admin: set DEX pool address ─────────────────────────────────────────
+    function setDexPool(address _pool) public {
+        require(msg.sender == owner, 301);
+        tvm.accept();
+        dexPool = _pool;
     }
 }

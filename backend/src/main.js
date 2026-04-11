@@ -1,4 +1,5 @@
 const { randomUUID } = require("crypto");
+const crypto = require("crypto");
 require("dotenv").config();
 const express = require("express");
 const { buildPublicConfig, config } = require("./config");
@@ -43,6 +44,47 @@ const {
   updateLaunchpadTaskStatus,
 } = require("./storage");
 const { createTreasuryPaymentRecord } = require("./treasury");
+
+// ─── Rate Limit: 1 token creation per wallet per hour ─────────────────────────
+const RATE_LIMIT_WINDOW_MS = 60 * 60 * 1000; // 1 hour
+const walletLastLaunch = new Map();
+
+function checkWalletRateLimit(walletAddress) {
+  const key = String(walletAddress || "").toLowerCase();
+  const lastTime = walletLastLaunch.get(key);
+  if (lastTime && Date.now() - lastTime < RATE_LIMIT_WINDOW_MS) {
+    const waitMinutes = Math.ceil((RATE_LIMIT_WINDOW_MS - (Date.now() - lastTime)) / 60000);
+    throw new Error(`Rate limit: aguarde ${waitMinutes} minuto(s) para criar outro token.`);
+  }
+  walletLastLaunch.set(key, Date.now());
+}
+
+// ─── Admin unlock JWT secret ──────────────────────────────────────────────────
+const ADMIN_MASTER_PASSWORD = config.adminToken; // reuse ADMIN_TOKEN as master password
+
+function signAdminJwt(walletAddress) {
+  // Simple HMAC-based token (no jwt lib needed): header.payload.sig
+  const payload = Buffer.from(JSON.stringify({
+    w: walletAddress,
+    iat: Math.floor(Date.now() / 1000),
+    exp: Math.floor(Date.now() / 1000) + 3600, // 1h
+  })).toString("base64url");
+  const sig = crypto.createHmac("sha256", ADMIN_MASTER_PASSWORD || "dev_secret")
+    .update(payload).digest("base64url");
+  return `${payload}.${sig}`;
+}
+
+function verifyAdminJwt(token) {
+  try {
+    const [payload, sig] = token.split(".");
+    const expectedSig = crypto.createHmac("sha256", ADMIN_MASTER_PASSWORD || "dev_secret")
+      .update(payload).digest("base64url");
+    if (sig !== expectedSig) return null;
+    const data = JSON.parse(Buffer.from(payload, "base64url").toString());
+    if (data.exp < Math.floor(Date.now() / 1000)) return null;
+    return data;
+  } catch { return null; }
+}
 
 const app = express();
 app.use(express.json({ limit: "1mb" }));
@@ -242,6 +284,41 @@ app.post("/auth/logout", async (req, res) => {
   });
 });
 
+// ── Admin unlock: verify master password, return short-lived JWT ──────────────
+app.post("/admin/unlock", async (req, res) => {
+  try {
+    const { password, walletAddress } = req.body || {};
+    if (!ADMIN_MASTER_PASSWORD) {
+      return res.status(503).json({ error: "ADMIN_TOKEN não configurado no backend." });
+    }
+    if (!password || password !== ADMIN_MASTER_PASSWORD) {
+      return res.status(401).json({ error: "Senha incorreta." });
+    }
+    // Optionally check wallet too
+    const wallet = String(walletAddress || "").toLowerCase();
+    const walletOk = config.adminWallets.length === 0 || config.adminWallets.includes(wallet);
+    if (!walletOk) {
+      return res.status(401).json({ error: "Wallet não autorizada como admin." });
+    }
+    const adminJwt = signAdminJwt(wallet);
+    return res.json({ success: true, adminJwt });
+  } catch (err) {
+    return res.status(400).json({ error: err.message });
+  }
+});
+
+// ── Admin JWT middleware (alternative to X-Admin-Token) ───────────────────────
+async function requireAdminJwt(req, res, next) {
+  const authHeader = req.headers["x-admin-jwt"] || "";
+  const data = verifyAdminJwt(authHeader);
+  if (data) {
+    req.admin = { authMode: "admin_jwt", walletAddress: data.w };
+    return next();
+  }
+  // Fallback to existing requireAdmin
+  return requireAdmin(req, res, next);
+}
+
 app.post("/verify-payment", async (req, res) => {
   try {
     const walletAddress =
@@ -281,6 +358,10 @@ app.post("/verify-payment", async (req, res) => {
 app.post("/launch-request", requireSession, async (req, res) => {
   try {
     const launchRequest = normalizeLaunchRequest(req.body, req.session);
+
+    // ── Rate limit: 1 token per wallet per hour ───────────────────────────────
+    checkWalletRateLimit(launchRequest.creator.wallet);
+
     const payment = await verifyPayment({
       walletAddress: launchRequest.creator.wallet,
       txHash: launchRequest.payment.txHash,

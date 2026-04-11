@@ -12,6 +12,8 @@ function getTelegramInitData() {
 
 export default function AuthPage() {
   const router = useRouter();
+  // Support ?from=/some-page redirect after login
+  const returnTo = router.query.from || "/";
   const [walletAddress, setWalletAddress] = useState("");
   const [publicKey, setPublicKey] = useState("");
   const [signature, setSignature] = useState("");
@@ -73,6 +75,8 @@ export default function AuthPage() {
       window.localStorage.setItem(SESSION_STORAGE_KEY, res.session.token);
       setSession(res.session);
       setStep("done");
+      // Redirect after 1.2s so user sees the success state
+      setTimeout(() => router.push(String(returnTo)), 1200);
     } catch (err) {
       setError(err.message);
     } finally {

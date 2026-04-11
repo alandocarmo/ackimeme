@@ -185,3 +185,10 @@ export function updateAdminLaunchpadSubmission(options, submissionId, payload) {
     ...normalizeAdminOptions(options),
   });
 }
+
+export function unlockAdmin(password, walletAddress) {
+  return request("/admin/unlock", {
+    method: "POST",
+    body: { password, walletAddress },
+  });
+}

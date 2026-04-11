@@ -173,6 +173,7 @@ export default function Home() {
       })
       .catch((error) => setConfigError(error.message));
 
+    // Initial feed load
     getPublicLaunches()
       .then((response) => {
         setPublicLaunches(response.launches || []);
@@ -186,7 +187,20 @@ export default function Home() {
         setLaunchpadError("");
       })
       .catch((error) => setLaunchpadError(error.message));
+
+    // ── Live feed: poll every 3s to keep prices/listings up to date ────────
+    const feedInterval = setInterval(() => {
+      getPublicLaunches()
+        .then((response) => {
+          setPublicLaunches(response.launches || []);
+          setPublicFeedError("");
+        })
+        .catch(() => {}); // silent — don't flash error on poll failures
+    }, 3000);
+
+    return () => clearInterval(feedInterval);
   }, []);
+
 
   useEffect(() => {
     const webApp = window.Telegram?.WebApp;
@@ -409,11 +423,21 @@ export default function Home() {
   const selectedFee =
     appConfig.payment.creationFees.find((fee) => fee.tokenSymbol === form.paymentTokenSymbol) ||
     appConfig.payment.creationFees[0];
-  const canVerifyWallet =
-    Boolean(challenge?.id) &&
-    Boolean(authForm.walletAddress.trim()) &&
-    Boolean(authForm.publicKey.trim()) &&
-    Boolean(authForm.signature.trim());
+
+  // ── Bonding curve math preview ────────────────────────────────────────────
+  const totalSupplyNum = Number((form.totalSupply || "1000000000").replace(/[.,]/g, "")) || 1e9;
+  // linear bonding curve: initial price = 1 SHELL / 1B tokens = 0.000000001 SHELL
+  // When 20% of supply sold, price doubles (simplified)
+  const INITIAL_PRICE_SHELL = 0.000000030; // ~pump.fun equivalent starting price
+  const MIGRATION_THRESHOLD_SHELL = 69000;
+  const estimatedInitialPrice = INITIAL_PRICE_SHELL;
+  const estimatedInitialMcap = (estimatedInitialPrice * totalSupplyNum).toFixed(2);
+  const estimatedMigrationMcap = (MIGRATION_THRESHOLD_SHELL * 2).toLocaleString(); // 2x reserve at migration
+  const percentToMigration = Math.min(
+    ((MIGRATION_THRESHOLD_SHELL / (estimatedInitialMcap || 1)) * 100).toFixed(1),
+    100,
+  );
+
   const canVerifyFee =
     Boolean(session?.walletAddress) && Boolean(form.paymentTokenSymbol) && Boolean(form.txHash.trim());
   const canCreateLaunch =
@@ -423,6 +447,7 @@ export default function Home() {
     Boolean(form.description.trim()) &&
     Boolean(form.totalSupply.trim()) &&
     Boolean(form.txHash.trim());
+
 
   return (
     <>
@@ -442,8 +467,7 @@ export default function Home() {
              </Link>
              <div className={styles.terminalNav}>
                 <Link href="#market-feed" className={styles.terminalLink}>/board</Link>
-                <Link href="/exclusive" className={styles.terminalLink}>/launchpad-exclusivo</Link>
-                <Link href="/admin" className={styles.terminalLink}>/admin</Link>
+                <Link href="/exclusive" className={styles.terminalLink}>/launchpad</Link>
              </div>
           </div>
         </section>
@@ -673,7 +697,36 @@ export default function Home() {
                 </div>
                 <span className={styles.sectionTag}>Passo 2</span>
               </div>
+              <div className={styles.bondingPreview}>
+                <p className={styles.bondingPreviewTitle}>⬡ simulação da bonding curve</p>
+                <div className={styles.bondingStats}>
+                  <div>
+                    <p className={styles.bondingLabel}>Preço inicial</p>
+                    <p className={styles.bondingValue}>{estimatedInitialPrice.toFixed(9)} SHELL</p>
+                  </div>
+                  <div>
+                    <p className={styles.bondingLabel}>Mcap inicial (~)</p>
+                    <p className={styles.bondingValue}>{Number(estimatedInitialMcap).toLocaleString()} SHELL</p>
+                  </div>
+                  <div>
+                    <p className={styles.bondingLabel}>Mcap na migração</p>
+                    <p className={styles.bondingValue}>{estimatedMigrationMcap} SHELL</p>
+                  </div>
+                  <div>
+                    <p className={styles.bondingLabel}>Threshold DEX.DO</p>
+                    <p className={styles.bondingValue}>69.000 SHELL</p>
+                  </div>
+                </div>
+                <div className={styles.bondingBar}>
+                  <div className={styles.bondingBarFill} style={{ width: `${percentToMigration}%` }} />
+                </div>
+                <p className={styles.bondingHint}>
+                  Ao atingir 69k SHELL em reserva, a liquidez migra automaticamente para DEX.DO
+                  com lock de 30 dias (anti-rug).
+                </p>
+              </div>
               <div className={styles.fieldGrid}>
+
                 <label className={styles.fieldWrap}>
                   <span className={styles.label}>Wallet autenticada</span>
                   <input

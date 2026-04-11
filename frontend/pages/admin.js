@@ -10,6 +10,7 @@ import {
   getAdminLaunchpadSubmissions,
   getAdminOverview,
   getSession,
+  unlockAdmin,
   updateAdminLaunchpadProject,
   updateAdminLaunchpadProjectContent,
   updateAdminLaunchpadSubmission,
@@ -127,20 +128,25 @@ export default function AdminPage() {
       });
   }, []);
 
-  function handleUnlock() {
-    const expected = process.env.NEXT_PUBLIC_ADMIN_MASTER_PASSWORD || "";
-    // Compare against env var. In production set NEXT_PUBLIC_ADMIN_MASTER_PASSWORD in Vercel.
-    if (!expected) {
-      // If no password configured, accept any input (dev mode)
-      setUnlocked(true);
-      setUnlockError("");
-      return;
-    }
-    if (masterPassword === expected) {
-      setUnlocked(true);
-      setUnlockError("");
-    } else {
-      setUnlockError("Senha incorreta.");
+  async function handleUnlock() {
+    setUnlockError("");
+    setLoading(true);
+    try {
+      const res = await unlockAdmin(masterPassword, sessionWallet);
+      if (res.adminJwt) {
+        // Store JWT for subsequent admin API calls
+        if (typeof window !== "undefined") {
+          window.sessionStorage.setItem("ackimeme_admin_jwt", res.adminJwt);
+        }
+        setAdminToken(masterPassword); // fallback for X-Admin-Token
+        setUnlocked(true);
+      } else {
+        setUnlockError("Falha ao obter token de admin.");
+      }
+    } catch (err) {
+      setUnlockError(err.message || "Senha incorreta.");
+    } finally {
+      setLoading(false);
     }
   }
 

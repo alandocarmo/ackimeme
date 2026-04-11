@@ -1203,3 +1203,62 @@
 .marketBadge { background: rgba(249, 115, 22, 0.2) !important; color: var(--accent-warm) !important; }
 .eyebrow { color: var(--accent-warm) !important; }
 .orb { display: none !important; }
+
+/* Bonding Curve Preview Panel */
+.bondingPreview {
+  background: rgba(134, 239, 172, 0.04);
+  border: 1px solid rgba(134, 239, 172, 0.2);
+  border-radius: 2px;
+  padding: 16px;
+  margin-bottom: 20px;
+}
+.bondingPreviewTitle {
+  font-size: 11px;
+  color: var(--accent);
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  margin: 0 0 12px;
+}
+.bondingStats {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+  margin-bottom: 12px;
+}
+@media (max-width: 640px) {
+  .bondingStats { grid-template-columns: repeat(2, 1fr); }
+}
+.bondingLabel {
+  font-size: 10px;
+  color: var(--ink-soft);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin: 0 0 4px;
+}
+.bondingValue {
+  font-size: 12px;
+  color: var(--ink);
+  font-weight: bold;
+  margin: 0;
+  font-family: var(--font-mono);
+}
+.bondingBar {
+  height: 4px;
+  background: var(--line);
+  border-radius: 2px;
+  margin-bottom: 8px;
+  overflow: hidden;
+}
+.bondingBarFill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--accent), var(--accent-warm));
+  border-radius: 2px;
+  transition: width 0.5s ease;
+  min-width: 2px;
+}
+.bondingHint {
+  font-size: 11px;
+  color: #52525b;
+  margin: 0;
+  line-height: 1.5;
+}
