@@ -1,11 +1,15 @@
 pragma ton-solidity >= 0.53.0;
 pragma AbiHeader expire;
-pragma AbiHeader time;
 pragma AbiHeader pubkey;
 
 // Interface to call DEX.DO liquidity pool after migration
 interface IDexPool {
     function addLiquidity(uint128 shellAmount, uint128 tokenAmount) external;
+}
+
+interface ITokenRoot {
+    function mint(address recipient, uint256 amount, uint128 deployWalletValue) external;
+    // Note: burning would require wallet interaction in TVM/TIP-3, simplified here.
 }
 
 contract BondingCurve {
@@ -45,7 +49,7 @@ contract BondingCurve {
         string _name,
         string _symbol,
         bytes _creationFeeTxHash
-    ) public {
+    ) {
         require(tvm.pubkey() != 0, 101);
         require(msg.pubkey() == tvm.pubkey(), 102);
         require(_owner != address(0), 103);
@@ -76,7 +80,7 @@ contract BondingCurve {
     // ─── Buy ─────────────────────────────────────────────────────────────────
     function buy(uint256 tokenAmount) public {
         // LOCK: no buying after migration to DEX.DO
-        require(!migrated, 201, "Token migrated to DEX.DO — trade there.");
+        require(!migrated, 201, "Token migrated to DEX.DO - trade there.");
         require(tokenAmount > 0, 202);
         require(msg.value > 0, 203, "Send SHELL to buy tokens");
         tvm.accept();
@@ -87,8 +91,8 @@ contract BondingCurve {
         reserveBalance += msg.value;
         totalSupply += tokenAmount;
 
-        // TODO: call tokenRoot.mint(msg.sender, tokenAmount) via async message
-        // ITokenRoot(tokenRoot).mint{value: 0.1 ton}(msg.sender, tokenAmount);
+        // Call tokenRoot.mint(msg.sender, tokenAmount) via async message
+        ITokenRoot(tokenRoot).mint{value: varuint16(0.1 ton)}(msg.sender, tokenAmount, uint128(0.05 ton));
 
         emit TokensBought(msg.sender, msg.value, tokenAmount, currentPrice());
 
@@ -101,7 +105,7 @@ contract BondingCurve {
     // ─── Sell ────────────────────────────────────────────────────────────────
     function sell(uint256 tokenAmount) public {
         // LOCK: no selling after migration
-        require(!migrated, 201, "Token migrated to DEX.DO — trade there.");
+        require(!migrated, 201, "Token migrated to DEX.DO - trade there.");
         require(tokenAmount > 0, 202);
         require(totalSupply >= tokenAmount, 205, "Not enough supply to sell back");
         tvm.accept();
@@ -114,7 +118,7 @@ contract BondingCurve {
 
         // TODO: burn tokens: ITokenRoot(tokenRoot).burn{value: 0.1 ton}(msg.sender, tokenAmount);
 
-        msg.sender.transfer(refund, false, 0);
+        msg.sender.transfer(varuint16(refund), false, 0);
 
         emit TokensSold(msg.sender, tokenAmount, refund, currentPrice());
     }
@@ -124,8 +128,8 @@ contract BondingCurve {
     // Liquidity is locked for LOCK_PERIOD — creator cannot withdraw.
     function _migrate() internal {
         migrated = true;
-        migratedAt = now;
-        uint32 lockedUntil = now + LOCK_PERIOD;
+        migratedAt = block.timestamp;
+        uint32 lockedUntil = block.timestamp + LOCK_PERIOD;
 
         // TODO: call DEX.DO pool to add liquidity
         // IDexPool(dexPool).addLiquidity{value: reserveBalance}(reserveBalance, totalSupply);
@@ -137,10 +141,10 @@ contract BondingCurve {
     function withdrawLiquidity() public {
         require(msg.sender == owner, 301);
         require(migrated, 302, "Not migrated yet");
-        require(now >= migratedAt + LOCK_PERIOD, 303, "Liquidity still locked");
+        require(block.timestamp >= migratedAt + LOCK_PERIOD, 303, "Liquidity still locked");
         tvm.accept();
         // Only allow withdrawal after lock expires
-        msg.sender.transfer(reserveBalance, false, 0);
+        msg.sender.transfer(varuint16(reserveBalance), false, 0);
     }
 
     // ─── Admin: set DEX pool address ─────────────────────────────────────────

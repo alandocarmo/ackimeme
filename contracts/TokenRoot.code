@@ -1,0 +1,755 @@
+.fragment c4_to_c7, {
+	PUSHROOT
+	CTOS
+	LDU 256 ; pubkey c4
+	LDU 64 ; pubkey timestamp c4
+	LDU 1 ; ctor flag
+	LDREF
+	LDREF
+	LDU 8
+	LDU 256
+	LDREF
+	ENDS
+	CTOS
+	LDMSGADDR
+	LDREF
+	ENDS
+	SETGLOB 15
+	SETGLOB 14
+	SETGLOB 13
+	SETGLOB 12
+	SETGLOB 11
+	SETGLOB 10
+	SETGLOB 6
+	SETGLOB 3
+	SETGLOB 2
+}
+
+.fragment c7_to_c4, {
+	GETGLOB 15
+	GETGLOB 14
+	GETGLOB 13
+	GETGLOB 12
+	GETGLOB 11
+	GETGLOB 10
+	GETGLOB 3
+	GETGLOB 2
+	NEWC
+	STU 256
+	STU 64
+	STONE
+	STREF
+	STREF
+	STU 8
+	STU 256
+	ROTREV
+	NEWC
+	STSLICE
+	STREF
+	STBREFR
+	ENDC
+	POPROOT
+}
+
+.fragment constructor, {
+	DROP
+	GETGLOB 2
+	ISNULL
+	IFREF {
+		.inline c4_to_c7
+	}
+	GETGLOB 6
+	THROWIF 51
+	LDREF
+	LDREF
+	LDU 8
+	LDREF
+	ENDS
+	.loc TokenRoot.sol, 17
+	ACCEPT
+	.loc TokenRoot.sol, 18
+	ROLL 3
+	SETGLOB 10
+	.loc TokenRoot.sol, 19
+	ROT
+	SETGLOB 11
+	.loc TokenRoot.sol, 20
+	SWAP
+	SETGLOB 12
+	.loc TokenRoot.sol, 21
+	SETGLOB 15
+	.loc TokenRoot.sol, 22
+	GETGLOB 9
+	SETGLOB 14
+	.loc TokenRoot.sol, 0
+	CALLREF {
+		.inline c7_to_c4
+	}
+	THROW 0
+}
+
+.fragment decimals, {
+	DROP
+	ENDS
+	CALLREF {
+		.inline c4_to_c7
+	}
+	GETGLOB 12
+	OVER
+	PUSHCONT {
+		PUSHSLICE xc000000000000000000000000095005b07
+		NEWC
+		STSLICE
+		STU 8
+		ENDC
+		PUSHINT 0
+		SENDRAWMSG
+	}
+	IF
+	THROW 0
+}
+
+.fragment deployWallet_726ee909_internal, {
+	.loc TokenRoot.sol, 35
+	ACCEPT
+	.loc TokenRoot.sol, 36
+	PUSHINT 0
+	ROT
+	MYADDR
+	NEWC
+	PUSHINT 321
+	STZEROES
+	STSLICE
+	ROTREV
+	NEWC
+	STSLICE
+	STU 256
+	STBREFR
+	ENDC
+	GETGLOB 15
+	NEWC
+	STSLICECONST x2_
+	STDICT
+	STDICT
+	STZERO
+	ENDC
+	.loc TokenRoot.sol, 41
+	DUP
+	HASHCU
+	NEWC
+	STSLICECONST x801_
+	STU 256
+	ENDC
+	CTOS
+	XCHG S2
+	UFITS 120
+	PUSH S2
+	NEWC
+	STSLICECONST x62_
+	STSLICE
+	SWAP
+	STGRAMS
+	PUSHINT 3
+	STUR 111
+	OVER
+	CALLREF {
+		CTOS
+		LDI 1
+		SWAP
+		PUSHCONT {
+			LDI 5
+			NIP
+		}
+		IF
+		LDI 1
+		SWAP
+		PUSHCONT {
+			LDI 2
+			NIP
+		}
+		IF
+		LDDICT
+		LDDICT
+		LDDICT
+		ENDS
+		BLKDROP 3
+	}
+	STREF
+	STSLICECONST x00000000c_
+	ENDC
+	PUSHINT 2
+	SENDRAWMSG
+	.loc TokenRoot.sol, 0
+}
+
+.fragment deployWallet, {
+	DROP
+	GETGLOB 6
+	THROWIFNOT 76
+	GETGLOB 2
+	ISNULL
+	IFREF {
+		.inline c4_to_c7
+	}
+	.loc TokenRoot.sol, 34
+	OVER
+	PUSHCONT {
+		LDREF
+		ENDS
+		CTOS
+	}
+	IF
+	LDMSGADDR
+	LDU 128
+	ENDS
+	.loc TokenRoot.sol, 0
+	CALLREF {
+		.inline deployWallet_726ee909_internal
+	}
+	OVER
+	PUSHCONT {
+		PUSH S3
+		CTOS
+		LDU 2
+		LDMSGADDR
+		DROP
+		NIP
+		NEWC
+		STSLICECONST xc
+		STSLICE
+		PUSHINT 1
+		STUR 98
+		SWAP
+		NEWC
+		STSLICECONST xcdfd1fc5
+		STSLICE
+		STBREFR
+		ENDC
+		PUSHINT 0
+		SENDRAWMSG
+	}
+	PUSHCONT {
+		DROP
+	}
+	IFELSE
+	CALLREF {
+		.inline c7_to_c4
+	}
+	THROW 0
+}
+
+.fragment getWalletAddress_1fd9afa5_internal, {
+	.loc TokenRoot.sol, 26
+	PUSHINT 0
+	SWAP
+	MYADDR
+	NEWC
+	PUSHINT 321
+	STZEROES
+	STSLICE
+	ROTREV
+	NEWC
+	STSLICE
+	STU 256
+	STBREFR
+	ENDC
+	GETGLOB 15
+	NEWC
+	STSLICECONST x2_
+	STDICT
+	STDICT
+	STZERO
+	ENDC
+	.loc TokenRoot.sol, 31
+	HASHCU
+	NEWC
+	STSLICECONST x801_
+	STU 256
+	ENDC
+	CTOS
+	.loc TokenRoot.sol, 0
+}
+
+.fragment upd_only_time_in_c4, {
+	PUSHROOT
+	CTOS
+	LDU 256
+	LDU 64
+	NIP
+	GETGLOB 3
+	ROT
+	NEWC
+	STU 256
+	STU 64
+	STSLICE
+	ENDC
+	POPROOT
+}
+
+.fragment getWalletAddress, {
+	DROP
+	GETGLOB 6
+	THROWIFNOT 76
+	GETGLOB 2
+	ISNULL
+	IFREF {
+		.inline c4_to_c7
+	}
+	.loc TokenRoot.sol, 25
+	OVER
+	PUSHCONT {
+		LDREF
+		ENDS
+		CTOS
+	}
+	IF
+	LDMSGADDR
+	ENDS
+	.loc TokenRoot.sol, 0
+	CALLREF {
+		.inline getWalletAddress_1fd9afa5_internal
+	}
+	OVER
+	PUSHCONT {
+		PUSH S3
+		CTOS
+		LDU 2
+		LDMSGADDR
+		DROP
+		NIP
+		NEWC
+		STSLICECONST xc
+		STSLICE
+		PUSHINT 1
+		STUR 98
+		SWAP
+		NEWC
+		STSLICECONST xc631db75
+		STSLICE
+		STBREFR
+		ENDC
+		PUSHINT 0
+		SENDRAWMSG
+	}
+	PUSHCONT {
+		DROP
+	}
+	IFELSE
+	IFREF {
+		.inline upd_only_time_in_c4
+	}
+	THROW 0
+}
+
+.fragment mint_499d1081_internal, {
+	.loc TokenRoot.sol, 50
+	PUSHREF {
+		.blob x4f6e6c79206f776e65722028426f6e64696e674375727665292063616e206d696e74
+	}
+	GETGLOB 9
+	GETGLOB 14
+	SDEQ
+	THROWARGIFNOT 101
+	.loc TokenRoot.sol, 51
+	ACCEPT
+	.loc TokenRoot.sol, 53
+	GETGLOB 13
+	PUSH S2
+	ADD
+	SETGLOB 13
+	.loc TokenRoot.sol, 55
+	ROT
+	CALLREF {
+		.inline getWalletAddress_1fd9afa5_internal
+	}
+	.loc TokenRoot.sol, 59
+	ROTREV
+	UFITS 120
+	ROT
+	NEWC
+	STSLICECONST x62_
+	STSLICE
+	SWAP
+	STGRAMS
+	PUSHINT 1
+	STUR 111
+	SWAP
+	NEWC
+	STSLICECONST x494445b6
+	STU 256
+	STBREFR
+	ENDC
+	PUSHINT 1
+	SENDRAWMSG
+	.loc TokenRoot.sol, 0
+}
+
+.fragment mint, {
+	DROP
+	GETGLOB 6
+	THROWIFNOT 76
+	GETGLOB 2
+	ISNULL
+	IFREF {
+		.inline c4_to_c7
+	}
+	.loc TokenRoot.sol, 49
+	OVER
+	PUSHCONT {
+		LDREF
+		ENDS
+		CTOS
+	}
+	IF
+	LDMSGADDR
+	LDU 256
+	LDU 128
+	ENDS
+	.loc TokenRoot.sol, 0
+	CALLREF {
+		.inline mint_499d1081_internal
+	}
+	CALLREF {
+		.inline c7_to_c4
+	}
+	THROW 0
+}
+
+.fragment name, {
+	DROP
+	ENDS
+	CALLREF {
+		.inline c4_to_c7
+	}
+	GETGLOB 10
+	OVER
+	PUSHCONT {
+		PUSHSLICE xc0000000000000000000000000947b25c0
+		NEWC
+		STSLICE
+		STREF
+		ENDC
+		PUSHINT 0
+		SENDRAWMSG
+	}
+	IF
+	THROW 0
+}
+
+.fragment owner, {
+	DROP
+	ENDS
+	CALLREF {
+		.inline c4_to_c7
+	}
+	GETGLOB 14
+	OVER
+	PUSHCONT {
+		PUSHSLICE xc0000000000000000000000000df0bcfde
+		NEWC
+		STSLICE
+		STSLICE
+		ENDC
+		PUSHINT 0
+		SENDRAWMSG
+	}
+	IF
+	THROW 0
+}
+
+.fragment symbol, {
+	DROP
+	ENDS
+	CALLREF {
+		.inline c4_to_c7
+	}
+	GETGLOB 11
+	OVER
+	PUSHCONT {
+		PUSHSLICE xc00000000000000000000000009b9f8f81
+		NEWC
+		STSLICE
+		STREF
+		ENDC
+		PUSHINT 0
+		SENDRAWMSG
+	}
+	IF
+	THROW 0
+}
+
+.fragment totalSupply, {
+	DROP
+	ENDS
+	CALLREF {
+		.inline c4_to_c7
+	}
+	GETGLOB 13
+	OVER
+	PUSHCONT {
+		PUSHSLICE xc00000000000000000000000008fc7eb61
+		NEWC
+		STSLICE
+		STU 256
+		ENDC
+		PUSHINT 0
+		SENDRAWMSG
+	}
+	IF
+	THROW 0
+}
+
+.fragment walletCode, {
+	DROP
+	ENDS
+	CALLREF {
+		.inline c4_to_c7
+	}
+	GETGLOB 15
+	OVER
+	PUSHCONT {
+		PUSHSLICE xc0000000000000000000000000ef0fd26b
+		NEWC
+		STSLICE
+		STREF
+		ENDC
+		PUSHINT 0
+		SENDRAWMSG
+	}
+	IF
+	THROW 0
+}
+
+.fragment public_function_selector, {
+	DUP
+	PUSHINT 352344839
+	LEQ
+	IFJMPREF {
+		DUP
+		EQINT 1
+		IFJMPREF {
+			.inline constructor
+		}
+		DUP
+		PUSHINT 264760161
+		EQUAL
+		IFJMPREF {
+			.inline totalSupply
+		}
+		DUP
+		PUSHINT 343614912
+		EQUAL
+		IFJMPREF {
+			.inline name
+		}
+		DUP
+		PUSHINT 352344839
+		EQUAL
+		IFJMPREF {
+			.inline decimals
+		}
+	}
+	DUP
+	PUSHINT 1308434373
+	LEQ
+	IFJMPREF {
+		DUP
+		PUSHINT 463441793
+		EQUAL
+		IFJMPREF {
+			.inline symbol
+		}
+		DUP
+		PUSHINT 1177672565
+		EQUAL
+		IFJMPREF {
+			.inline getWalletAddress
+		}
+		DUP
+		PUSHINT 1308434373
+		EQUAL
+		IFJMPREF {
+			.inline deployWallet
+		}
+	}
+	DUP
+	PUSHINT 1853372319
+	LEQ
+	IFJMPREF {
+		DUP
+		PUSHINT 1594609630
+		EQUAL
+		IFJMPREF {
+			.inline owner
+		}
+		DUP
+		PUSHINT 1853372319
+		EQUAL
+		IFJMPREF {
+			.inline mint
+		}
+	}
+	DUP
+	PUSHINT 1863307883
+	EQUAL
+	IFJMPREF {
+		.inline walletCode
+	}
+}
+
+.fragment main_external, {
+	PUSHSLICE x8000000000000000000000000000000000000000000000000000000000000000001_
+	SETGLOB 9
+	OVER
+	CALLREF {
+		.inline c4_to_c7
+	}
+	LDU 1 ; haveSign msgSlice
+	SWAP
+	PUSHCONT {
+		PUSHPOW2 9
+		LDSLICEX
+		DUP
+		MYADDR
+		NEWC
+		STSLICE
+		STSLICE
+		ENDC
+		HASHCU
+		SWAP
+		LDU 1 ; signatureSlice hashMsgSlice hasPubkey msgSlice
+		SWAP
+		PUSHCONT {
+			LDU 256 ; signatureSlice hashMsgSlice pubkey msgSlice
+			XCHG2 S3, S3
+		}
+		PUSHCONT {
+			XCHG S2
+			GETGLOB 2
+		}
+		IFELSE
+		CHKSIGNU
+		THROWIFNOT 40
+	}
+	PUSHCONT {
+		LDU 1 ; hasPubkey msgSlice
+		SWAP
+		THROWIF 58
+	}
+	IFELSE
+	LDU 64 ; timestamp msgSlice
+	SWAP
+	.inline __replayProtection
+	LDU 32 ; expireAt msgSlice
+	SWAP
+	NOW ; msgSlice expireAt now
+	GREATER ; msgSlice expireAt>now
+	THROWIFNOT 57
+	LDU 32 ; funcId body
+	SWAP
+	CALLREF {
+		.inline public_function_selector
+	}
+	THROW 60
+}
+
+.fragment main_internal, {
+	PUSHROOT
+	CTOS
+	PUSHINT 320
+	SDSKIPFIRST
+	PLDI 1
+	SETGLOB 6
+	PUSH S2
+	CTOS
+	LDU 4 ; bounced tail
+	LDMSGADDR ; bounced src tail
+	DROP
+	SETGLOB 9
+	MODPOW2 1
+	IFRET
+	OVER
+	SEMPTY ; isEmpty
+	IFJMPREF {
+		GETGLOB 6
+		THROWIFNOT 76
+	}
+	OVER
+	LDUQ 32  ; [funcId] body' ok
+	THROWIFNOT 60
+	OVER
+	IFNOTJMPREF {
+		GETGLOB 6
+		THROWIFNOT 76
+	}
+	SWAP
+	CALLREF {
+		.inline public_function_selector
+	}
+	THROW 60
+}
+
+.fragment default_data_cell, {
+	PUSHREF {
+	}
+	PUSHSLICE x2_
+	PUSHINT 0
+	DUP
+	PUSHREF {
+	}
+	DUP
+	NEWC
+	PUSHINT 321
+	STZEROES
+	STREF
+	STREF
+	STU 8
+	STU 256
+	ROTREV
+	NEWC
+	STSLICE
+	STREF
+	STBREFR
+	ENDC
+}
+
+.fragment onTickTock, {
+}
+
+; The code below forms a value of the StateInit type.
+.blob x4_ ; split_depth = nothing
+.blob x4_ ; special = nothing
+.blob xc_ ; code = just
+.cell { ; code cell
+	PUSHREFCONT {
+		DICTPUSHCONST 32
+		DICTUGETJMPZ
+		THROW 78
+		.code-dict-cell 32, {
+		}
+		.cell { ; version
+			.blob x736f6c20302e37392e33 ; sol 0.79.3
+		}
+	}
+	POPCTR c3
+	DUP
+	IFNOTJMPREF {
+		.inline main_internal
+	}
+	DUP
+	EQINT -1
+	IFJMPREF {
+		.inline main_external
+	}
+	DUP
+	EQINT -2
+	IFJMPREF {
+		.inline onTickTock
+	}
+	THROW 11
+}
+.blob xc_ ; data = just
+.cell { 
+	.inline-computed-cell default_data_cell, 0
+}
+.blob x4_ ; library = hme_empty

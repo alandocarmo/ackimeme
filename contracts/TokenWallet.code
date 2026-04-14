@@ -1,0 +1,459 @@
+.fragment c4_to_c7, {
+	PUSHROOT
+	CTOS
+	LDU 256 ; pubkey c4
+	LDU 64 ; pubkey timestamp c4
+	LDU 1 ; ctor flag
+	LDMSGADDR
+	LDREF
+	ENDS
+	CTOS
+	LDMSGADDR
+	LDU 256
+	ENDS
+	SETGLOB 12
+	SETGLOB 11
+	SETGLOB 10
+	SETGLOB 6
+	SETGLOB 3
+	SETGLOB 2
+}
+
+.fragment balance, {
+	DROP
+	ENDS
+	CALLREF {
+		.inline c4_to_c7
+	}
+	GETGLOB 12
+	OVER
+	PUSHCONT {
+		PUSHSLICE xc0000000000000000000000000c0a6f47c
+		NEWC
+		STSLICE
+		STU 256
+		ENDC
+		PUSHINT 0
+		SENDRAWMSG
+	}
+	IF
+	THROW 0
+}
+
+.fragment c7_to_c4, {
+	GETGLOB 12
+	GETGLOB 11
+	GETGLOB 10
+	GETGLOB 3
+	GETGLOB 2
+	NEWC
+	STU 256
+	STU 64
+	STONE
+	STSLICE
+	ROTREV
+	NEWC
+	STSLICE
+	STU 256
+	STBREFR
+	ENDC
+	POPROOT
+}
+
+.fragment constructor, {
+	DROP
+	GETGLOB 2
+	ISNULL
+	IFREF {
+		.inline c4_to_c7
+	}
+	GETGLOB 6
+	THROWIF 51
+	ENDS
+	.loc TokenWallet.sol, 16
+	PUSHREF {
+		.blob x4f6e6c7920726f6f742063616e206465706c6f792077616c6c6574
+	}
+	GETGLOB 9
+	GETGLOB 10
+	SDEQ
+	THROWARGIFNOT 101
+	.loc TokenWallet.sol, 17
+	ACCEPT
+	.loc TokenWallet.sol, 0
+	CALLREF {
+		.inline c7_to_c4
+	}
+	THROW 0
+}
+
+.fragment owner, {
+	DROP
+	ENDS
+	CALLREF {
+		.inline c4_to_c7
+	}
+	GETGLOB 11
+	OVER
+	PUSHCONT {
+		PUSHSLICE xc0000000000000000000000000df0bcfde
+		NEWC
+		STSLICE
+		STSLICE
+		ENDC
+		PUSHINT 0
+		SENDRAWMSG
+	}
+	IF
+	THROW 0
+}
+
+.fragment receiveTokens_743e0c9b_internal, {
+	.loc TokenWallet.sol, 21
+	PUSHREF {
+		.blob x4f6e6c7920726f6f742063616e206d696e7420746f6b656e7320696e746f2077616c6c6574
+	}
+	GETGLOB 9
+	GETGLOB 10
+	SDEQ
+	THROWARGIFNOT 102
+	.loc TokenWallet.sol, 22
+	ACCEPT
+	.loc TokenWallet.sol, 23
+	GETGLOB 12
+	ADD
+	SETGLOB 12
+	.loc TokenWallet.sol, 0
+}
+
+.fragment receiveTokens, {
+	DROP
+	GETGLOB 6
+	THROWIFNOT 76
+	GETGLOB 2
+	ISNULL
+	IFREF {
+		.inline c4_to_c7
+	}
+	.loc TokenWallet.sol, 20
+	OVER
+	PUSHCONT {
+		LDREF
+		ENDS
+		CTOS
+	}
+	IF
+	LDU 256
+	ENDS
+	.loc TokenWallet.sol, 0
+	CALLREF {
+		.inline receiveTokens_743e0c9b_internal
+	}
+	CALLREF {
+		.inline c7_to_c4
+	}
+	THROW 0
+}
+
+.fragment root, {
+	DROP
+	ENDS
+	CALLREF {
+		.inline c4_to_c7
+	}
+	GETGLOB 10
+	OVER
+	PUSHCONT {
+		PUSHSLICE xc0000000000000000000000000b7295e20
+		NEWC
+		STSLICE
+		STSLICE
+		ENDC
+		PUSHINT 0
+		SENDRAWMSG
+	}
+	IF
+	THROW 0
+}
+
+.fragment transfer_a9059cbb_internal, {
+	.loc TokenWallet.sol, 27
+	PUSHREF {
+		.blob x4f6e6c79206f776e65722063616e207472616e73666572
+	}
+	GETGLOB 9
+	GETGLOB 11
+	SDEQ
+	THROWARGIFNOT 103
+	.loc TokenWallet.sol, 28
+	PUSHREF {
+		.blob x496e73756666696369656e742062616c616e6365
+	}
+	GETGLOB 12
+	PUSH S2
+	GEQ
+	THROWARGIFNOT 104
+	.loc TokenWallet.sol, 29
+	ACCEPT
+	.loc TokenWallet.sol, 31
+	GETGLOB 12
+	OVER
+	SUB
+	UFITS 256
+	SETGLOB 12
+	.loc TokenWallet.sol, 32
+	PUSHINT 0
+	ROT
+	NEWC
+	STSLICECONST x62_
+	STSLICE
+	SWAP
+	STGRAMS
+	PUSHINT 1
+	STUR 111
+	SWAP
+	NEWC
+	STSLICECONST x494445b6
+	STU 256
+	STBREFR
+	ENDC
+	PUSHINT 64
+	SENDRAWMSG
+	.loc TokenWallet.sol, 0
+}
+
+.fragment transfer, {
+	DROP
+	GETGLOB 6
+	THROWIFNOT 76
+	GETGLOB 2
+	ISNULL
+	IFREF {
+		.inline c4_to_c7
+	}
+	.loc TokenWallet.sol, 26
+	OVER
+	PUSHCONT {
+		LDREF
+		ENDS
+		CTOS
+	}
+	IF
+	LDMSGADDR
+	LDU 256
+	ENDS
+	.loc TokenWallet.sol, 0
+	CALLREF {
+		.inline transfer_a9059cbb_internal
+	}
+	CALLREF {
+		.inline c7_to_c4
+	}
+	THROW 0
+}
+
+.fragment public_function_selector, {
+	DUP
+	PUSHINT 925457952
+	LEQ
+	IFJMPREF {
+		DUP
+		EQINT 1
+		IFJMPREF {
+			.inline constructor
+		}
+		DUP
+		PUSHINT 912579553
+		EQUAL
+		IFJMPREF {
+			.inline transfer
+		}
+		DUP
+		PUSHINT 925457952
+		EQUAL
+		IFJMPREF {
+			.inline root
+		}
+	}
+	DUP
+	PUSHINT 1084683388
+	EQUAL
+	IFJMPREF {
+		.inline balance
+	}
+	DUP
+	PUSHINT 1229211062
+	EQUAL
+	IFJMPREF {
+		.inline receiveTokens
+	}
+	DUP
+	PUSHINT 1594609630
+	EQUAL
+	IFJMPREF {
+		.inline owner
+	}
+}
+
+.fragment main_external, {
+	PUSHSLICE x8000000000000000000000000000000000000000000000000000000000000000001_
+	SETGLOB 9
+	OVER
+	CALLREF {
+		.inline c4_to_c7
+	}
+	LDU 1 ; haveSign msgSlice
+	SWAP
+	PUSHCONT {
+		PUSHPOW2 9
+		LDSLICEX
+		DUP
+		MYADDR
+		NEWC
+		STSLICE
+		STSLICE
+		ENDC
+		HASHCU
+		SWAP
+		LDU 1 ; signatureSlice hashMsgSlice hasPubkey msgSlice
+		SWAP
+		PUSHCONT {
+			LDU 256 ; signatureSlice hashMsgSlice pubkey msgSlice
+			XCHG2 S3, S3
+		}
+		PUSHCONT {
+			XCHG S2
+			GETGLOB 2
+		}
+		IFELSE
+		CHKSIGNU
+		THROWIFNOT 40
+	}
+	PUSHCONT {
+		LDU 1 ; hasPubkey msgSlice
+		SWAP
+		THROWIF 58
+	}
+	IFELSE
+	LDU 64 ; timestamp msgSlice
+	SWAP
+	.inline __replayProtection
+	LDU 32 ; expireAt msgSlice
+	SWAP
+	NOW ; msgSlice expireAt now
+	GREATER ; msgSlice expireAt>now
+	THROWIFNOT 57
+	LDU 32 ; funcId body
+	SWAP
+	CALLREF {
+		.inline public_function_selector
+	}
+	THROW 60
+}
+
+.fragment main_internal, {
+	PUSHROOT
+	CTOS
+	PUSHINT 320
+	SDSKIPFIRST
+	PLDI 1
+	SETGLOB 6
+	PUSH S2
+	CTOS
+	LDU 4 ; bounced tail
+	LDMSGADDR ; bounced src tail
+	DROP
+	SETGLOB 9
+	MODPOW2 1
+	IFRET
+	OVER
+	SEMPTY ; isEmpty
+	IFJMPREF {
+		GETGLOB 6
+		THROWIFNOT 76
+	}
+	OVER
+	LDUQ 32  ; [funcId] body' ok
+	THROWIFNOT 60
+	OVER
+	IFNOTJMPREF {
+		GETGLOB 6
+		THROWIFNOT 76
+	}
+	SWAP
+	CALLREF {
+		.inline public_function_selector
+	}
+	THROW 60
+}
+
+.fragment default_data_cell, {
+	PUSHINT 0
+	PUSHSLICE x2_
+	NEWC
+	PUSHINT 323
+	STZEROES
+	ROTREV
+	NEWC
+	STSLICE
+	STU 256
+	STBREFR
+	ENDC
+}
+
+.fragment upd_only_time_in_c4, {
+	PUSHROOT
+	CTOS
+	LDU 256
+	LDU 64
+	NIP
+	GETGLOB 3
+	ROT
+	NEWC
+	STU 256
+	STU 64
+	STSLICE
+	ENDC
+	POPROOT
+}
+
+.fragment onTickTock, {
+}
+
+; The code below forms a value of the StateInit type.
+.blob x4_ ; split_depth = nothing
+.blob x4_ ; special = nothing
+.blob xc_ ; code = just
+.cell { ; code cell
+	PUSHREFCONT {
+		DICTPUSHCONST 32
+		DICTUGETJMPZ
+		THROW 78
+		.code-dict-cell 32, {
+		}
+		.cell { ; version
+			.blob x736f6c20302e37392e33 ; sol 0.79.3
+		}
+	}
+	POPCTR c3
+	DUP
+	IFNOTJMPREF {
+		.inline main_internal
+	}
+	DUP
+	EQINT -1
+	IFJMPREF {
+		.inline main_external
+	}
+	DUP
+	EQINT -2
+	IFJMPREF {
+		.inline onTickTock
+	}
+	THROW 11
+}
+.blob xc_ ; data = just
+.cell { 
+	.inline-computed-cell default_data_cell, 0
+}
+.blob x4_ ; library = hme_empty

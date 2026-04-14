@@ -1,0 +1,65 @@
+{
+	"ABI version": 2,
+	"version": "2.4",
+	"header": ["pubkey", "time", "expire"],
+	"functions": [
+		{
+			"name": "constructor",
+			"inputs": [
+			],
+			"outputs": [
+			]
+		},
+		{
+			"name": "receiveTokens",
+			"inputs": [
+				{"name":"amount","type":"uint256"}
+			],
+			"outputs": [
+			]
+		},
+		{
+			"name": "transfer",
+			"inputs": [
+				{"name":"toWallet","type":"address"},
+				{"name":"amount","type":"uint256"}
+			],
+			"outputs": [
+			]
+		},
+		{
+			"name": "root",
+			"inputs": [
+			],
+			"outputs": [
+				{"name":"root","type":"address"}
+			]
+		},
+		{
+			"name": "owner",
+			"inputs": [
+			],
+			"outputs": [
+				{"name":"owner","type":"address"}
+			]
+		},
+		{
+			"name": "balance",
+			"inputs": [
+			],
+			"outputs": [
+				{"name":"balance","type":"uint256"}
+			]
+		}
+	],
+	"events": [
+	],
+	"fields": [
+		{"init":true,"name":"_pubkey","type":"uint256"},
+		{"init":false,"name":"_timestamp","type":"uint64"},
+		{"init":false,"name":"_constructorFlag","type":"bool"},
+		{"init":true,"name":"root","type":"address"},
+		{"init":true,"name":"owner","type":"address"},
+		{"init":false,"name":"balance","type":"uint256"}
+	]
+}

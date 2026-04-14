@@ -1,0 +1,196 @@
+{
+	"ABI version": 2,
+	"version": "2.4",
+	"header": ["pubkey", "time", "expire"],
+	"functions": [
+		{
+			"name": "constructor",
+			"inputs": [
+				{"name":"_owner","type":"address"},
+				{"name":"_tokenRoot","type":"address"},
+				{"name":"_name","type":"string"},
+				{"name":"_symbol","type":"string"},
+				{"name":"_creationFeeTxHash","type":"bytes"}
+			],
+			"outputs": [
+			]
+		},
+		{
+			"name": "currentPrice",
+			"inputs": [
+			],
+			"outputs": [
+				{"name":"value0","type":"uint128"}
+			]
+		},
+		{
+			"name": "getBuyPrice",
+			"inputs": [
+				{"name":"tokenAmount","type":"uint256"}
+			],
+			"outputs": [
+				{"name":"value0","type":"uint128"}
+			]
+		},
+		{
+			"name": "buy",
+			"inputs": [
+				{"name":"tokenAmount","type":"uint256"}
+			],
+			"outputs": [
+			]
+		},
+		{
+			"name": "sell",
+			"inputs": [
+				{"name":"tokenAmount","type":"uint256"}
+			],
+			"outputs": [
+			]
+		},
+		{
+			"name": "withdrawLiquidity",
+			"inputs": [
+			],
+			"outputs": [
+			]
+		},
+		{
+			"name": "setDexPool",
+			"inputs": [
+				{"name":"_pool","type":"address"}
+			],
+			"outputs": [
+			]
+		},
+		{
+			"name": "reserveBalance",
+			"inputs": [
+			],
+			"outputs": [
+				{"name":"reserveBalance","type":"uint128"}
+			]
+		},
+		{
+			"name": "totalSupply",
+			"inputs": [
+			],
+			"outputs": [
+				{"name":"totalSupply","type":"uint256"}
+			]
+		},
+		{
+			"name": "migrated",
+			"inputs": [
+			],
+			"outputs": [
+				{"name":"migrated","type":"bool"}
+			]
+		},
+		{
+			"name": "migratedAt",
+			"inputs": [
+			],
+			"outputs": [
+				{"name":"migratedAt","type":"uint32"}
+			]
+		},
+		{
+			"name": "dexPool",
+			"inputs": [
+			],
+			"outputs": [
+				{"name":"dexPool","type":"address"}
+			]
+		},
+		{
+			"name": "owner",
+			"inputs": [
+			],
+			"outputs": [
+				{"name":"owner","type":"address"}
+			]
+		},
+		{
+			"name": "tokenRoot",
+			"inputs": [
+			],
+			"outputs": [
+				{"name":"tokenRoot","type":"address"}
+			]
+		},
+		{
+			"name": "name",
+			"inputs": [
+			],
+			"outputs": [
+				{"name":"name","type":"string"}
+			]
+		},
+		{
+			"name": "symbol",
+			"inputs": [
+			],
+			"outputs": [
+				{"name":"symbol","type":"string"}
+			]
+		},
+		{
+			"name": "creationFeeTxHash",
+			"inputs": [
+			],
+			"outputs": [
+				{"name":"creationFeeTxHash","type":"bytes"}
+			]
+		}
+	],
+	"events": [
+		{
+			"name": "TokensBought",
+			"inputs": [
+				{"name":"buyer","type":"address"},
+				{"name":"shellIn","type":"uint128"},
+				{"name":"tokensOut","type":"uint256"},
+				{"name":"newPrice","type":"uint128"}
+			],
+			"outputs": [
+			]
+		},
+		{
+			"name": "TokensSold",
+			"inputs": [
+				{"name":"seller","type":"address"},
+				{"name":"tokensIn","type":"uint256"},
+				{"name":"shellOut","type":"uint128"},
+				{"name":"newPrice","type":"uint128"}
+			],
+			"outputs": [
+			]
+		},
+		{
+			"name": "MigratedToDex",
+			"inputs": [
+				{"name":"pool","type":"address"},
+				{"name":"liquidity","type":"uint128"},
+				{"name":"lockedUntil","type":"uint32"}
+			],
+			"outputs": [
+			]
+		}
+	],
+	"fields": [
+		{"init":true,"name":"_pubkey","type":"uint256"},
+		{"init":false,"name":"_timestamp","type":"uint64"},
+		{"init":false,"name":"_constructorFlag","type":"bool"},
+		{"init":false,"name":"reserveBalance","type":"uint128"},
+		{"init":false,"name":"totalSupply","type":"uint256"},
+		{"init":false,"name":"migrated","type":"bool"},
+		{"init":false,"name":"migratedAt","type":"uint32"},
+		{"init":false,"name":"dexPool","type":"address"},
+		{"init":false,"name":"owner","type":"address"},
+		{"init":false,"name":"tokenRoot","type":"address"},
+		{"init":false,"name":"name","type":"string"},
+		{"init":false,"name":"symbol","type":"string"},
+		{"init":false,"name":"creationFeeTxHash","type":"bytes"}
+	]
+}

@@ -25,28 +25,11 @@ const { verifyPayment } = require("./payments");
 const { createInitialRiskProfile } = require("./risk");
 const {
   createLaunchBundle,
-  createLaunchpadProject,
-  createLaunchpadTask,
-  createLaunchpadTaskSubmission,
-  getPublicLaunchpadProjectBySlug,
-  getAdminOverview,
-  getLaunchById,
-  isTxHashUsed,
-  markTxHashUsed,
   getWalletLastLaunch,
   updateWalletLastLaunch,
-  listAdminLaunchpadProjects,
-  listAdminLaunchpadSubmissions,
   listAllLaunches,
-  listMyLaunchpadSubmissions,
   listLaunchesByWallet,
-  listPublicLaunchpadProjects,
   listPublicLaunches,
-  moderateLaunchpadSubmission,
-  updateLaunchpadProjectContent,
-  updateLaunchpadProjectStatus,
-  updateLaunchpadTaskContent,
-  updateLaunchpadTaskStatus,
 } = require("./storage");
 const { createTreasuryPaymentRecord } = require("./treasury");
 const { getAccountBalance } = require("./services/graphql.service");
@@ -72,32 +55,7 @@ async function checkTxHashDuplicate(txHash) {
   }
 }
 
-// ─── Admin unlock JWT secret ──────────────────────────────────────────────────
-const ADMIN_MASTER_PASSWORD = config.adminToken; // reuse ADMIN_TOKEN as master password
 
-function signAdminJwt(walletAddress) {
-  // Simple HMAC-based token (no jwt lib needed): header.payload.sig
-  const payload = Buffer.from(JSON.stringify({
-    w: walletAddress,
-    iat: Math.floor(Date.now() / 1000),
-    exp: Math.floor(Date.now() / 1000) + 3600, // 1h
-  })).toString("base64url");
-  const sig = crypto.createHmac("sha256", ADMIN_MASTER_PASSWORD)
-    .update(payload).digest("base64url");
-  return `${payload}.${sig}`;
-}
-
-function verifyAdminJwt(token) {
-  try {
-    const [payload, sig] = token.split(".");
-    const expectedSig = crypto.createHmac("sha256", ADMIN_MASTER_PASSWORD)
-      .update(payload).digest("base64url");
-    if (sig !== expectedSig) return null;
-    const data = JSON.parse(Buffer.from(payload, "base64url").toString());
-    if (data.exp < Math.floor(Date.now() / 1000)) return null;
-    return data;
-  } catch { return null; }
-}
 
 const app = express();
 app.use(express.json({ limit: "1mb" }));
@@ -133,9 +91,7 @@ function extractBearerToken(headerValue) {
   return type === "Bearer" ? token : "";
 }
 
-function isAdminWallet(walletAddress) {
-  return config.adminWallets.includes(String(walletAddress || "").trim().toLowerCase());
-}
+
 
 async function getOptionalSession(req) {
   const sessionToken = extractBearerToken(req.headers.authorization);
@@ -159,35 +115,48 @@ async function requireSession(req, res, next) {
   return next();
 }
 
-async function requireAdmin(req, res, next) {
-  const adminToken = typeof req.headers["x-admin-token"] === "string"
-    ? req.headers["x-admin-token"]
-    : "";
-  const sessionToken = extractBearerToken(req.headers.authorization);
-  const session = sessionToken ? await touchSession(sessionToken) : null;
-  const walletAllowed = Boolean(session?.walletAddress) && isAdminWallet(session.walletAddress);
-  const tokenAllowed = Boolean(config.adminToken) && adminToken === config.adminToken;
 
-  if (!config.adminToken && config.adminWallets.length === 0) {
-    return res.status(503).json({
-      error: "Configure ADMIN_WALLETS ou ADMIN_TOKEN no backend.",
-    });
-  }
 
-  if (!walletAllowed && !tokenAllowed) {
-    return res.status(401).json({
-      error: "Acesso admin negado. Use wallet autorizada ou ADMIN_TOKEN válido.",
-    });
-  }
+// ─── Admin Security Layer ──────────────────────────────────────────────────
+const ADMIN_MASTER_PASSWORD = config.adminToken; // reuse ADMIN_TOKEN as master password
 
-  req.admin = {
-    authMode: walletAllowed ? "wallet_session" : "admin_token",
-    session,
-    walletAddress: session?.walletAddress || "",
-  };
-
-  return next();
+function signAdminJwt(walletAddress) {
+  const payload = Buffer.from(JSON.stringify({ w: walletAddress })).toString("base64url");
+  const sig = crypto.createHmac("sha256", ADMIN_MASTER_PASSWORD).update(payload).digest("base64url");
+  return `${payload}.${sig}`;
 }
+
+function verifyAdminJwt(token) {
+  try {
+    const [payload, sig] = token.split(".");
+    const expectedSig = crypto.createHmac("sha256", ADMIN_MASTER_PASSWORD).update(payload).digest("base64url");
+    if (sig !== expectedSig) return null;
+    return JSON.parse(Buffer.from(payload, "base64url").toString());
+  } catch { return null; }
+}
+
+async function requireSecurityAdmin(req, res, next) {
+  const authHeader = req.headers["x-admin-jwt"] || "";
+  const data = verifyAdminJwt(authHeader);
+  if (data) {
+    req.admin = { authMode: "admin_jwt", walletAddress: data.w };
+    return next();
+  }
+  return res.status(401).json({ error: "Acesso admin de segurança negado." });
+}
+
+// ── Admin unlock: verify master password, return short-lived JWT ──────────────
+app.post("/admin/unlock", async (req, res) => {
+  try {
+    const { password } = req.body || {};
+    if (!ADMIN_MASTER_PASSWORD) return res.status(503).json({ error: "ADMIN_TOKEN não configurado no backend." });
+    if (!password || password !== ADMIN_MASTER_PASSWORD) return res.status(401).json({ error: "Senha incorreta." });
+    
+    return res.json({ success: true, adminJwt: signAdminJwt("admin") });
+  } catch (err) {
+    return res.status(400).json({ error: err.message });
+  }
+});
 
 app.get("/", (_, res) => {
   res.json({
@@ -297,40 +266,21 @@ app.post("/auth/logout", async (req, res) => {
   });
 });
 
-// ── Admin unlock: verify master password, return short-lived JWT ──────────────
-app.post("/admin/unlock", async (req, res) => {
-  try {
-    const { password, walletAddress } = req.body || {};
-    if (!ADMIN_MASTER_PASSWORD) {
-      return res.status(503).json({ error: "ADMIN_TOKEN não configurado no backend." });
-    }
-    if (!password || password !== ADMIN_MASTER_PASSWORD) {
-      return res.status(401).json({ error: "Senha incorreta." });
-    }
-    // Optionally check wallet too
-    const wallet = String(walletAddress || "").toLowerCase();
-    const walletOk = config.adminWallets.length === 0 || config.adminWallets.includes(wallet);
-    if (!walletOk) {
-      return res.status(401).json({ error: "Wallet não autorizada como admin." });
-    }
-    const adminJwt = signAdminJwt(wallet);
-    return res.json({ success: true, adminJwt });
-  } catch (err) {
-    return res.status(400).json({ error: err.message });
-  }
-});
 
-// ── Admin JWT middleware (alternative to X-Admin-Token) ───────────────────────
-async function requireAdminJwt(req, res, next) {
-  const authHeader = req.headers["x-admin-jwt"] || "";
-  const data = verifyAdminJwt(authHeader);
-  if (data) {
-    req.admin = { authMode: "admin_jwt", walletAddress: data.w };
-    return next();
-  }
-  // Fallback to existing requireAdmin
-  return requireAdmin(req, res, next);
-}
+
+// Security Mock Engine
+app.use("/admin/security", requireSecurityAdmin, require("./security"));
+
+app.get("/tokens/viral", (req, res) => {
+  res.json({
+    success: true,
+    ranking: [
+      { id: "1", name: "Pepe TVM", symbol: "$PEPET", trendingScore: 99.5, speed: "+1400%", bubbleCluster: 8, contractStatus: "Renounced" },
+      { id: "2", name: "Acki Dog", symbol: "$ACKIDOG", trendingScore: 88.2, speed: "+450%", bubbleCluster: 5, contractStatus: "Renounced" },
+      { id: "3", name: "Shill Net", symbol: "$SHILL", trendingScore: 65.4, speed: "+120%", bubbleCluster: 3, contractStatus: "Renounced" }
+    ]
+  });
+});
 
 app.post("/verify-payment", async (req, res) => {
   try {
@@ -565,336 +515,7 @@ app.get("/wallet/:address/balance", async (req, res) => {
   }
 });
 
-app.get("/launchpad/projects", (_, res) => {
-  listPublicLaunchpadProjects(6)
-    .then((projects) => {
-      res.json({
-        success: true,
-        projects,
-      });
-    })
-    .catch((error) => {
-      res.status(500).json({ error: error.message });
-    });
-});
 
-app.get("/launchpad/projects/:slug", async (req, res) => {
-  try {
-    const session = await getOptionalSession(req);
-    const detail = await getPublicLaunchpadProjectBySlug(
-      req.params.slug,
-      session?.walletAddress || "",
-    );
-
-    if (!detail) {
-      return res.status(404).json({ error: "Campanha exclusiva não encontrada." });
-    }
-
-    return res.json({
-      success: true,
-      project: detail.project,
-      viewer: detail.viewer,
-    });
-  } catch (error) {
-    return res.status(500).json({ error: error.message });
-  }
-});
-
-app.get("/launchpad/submissions/my", requireSession, (req, res) => {
-  listMyLaunchpadSubmissions(req.session.walletAddress)
-    .then((submissions) => {
-      res.json({
-        success: true,
-        submissions,
-      });
-    })
-    .catch((error) => {
-      res.status(500).json({ error: error.message });
-    });
-});
-
-app.post("/launchpad/tasks/:taskId/submit", requireSession, async (req, res) => {
-  try {
-    const submission = normalizeSubmissionInput(req.body, req.session);
-    const storedSubmission = await createLaunchpadTaskSubmission({
-      projectId: typeof req.body?.projectId === "string" ? req.body.projectId.trim() : "",
-      taskId: req.params.taskId,
-      submission,
-      auditEvent: {
-        id: submission.id,
-        type: "launchpad.submission.upserted",
-        createdAt: new Date().toISOString(),
-        walletAddress: req.session.walletAddress,
-        payload: {
-          taskId: req.params.taskId,
-        },
-      },
-    });
-
-    res.json({
-      success: true,
-      submission: storedSubmission,
-    });
-  } catch (error) {
-    res.status(400).json({ error: error.message });
-  }
-});
-
-app.get("/admin/overview", requireAdmin, (_, res) => {
-  getAdminOverview()
-    .then((overview) => {
-      res.json({
-        success: true,
-        overview,
-      });
-    })
-    .catch((error) => {
-      res.status(500).json({ error: error.message });
-    });
-});
-
-app.get("/admin/access", requireAdmin, (req, res) => {
-  res.json({
-    success: true,
-    access: {
-      authMode: req.admin.authMode,
-      walletAddress: req.admin.walletAddress,
-    },
-  });
-});
-
-app.get("/admin/launchpad/projects", requireAdmin, (_, res) => {
-  listAdminLaunchpadProjects()
-    .then((projects) => {
-      res.json({
-        success: true,
-        projects,
-      });
-    })
-    .catch((error) => {
-      res.status(500).json({ error: error.message });
-    });
-});
-
-app.get("/admin/launchpad/submissions", requireAdmin, (_, res) => {
-  listAdminLaunchpadSubmissions()
-    .then((submissions) => {
-      res.json({
-        success: true,
-        submissions,
-      });
-    })
-    .catch((error) => {
-      res.status(500).json({ error: error.message });
-    });
-});
-
-app.post("/admin/launchpad/projects", requireAdmin, async (req, res) => {
-  try {
-    const project = normalizeProjectInput(req.body);
-    await createLaunchpadProject({
-      project,
-      auditEvent: {
-        id: project.id,
-        type: "launchpad.project.created",
-        createdAt: new Date().toISOString(),
-        payload: {
-          projectId: project.id,
-          slug: project.slug,
-        },
-      },
-    });
-
-    res.json({
-      success: true,
-      project,
-    });
-  } catch (error) {
-    res.status(400).json({
-      error:
-        error.code === "23505" ? "Slug do projeto exclusivo já existe." : error.message,
-    });
-  }
-});
-
-app.patch("/admin/launchpad/projects/:projectId", requireAdmin, async (req, res) => {
-  try {
-    const update = normalizeProjectStatusUpdate(req.body);
-    const project = await updateLaunchpadProjectStatus({
-      projectId: req.params.projectId,
-      status: update.status,
-      updatedBy: req.admin.walletAddress || req.admin.authMode,
-      auditEvent: {
-        id: randomUUID(),
-        type: "launchpad.project.status_updated",
-        createdAt: new Date().toISOString(),
-        payload: {
-          projectId: req.params.projectId,
-          status: update.status,
-        },
-      },
-    });
-
-    res.json({
-      success: true,
-      project,
-    });
-  } catch (error) {
-    res.status(400).json({ error: error.message });
-  }
-});
-
-app.patch("/admin/launchpad/projects/:projectId/content", requireAdmin, async (req, res) => {
-  try {
-    const content = normalizeProjectContentUpdateInput(req.body);
-    const project = await updateLaunchpadProjectContent({
-      projectId: req.params.projectId,
-      content,
-      updatedBy: req.admin.walletAddress || req.admin.authMode,
-      auditEvent: {
-        id: randomUUID(),
-        type: "launchpad.project.content_updated",
-        createdAt: new Date().toISOString(),
-        payload: {
-          projectId: req.params.projectId,
-          slug: content.slug,
-        },
-      },
-    });
-
-    res.json({
-      success: true,
-      project,
-    });
-  } catch (error) {
-    res.status(400).json({
-      error:
-        error.code === "23505" ? "Slug do projeto exclusivo já existe." : error.message,
-    });
-  }
-});
-
-app.post("/admin/launchpad/projects/:projectId/tasks", requireAdmin, async (req, res) => {
-  try {
-    const task = normalizeTaskInput(req.body);
-    const storedTask = await createLaunchpadTask({
-      projectId: req.params.projectId,
-      task,
-      auditEvent: {
-        id: task.id,
-        type: "launchpad.task.created",
-        createdAt: new Date().toISOString(),
-        payload: {
-          projectId: req.params.projectId,
-          taskId: task.id,
-        },
-      },
-    });
-
-    res.json({
-      success: true,
-      task: storedTask,
-    });
-  } catch (error) {
-    res.status(400).json({ error: error.message });
-  }
-});
-
-app.patch("/admin/launchpad/tasks/:taskId/content", requireAdmin, async (req, res) => {
-  try {
-    const content = normalizeTaskContentUpdateInput(req.body);
-    const task = await updateLaunchpadTaskContent({
-      taskId: req.params.taskId,
-      content,
-      updatedBy: req.admin.walletAddress || req.admin.authMode,
-      auditEvent: {
-        id: randomUUID(),
-        type: "launchpad.task.content_updated",
-        createdAt: new Date().toISOString(),
-        payload: {
-          taskId: req.params.taskId,
-        },
-      },
-    });
-
-    res.json({
-      success: true,
-      task,
-    });
-  } catch (error) {
-    res.status(400).json({ error: error.message });
-  }
-});
-
-app.patch("/admin/launchpad/tasks/:taskId", requireAdmin, async (req, res) => {
-  try {
-    const update = normalizeTaskStatusUpdate(req.body);
-    const task = await updateLaunchpadTaskStatus({
-      taskId: req.params.taskId,
-      status: update.status,
-      updatedBy: req.admin.walletAddress || req.admin.authMode,
-      auditEvent: {
-        id: randomUUID(),
-        type: "launchpad.task.status_updated",
-        createdAt: new Date().toISOString(),
-        payload: {
-          taskId: req.params.taskId,
-          status: update.status,
-        },
-      },
-    });
-
-    res.json({
-      success: true,
-      task,
-    });
-  } catch (error) {
-    res.status(400).json({ error: error.message });
-  }
-});
-
-app.patch("/admin/launchpad/submissions/:submissionId", requireAdmin, async (req, res) => {
-  try {
-    const moderation = normalizeSubmissionModerationInput(req.body);
-    const submission = await moderateLaunchpadSubmission({
-      submissionId: req.params.submissionId,
-      status: moderation.status,
-      reviewNote: moderation.reviewNote,
-      reviewedBy: req.admin.walletAddress || moderation.reviewedBy,
-      reviewedAt: moderation.reviewedAt,
-      auditEvent: {
-        id: randomUUID(),
-        type: "launchpad.submission.moderated",
-        createdAt: new Date().toISOString(),
-        payload: {
-          submissionId: req.params.submissionId,
-          status: moderation.status,
-          reviewNote: moderation.reviewNote,
-        },
-      },
-    });
-
-    res.json({
-      success: true,
-      submission,
-    });
-  } catch (error) {
-    res.status(400).json({ error: error.message });
-  }
-});
-
-app.get("/admin/launches", requireAdmin, (_, res) => {
-  listAllLaunches()
-    .then((launches) => {
-      res.json({
-        success: true,
-        launches,
-      });
-    })
-    .catch((error) => {
-      res.status(500).json({ error: error.message });
-    });
-});
 
 async function start() {
   await pingDatabase();

@@ -7,10 +7,7 @@ import { getSession } from "../lib/api";
 
 const SESSION_STORAGE_KEY = "ackimeme_session_token";
 
-const ADMIN_WALLETS = (process.env.NEXT_PUBLIC_ADMIN_WALLETS || "")
-  .split(",")
-  .map((w) => w.trim().toLowerCase())
-  .filter(Boolean);
+
 
 function GlobalNav({ session, isAdmin }) {
   const router = useRouter();
@@ -29,12 +26,6 @@ function GlobalNav({ session, isAdmin }) {
         <Link href="/" style={nav.link}>
           <span style={nav.linkIcon}>◈</span> Board
         </Link>
-        <Link href="/exclusive" style={nav.link}>
-          <span style={nav.linkIcon}>★</span> Launchpad
-        </Link>
-        {isAdmin && (
-          <Link href="/admin" style={nav.adminLink}>⚙ Admin</Link>
-        )}
         <Link href="/create" style={nav.createBtn}>
           🚀 Create Coin
         </Link>
@@ -53,7 +44,6 @@ function GlobalNav({ session, isAdmin }) {
 
 export default function App({ Component, pageProps }) {
   const [session, setSession] = useState(null);
-  const [isAdmin, setIsAdmin] = useState(false);
 
   useEffect(() => {
     if (typeof window === "undefined") return;
@@ -63,10 +53,6 @@ export default function App({ Component, pageProps }) {
     getSession(token)
       .then((res) => {
         setSession(res.session);
-        const wallet = (res.session?.walletAddress || "").toLowerCase();
-        if (ADMIN_WALLETS.length > 0 && ADMIN_WALLETS.includes(wallet)) {
-          setIsAdmin(true);
-        }
       })
       .catch(() => {
         window.localStorage.removeItem(SESSION_STORAGE_KEY);
@@ -75,7 +61,7 @@ export default function App({ Component, pageProps }) {
 
   return (
     <>
-      <GlobalNav session={session} isAdmin={isAdmin} />
+      <GlobalNav session={session} />
       <Component {...pageProps} />
       <Analytics />
     </>
@@ -149,16 +135,7 @@ const nav = {
     fontSize: "10px",
     opacity: 0.6,
   },
-  adminLink: {
-    color: "#f97316",
-    fontSize: "12px",
-    fontWeight: 600,
-    textDecoration: "none",
-    padding: "5px 10px",
-    borderRadius: "6px",
-    background: "rgba(249,115,22,0.08)",
-    border: "1px solid rgba(249,115,22,0.2)",
-  },
+
   createBtn: {
     color: "#000",
     fontSize: "13px",

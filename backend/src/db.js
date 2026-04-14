@@ -7,7 +7,7 @@ const migrationsDir = path.join(__dirname, "migrations");
 
 const pool = new Pool({
   connectionString: config.databaseUrl,
-  ssl: { rejectUnauthorized: false }, 
+  ssl: process.env.NODE_ENV === "production" ? { rejectUnauthorized: false } : false,
   connectionTimeoutMillis: 30000, 
 });
 

@@ -5,22 +5,16 @@ const { config } = require("../config");
 let client = null;
 
 try {
-  const lib = libNode();
-  if (lib) {
-    TvmClient.useBinaryLibrary(lib);
-    client = new TvmClient({
-      network: {
-        endpoints: [config.graphqlUrl || "https://shellnet.ackinacki.org/graphql"],
-      },
-    });
-    console.log("[Deployer] TVM Binary Library carregada com sucesso.");
-  } else {
-    throw new Error("Addon não retornado pelo libNode.");
-  }
+  TvmClient.useBinaryLibrary(libNode);
+  client = new TvmClient({
+    network: {
+      endpoints: [config.graphqlUrl || "https://shellnet.ackinacki.org/graphql"],
+    },
+  });
+  console.log("[Deployer] TVM SDK Library carregada (libNode).");
 } catch (e) {
-  console.warn("[Deployer] TVM Addon não encontrado ou incompatível. Rodando em modo SIMULADO.");
+  console.warn("[Deployer] Erro ao carregar TVM SDK. Rodando em modo SIMULADO.", e.message);
 }
-
 
 /**
  * Simula ou executa o deploy do ecossistema do token (Root + BondingCurve).

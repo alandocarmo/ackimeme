@@ -1,0 +1,108 @@
+{
+	"ABI version": 2,
+	"version": "2.4",
+	"header": ["pubkey", "time", "expire"],
+	"functions": [
+		{
+			"name": "constructor",
+			"inputs": [
+				{"name":"_name","type":"string"},
+				{"name":"_symbol","type":"string"},
+				{"name":"_decimals","type":"uint8"},
+				{"name":"_walletCode","type":"cell"}
+			],
+			"outputs": [
+			]
+		},
+		{
+			"name": "getWalletAddress",
+			"inputs": [
+				{"name":"ownerAddress","type":"address"}
+			],
+			"outputs": [
+				{"name":"value0","type":"address"}
+			]
+		},
+		{
+			"name": "deployWallet",
+			"inputs": [
+				{"name":"ownerAddress","type":"address"},
+				{"name":"deployValue","type":"uint128"}
+			],
+			"outputs": [
+				{"name":"value0","type":"address"}
+			]
+		},
+		{
+			"name": "mint",
+			"inputs": [
+				{"name":"recipient","type":"address"},
+				{"name":"amount","type":"uint256"},
+				{"name":"deployWalletValue","type":"uint128"}
+			],
+			"outputs": [
+			]
+		},
+		{
+			"name": "name",
+			"inputs": [
+			],
+			"outputs": [
+				{"name":"name","type":"string"}
+			]
+		},
+		{
+			"name": "symbol",
+			"inputs": [
+			],
+			"outputs": [
+				{"name":"symbol","type":"string"}
+			]
+		},
+		{
+			"name": "decimals",
+			"inputs": [
+			],
+			"outputs": [
+				{"name":"decimals","type":"uint8"}
+			]
+		},
+		{
+			"name": "totalSupply",
+			"inputs": [
+			],
+			"outputs": [
+				{"name":"totalSupply","type":"uint256"}
+			]
+		},
+		{
+			"name": "owner",
+			"inputs": [
+			],
+			"outputs": [
+				{"name":"owner","type":"address"}
+			]
+		},
+		{
+			"name": "walletCode",
+			"inputs": [
+			],
+			"outputs": [
+				{"name":"walletCode","type":"cell"}
+			]
+		}
+	],
+	"events": [
+	],
+	"fields": [
+		{"init":true,"name":"_pubkey","type":"uint256"},
+		{"init":false,"name":"_timestamp","type":"uint64"},
+		{"init":false,"name":"_constructorFlag","type":"bool"},
+		{"init":false,"name":"name","type":"string"},
+		{"init":false,"name":"symbol","type":"string"},
+		{"init":false,"name":"decimals","type":"uint8"},
+		{"init":false,"name":"totalSupply","type":"uint256"},
+		{"init":false,"name":"owner","type":"address"},
+		{"init":false,"name":"walletCode","type":"cell"}
+	]
+}

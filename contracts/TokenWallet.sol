@@ -1,37 +1,34 @@
 pragma ton-solidity >= 0.53.0;
 pragma AbiHeader expire;
+pragma AbiHeader pubkey;
 
-interface ITokenRoot {
-    //
+interface ITokenWallet {
+    function receiveTokens(uint256 amount) external;
 }
 
-contract TokenWallet {
-    uint128 public balance;
-    address public owner;
-    address public root;
+contract TokenWallet is ITokenWallet {
+    address static public root;
+    address static public owner;
+    
+    uint256 public balance;
 
-    constructor(address _owner, address _root) public {
-        require(tvm.pubkey() != 0, 101);
-        require(msg.pubkey() == tvm.pubkey(), 102);
+    constructor() {
+        require(msg.sender == root, 101, "Only root can deploy wallet");
         tvm.accept();
-        owner = _owner;
-        root = _root;
     }
 
-    function acceptTransfer(uint128 amount, address sender) public {
-        // Can only be called by other wallets or the root
-        require(msg.sender == root, 104);
+    function receiveTokens(uint256 amount) external override {
+        require(msg.sender == root, 102, "Only root can mint tokens into wallet");
         tvm.accept();
         balance += amount;
     }
 
-    function transfer(address to, uint128 amount) public {
-        require(msg.sender == owner, 105);
-        require(balance >= amount, 106);
+    function transfer(address toWallet, uint256 amount) public {
+        require(msg.sender == owner, 103, "Only owner can transfer");
+        require(balance >= amount, 104, "Insufficient balance");
         tvm.accept();
         
         balance -= amount;
-        // In TVM we build the destination wallet address via state init 
-        // and call `ITokenWallet(dest).acceptTransfer{value: 0.1 ton}(amount, owner)`
+        ITokenWallet(toWallet).receiveTokens{value: varuint16(0), flag: 64}(amount);
     }
 }
