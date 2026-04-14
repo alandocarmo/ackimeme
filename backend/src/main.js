@@ -30,6 +30,11 @@ const {
   createLaunchpadTaskSubmission,
   getPublicLaunchpadProjectBySlug,
   getAdminOverview,
+  getLaunchById,
+  isTxHashUsed,
+  markTxHashUsed,
+  getWalletLastLaunch,
+  updateWalletLastLaunch,
   listAdminLaunchpadProjects,
   listAdminLaunchpadSubmissions,
   listAllLaunches,
@@ -44,19 +49,27 @@ const {
   updateLaunchpadTaskStatus,
 } = require("./storage");
 const { createTreasuryPaymentRecord } = require("./treasury");
+const { getAccountBalance } = require("./services/graphql.service");
+const { uploadToIPFS, createTokenMetadata } = require("./services/ipfs.service");
+const { deployTokenEcosystem } = require("./services/deployer.service");
 
-// ─── Rate Limit: 1 token creation per wallet per hour ─────────────────────────
+
+// ─── Rate Limit & txHash: now persistent in PostgreSQL ───────────────────────
 const RATE_LIMIT_WINDOW_MS = 60 * 60 * 1000; // 1 hour
-const walletLastLaunch = new Map();
 
-function checkWalletRateLimit(walletAddress) {
-  const key = String(walletAddress || "").toLowerCase();
-  const lastTime = walletLastLaunch.get(key);
-  if (lastTime && Date.now() - lastTime < RATE_LIMIT_WINDOW_MS) {
-    const waitMinutes = Math.ceil((RATE_LIMIT_WINDOW_MS - (Date.now() - lastTime)) / 60000);
+async function checkWalletRateLimit(walletAddress) {
+  const lastTime = await getWalletLastLaunch(walletAddress);
+  if (lastTime && Date.now() - lastTime.getTime() < RATE_LIMIT_WINDOW_MS) {
+    const waitMinutes = Math.ceil((RATE_LIMIT_WINDOW_MS - (Date.now() - lastTime.getTime())) / 60000);
     throw new Error(`Rate limit: aguarde ${waitMinutes} minuto(s) para criar outro token.`);
   }
-  walletLastLaunch.set(key, Date.now());
+}
+
+async function checkTxHashDuplicate(txHash) {
+  const used = await isTxHashUsed(txHash);
+  if (used) {
+    throw new Error("Este txHash já foi utilizado para criar outro token. Use uma nova transação.");
+  }
 }
 
 // ─── Admin unlock JWT secret ──────────────────────────────────────────────────
@@ -69,7 +82,7 @@ function signAdminJwt(walletAddress) {
     iat: Math.floor(Date.now() / 1000),
     exp: Math.floor(Date.now() / 1000) + 3600, // 1h
   })).toString("base64url");
-  const sig = crypto.createHmac("sha256", ADMIN_MASTER_PASSWORD || "dev_secret")
+  const sig = crypto.createHmac("sha256", ADMIN_MASTER_PASSWORD)
     .update(payload).digest("base64url");
   return `${payload}.${sig}`;
 }
@@ -77,7 +90,7 @@ function signAdminJwt(walletAddress) {
 function verifyAdminJwt(token) {
   try {
     const [payload, sig] = token.split(".");
-    const expectedSig = crypto.createHmac("sha256", ADMIN_MASTER_PASSWORD || "dev_secret")
+    const expectedSig = crypto.createHmac("sha256", ADMIN_MASTER_PASSWORD)
       .update(payload).digest("base64url");
     if (sig !== expectedSig) return null;
     const data = JSON.parse(Buffer.from(payload, "base64url").toString());
@@ -359,8 +372,11 @@ app.post("/launch-request", requireSession, async (req, res) => {
   try {
     const launchRequest = normalizeLaunchRequest(req.body, req.session);
 
-    // ── Rate limit: 1 token per wallet per hour ───────────────────────────────
-    checkWalletRateLimit(launchRequest.creator.wallet);
+    // ── Rate limit: 1 token per wallet per hour (persistent) ─────────────────
+    await checkWalletRateLimit(launchRequest.creator.wallet);
+
+    // ── Duplicate txHash guard (persistent) ──────────────────────────────────
+    await checkTxHashDuplicate(launchRequest.payment.txHash);
 
     const payment = await verifyPayment({
       walletAddress: launchRequest.creator.wallet,
@@ -386,7 +402,38 @@ app.post("/launch-request", requireSession, async (req, res) => {
       riskProfile,
     });
 
+    // ── Phase 2: On-chain Automation & IPFS ──────────────────────────────────
+    console.log(`[Launch] Iniciando automação on-chain para ${launchTicket.id}`);
+    
+    // 1. Upload Metadata to IPFS
+    const metadata = createTokenMetadata(launchRequest);
+    const ipfsHash = await uploadToIPFS(metadata);
+    
+    // 2. Trigger On-chain Deployment
+    const deployResult = await deployTokenEcosystem({
+      name: launchRequest.coin.name,
+      symbol: launchRequest.coin.symbol,
+      totalSupply: launchRequest.coin.totalSupply,
+      ipfsHash: ipfsHash,
+      creatorWallet: launchRequest.creator.wallet
+    });
+
+    // 3. Attach on-chain data to ticket
+    launchTicket.onchainData = {
+      ipfsHash,
+      tokenRootAddress: deployResult.tokenRoot,
+      bondingCurveAddress: deployResult.bondingCurve,
+      deployStatus: deployResult.status
+    };
+
+    if (deployResult.status === "on_chain_init" || deployResult.status === "deployed") {
+      launchTicket.status = "on_chain_deployed";
+      launchTicket.mintingAvailable = true;
+      launchTicket.note = `Token criado com sucesso no IPFS (${ipfsHash}) e instanciado na Acki Nacki.`;
+    }
+
     await createLaunchBundle({
+
       launchTicket,
       auditEvent: {
         id: launchTicket.id,
@@ -397,6 +444,10 @@ app.post("/launch-request", requireSession, async (req, res) => {
         payload: {},
       },
     });
+
+    // Persist rate limit and txHash after successful creation
+    await markTxHashUsed(launchRequest.payment.txHash, launchRequest.creator.wallet);
+    await updateWalletLastLaunch(launchRequest.creator.wallet);
 
     res.json({
       success: true,
@@ -448,12 +499,70 @@ app.get("/launches/public", (_, res) => {
             status: launch.riskProfile.status,
             score: launch.riskProfile.score,
           },
+          onchainData: {
+            ipfsHash: launch.ipfsHash,
+            tokenRootAddress: launch.tokenRootAddress,
+            bondingCurveAddress: launch.bondingCurveAddress,
+          },
         })),
+
       });
     })
     .catch((error) => {
       res.status(500).json({ error: error.message });
     });
+});
+
+// ── GET single token by ID (direct query — no full table scan) ───────────────
+app.get("/launches/:id", async (req, res) => {
+  try {
+    const found = await getLaunchById(req.params.id);
+    if (!found) return res.status(404).json({ error: "Token não encontrado." });
+    res.json({
+      success: true,
+      launch: {
+        id: found.id,
+        status: found.status,
+        createdAt: found.createdAt,
+        creatorWallet: found.launchRequest.creator.wallet,
+        coin: {
+          name: found.launchRequest.coin.name,
+          symbol: found.launchRequest.coin.symbol,
+          tagline: found.launchRequest.coin.tagline,
+          description: found.launchRequest.coin.description,
+          totalSupply: found.launchRequest.coin.totalSupply,
+          logoUrl: found.launchRequest.coin.logoUrl,
+        },
+        links: found.launchRequest.links || {},
+        treasuryPayment: {
+          tokenSymbol: found.treasuryPayment.tokenSymbol,
+          amount: found.treasuryPayment.amount,
+        },
+        riskProfile: {
+          status: found.riskProfile.status,
+          score: found.riskProfile.score,
+        },
+        onchainData: {
+          ipfsHash: found.ipfsHash,
+          tokenRootAddress: found.tokenRootAddress,
+          bondingCurveAddress: found.bondingCurveAddress,
+        },
+      },
+    });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// ── GET wallet SHELL balance (for UI pre-flight check) ───────────────────────
+app.get("/wallet/:address/balance", async (req, res) => {
+  try {
+    const balance = await getAccountBalance(req.params.address);
+    if (!balance) return res.status(404).json({ error: "Conta não encontrada na Acki Nacki." });
+    res.json({ success: true, balance });
+  } catch (err) {
+    res.status(400).json({ error: err.message });
+  }
 });
 
 app.get("/launchpad/projects", (_, res) => {

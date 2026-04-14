@@ -1,939 +1,513 @@
 import Head from "next/head";
 import Link from "next/link";
-import Script from "next/script";
-import { startTransition, useDeferredValue, useEffect, useState } from "react";
-import {
-  createAuthChallenge,
-  createLaunchRequest,
-  getConfig,
-  getMyLaunches,
-  getMyLaunchpadSubmissions,
-  getPublicLaunches,
-  getPublicLaunchpadProjects,
-  getSession,
-  logout,
-  submitLaunchpadTask,
-  verifyAuthChallenge,
-  verifyPayment,
-} from "../lib/api";
-import styles from "../styles/Home.module.css";
+import { useDeferredValue, useEffect, useState } from "react";
+import { getPublicLaunches } from "../lib/api";
 
-const SESSION_STORAGE_KEY = "ackimeme_session_token";
-const FALLBACK_CONFIG = {
-  appName: process.env.NEXT_PUBLIC_APP_NAME || "AckiMeme",
-  network: process.env.NEXT_PUBLIC_NETWORK_LABEL || "Acki Nacki",
-  payment: {
-    feeWallet: "Configure backend/.env",
-    creationFees: [
-      { tokenSymbol: "SHELL", minimumAmount: 3 },
-      { tokenSymbol: "USDC", minimumAmount: 10 },
-    ],
-    appFeeSharePercent: 100,
-    networkSettlementToken: "VMSHELL",
-  },
-  auth: { challengeTtlSeconds: 300, telegramBindingRequired: false },
-  launch: {
-    mintingMode: "manual-review",
-    symbolMaxLength: 10,
-    nameMaxLength: 32,
-    descriptionMaxLength: 280,
-    distribution: { creatorPercent: 80, lockedReservePercent: 20 },
-  },
-  launchpad: {
-    mode: "admin_curated_exclusive",
-    submissionReview: "manual_review",
-  },
-};
-const INITIAL_FORM = {
-  name: "",
-  symbol: "",
-  tagline: "",
-  description: "",
-  totalSupply: "1000000000",
-  logoUrl: "",
-  website: "",
-  xUrl: "",
-  telegramUrl: "",
-  creatorWallet: "",
-  txHash: "",
-  paymentTokenSymbol: "SHELL",
-};
-const INITIAL_AUTH_FORM = { walletAddress: "", publicKey: "", signature: "" };
+function formatTimeAgo(dateStr) {
+  if (!dateStr) return "";
+  const diff = Date.now() - new Date(dateStr).getTime();
+  const mins = Math.floor(diff / 60000);
+  if (mins < 1) return "just now";
+  if (mins < 60) return `${mins}m ago`;
+  const hrs = Math.floor(mins / 60);
+  if (hrs < 24) return `${hrs}h ago`;
+  const days = Math.floor(hrs / 24);
+  return `${days}d ago`;
+}
 
-function sanitizeSymbol(value) {
-  return String(value || "").toUpperCase().replace(/[^A-Z0-9]/g, "").slice(0, 10);
+function compactWallet(w) {
+  const s = String(w || "");
+  return s.length <= 14 ? s : `${s.slice(0, 6)}…${s.slice(-4)}`;
 }
-function formatNumberString(value) {
-  const digits = String(value || "").replace(/[^\d]/g, "");
-  return digits ? digits.replace(/\B(?=(\d{3})+(?!\d))/g, ".") : "0";
+
+function formatSupply(val) {
+  const n = Number(String(val || "0").replace(/[.,]/g, ""));
+  if (n >= 1e9) return `${(n / 1e9).toFixed(1)}B`;
+  if (n >= 1e6) return `${(n / 1e6).toFixed(1)}M`;
+  if (n >= 1e3) return `${(n / 1e3).toFixed(0)}K`;
+  return String(n);
 }
-function formatDateTime(value) {
-  return value ? new Date(value).toLocaleString("pt-BR") : "";
+
+const INITIAL_PRICE = 0.000000030;
+const MIGRATION_THRESHOLD = 69000;
+
+function calcProgress(supply) {
+  const s = Number(String(supply || "1000000000").replace(/[.,]/g, "")) || 1e9;
+  const mcap = INITIAL_PRICE * s;
+  return Math.min(((mcap / MIGRATION_THRESHOLD) * 100), 100).toFixed(1);
 }
-function formatShortDate(value) {
-  return value
-    ? new Date(value).toLocaleDateString("pt-BR", {
-        day: "2-digit",
-        month: "2-digit",
-        hour: "2-digit",
-        minute: "2-digit",
-      })
-    : "";
+
+function matchesSearch(launch, q) {
+  if (!q) return true;
+  const hay = [launch.coin?.name, launch.coin?.symbol, launch.coin?.tagline, launch.creatorWallet].join(" ").toLowerCase();
+  return hay.includes(q.toLowerCase());
 }
-function truncateText(value, length = 120) {
-  const text = String(value || "").trim();
-  return text.length <= length ? text : `${text.slice(0, length).trim()}...`;
-}
-function compactWallet(value) {
-  const text = String(value || "").trim();
-  return text.length <= 14 ? text : `${text.slice(0, 6)}...${text.slice(-4)}`;
-}
-function getTelegramInitData() {
-  if (typeof window === "undefined") return "";
-  return window.Telegram?.WebApp?.initData || "";
-}
-function telegramGreeting(webApp) {
-  const user = webApp?.initDataUnsafe?.user;
-  if (user?.first_name) return `Sessão Telegram ativa para ${user.first_name}`;
-  if (user?.username) return `Sessão Telegram ativa para @${user.username}`;
-  return "Abra esta página pelo bot para usar como Telegram Mini App.";
-}
-function buildSubmissionMap(submissions) {
-  const map = {};
-  for (const submission of submissions) map[submission.taskId] = submission;
-  return map;
-}
-function launchMatchesSearch(launch, query) {
-  if (!query) return true;
-  const haystack = [
-    launch.coin?.name,
-    launch.coin?.symbol,
-    launch.coin?.tagline,
-    launch.coin?.description,
-    launch.creatorWallet,
-  ]
-    .join(" ")
-    .toLowerCase();
-  return haystack.includes(query.toLowerCase());
+
+// Generate a consistent color from a string
+function hashColor(str) {
+  let hash = 0;
+  for (let i = 0; i < (str || "").length; i++) {
+    hash = str.charCodeAt(i) + ((hash << 5) - hash);
+  }
+  const h = Math.abs(hash) % 360;
+  return `hsl(${h}, 65%, 55%)`;
 }
 
 export default function Home() {
-  const [appConfig, setAppConfig] = useState(FALLBACK_CONFIG);
-  const [form, setForm] = useState(INITIAL_FORM);
-  const [authForm, setAuthForm] = useState(INITIAL_AUTH_FORM);
-  const [challenge, setChallenge] = useState(null);
-  const [session, setSession] = useState(null);
-  const [sessionToken, setSessionToken] = useState("");
-  const [myLaunches, setMyLaunches] = useState([]);
-  const [publicLaunches, setPublicLaunches] = useState([]);
-  const [launchpadProjects, setLaunchpadProjects] = useState([]);
-  const [mySubmissions, setMySubmissions] = useState([]);
-  const [taskProofs, setTaskProofs] = useState({});
-  const [taskStates, setTaskStates] = useState({});
-  const [feedSearch, setFeedSearch] = useState("");
-  const [telegramMessage, setTelegramMessage] = useState(
-    "Abra esta página pelo bot para usar como Telegram Mini App.",
-  );
-  const [authState, setAuthState] = useState({
-    status: "idle",
-    message: "Gere um challenge e valide a assinatura da wallet.",
-  });
-  const [paymentState, setPaymentState] = useState({
-    status: "idle",
-    message: "Escolha SHELL ou USDC e valide a transação.",
-    payload: null,
-  });
-  const [launchState, setLaunchState] = useState({
-    status: "idle",
-    message: "Depois da fee validada, persista o launch request.",
-    ticket: null,
-  });
-  const [configError, setConfigError] = useState("");
-  const [launchesError, setLaunchesError] = useState("");
-  const [publicFeedError, setPublicFeedError] = useState("");
-  const [launchpadError, setLaunchpadError] = useState("");
-
-  const deferredFeedSearch = useDeferredValue(feedSearch);
-  const submissionMap = buildSubmissionMap(mySubmissions);
-  const filteredPublicLaunches = publicLaunches.filter((launch) =>
-    launchMatchesSearch(launch, deferredFeedSearch),
-  );
+  const [launches, setLaunches] = useState([]);
+  const [error, setError] = useState("");
+  const [search, setSearch] = useState("");
+  const [filter, setFilter] = useState("new"); // new | trending | finishing
+  const deferredSearch = useDeferredValue(search);
 
   useEffect(() => {
-    getConfig()
-      .then((data) => {
-        startTransition(() => {
-          setAppConfig(data);
-          setForm((current) => ({
-            ...current,
-            paymentTokenSymbol:
-              data.payment.creationFees?.[0]?.tokenSymbol || current.paymentTokenSymbol,
-          }));
-        });
-      })
-      .catch((error) => setConfigError(error.message));
-
-    // Initial feed load
     getPublicLaunches()
-      .then((response) => {
-        setPublicLaunches(response.launches || []);
-        setPublicFeedError("");
-      })
-      .catch((error) => setPublicFeedError(error.message));
+      .then((r) => { setLaunches(r.launches || []); setError(""); })
+      .catch((e) => setError(e.message));
 
-    getPublicLaunchpadProjects()
-      .then((response) => {
-        setLaunchpadProjects(response.projects || []);
-        setLaunchpadError("");
-      })
-      .catch((error) => setLaunchpadError(error.message));
-
-    // ── Live feed: poll every 3s to keep prices/listings up to date ────────
-    const feedInterval = setInterval(() => {
+    const interval = setInterval(() => {
       getPublicLaunches()
-        .then((response) => {
-          setPublicLaunches(response.launches || []);
-          setPublicFeedError("");
-        })
-        .catch(() => {}); // silent — don't flash error on poll failures
-    }, 3000);
+        .then((r) => { setLaunches(r.launches || []); })
+        .catch(() => {});
+    }, 12000);
 
-    return () => clearInterval(feedInterval);
+    return () => clearInterval(interval);
   }, []);
 
+  let filtered = launches.filter((l) => matchesSearch(l, deferredSearch));
 
-  useEffect(() => {
-    const webApp = window.Telegram?.WebApp;
-    if (!webApp) return;
-    webApp.ready();
-    webApp.expand();
-    setTelegramMessage(telegramGreeting(webApp));
-  }, []);
-
-  useEffect(() => {
-    if (typeof window === "undefined") return;
-    const storedToken = window.localStorage.getItem(SESSION_STORAGE_KEY);
-    if (!storedToken) return;
-    getSession(storedToken)
-      .then((response) => {
-        setSessionToken(storedToken);
-        setSession(response.session);
-        setAuthForm((current) => ({
-          ...current,
-          walletAddress: response.session.walletAddress,
-        }));
-        setForm((current) => ({
-          ...current,
-          creatorWallet: response.session.walletAddress,
-        }));
-        loadMyLaunches(storedToken);
-        loadMyLaunchpadSubmissions(storedToken);
-      })
-      .catch(() => window.localStorage.removeItem(SESSION_STORAGE_KEY));
-  }, []);
-
-  async function loadMyLaunches(token = sessionToken) {
-    if (!token) return;
-    try {
-      const response = await getMyLaunches(token);
-      setMyLaunches(response.launches || []);
-      setLaunchesError("");
-    } catch (error) {
-      setLaunchesError(error.message);
-    }
-  }
-
-  async function loadMyLaunchpadSubmissions(token = sessionToken) {
-    if (!token) return;
-    try {
-      const response = await getMyLaunchpadSubmissions(token);
-      setMySubmissions(response.submissions || []);
-    } catch (error) {
-      setLaunchpadError(error.message);
-    }
-  }
-
-  function updateField(field, value) {
-    const nextValue = field === "symbol" ? sanitizeSymbol(value) : value;
-    setForm((current) => ({ ...current, [field]: nextValue }));
-    if (field === "txHash" || field === "paymentTokenSymbol") {
-      setPaymentState({
-        status: "idle",
-        message: "Escolha SHELL ou USDC e valide a transação.",
-        payload: null,
-      });
-    }
-    setLaunchState({
-      status: "idle",
-      message: "Depois da fee validada, persista o launch request.",
-      ticket: null,
+  // Sort by filter
+  if (filter === "trending") {
+    filtered = [...filtered].sort((a, b) => (b.riskProfile?.score || 0) - (a.riskProfile?.score || 0));
+  } else if (filter === "finishing") {
+    filtered = [...filtered].sort((a, b) => {
+      const pa = parseFloat(calcProgress(a.coin?.totalSupply));
+      const pb = parseFloat(calcProgress(b.coin?.totalSupply));
+      return pb - pa;
     });
   }
-
-  function updateAuthField(field, value) {
-    setAuthForm((current) => ({ ...current, [field]: value }));
-  }
-
-  function updateTaskProof(taskId, value) {
-    setTaskProofs((current) => ({ ...current, [taskId]: value }));
-  }
-
-  async function handleCreateChallenge() {
-    setAuthState({ status: "loading", message: "Gerando challenge..." });
-    try {
-      const response = await createAuthChallenge({
-        walletAddress: authForm.walletAddress,
-        telegramInitData: getTelegramInitData(),
-      });
-      setChallenge(response.challenge);
-      setForm((current) => ({ ...current, creatorWallet: authForm.walletAddress }));
-      setAuthState({
-        status: "pending",
-        message: "Challenge gerado. Assine a mensagem e envie public key + signature.",
-      });
-    } catch (error) {
-      setAuthState({ status: "error", message: error.message });
-    }
-  }
-
-  async function handleVerifyWallet() {
-    setAuthState({ status: "loading", message: "Validando assinatura..." });
-    try {
-      const response = await verifyAuthChallenge({
-        challengeId: challenge?.id,
-        walletAddress: authForm.walletAddress,
-        publicKey: authForm.publicKey,
-        signature: authForm.signature,
-        telegramInitData: getTelegramInitData(),
-      });
-      if (typeof window !== "undefined") {
-        window.localStorage.setItem(SESSION_STORAGE_KEY, response.session.token);
-      }
-      setSession(response.session);
-      setSessionToken(response.session.token);
-      setForm((current) => ({
-        ...current,
-        creatorWallet: response.session.walletAddress,
-      }));
-      setAuthState({ status: "success", message: "Wallet autenticada." });
-      loadMyLaunches(response.session.token);
-      loadMyLaunchpadSubmissions(response.session.token);
-    } catch (error) {
-      setAuthState({ status: "error", message: error.message });
-    }
-  }
-
-  async function handleLogout() {
-    if (typeof window !== "undefined") {
-      window.localStorage.removeItem(SESSION_STORAGE_KEY);
-    }
-    try {
-      if (sessionToken) await logout(sessionToken);
-    } catch (error) {
-      // noop
-    }
-    setSession(null);
-    setSessionToken("");
-    setMyLaunches([]);
-    setMySubmissions([]);
-    setChallenge(null);
-    setAuthForm(INITIAL_AUTH_FORM);
-    setTaskProofs({});
-    setTaskStates({});
-  }
-
-  async function handleVerifyPayment() {
-    setPaymentState({
-      status: "loading",
-      message: "Consultando a transação na blockchain...",
-      payload: null,
-    });
-    try {
-      const response = await verifyPayment({
-        walletAddress: session?.walletAddress,
-        txHash: form.txHash,
-        tokenSymbol: form.paymentTokenSymbol,
-      });
-      setPaymentState({
-        status: "success",
-        message: `Fee confirmada em ${formatDateTime(response.verifiedAt)}.`,
-        payload: response.payment,
-      });
-    } catch (error) {
-      setPaymentState({ status: "error", message: error.message, payload: null });
-    }
-  }
-
-  async function handleLaunchRequest() {
-    setLaunchState({ status: "loading", message: "Persistindo launch request...", ticket: null });
-    try {
-      const response = await createLaunchRequest(
-        { ...form, creatorWallet: session?.walletAddress, symbol: sanitizeSymbol(form.symbol) },
-        sessionToken,
-      );
-      setLaunchState({
-        status: "success",
-        message: "Launch request salvo com treasury e risk profile inicial.",
-        ticket: response.launchRequest,
-      });
-      loadMyLaunches(sessionToken);
-      getPublicLaunches().then((responseFeed) => setPublicLaunches(responseFeed.launches || []));
-    } catch (error) {
-      setLaunchState({ status: "error", message: error.message, ticket: null });
-    }
-  }
-
-  async function handleTaskSubmit(projectId, taskId) {
-    if (!sessionToken) return;
-    setTaskStates((current) => ({
-      ...current,
-      [taskId]: { status: "loading", message: "Enviando prova..." },
-    }));
-    try {
-      const response = await submitLaunchpadTask(
-        projectId,
-        taskId,
-        { proofText: taskProofs[taskId] || "" },
-        sessionToken,
-      );
-      setTaskStates((current) => ({
-        ...current,
-        [taskId]: { status: "success", message: "Tarefa enviada para revisão." },
-      }));
-      setTaskProofs((current) => ({ ...current, [taskId]: "" }));
-      setMySubmissions((current) => {
-        const nextItems = current.filter((item) => item.taskId !== response.submission.taskId);
-        return [response.submission, ...nextItems];
-      });
-      getPublicLaunchpadProjects().then((responseProjects) =>
-        setLaunchpadProjects(responseProjects.projects || []),
-      );
-    } catch (error) {
-      setTaskStates((current) => ({
-        ...current,
-        [taskId]: { status: "error", message: error.message },
-      }));
-    }
-  }
-
-  const previewSymbol = sanitizeSymbol(form.symbol) || "ACKI";
-  const previewName = form.name.trim() || "Seu token";
-  const previewTagline =
-    form.tagline.trim() || "Coin pública publicada no board geral do app.";
-  const selectedFee =
-    appConfig.payment.creationFees.find((fee) => fee.tokenSymbol === form.paymentTokenSymbol) ||
-    appConfig.payment.creationFees[0];
-
-  // ── Bonding curve math preview ────────────────────────────────────────────
-  const totalSupplyNum = Number((form.totalSupply || "1000000000").replace(/[.,]/g, "")) || 1e9;
-  // linear bonding curve: initial price = 1 SHELL / 1B tokens = 0.000000001 SHELL
-  // When 20% of supply sold, price doubles (simplified)
-  const INITIAL_PRICE_SHELL = 0.000000030; // ~pump.fun equivalent starting price
-  const MIGRATION_THRESHOLD_SHELL = 69000;
-  const estimatedInitialPrice = INITIAL_PRICE_SHELL;
-  const estimatedInitialMcap = (estimatedInitialPrice * totalSupplyNum).toFixed(2);
-  const estimatedMigrationMcap = (MIGRATION_THRESHOLD_SHELL * 2).toLocaleString(); // 2x reserve at migration
-  const percentToMigration = Math.min(
-    ((MIGRATION_THRESHOLD_SHELL / (estimatedInitialMcap || 1)) * 100).toFixed(1),
-    100,
-  );
-
-  const canVerifyFee =
-    Boolean(session?.walletAddress) && Boolean(form.paymentTokenSymbol) && Boolean(form.txHash.trim());
-  const canCreateLaunch =
-    Boolean(session?.walletAddress) &&
-    Boolean(form.name.trim()) &&
-    Boolean(previewSymbol) &&
-    Boolean(form.description.trim()) &&
-    Boolean(form.totalSupply.trim()) &&
-    Boolean(form.txHash.trim());
-
 
   return (
     <>
       <Head>
-        <title>{appConfig.appName}</title>
-        <meta name="description" content="Feed público geral + launchpad exclusivo curado." />
+        <title>AckiMeme — Memecoin Launchpad on Acki Nacki</title>
+        <meta name="description" content="Create and trade memecoins with bonding curves on Acki Nacki blockchain. Fair launch, no rugs." />
       </Head>
-      <Script src="https://telegram.org/js/telegram-web-app.js" strategy="beforeInteractive" />
-      <main className={styles.shell}>
-        <div className={`${styles.orb} ${styles.orbPrimary}`} />
-        <div className={`${styles.orb} ${styles.orbWarm}`} />
-        <section className={styles.heroBlank}>
-          <div className={styles.terminalHeader}>
-             <p className={styles.eyebrow}>{telegramMessage}</p>
-             <Link href="#launch-form" className={styles.launchCta}>
-                [ start a new coin ]
-             </Link>
-             <div className={styles.terminalNav}>
-                <Link href="#market-feed" className={styles.terminalLink}>/board</Link>
-                <Link href="/exclusive" className={styles.terminalLink}>/launchpad</Link>
-             </div>
-          </div>
+
+      <main style={s.page}>
+        {/* Hero */}
+        <section style={s.hero}>
+          <div style={s.heroGlow} />
+          <h1 style={s.heroTitle}>
+            the memecoin launchpad<br />
+            <span style={s.heroAccent}>on Acki Nacki</span>
+          </h1>
+          <p style={s.heroSub}>
+            fair launch · bonding curve · auto-migrate to DEX.DO at 69K SHELL
+          </p>
+          <Link href="/create" style={s.heroCta}>
+            🚀 Launch your coin
+          </Link>
         </section>
-        <section className={styles.marketStrip} id="market-feed">
-          <div className={styles.marketHeader}>
-            <div>
-              <p className={styles.eyebrow}>Feed público geral</p>
-              <h2 className={styles.marketTitle}>Board aberto estilo market feed</h2>
-              <p className={styles.marketIntro}>
-                Aqui entram os launches públicos. O launchpad exclusivo não se mistura
-                com esta fila.
-              </p>
-            </div>
-            <div className={styles.marketControls}>
-              <input
-                className={styles.marketSearch}
-                onChange={(event) => setFeedSearch(event.target.value)}
-                placeholder="Buscar por nome, ticker ou wallet"
-                value={feedSearch}
-              />
-              <div className={styles.marketCounter}>
-                {filteredPublicLaunches.length} listados
-              </div>
-            </div>
-          </div>
 
-          <div className={styles.marketTicker}>
-            <span>public feed</span>
-            <span>anyone can submit</span>
-            <span>fair launch (bonding curve)</span>
-            <span>fee: $3 USDC</span>
+        {/* Controls */}
+        <section style={s.controls}>
+          <div style={s.filterRow}>
+            {["new", "trending", "finishing"].map((f) => (
+              <button
+                key={f}
+                style={filter === f ? s.filterActive : s.filterBtn}
+                onClick={() => setFilter(f)}
+              >
+                {f === "new" ? "🕐 New" : f === "trending" ? "🔥 Trending" : "🏁 Finishing"}
+              </button>
+            ))}
           </div>
+          <div style={s.searchWrap}>
+            <span style={s.searchIcon}>🔍</span>
+            <input
+              style={s.searchInput}
+              placeholder="Search by name, ticker, or wallet…"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+            />
+          </div>
+          <span style={s.count}>{filtered.length} tokens</span>
+        </section>
 
-          {publicFeedError ? (
-            <p className={styles.smallPrint}>{publicFeedError}</p>
-          ) : filteredPublicLaunches.length === 0 ? (
-            <p className={styles.smallPrint}>
-              Ainda não há launches públicos persistidos no backend.
-            </p>
-          ) : (
-            <div className={styles.marketGrid}>
-              {filteredPublicLaunches.map((launch) => (
-                <article className={styles.marketCard} key={launch.id}>
-                  <div className={styles.marketCardTop}>
-                    <span className={styles.marketBadge}>public</span>
-                    <span className={styles.marketTime}>
-                      {formatShortDate(launch.createdAt)}
-                    </span>
-                  </div>
-                  <div className={styles.marketIdentity}>
-                    <div className={styles.marketToken}>{launch.coin.symbol}</div>
-                    <div className={styles.marketMeta}>
-                      <p className={styles.marketName}>{launch.coin.name}</p>
-                      <p className={styles.marketSub}>{compactWallet(launch.creatorWallet)}</p>
+        {/* Feed */}
+        {error && <p style={s.errorMsg}>{error}</p>}
+        {!error && filtered.length === 0 && (
+          <div style={s.empty}>
+            <p style={s.emptyIcon}>⬡</p>
+            <p style={s.emptyText}>No tokens found. Be the first to launch!</p>
+            <Link href="/create" style={s.emptyBtn}>Create a coin</Link>
+          </div>
+        )}
+
+        <div style={s.grid}>
+          {filtered.map((launch, i) => {
+            const progress = calcProgress(launch.coin?.totalSupply);
+            const color = hashColor(launch.coin?.symbol);
+            return (
+              <Link href={`/token/${launch.id}`} key={launch.id} style={{ textDecoration: "none" }}>
+                <article style={{ ...s.card, animationDelay: `${i * 40}ms` }}>
+                  {/* Token badge */}
+                  <div style={s.cardTop}>
+                    <div style={{ ...s.tokenIcon, background: `linear-gradient(135deg, ${color}, ${color}44)` }}>
+                      {launch.coin?.logoUrl ? (
+                        <img src={launch.coin.logoUrl} alt="" style={s.tokenImg} />
+                      ) : (
+                        <span style={s.tokenLetter}>{(launch.coin?.symbol || "?")[0]}</span>
+                      )}
+                    </div>
+                    <div style={s.cardIdent}>
+                      <div style={s.tickerRow}>
+                        <span style={s.ticker}>${launch.coin?.symbol}</span>
+                        <span style={s.timeAgo}>{formatTimeAgo(launch.createdAt)}</span>
+                      </div>
+                      <p style={s.coinName}>{launch.coin?.name}</p>
                     </div>
                   </div>
-                  <p className={styles.marketDescription}>
-                    {truncateText(launch.coin.tagline || launch.coin.description, 120)}
+
+                  {/* Tagline */}
+                  <p style={s.tagline}>
+                    {(launch.coin?.tagline || launch.coin?.description || "").slice(0, 80)}
+                    {(launch.coin?.tagline || launch.coin?.description || "").length > 80 ? "…" : ""}
                   </p>
-                  <div className={styles.marketStats}>
-                    <div>
-                      <p className={styles.marketStatLabel}>Fee</p>
-                      <p className={styles.marketStatValue}>
-                        {launch.treasuryPayment.amount} {launch.treasuryPayment.tokenSymbol}
-                      </p>
+
+                  {/* Progress bar */}
+                  <div style={s.progressWrap}>
+                    <div style={s.progressTrack}>
+                      <div style={{
+                        ...s.progressFill,
+                        width: `${progress}%`,
+                        background: parseFloat(progress) > 80
+                          ? "linear-gradient(90deg, #f97316, #ef4444)"
+                          : "linear-gradient(90deg, #00ff88, #00cc6d)",
+                      }} />
                     </div>
-                    <div>
-                      <p className={styles.marketStatLabel}>Risk</p>
-                      <p className={styles.marketStatValue}>
-                        {launch.riskProfile.status} / {launch.riskProfile.score}
-                      </p>
+                    <span style={s.progressLabel}>{progress}%</span>
+                  </div>
+
+                  {/* Stats */}
+                  <div style={s.statsRow}>
+                    <div style={s.stat}>
+                      <span style={s.statLabel}>mcap</span>
+                      <span style={s.statValue}>
+                        {(INITIAL_PRICE * Number(String(launch.coin?.totalSupply || "0").replace(/[.,]/g, ""))).toFixed(2)} SHELL
+                      </span>
                     </div>
-                    <div>
-                      <p className={styles.marketStatLabel}>Supply</p>
-                      <p className={styles.marketStatValue}>
-                        {formatNumberString(launch.coin.totalSupply)}
-                      </p>
+                    <div style={s.stat}>
+                      <span style={s.statLabel}>supply</span>
+                      <span style={s.statValue}>{formatSupply(launch.coin?.totalSupply)}</span>
                     </div>
-                    <div>
-                      <p className={styles.marketStatLabel}>Mode</p>
-                      <p className={styles.marketStatValue}>
-                        Bonding Curve
-                      </p>
+                    <div style={s.stat}>
+                      <span style={s.statLabel}>by</span>
+                      <span style={{ ...s.statValue, fontFamily: "var(--font-mono)", fontSize: "10px" }}>
+                        {compactWallet(launch.creatorWallet)}
+                      </span>
                     </div>
                   </div>
                 </article>
-              ))}
-            </div>
-          )}
-        </section>
-
-        {/* Launchpad Removido */}
-
-        <section className={styles.workspace} id="launch-form">
-          <div className={styles.formColumn}>
-            {/* Wallet auth was moved to /auth */}
-            {session ? (
-              <section className={styles.formSection}>
-                <div className={styles.sectionHeader}>
-                  <div>
-                    <h2 className={styles.sectionTitle}>Wallet conectada</h2>
-                    <p className={styles.sectionBody}>
-                      {session.walletAddress.slice(0,8)}...{session.walletAddress.slice(-6)}
-                    </p>
-                  </div>
-                  <button className={styles.actionButtonMuted} onClick={handleLogout} type="button">
-                    Desconectar
-                  </button>
-                </div>
-              </section>
-            ) : (
-              <section className={styles.formSection}>
-                <div className={styles.sectionHeader}>
-                  <div>
-                    <h2 className={styles.sectionTitle}>Conecte sua wallet</h2>
-                    <p className={styles.sectionBody}>
-                      Autentique com sua wallet Acki Nacki para criar tokens no board.
-                    </p>
-                  </div>
-                </div>
-                <div className={styles.actionRow}>
-                  <Link className={styles.actionButton} href="/auth">
-                    [ connect wallet ]
-                  </Link>
-                </div>
-              </section>
-            )}
-
-            <section className={styles.formSection}>
-              <div className={styles.sectionHeader}>
-                <div>
-                  <h2 className={styles.sectionTitle}>Token setup</h2>
-                  <p className={styles.sectionBody}>
-                    Este fluxo é do feed público geral. O launchpad exclusivo é
-                    operado pelo admin.
-                  </p>
-                </div>
-                <span className={styles.sectionTag}>Passo 1</span>
-              </div>
-              <div className={styles.fieldGrid}>
-                <label className={styles.fieldWrap}>
-                  <span className={styles.label}>Nome do token</span>
-                  <input
-                    className={styles.field}
-                    maxLength={appConfig.launch.nameMaxLength}
-                    onChange={(event) => updateField("name", event.target.value)}
-                    value={form.name}
-                  />
-                </label>
-                <label className={styles.fieldWrap}>
-                  <span className={styles.label}>Ticker</span>
-                  <input
-                    className={styles.field}
-                    maxLength={appConfig.launch.symbolMaxLength}
-                    onChange={(event) => updateField("symbol", event.target.value)}
-                    value={form.symbol}
-                  />
-                </label>
-                <label className={styles.fieldWrapWide}>
-                  <span className={styles.label}>Tagline</span>
-                  <input
-                    className={styles.field}
-                    onChange={(event) => updateField("tagline", event.target.value)}
-                    value={form.tagline}
-                  />
-                </label>
-                <label className={styles.fieldWrapWide}>
-                  <span className={styles.label}>Descrição</span>
-                  <textarea
-                    className={styles.area}
-                    maxLength={appConfig.launch.descriptionMaxLength}
-                    onChange={(event) => updateField("description", event.target.value)}
-                    value={form.description}
-                  />
-                </label>
-                <label className={styles.fieldWrap}>
-                  <span className={styles.label}>Supply total</span>
-                  <input
-                    className={styles.field}
-                    inputMode="numeric"
-                    onChange={(event) => updateField("totalSupply", event.target.value)}
-                    value={form.totalSupply}
-                  />
-                </label>
-                <label className={styles.fieldWrap}>
-                  <span className={styles.label}>Logo URL</span>
-                  <input
-                    className={styles.field}
-                    onChange={(event) => updateField("logoUrl", event.target.value)}
-                    value={form.logoUrl}
-                  />
-                </label>
-                <label className={styles.fieldWrap}>
-                  <span className={styles.label}>Website</span>
-                  <input
-                    className={styles.field}
-                    onChange={(event) => updateField("website", event.target.value)}
-                    value={form.website}
-                  />
-                </label>
-                <label className={styles.fieldWrap}>
-                  <span className={styles.label}>X</span>
-                  <input
-                    className={styles.field}
-                    onChange={(event) => updateField("xUrl", event.target.value)}
-                    value={form.xUrl}
-                  />
-                </label>
-                <label className={styles.fieldWrapWide}>
-                  <span className={styles.label}>Telegram</span>
-                  <input
-                    className={styles.field}
-                    onChange={(event) => updateField("telegramUrl", event.target.value)}
-                    value={form.telegramUrl}
-                  />
-                </label>
-              </div>
-            </section>
-
-            <section className={styles.formSection}>
-              <div className={styles.sectionHeader}>
-                <div>
-                  <h2 className={styles.sectionTitle}>Fee e publish no feed</h2>
-                  <p className={styles.sectionBody}>
-                    Taxa do app: $3 USDC por token criado. Gas on-chain pago pelo criador.
-                  </p>
-                </div>
-                <span className={styles.sectionTag}>Passo 2</span>
-              </div>
-              <div className={styles.bondingPreview}>
-                <p className={styles.bondingPreviewTitle}>⬡ simulação da bonding curve</p>
-                <div className={styles.bondingStats}>
-                  <div>
-                    <p className={styles.bondingLabel}>Preço inicial</p>
-                    <p className={styles.bondingValue}>{estimatedInitialPrice.toFixed(9)} SHELL</p>
-                  </div>
-                  <div>
-                    <p className={styles.bondingLabel}>Mcap inicial (~)</p>
-                    <p className={styles.bondingValue}>{Number(estimatedInitialMcap).toLocaleString()} SHELL</p>
-                  </div>
-                  <div>
-                    <p className={styles.bondingLabel}>Mcap na migração</p>
-                    <p className={styles.bondingValue}>{estimatedMigrationMcap} SHELL</p>
-                  </div>
-                  <div>
-                    <p className={styles.bondingLabel}>Threshold DEX.DO</p>
-                    <p className={styles.bondingValue}>69.000 SHELL</p>
-                  </div>
-                </div>
-                <div className={styles.bondingBar}>
-                  <div className={styles.bondingBarFill} style={{ width: `${percentToMigration}%` }} />
-                </div>
-                <p className={styles.bondingHint}>
-                  Ao atingir 69k SHELL em reserva, a liquidez migra automaticamente para DEX.DO
-                  com lock de 30 dias (anti-rug).
-                </p>
-              </div>
-              <div className={styles.fieldGrid}>
-
-                <label className={styles.fieldWrap}>
-                  <span className={styles.label}>Wallet autenticada</span>
-                  <input
-                    className={`${styles.field} ${styles.mono}`}
-                    readOnly
-                    value={session?.walletAddress || ""}
-                  />
-                </label>
-                <label className={styles.fieldWrap}>
-                  <span className={styles.label}>Token da taxa</span>
-                  <select
-                    className={styles.field}
-                    onChange={(event) => updateField("paymentTokenSymbol", event.target.value)}
-                    value={form.paymentTokenSymbol}
-                  >
-                    {appConfig.payment.creationFees.map((fee) => (
-                      <option key={fee.tokenSymbol} value={fee.tokenSymbol}>
-                        {fee.tokenSymbol} - {fee.minimumAmount}
-                      </option>
-                    ))}
-                  </select>
-                </label>
-                <label className={styles.fieldWrapWide}>
-                  <span className={styles.label}>Tx hash</span>
-                  <input
-                    className={`${styles.field} ${styles.mono}`}
-                    onChange={(event) => updateField("txHash", event.target.value)}
-                    value={form.txHash}
-                  />
-                </label>
-              </div>
-              <div className={styles.actionRow}>
-                <button
-                  className={styles.actionButton}
-                  disabled={!canVerifyFee}
-                  onClick={handleVerifyPayment}
-                  type="button"
-                >
-                  Verificar fee
-                </button>
-                <button
-                  className={styles.actionButtonMuted}
-                  disabled={!canCreateLaunch}
-                  onClick={handleLaunchRequest}
-                  type="button"
-                >
-                  Publicar no feed
-                </button>
-              </div>
-            </section>
-          </div>
-          <aside className={styles.sideColumn}>
-            <section className={styles.sidePanel}>
-              <h2 className={styles.panelTitle}>Sessão atual</h2>
-              <p className={styles.panelCopy}>
-                O mesmo login por wallet serve para criar coins no feed público e
-                para enviar provas no launchpad exclusivo.
-              </p>
-              {session ? (
-                <div className={styles.sessionMeta}>
-                  <div className={styles.sessionMetaRow}>
-                    <p className={styles.sessionMetaLabel}>Wallet</p>
-                    <p className={`${styles.sessionMetaValue} ${styles.mono}`}>
-                      {session.walletAddress}
-                    </p>
-                  </div>
-                  <div className={styles.sessionMetaRow}>
-                    <p className={styles.sessionMetaLabel}>Proof level</p>
-                    <p className={styles.sessionMetaValue}>{session.proofLevel}</p>
-                  </div>
-                  <div className={styles.sessionMetaRow}>
-                    <p className={styles.sessionMetaLabel}>Telegram binding</p>
-                    <p className={styles.sessionMetaValue}>
-                      {session.telegramBinding.status}
-                    </p>
-                  </div>
-                </div>
-              ) : (
-                <p className={styles.smallPrint}>
-                  Sem sessão autenticada a API não aceita publish no feed nem
-                  submission de tarefa.
-                </p>
-              )}
-            </section>
-
-            <section className={styles.sidePanel}>
-              <h2 className={styles.panelTitle}>Configuração</h2>
-              <p className={styles.panelCopy}>
-                Fee wallet, taxa do app e distribuição inicial modeladas no backend.
-              </p>
-              <p className={`${styles.address} ${styles.mono}`}>
-                {appConfig.payment.feeWallet}
-              </p>
-              <div className={styles.metaList}>
-                <div>
-                  <p className={styles.metaLabel}>Fee app</p>
-                  <p className={styles.metaValue}>{appConfig.payment.appFeeSharePercent}%</p>
-                </div>
-                <div>
-                  <p className={styles.metaLabel}>Settlement</p>
-                  <p className={styles.metaValue}>
-                    {appConfig.payment.networkSettlementToken}
-                  </p>
-                </div>
-                <div>
-                  <p className={styles.metaLabel}>Distribuição</p>
-                  <p className={styles.metaValue}>
-                    {appConfig.launch.distribution.creatorPercent}% /
-                    {appConfig.launch.distribution.lockedReservePercent}%
-                  </p>
-                </div>
-              </div>
-              {configError ? <p className={styles.smallPrint}>{configError}</p> : null}
-            </section>
-
-            <section className={styles.sidePanel}>
-              <h2 className={styles.panelTitle}>Status</h2>
-              <div className={styles.statusStack}>
-                <div
-                  className={`${styles.statusBlock} ${
-                    paymentState.status === "success"
-                      ? styles.success
-                      : paymentState.status === "error"
-                        ? styles.error
-                        : ""
-                  }`}
-                >
-                  <p className={styles.statusLabel}>Verificação da fee</p>
-                  <p className={styles.statusValue}>{paymentState.message}</p>
-                </div>
-                <div
-                  className={`${styles.statusBlock} ${
-                    launchState.status === "success"
-                      ? styles.success
-                      : launchState.status === "error"
-                        ? styles.error
-                        : ""
-                  }`}
-                >
-                  <p className={styles.statusLabel}>Publish no feed</p>
-                  <p className={styles.statusValue}>{launchState.message}</p>
-                </div>
-              </div>
-              {paymentState.payload ? (
-                <div className={styles.callout}>
-                  <p className={styles.calloutTitle}>Treasury settlement</p>
-                  <p className={styles.calloutBody}>
-                    {paymentState.payload.networkSettlementStatus}
-                  </p>
-                </div>
-              ) : null}
-              {launchState.ticket ? (
-                <div className={styles.ticket}>
-                  <p className={styles.ticketId}>Launch ID</p>
-                  <p className={`${styles.ticketValue} ${styles.mono}`}>
-                    {launchState.ticket.id}
-                  </p>
-                </div>
-              ) : null}
-            </section>
-
-            <section className={styles.sidePanel}>
-              <h2 className={styles.panelTitle}>Minha atividade</h2>
-              <div className={styles.miniSummary}>
-                <div>
-                  <p className={styles.metaLabel}>Feed publishes</p>
-                  <p className={styles.metaValue}>{myLaunches.length}</p>
-                </div>
-                <div>
-                  <p className={styles.metaLabel}>Task submissions</p>
-                  <p className={styles.metaValue}>{mySubmissions.length}</p>
-                </div>
-              </div>
-              {launchesError ? (
-                <p className={styles.smallPrint}>{launchesError}</p>
-              ) : myLaunches.length === 0 ? (
-                <p className={styles.smallPrint}>Nenhum launch persistido para esta wallet.</p>
-              ) : (
-                <div className={styles.launchList}>
-                  {myLaunches.slice(0, 4).map((launch) => (
-                    <div className={styles.launchCard} key={launch.id}>
-                      <p className={styles.launchCardTitle}>
-                        {launch.launchRequest.coin.name} ({launch.launchRequest.coin.symbol})
-                      </p>
-                      <p className={styles.launchCardBody}>{launch.status}</p>
-                      <p className={styles.launchCardMeta}>
-                        Fee: {launch.treasuryPayment.amount} {launch.treasuryPayment.tokenSymbol}
-                      </p>
-                    </div>
-                  ))}
-                </div>
-              )}
-            </section>
-
-            <section className={styles.sidePanel}>
-              <h2 className={styles.panelTitle}>Operação</h2>
-              <p className={styles.panelCopy}>
-                O admin opera o launchpad exclusivo em uma área separada do board
-                geral.
-              </p>
-              <Link className={styles.secondaryLink} href="/admin">
-                Abrir admin
               </Link>
-            </section>
-          </aside>
-        </section>
+            );
+          })}
+        </div>
       </main>
     </>
   );
 }
+
+const s = {
+  page: {
+    minHeight: "100vh",
+    padding: "0 0 80px",
+  },
+  // Hero
+  hero: {
+    position: "relative",
+    textAlign: "center",
+    padding: "60px 24px 40px",
+    overflow: "hidden",
+  },
+  heroGlow: {
+    position: "absolute",
+    top: "-100px",
+    left: "50%",
+    transform: "translateX(-50%)",
+    width: "600px",
+    height: "400px",
+    background: "radial-gradient(ellipse, rgba(0,255,136,0.08) 0%, transparent 70%)",
+    pointerEvents: "none",
+  },
+  heroTitle: {
+    fontSize: "clamp(28px, 5vw, 44px)",
+    fontWeight: 700,
+    color: "#f4f4f5",
+    lineHeight: 1.15,
+    margin: "0 0 14px",
+    letterSpacing: "-0.03em",
+    position: "relative",
+  },
+  heroAccent: {
+    background: "linear-gradient(135deg, #00ff88, #00cc6d)",
+    WebkitBackgroundClip: "text",
+    WebkitTextFillColor: "transparent",
+    backgroundClip: "text",
+  },
+  heroSub: {
+    color: "#71717a",
+    fontSize: "14px",
+    margin: "0 0 28px",
+    fontFamily: "var(--font-mono)",
+    letterSpacing: "0.02em",
+    position: "relative",
+  },
+  heroCta: {
+    display: "inline-block",
+    background: "linear-gradient(135deg, #00ff88, #00cc6d)",
+    color: "#000",
+    fontWeight: 700,
+    fontSize: "15px",
+    padding: "12px 32px",
+    borderRadius: "10px",
+    textDecoration: "none",
+    boxShadow: "0 0 30px rgba(0,255,136,0.25), 0 4px 12px rgba(0,0,0,0.3)",
+    transition: "transform 0.15s, box-shadow 0.2s",
+    position: "relative",
+  },
+  // Controls
+  controls: {
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "space-between",
+    gap: "12px",
+    padding: "0 24px",
+    maxWidth: "1200px",
+    margin: "0 auto 24px",
+    flexWrap: "wrap",
+  },
+  filterRow: {
+    display: "flex",
+    gap: "6px",
+  },
+  filterBtn: {
+    background: "rgba(39,39,42,0.4)",
+    border: "1px solid rgba(39,39,42,0.6)",
+    color: "#71717a",
+    padding: "6px 14px",
+    borderRadius: "8px",
+    fontSize: "12px",
+    cursor: "pointer",
+    transition: "all 0.15s",
+    fontWeight: 500,
+  },
+  filterActive: {
+    background: "rgba(0,255,136,0.08)",
+    border: "1px solid rgba(0,255,136,0.25)",
+    color: "#00ff88",
+    padding: "6px 14px",
+    borderRadius: "8px",
+    fontSize: "12px",
+    cursor: "pointer",
+    fontWeight: 600,
+  },
+  searchWrap: {
+    display: "flex",
+    alignItems: "center",
+    background: "rgba(39,39,42,0.3)",
+    border: "1px solid rgba(39,39,42,0.6)",
+    borderRadius: "8px",
+    padding: "0 12px",
+    flex: "1 1 200px",
+    maxWidth: "360px",
+  },
+  searchIcon: {
+    fontSize: "12px",
+    marginRight: "8px",
+    opacity: 0.5,
+  },
+  searchInput: {
+    background: "transparent",
+    border: "none",
+    color: "#f4f4f5",
+    fontSize: "13px",
+    padding: "8px 0",
+    width: "100%",
+    fontFamily: "var(--font-sans)",
+  },
+  count: {
+    color: "#3f3f46",
+    fontSize: "12px",
+    fontFamily: "var(--font-mono)",
+    whiteSpace: "nowrap",
+  },
+  // Grid
+  grid: {
+    display: "grid",
+    gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))",
+    gap: "16px",
+    padding: "0 24px",
+    maxWidth: "1200px",
+    margin: "0 auto",
+  },
+  card: {
+    background: "rgba(22,22,26,0.7)",
+    border: "1px solid rgba(39,39,42,0.5)",
+    borderRadius: "12px",
+    padding: "18px",
+    cursor: "pointer",
+    transition: "border-color 0.2s, transform 0.15s, box-shadow 0.2s",
+    backdropFilter: "blur(8px)",
+    animation: "fadeInUp 0.4s ease both",
+    position: "relative",
+    overflow: "hidden",
+  },
+  cardTop: {
+    display: "flex",
+    alignItems: "center",
+    gap: "12px",
+    marginBottom: "12px",
+  },
+  tokenIcon: {
+    width: "42px",
+    height: "42px",
+    borderRadius: "10px",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    flexShrink: 0,
+    overflow: "hidden",
+  },
+  tokenImg: {
+    width: "100%",
+    height: "100%",
+    objectFit: "cover",
+    borderRadius: "10px",
+  },
+  tokenLetter: {
+    color: "#fff",
+    fontSize: "18px",
+    fontWeight: 700,
+    textShadow: "0 1px 3px rgba(0,0,0,0.3)",
+  },
+  cardIdent: {
+    flex: 1,
+    minWidth: 0,
+  },
+  tickerRow: {
+    display: "flex",
+    justifyContent: "space-between",
+    alignItems: "baseline",
+  },
+  ticker: {
+    color: "#00ff88",
+    fontSize: "15px",
+    fontWeight: 700,
+    fontFamily: "var(--font-mono)",
+  },
+  timeAgo: {
+    color: "#3f3f46",
+    fontSize: "10px",
+    fontFamily: "var(--font-mono)",
+  },
+  coinName: {
+    color: "#a1a1aa",
+    fontSize: "13px",
+    margin: "2px 0 0",
+    overflow: "hidden",
+    textOverflow: "ellipsis",
+    whiteSpace: "nowrap",
+  },
+  tagline: {
+    color: "#52525b",
+    fontSize: "12px",
+    lineHeight: 1.5,
+    margin: "0 0 14px",
+    minHeight: "36px",
+  },
+  // Progress
+  progressWrap: {
+    display: "flex",
+    alignItems: "center",
+    gap: "8px",
+    marginBottom: "14px",
+  },
+  progressTrack: {
+    flex: 1,
+    height: "8px",
+    background: "rgba(39,39,42,0.5)",
+    borderRadius: "4px",
+    overflow: "hidden",
+  },
+  progressFill: {
+    height: "100%",
+    borderRadius: "4px",
+    minWidth: "4px",
+    transition: "width 0.6s ease",
+    boxShadow: "0 0 8px rgba(0,255,136,0.3)",
+  },
+  progressLabel: {
+    color: "#71717a",
+    fontSize: "10px",
+    fontFamily: "var(--font-mono)",
+    fontWeight: 600,
+    minWidth: "36px",
+    textAlign: "right",
+  },
+  // Stats
+  statsRow: {
+    display: "flex",
+    justifyContent: "space-between",
+    gap: "8px",
+  },
+  stat: {
+    display: "flex",
+    flexDirection: "column",
+    gap: "2px",
+  },
+  statLabel: {
+    color: "#3f3f46",
+    fontSize: "9px",
+    textTransform: "uppercase",
+    letterSpacing: "0.1em",
+    fontFamily: "var(--font-mono)",
+  },
+  statValue: {
+    color: "#a1a1aa",
+    fontSize: "11px",
+    fontWeight: 600,
+  },
+  // Empty
+  empty: {
+    textAlign: "center",
+    padding: "80px 24px",
+  },
+  emptyIcon: {
+    fontSize: "48px",
+    color: "#27272a",
+    margin: "0 0 12px",
+  },
+  emptyText: {
+    color: "#52525b",
+    fontSize: "14px",
+    margin: "0 0 20px",
+  },
+  emptyBtn: {
+    display: "inline-block",
+    background: "linear-gradient(135deg, #00ff88, #00cc6d)",
+    color: "#000",
+    fontWeight: 600,
+    fontSize: "13px",
+    padding: "10px 24px",
+    borderRadius: "8px",
+    textDecoration: "none",
+  },
+  errorMsg: {
+    color: "#ff4757",
+    textAlign: "center",
+    padding: "40px 24px",
+    fontSize: "13px",
+  },
+};

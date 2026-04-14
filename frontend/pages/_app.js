@@ -7,8 +7,6 @@ import { getSession } from "../lib/api";
 
 const SESSION_STORAGE_KEY = "ackimeme_session_token";
 
-// Lista de wallets admin (sync com backend ADMIN_WALLETS env)
-// Lida do env publico para nao expor no server side
 const ADMIN_WALLETS = (process.env.NEXT_PUBLIC_ADMIN_WALLETS || "")
   .split(",")
   .map((w) => w.trim().toLowerCase())
@@ -16,30 +14,37 @@ const ADMIN_WALLETS = (process.env.NEXT_PUBLIC_ADMIN_WALLETS || "")
 
 function GlobalNav({ session, isAdmin }) {
   const router = useRouter();
-  const isHome = router.pathname === "/";
   const isAuth = router.pathname === "/auth";
 
   return (
-    <nav style={navStyles.bar}>
-      <div style={navStyles.left}>
-        <Link href="/" style={navStyles.brand}>⬡ AckiMeme</Link>
-        <span style={navStyles.networkTag}>Acki Nacki</span>
+    <nav style={nav.bar}>
+      <div style={nav.left}>
+        <Link href="/" style={nav.brand}>
+          <span style={nav.brandIcon}>⬡</span>
+          <span style={nav.brandText}>AckiMeme</span>
+        </Link>
+        <span style={nav.networkTag}>Acki Nacki</span>
       </div>
-      <div style={navStyles.right}>
-        {!isHome && (
-          <Link href="/#market-feed" style={navStyles.link}>/board</Link>
-        )}
-        <Link href="/exclusive" style={navStyles.link}>/launchpad</Link>
-        {/* Admin tab: ONLY visible if wallet is recognised as admin */}
+      <div style={nav.right}>
+        <Link href="/" style={nav.link}>
+          <span style={nav.linkIcon}>◈</span> Board
+        </Link>
+        <Link href="/exclusive" style={nav.link}>
+          <span style={nav.linkIcon}>★</span> Launchpad
+        </Link>
         {isAdmin && (
-          <Link href="/admin" style={navStyles.adminLink}>/admin</Link>
+          <Link href="/admin" style={nav.adminLink}>⚙ Admin</Link>
         )}
+        <Link href="/create" style={nav.createBtn}>
+          🚀 Create Coin
+        </Link>
         {session ? (
-          <span style={navStyles.walletBadge}>
-            {session.walletAddress.slice(0, 6)}...{session.walletAddress.slice(-4)}
-          </span>
+          <Link href="/auth" style={nav.walletBadge}>
+            <span style={nav.walletDot} />
+            {session.walletAddress.slice(0, 6)}…{session.walletAddress.slice(-4)}
+          </Link>
         ) : !isAuth ? (
-          <Link href="/auth" style={navStyles.connectBtn}>[ connect wallet ]</Link>
+          <Link href="/auth" style={nav.connectBtn}>Connect</Link>
         ) : null}
       </div>
     </nav>
@@ -58,7 +63,6 @@ export default function App({ Component, pageProps }) {
     getSession(token)
       .then((res) => {
         setSession(res.session);
-        // Verificação local silenciosa — sem expor endpoint admin
         const wallet = (res.session?.walletAddress || "").toLowerCase();
         if (ADMIN_WALLETS.length > 0 && ADMIN_WALLETS.includes(wallet)) {
           setIsAdmin(true);
@@ -78,7 +82,7 @@ export default function App({ Component, pageProps }) {
   );
 }
 
-const navStyles = {
+const nav = {
   bar: {
     position: "sticky",
     top: 0,
@@ -86,68 +90,116 @@ const navStyles = {
     display: "flex",
     justifyContent: "space-between",
     alignItems: "center",
-    padding: "0 20px",
-    height: "52px",
-    background: "rgba(9,9,11,0.92)",
-    borderBottom: "1px solid #27272a",
-    backdropFilter: "blur(12px)",
-    fontFamily: '"ui-monospace","SFMono-Regular","Menlo","Monaco",monospace',
+    padding: "0 24px",
+    height: "56px",
+    background: "rgba(9,9,11,0.85)",
+    borderBottom: "1px solid rgba(39,39,42,0.6)",
+    backdropFilter: "blur(16px)",
+    WebkitBackdropFilter: "blur(16px)",
+    fontFamily: 'var(--font-sans)',
   },
   left: {
     display: "flex",
     alignItems: "center",
-    gap: "12px",
+    gap: "14px",
   },
   brand: {
-    color: "#86efac",
-    fontWeight: "bold",
-    fontSize: "15px",
+    display: "flex",
+    alignItems: "center",
+    gap: "8px",
     textDecoration: "none",
-    letterSpacing: "-0.02em",
+  },
+  brandIcon: {
+    color: "#00ff88",
+    fontSize: "20px",
+    filter: "drop-shadow(0 0 6px rgba(0,255,136,0.4))",
+  },
+  brandText: {
+    color: "#f4f4f5",
+    fontWeight: 700,
+    fontSize: "16px",
+    letterSpacing: "-0.03em",
   },
   networkTag: {
-    fontSize: "10px",
+    fontSize: "9px",
     color: "#3f3f46",
     textTransform: "uppercase",
-    letterSpacing: "0.12em",
-    paddingLeft: "8px",
+    letterSpacing: "0.14em",
+    paddingLeft: "12px",
     borderLeft: "1px solid #27272a",
+    fontFamily: "var(--font-mono)",
   },
   right: {
     display: "flex",
     alignItems: "center",
-    gap: "16px",
+    gap: "8px",
   },
   link: {
     color: "#71717a",
-    fontSize: "12px",
+    fontSize: "13px",
     textDecoration: "none",
-    letterSpacing: "0.04em",
+    padding: "6px 12px",
+    borderRadius: "6px",
+    transition: "color 0.15s, background 0.15s",
+    display: "flex",
+    alignItems: "center",
+    gap: "5px",
+  },
+  linkIcon: {
+    fontSize: "10px",
+    opacity: 0.6,
   },
   adminLink: {
     color: "#f97316",
     fontSize: "12px",
-    fontWeight: "bold",
+    fontWeight: 600,
     textDecoration: "none",
-    letterSpacing: "0.04em",
-    border: "1px solid rgba(249,115,22,0.3)",
-    padding: "3px 8px",
-    borderRadius: "2px",
+    padding: "5px 10px",
+    borderRadius: "6px",
+    background: "rgba(249,115,22,0.08)",
+    border: "1px solid rgba(249,115,22,0.2)",
+  },
+  createBtn: {
+    color: "#000",
+    fontSize: "13px",
+    fontWeight: 600,
+    textDecoration: "none",
+    padding: "7px 16px",
+    borderRadius: "8px",
+    background: "linear-gradient(135deg, #00ff88, #00cc6d)",
+    boxShadow: "0 0 16px rgba(0,255,136,0.2)",
+    transition: "box-shadow 0.2s, transform 0.15s",
+    whiteSpace: "nowrap",
   },
   connectBtn: {
-    color: "#86efac",
-    fontSize: "12px",
-    fontWeight: "bold",
+    color: "#00ff88",
+    fontSize: "13px",
+    fontWeight: 600,
     textDecoration: "none",
-    border: "1px solid rgba(134,239,172,0.4)",
-    padding: "5px 10px",
-    borderRadius: "2px",
+    padding: "6px 14px",
+    borderRadius: "8px",
+    border: "1px solid rgba(0,255,136,0.3)",
+    transition: "background 0.15s",
   },
   walletBadge: {
     color: "#a1a1aa",
     fontSize: "11px",
-    background: "#27272a",
-    padding: "4px 8px",
-    borderRadius: "2px",
+    background: "rgba(39,39,42,0.6)",
+    padding: "5px 10px",
+    borderRadius: "6px",
+    fontFamily: "var(--font-mono)",
+    display: "flex",
+    alignItems: "center",
+    gap: "6px",
+    textDecoration: "none",
+    border: "1px solid rgba(39,39,42,0.8)",
+  },
+  walletDot: {
+    width: "6px",
+    height: "6px",
+    borderRadius: "50%",
+    background: "#00ff88",
+    boxShadow: "0 0 6px rgba(0,255,136,0.5)",
+    display: "inline-block",
   },
 };

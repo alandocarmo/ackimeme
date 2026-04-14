@@ -179,8 +179,45 @@ async function getAccountBalance(address) {
   };
 }
 
+/**
+ * Verifica se uma carteira está deployada na blockchain.
+ * Migrado de tvm.js para centralizar todas as queries GraphQL aqui.
+ */
+async function getAccountPublicKey(address) {
+  const query = `
+    query getAccount($address: String!) {
+      blockchain {
+        account(address: $address) {
+          info {
+            balance(format: DEC)
+            address
+            acc_type_name
+          }
+        }
+      }
+    }
+  `;
+
+  try {
+    const data = await gql(query, { address });
+    const info = data?.blockchain?.account?.info;
+
+    if (!info) {
+      return { isDeployed: false };
+    }
+
+    return {
+      isDeployed: true,
+      balance: nanoToDecimal(info.balance || "0"),
+    };
+  } catch {
+    return { isDeployed: false };
+  }
+}
+
 module.exports = {
   getTransaction,
   getAccountBalance,
+  getAccountPublicKey,
   nanoToDecimal,
 };

@@ -1,6 +1,6 @@
 const crypto = require("crypto");
 const { config } = require("./config");
-const { getAccountPublicKey } = require("./tvm");
+const { getAccountPublicKey } = require("./services/graphql.service");
 const {
   createAuthChallenge: persistAuthChallenge,
   consumeChallengeAndCreateSession,
@@ -97,8 +97,8 @@ async function createWalletChallenge({ walletAddress, telegramInitData }) {
   }
 
   const telegram = verifyTelegramInitData(telegramInitData);
-  const challengeId = crypto ? crypto.randomUUID() : (Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15));
-  const nonce = crypto ? crypto.randomBytes(16).toString("hex") : (Math.random().toString(36).substring(2, 15));
+  const challengeId = crypto.randomUUID();
+  const nonce = crypto.randomBytes(16).toString("hex");
   
   const challenge = {
     id: challengeId,
@@ -125,7 +125,7 @@ async function createWalletChallenge({ walletAddress, telegramInitData }) {
   });
 
   await persistAuthChallenge(challenge, {
-    id: crypto ? crypto.randomUUID() : challengeId,
+    id: crypto.randomUUID(),
     type: "auth.challenge.created",
     createdAt: new Date().toISOString(),
     walletAddress: challenge.walletAddress,
@@ -189,8 +189,8 @@ async function verifyWalletChallenge({
     throw new Error("Assinatura inválida no Ed25519. Verifique se public key corresponde.");
   }
 
-  const sessionId = crypto ? crypto.randomUUID() : Math.random().toString(36).substring(2, 15);
-  const tokenVal = crypto ? crypto.randomBytes(32).toString("hex") : Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+  const sessionId = crypto.randomUUID();
+  const tokenVal = crypto.randomBytes(32).toString("hex");
 
   const session = {
     id: sessionId,
@@ -215,7 +215,7 @@ async function verifyWalletChallenge({
     challengeId: normalizedChallengeId,
     session,
     auditEvent: {
-      id: crypto ? crypto.randomUUID() : Math.random().toString(36).substring(2, 15),
+      id: crypto.randomUUID(),
       type: "auth.session.created",
       createdAt: new Date().toISOString(),
       walletAddress: session.walletAddress,

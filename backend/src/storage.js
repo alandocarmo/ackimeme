@@ -53,8 +53,12 @@ function normalizeLaunchRow(row) {
     createdAt: row.created_at?.toISOString?.() || row.created_at,
     curatedByAdmin: row.curated_by_admin,
     isPublic: row.is_public,
+    ipfsHash: row.ipfs_hash || "",
+    tokenRootAddress: row.token_root_address || "",
+    bondingCurveAddress: row.bonding_curve_address || "",
   };
 }
+
 
 function normalizeLaunchpadProjectRow(row) {
   if (!row) {
@@ -399,8 +403,12 @@ async function createLaunchBundle({ launchTicket, auditEvent }) {
           launch_request,
           treasury_payment,
           risk_profile,
-          created_at
+          created_at,
+          ipfs_hash,
+          token_root_address,
+          bonding_curve_address
         ) VALUES (
+
           $1,
           $2,
           $3,
@@ -411,8 +419,12 @@ async function createLaunchBundle({ launchTicket, auditEvent }) {
           $8::jsonb,
           $9::jsonb,
           $10::jsonb,
-          $11
+          $11,
+          $12,
+          $13,
+          $14
         )
+
       `,
       [
         launchTicket.id,
@@ -426,7 +438,11 @@ async function createLaunchBundle({ launchTicket, auditEvent }) {
         JSON.stringify(launchTicket.treasuryPayment),
         JSON.stringify(launchTicket.riskProfile),
         launchTicket.createdAt,
+        launchTicket.onchainData?.ipfsHash || null,
+        launchTicket.onchainData?.tokenRootAddress || null,
+        launchTicket.onchainData?.bondingCurveAddress || null,
       ],
+
     );
 
     await client.query(
@@ -549,6 +565,14 @@ async function listPublicLaunches(limit = 30) {
   return result.rows.map(normalizeLaunchRow);
 }
 
+async function getLaunchById(id) {
+  const result = await query(
+    `SELECT * FROM launches WHERE id = $1 LIMIT 1`,
+    [id],
+  );
+  return result.rows.length > 0 ? normalizeLaunchRow(result.rows[0]) : null;
+}
+
 async function listAllLaunches() {
   const result = await query(
     `
@@ -559,6 +583,39 @@ async function listAllLaunches() {
   );
 
   return result.rows.map(normalizeLaunchRow);
+}
+
+// ── Persistent rate limit & txHash dedup ─────────────────────────────────────
+
+async function isTxHashUsed(txHash) {
+  const result = await query(
+    `SELECT 1 FROM used_tx_hashes WHERE tx_hash = $1 LIMIT 1`,
+    [String(txHash || "").toLowerCase()],
+  );
+  return result.rows.length > 0;
+}
+
+async function markTxHashUsed(txHash, walletAddress) {
+  await query(
+    `INSERT INTO used_tx_hashes (tx_hash, wallet_address) VALUES ($1, $2) ON CONFLICT (tx_hash) DO NOTHING`,
+    [String(txHash || "").toLowerCase(), String(walletAddress || "").toLowerCase()],
+  );
+}
+
+async function getWalletLastLaunch(walletAddress) {
+  const result = await query(
+    `SELECT last_launch_at FROM wallet_rate_limits WHERE wallet_address = $1 LIMIT 1`,
+    [String(walletAddress || "").toLowerCase()],
+  );
+  return result.rows.length > 0 ? new Date(result.rows[0].last_launch_at) : null;
+}
+
+async function updateWalletLastLaunch(walletAddress) {
+  await query(
+    `INSERT INTO wallet_rate_limits (wallet_address, last_launch_at) VALUES ($1, NOW())
+     ON CONFLICT (wallet_address) DO UPDATE SET last_launch_at = NOW()`,
+    [String(walletAddress || "").toLowerCase()],
+  );
 }
 
 async function createLaunchpadProject({ project, auditEvent }) {
@@ -1562,6 +1619,11 @@ module.exports = {
   listLaunchesByWallet,
   listPublicLaunchpadProjects,
   listPublicLaunches,
+  getLaunchById,
+  isTxHashUsed,
+  markTxHashUsed,
+  getWalletLastLaunch,
+  updateWalletLastLaunch,
   moderateLaunchpadSubmission,
   updateLaunchpadProjectContent,
   revokeSession,
