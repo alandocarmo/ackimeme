@@ -2,9 +2,9 @@ import Head from "next/head";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
-import { getSession } from "../../lib/api";
+import { getLaunchById, getSession } from "../../lib/api";
 
-const API_BASE = process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:3000";
+const INITIAL_PRICE = 0.00000003;
 const SESSION_KEY = "ackimeme_session_token";
 
 function compactWallet(w) {
@@ -33,13 +33,23 @@ function formatSupply(val) {
 }
 
 const MIGRATION_THRESHOLD = 69000;
-const INITIAL_PRICE = 0.000000030;
 
-function calcBondingStats(supply) {
-  const s = Number(String(supply || "1000000000").replace(/[.,]/g, "")) || 1e9;
-  const initialMcap = (INITIAL_PRICE * s).toFixed(2);
-  const progressPct = Math.min(((MIGRATION_THRESHOLD / (Number(initialMcap) || 1)) * 100), 100).toFixed(1);
-  return { initialMcap, progressPct, supply: s };
+function readReserveBalance(onchainData) {
+  const parsed = Number(onchainData?.reserveBalance);
+  if (!Number.isFinite(parsed) || parsed < 0) {
+    return null;
+  }
+  return parsed;
+}
+
+function calcBondingStats(onchainData) {
+  const reserveBalance = readReserveBalance(onchainData);
+  const hasOnchainReserve = Number.isFinite(reserveBalance);
+  const progressPct = hasOnchainReserve
+    ? Math.min((reserveBalance / MIGRATION_THRESHOLD) * 100, 100).toFixed(1)
+    : null;
+
+  return { reserveBalance, hasOnchainReserve, progressPct };
 }
 
 function hashColor(str) {
@@ -73,13 +83,19 @@ export default function TokenPage() {
   useEffect(() => {
     if (!id) return;
     setLoading(true);
-    fetch(`${API_BASE}/launches/${id}`)
-      .then(r => r.json())
-      .then(data => {
-        if (data.launch) { setToken(data.launch); setError(""); }
-        else { setError(data.error || "Token not found."); }
+    getLaunchById(id)
+      .then((data) => {
+        setToken(data.launch);
+        setError("");
       })
-      .catch(() => setError("Failed to load token."))
+      .catch((err) => {
+        setToken(null);
+        if (String(err.message || "").toLowerCase().includes("404")) {
+          setError("Token não encontrado.");
+          return;
+        }
+        setError(err.message || "Falha ao carregar token.");
+      })
       .finally(() => setLoading(false));
   }, [id]);
 
@@ -92,8 +108,9 @@ export default function TokenPage() {
     }, 1500);
   }
 
-  const stats = token ? calcBondingStats(token.coin?.totalSupply) : null;
+  const stats = token ? calcBondingStats(token.onchainData) : null;
   const color = token ? hashColor(token.coin?.symbol) : "#888";
+  const showMissingTokenCta = Boolean(error) && !loading && !token;
 
   const estimateOutput = () => {
     const amt = parseFloat(tradeAmount) || 0;
@@ -112,7 +129,14 @@ export default function TokenPage() {
 
       <main style={s.page}>
         {loading && <p style={s.loadingMsg}>Loading...</p>}
-        {error && <p style={s.errorMsg}>{error}</p>}
+        {showMissingTokenCta ? (
+          <div style={s.errorCard}>
+            <p style={s.errorMsgCompact}>{error}</p>
+            <Link href="/" style={s.backToFeedBtn}>Voltar para o feed</Link>
+          </div>
+        ) : error ? (
+          <p style={s.errorMsg}>{error}</p>
+        ) : null}
 
         {token && (
           <div style={s.layout}>
@@ -143,19 +167,25 @@ export default function TokenPage() {
                 <div style={s.curveBarWrap}>
                   <div style={{
                     ...s.curveBarFill,
-                    width: `${stats.progressPct}%`,
-                    background: parseFloat(stats.progressPct) > 80
+                    width: stats.progressPct === null ? "0%" : `${stats.progressPct}%`,
+                    minWidth: stats.progressPct === null ? "0px" : s.curveBarFill.minWidth,
+                    opacity: stats.progressPct === null ? 0 : 1,
+                    background: parseFloat(stats.progressPct || "0") > 80
                       ? "linear-gradient(90deg, #f97316, #ef4444)"
                       : "linear-gradient(90deg, #00ff88, #00cc6d)",
                   }} />
                 </div>
                 <div style={s.curveStatsGrid}>
-                  <div><p style={s.cStatLabel}>Progress</p><p style={s.cStatVal}>{stats.progressPct}%</p></div>
+                  <div><p style={s.cStatLabel}>Progress</p><p style={s.cStatVal}>{stats.progressPct === null ? "N/A" : `${stats.progressPct}%`}</p></div>
                   <div><p style={s.cStatLabel}>Threshold</p><p style={s.cStatVal}>69K SHELL</p></div>
-                  <div><p style={s.cStatLabel}>Market Cap</p><p style={s.cStatVal}>{Number(stats.initialMcap).toFixed(0)} SHELL</p></div>
+                  <div><p style={s.cStatLabel}>Reserve</p><p style={s.cStatVal}>{stats.hasOnchainReserve ? `${stats.reserveBalance.toFixed(2)} SHELL` : "awaiting indexer"}</p></div>
                   <div><p style={s.cStatLabel}>Lock</p><p style={s.cStatVal}>30 days</p></div>
                 </div>
-                <p style={s.curveHint}>Liquidity auto-migrates to DEX.DO at 69K SHELL reserve with 30-day anti-rug lock.</p>
+                <p style={s.curveHint}>
+                  {stats.hasOnchainReserve
+                    ? "Liquidity auto-migrates to DEX.DO at 69K SHELL reserve with 30-day anti-rug lock."
+                    : "Progress requires reserveBalance indexed from blockchain. Until then, values stay as N/A."}
+                </p>
               </div>
 
               {/* Info Grid */}
@@ -305,6 +335,27 @@ const s = {
   page: { minHeight: "100vh", padding: "24px 24px 80px" },
   loadingMsg: { color: "#52525b", textAlign: "center", padding: "80px 24px", fontSize: "13px" },
   errorMsg: { color: "#ff4757", textAlign: "center", padding: "80px 24px", fontSize: "13px" },
+  errorMsgCompact: { color: "#ff4757", margin: "0 0 12px", fontSize: "14px" },
+  errorCard: {
+    maxWidth: "520px",
+    margin: "80px auto",
+    textAlign: "center",
+    background: "rgba(22,22,26,0.7)",
+    border: "1px solid rgba(39,39,42,0.5)",
+    borderRadius: "12px",
+    padding: "24px",
+  },
+  backToFeedBtn: {
+    display: "inline-block",
+    marginTop: "6px",
+    textDecoration: "none",
+    color: "#00ff88",
+    border: "1px solid rgba(0,255,136,0.24)",
+    borderRadius: "8px",
+    padding: "8px 14px",
+    fontSize: "12px",
+    fontWeight: 600,
+  },
   layout: {
     maxWidth: "1100px", margin: "0 auto",
     display: "grid", gridTemplateColumns: "1fr 340px", gap: "24px",

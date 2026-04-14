@@ -9,7 +9,7 @@ interface IDexPool {
 
 interface ITokenRoot {
     function mint(address recipient, uint256 amount, uint128 deployWalletValue) external;
-    // Note: burning would require wallet interaction in TVM/TIP-3, simplified here.
+    function burn(address sender, uint256 amount, uint128 deployWalletValue) external;
 }
 
 contract BondingCurve {
@@ -34,6 +34,7 @@ contract BondingCurve {
     address public tokenRoot;            // MemeTokenRoot address
     string public name;
     string public symbol;
+    bool private _locked;                // Reentrancy guard
 
     // Payment proof: tx hash of the $3 USDC creation fee verified by backend
     bytes public creationFeeTxHash;
@@ -42,6 +43,13 @@ contract BondingCurve {
     event TokensBought(address buyer, uint128 shellIn, uint256 tokensOut, uint128 newPrice);
     event TokensSold(address seller, uint256 tokensIn, uint128 shellOut, uint128 newPrice);
     event MigratedToDex(address pool, uint128 liquidity, uint32 lockedUntil);
+
+    modifier nonReentrant() {
+        require(!_locked, 111, "Reentrancy guard triggered");
+        _locked = true;
+        _;
+        _locked = false;
+    }
 
     constructor(
         address _owner,
@@ -62,23 +70,21 @@ contract BondingCurve {
         symbol = _symbol;
         creationFeeTxHash = _creationFeeTxHash;
         migrated = false;
+        _locked = false;
     }
 
     // ─── Price Function (Bancor-style) ────────────────────────────────────────
-    // price = reserveBalance / totalSupply  (simplified linear curve)
+    // Safe linear slope avoiding div by zero. Start at 1 nanowVMSHELL, slope = 1 per 10k tokens
     function currentPrice() public view returns (uint128) {
-        if (totalSupply == 0) return 1 ton; // initial price: 1 SHELL
-        return uint128(reserveBalance / totalSupply);
+        return uint128(1 ton + (totalSupply / 1000));
     }
 
     function getBuyPrice(uint256 tokenAmount) public view returns (uint128) {
-        // Integral of linear curve: cost = currentPrice * amount + (amount^2 * slope)
-        uint128 base = uint128(tokenAmount) * currentPrice();
-        return base;
+        return uint128(tokenAmount) * currentPrice();
     }
 
     // ─── Buy ─────────────────────────────────────────────────────────────────
-    function buy(uint256 tokenAmount) public {
+    function buy(uint256 tokenAmount) public nonReentrant {
         // LOCK: no buying after migration to DEX.DO
         require(!migrated, 201, "Token migrated to DEX.DO - trade there.");
         require(tokenAmount > 0, 202);
@@ -103,7 +109,7 @@ contract BondingCurve {
     }
 
     // ─── Sell ────────────────────────────────────────────────────────────────
-    function sell(uint256 tokenAmount) public {
+    function sell(uint256 tokenAmount) public nonReentrant {
         // LOCK: no selling after migration
         require(!migrated, 201, "Token migrated to DEX.DO - trade there.");
         require(tokenAmount > 0, 202);
@@ -116,7 +122,8 @@ contract BondingCurve {
         reserveBalance -= refund;
         totalSupply -= tokenAmount;
 
-        // TODO: burn tokens: ITokenRoot(tokenRoot).burn{value: 0.1 ton}(msg.sender, tokenAmount);
+        // Burn tokens
+        ITokenRoot(tokenRoot).burn{value: varuint16(0.1 ton)}(msg.sender, tokenAmount, uint128(0.05 ton));
 
         msg.sender.transfer(varuint16(refund), false, 0);
 
@@ -131,8 +138,10 @@ contract BondingCurve {
         migratedAt = block.timestamp;
         uint32 lockedUntil = block.timestamp + LOCK_PERIOD;
 
-        // TODO: call DEX.DO pool to add liquidity
-        // IDexPool(dexPool).addLiquidity{value: reserveBalance}(reserveBalance, totalSupply);
+        // Call DEX.DO pool to add liquidity securely (real integration payload)
+        if (dexPool != address(0)) {
+            IDexPool(dexPool).addLiquidity{value: varuint16(reserveBalance)}(reserveBalance, uint128(totalSupply));
+        }
 
         emit MigratedToDex(dexPool, reserveBalance, lockedUntil);
     }

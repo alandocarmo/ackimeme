@@ -28,13 +28,21 @@ function formatSupply(val) {
   return String(n);
 }
 
-const INITIAL_PRICE = 0.000000030;
 const MIGRATION_THRESHOLD = 69000;
 
-function calcProgress(supply) {
-  const s = Number(String(supply || "1000000000").replace(/[.,]/g, "")) || 1e9;
-  const mcap = INITIAL_PRICE * s;
-  return Math.min(((mcap / MIGRATION_THRESHOLD) * 100), 100).toFixed(1);
+function readReserveBalance(onchainData) {
+  const parsed = Number(onchainData?.reserveBalance);
+  if (!Number.isFinite(parsed) || parsed < 0) {
+    return null;
+  }
+  return parsed;
+}
+
+function calcProgressFromReserve(reserveBalance) {
+  if (!Number.isFinite(reserveBalance)) {
+    return null;
+  }
+  return Math.min((reserveBalance / MIGRATION_THRESHOLD) * 100, 100).toFixed(1);
 }
 
 function matchesSearch(launch, q) {
@@ -81,8 +89,8 @@ export default function Home() {
     filtered = [...filtered].sort((a, b) => (b.riskProfile?.score || 0) - (a.riskProfile?.score || 0));
   } else if (filter === "finishing") {
     filtered = [...filtered].sort((a, b) => {
-      const pa = parseFloat(calcProgress(a.coin?.totalSupply));
-      const pb = parseFloat(calcProgress(b.coin?.totalSupply));
+      const pa = parseFloat(calcProgressFromReserve(readReserveBalance(a.onchainData)) || "0");
+      const pb = parseFloat(calcProgressFromReserve(readReserveBalance(b.onchainData)) || "0");
       return pb - pa;
     });
   }
@@ -147,7 +155,8 @@ export default function Home() {
 
         <div style={s.grid}>
           {filtered.map((launch, i) => {
-            const progress = calcProgress(launch.coin?.totalSupply);
+            const reserveBalance = readReserveBalance(launch.onchainData);
+            const progress = calcProgressFromReserve(reserveBalance);
             const color = hashColor(launch.coin?.symbol);
             return (
               <Link href={`/token/${launch.id}`} key={launch.id} style={{ textDecoration: "none" }}>
@@ -181,21 +190,23 @@ export default function Home() {
                     <div style={s.progressTrack}>
                       <div style={{
                         ...s.progressFill,
-                        width: `${progress}%`,
-                        background: parseFloat(progress) > 80
+                        width: progress === null ? "0%" : `${progress}%`,
+                        minWidth: progress === null ? "0px" : s.progressFill.minWidth,
+                        opacity: progress === null ? 0 : 1,
+                        background: parseFloat(progress || "0") > 80
                           ? "linear-gradient(90deg, #f97316, #ef4444)"
                           : "linear-gradient(90deg, #00ff88, #00cc6d)",
                       }} />
                     </div>
-                    <span style={s.progressLabel}>{progress}%</span>
+                    <span style={s.progressLabel}>{progress === null ? "N/A" : `${progress}%`}</span>
                   </div>
 
                   {/* Stats */}
                   <div style={s.statsRow}>
                     <div style={s.stat}>
-                      <span style={s.statLabel}>mcap</span>
+                      <span style={s.statLabel}>reserve</span>
                       <span style={s.statValue}>
-                        {(INITIAL_PRICE * Number(String(launch.coin?.totalSupply || "0").replace(/[.,]/g, ""))).toFixed(2)} SHELL
+                        {reserveBalance === null ? "on-chain pending" : `${reserveBalance.toFixed(2)} SHELL`}
                       </span>
                     </div>
                     <div style={s.stat}>

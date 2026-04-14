@@ -12,7 +12,10 @@
  * Endpoint testnet: https://shellnet.ackinacki.org/graphql
  */
 
-const { getTransaction } = require("./services/graphql.service");
+const {
+  getTip3TransferPayment,
+  getTransaction,
+} = require("./services/graphql.service");
 const { getCreationFeeRequirement, normalizeTokenSymbol } = require("./treasury");
 
 /**
@@ -43,6 +46,42 @@ async function verifyPayment({ walletAddress, txHash, tokenSymbol }) {
     );
   }
 
+  if (requirement.tokenSymbol === "USDC") {
+    const tip3Transfer = await getTip3TransferPayment({
+      txHash,
+      senderWallet: walletAddress,
+      recipientWallet: requirement.feeWallet,
+      decimals: requirement.decimals || 6,
+    });
+
+    if (!tip3Transfer) {
+      throw new Error(
+        "Não foi possível validar transferência TIP-3 USDC para a fee wallet. " +
+          "Confirme txHash, sender e destino.",
+      );
+    }
+
+    if (Number(tip3Transfer.amount) < requirement.minimumAmount) {
+      throw new Error(
+        `Valor USDC insuficiente. Mínimo exigido: ${requirement.minimumAmount} USDC. ` +
+          `Recebido: ${tip3Transfer.amount} USDC.`,
+      );
+    }
+
+    return {
+      success: true,
+      txHash,
+      tokenSymbol: requirement.tokenSymbol,
+      amount: Number(tip3Transfer.amount),
+      rawAmount: tip3Transfer.rawAmount,
+      feeWallet: requirement.feeWallet,
+      minimumAmount: requirement.minimumAmount,
+      networkSettlementToken: requirement.networkSettlementToken,
+      networkSettlementStatus: requirement.networkSettlementStatus,
+      tip3Proof: tip3Transfer.proof,
+    };
+  }
+
   // Valida o remetente (quem enviou a fee)
   const normalizedSender = String(tx.from || "").trim().toLowerCase();
   const normalizedWallet = String(walletAddress || "").trim().toLowerCase();
@@ -69,8 +108,7 @@ async function verifyPayment({ walletAddress, txHash, tokenSymbol }) {
     }
   }
 
-  // Valida token
-  // Na Acki Nacki, o token nativo é SHELL. Suporte a USDC via TIP-3 é pendente.
+  // Valida token nativo (SHELL) no fluxo não-TIP3.
   const txTokenSymbol = normalizeTokenSymbol(tx.token?.symbol || "SHELL");
 
   if (txTokenSymbol !== requirement.tokenSymbol) {

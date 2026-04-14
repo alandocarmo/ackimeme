@@ -2,73 +2,6 @@ require("dotenv").config();
 const { randomUUID } = require("crypto");
 const { pingDatabase, pool, runMigrations, withTransaction } = require("../src/db");
 
-const DEMO_PROJECTS = [
-  {
-    slug: "shell-raiders",
-    title: "Shell Raiders",
-    badge: "exclusive",
-    shortDescription: "Campanha exclusiva para growth inicial do ecossistema.",
-    description:
-      "Projeto curado pelo admin para validar tarefas sociais, submissions e fluxo de moderacao dentro do launchpad exclusivo.",
-    rewardLabel: "SHELL rewards",
-    rewardToken: "SHELL",
-    rewardAmount: 2500,
-    status: "published",
-    tasks: [
-      {
-        title: "Entrar no grupo Telegram",
-        description: "Comprove que entrou no grupo oficial da campanha.",
-        taskType: "join_telegram",
-        targetUrl: "https://t.me/ackimeme",
-        rewardPoints: 50,
-        rewardLabel: "pts",
-        status: "active",
-      },
-      {
-        title: "Seguir perfil no X",
-        description: "Seguir o perfil social do projeto exclusivo.",
-        taskType: "follow_x",
-        targetUrl: "https://x.com/ackimeme",
-        rewardPoints: 40,
-        rewardLabel: "pts",
-        status: "active",
-      },
-    ],
-  },
-  {
-    slug: "meme-labs-allstars",
-    title: "Meme Labs Allstars",
-    badge: "priority",
-    shortDescription: "Missao social para ativar comunidade e referrals.",
-    description:
-      "Segundo projeto demo para testar multiplas campanhas, ordenacao de tarefas e contagem de submissions no admin.",
-    rewardLabel: "USDC rewards",
-    rewardToken: "USDC",
-    rewardAmount: 500,
-    status: "published",
-    tasks: [
-      {
-        title: "Compartilhar post da campanha",
-        description: "Publique o link da campanha e envie a prova.",
-        taskType: "share_post",
-        targetUrl: "https://ackimeme.fun",
-        rewardPoints: 60,
-        rewardLabel: "pts",
-        status: "active",
-      },
-      {
-        title: "Visitar pagina da campanha",
-        description: "Abrir a pagina da campanha para validar clickthrough.",
-        taskType: "visit_url",
-        targetUrl: "https://ackimeme.fun",
-        rewardPoints: 20,
-        rewardLabel: "pts",
-        status: "active",
-      },
-    ],
-  },
-];
-
 const DEMO_LAUNCHES = [
   {
     walletAddress: "demo-feed-bot",
@@ -79,7 +12,7 @@ const DEMO_LAUNCHES = [
       "Projeto demo para testar o feed publico geral com card publico, fee modelada e risk score inicial.",
     totalSupply: "1000000000",
     txHash: "demo-tx-hash-001",
-    paymentTokenSymbol: "SHELL",
+    paymentTokenSymbol: "USDC",
     paymentAmount: "3",
     riskStatus: "manual_review",
     riskScore: 42,
@@ -94,113 +27,11 @@ const DEMO_LAUNCHES = [
     totalSupply: "500000000",
     txHash: "demo-tx-hash-002",
     paymentTokenSymbol: "USDC",
-    paymentAmount: "10",
+    paymentAmount: "3",
     riskStatus: "manual_review",
     riskScore: 37,
   },
 ];
-
-async function seedLaunchpad(client) {
-  await client.query(
-    `
-      DELETE FROM launchpad_projects
-      WHERE slug = ANY($1::text[])
-    `,
-    [DEMO_PROJECTS.map((project) => project.slug)],
-  );
-
-  for (let projectIndex = 0; projectIndex < DEMO_PROJECTS.length; projectIndex += 1) {
-    const project = DEMO_PROJECTS[projectIndex];
-    const projectId = randomUUID();
-    const createdAt = new Date().toISOString();
-
-    await client.query(
-      `
-        INSERT INTO launchpad_projects (
-          id,
-          slug,
-          title,
-          badge,
-          short_description,
-          description,
-          logo_url,
-          cover_image_url,
-          reward_label,
-          reward_token,
-          reward_amount,
-          participant_limit,
-          sort_order,
-          status,
-          starts_at,
-          ends_at,
-          created_by,
-          metadata,
-          created_at,
-          updated_at
-        ) VALUES (
-          $1, $2, $3, $4, $5, $6, '', '', $7, $8, $9, 0, $10, $11, NULL, NULL, 'seed-demo',
-          $12::jsonb, $13, $14
-        )
-      `,
-      [
-        projectId,
-        project.slug,
-        project.title,
-        project.badge,
-        project.shortDescription,
-        project.description,
-        project.rewardLabel,
-        project.rewardToken,
-        project.rewardAmount,
-        projectIndex,
-        project.status,
-        JSON.stringify({ seedTag: "demo_v1" }),
-        createdAt,
-        createdAt,
-      ],
-    );
-
-    for (let taskIndex = 0; taskIndex < project.tasks.length; taskIndex += 1) {
-      const task = project.tasks[taskIndex];
-      await client.query(
-        `
-          INSERT INTO launchpad_tasks (
-            id,
-            project_id,
-            title,
-            description,
-            task_type,
-            target_url,
-            reward_points,
-            reward_label,
-            sort_order,
-            status,
-            metadata,
-            created_at,
-            updated_at
-          ) VALUES (
-            $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11::jsonb, $12, $13
-          )
-        `,
-        [
-          randomUUID(),
-          projectId,
-          task.title,
-          task.description,
-          task.taskType,
-          task.targetUrl,
-          task.rewardPoints,
-          task.rewardLabel,
-          taskIndex,
-          task.status,
-          JSON.stringify({ seedTag: "demo_v1" }),
-          createdAt,
-          createdAt,
-        ],
-      );
-    }
-  }
-}
 
 async function seedPublicFeed(client) {
   await client.query(
@@ -371,7 +202,6 @@ async function main() {
   await runMigrations();
 
   await withTransaction(async (client) => {
-    await seedLaunchpad(client);
     await seedPublicFeed(client);
   });
 

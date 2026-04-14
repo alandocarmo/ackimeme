@@ -177,23 +177,6 @@ Componentes:
 Como a documentacao consultada nao mostrou contrato padrao pronto para isso, devemos assumir implementacao propria.
 
 ### 10. Distribuicao inicial
-
-Regra requerida:
-
-- 80% criador
-- 20% reserva trancada
-
-Isso deve ser enforce on-chain.
-
-Implementacao recomendada:
-
-- mint inicial atomico no deploy
-- 80% enviado para a wallet/vesting do criador
-- 20% enviado para um contrato `LockedReserveVault`
-- regras de unlock explicitadas no contrato
-
-Nao pode ficar apenas salvo em banco.
-
 ### 11. Taxa 100% para o app
 
 Aqui existe uma distincao obrigatoria:

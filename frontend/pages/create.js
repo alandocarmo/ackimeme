@@ -44,7 +44,15 @@ export default function CreatePage() {
   }, []);
 
   useEffect(() => {
-    getConfig().then((c) => setConfig(c)).catch(() => {});
+    getConfig()
+      .then((c) => {
+        setConfig(c);
+        const defaultFeeToken = c?.payment?.creationFees?.[0]?.tokenSymbol;
+        if (defaultFeeToken) {
+          setForm((prev) => ({ ...prev, paymentTokenSymbol: defaultFeeToken }));
+        }
+      })
+      .catch(() => {});
   }, []);
 
   function updateField(field, value) {
@@ -54,6 +62,7 @@ export default function CreatePage() {
 
   const feeWallet = config?.payment?.feeWallet || "Loading...";
   const fee = config?.payment?.creationFees?.[0] || { tokenSymbol: "USDC", minimumAmount: 3 };
+  const blockchainFee = config?.payment?.blockchainFee || { tokenSymbol: "SHELL", minimumCreatorBalance: 1 };
 
   const canStep2 = form.name.trim().length >= 2 && sanitizeSymbol(form.symbol).length >= 2 &&
     form.description.trim().length >= 20 && form.totalSupply.trim();
@@ -227,6 +236,10 @@ export default function CreatePage() {
                   <code style={s.feeWallet}>{feeWallet}</code>
                 </div>
               </div>
+              <p style={s.hintNotice}>
+                Network cost is paid separately by the creator wallet in {blockchainFee.tokenSymbol}.
+                Keep at least {blockchainFee.minimumCreatorBalance} {blockchainFee.tokenSymbol} available.
+              </p>
 
               <label style={{ ...s.fieldWrap, marginTop: "20px" }}>
                 <span style={s.label}>Transaction Hash</span>
@@ -379,6 +392,12 @@ const s = {
   },
   charCount: { color: "#3f3f46", fontSize: "10px", textAlign: "right", fontFamily: "var(--font-mono)" },
   hint: { color: "#52525b", fontSize: "11px", fontFamily: "var(--font-mono)" },
+  hintNotice: {
+    color: "#71717a",
+    fontSize: "11px",
+    lineHeight: 1.5,
+    marginTop: "10px",
+  },
   nextBtn: {
     width: "100%", marginTop: "24px", padding: "14px",
     background: "linear-gradient(135deg, #00ff88, #00cc6d)",

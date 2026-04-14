@@ -1,4 +1,3 @@
-const { randomUUID } = require("crypto");
 const crypto = require("crypto");
 require("dotenv").config();
 const express = require("express");
@@ -11,34 +10,33 @@ const {
   verifyWalletChallenge,
 } = require("./auth");
 const {
-  normalizeProjectContentUpdateInput,
-  normalizeProjectInput,
-  normalizeProjectStatusUpdate,
-  normalizeSubmissionInput,
-  normalizeSubmissionModerationInput,
-  normalizeTaskContentUpdateInput,
-  normalizeTaskStatusUpdate,
-  normalizeTaskInput,
-} = require("./launchpad");
-const { createLaunchTicket, normalizeLaunchRequest } = require("./launches");
+  createLaunchTicket,
+  normalizeLaunchRequest,
+} = require("./launches");
 const { verifyPayment } = require("./payments");
 const { createInitialRiskProfile } = require("./risk");
 const {
   createLaunchBundle,
+  getLaunchById,
   getWalletLastLaunch,
+  isTxHashUsed,
+  markTxHashUsed,
   updateWalletLastLaunch,
-  listAllLaunches,
   listLaunchesByWallet,
   listPublicLaunches,
 } = require("./storage");
 const { createTreasuryPaymentRecord } = require("./treasury");
-const { getAccountBalance } = require("./services/graphql.service");
+const {
+  getAccountBalance,
+  isTip3DecoderAvailable,
+} = require("./services/graphql.service");
 const { uploadToIPFS, createTokenMetadata } = require("./services/ipfs.service");
 const { deployTokenEcosystem } = require("./services/deployer.service");
 
 
 // ─── Rate Limit & txHash: now persistent in PostgreSQL ───────────────────────
 const RATE_LIMIT_WINDOW_MS = 60 * 60 * 1000; // 1 hour
+const hasWildcardOrigin = config.allowedOrigins.includes("*");
 
 async function checkWalletRateLimit(walletAddress) {
   const lastTime = await getWalletLastLaunch(walletAddress);
@@ -55,6 +53,36 @@ async function checkTxHashDuplicate(txHash) {
   }
 }
 
+async function ensureCreatorHasShellBalance(walletAddress) {
+  const balanceInfo = await getAccountBalance(walletAddress);
+
+  if (!balanceInfo) {
+    throw new Error("Carteira do criador não encontrada na Acki Nacki.");
+  }
+
+  const balance = Number(balanceInfo.balance || 0);
+  if (!Number.isFinite(balance) || balance < config.minCreatorShellBalance) {
+    throw new Error(
+      `Saldo SHELL insuficiente para custos de blockchain. ` +
+      `Mínimo recomendado: ${config.minCreatorShellBalance} SHELL.`,
+    );
+  }
+}
+
+function buildReadinessChecks(databaseReachable) {
+  return {
+    databaseConfigured: Boolean(config.databaseUrl),
+    databaseReachable,
+    graphqlConfigured: Boolean(config.graphqlUrl),
+    tip3DecoderAvailable: isTip3DecoderAvailable(),
+    feeWalletConfigured: config.feeWalletConfigured,
+    adminTokenConfigured: config.adminTokenStrong,
+    allowedOriginsConfigured:
+      config.allowedOrigins.length > 0 && !hasWildcardOrigin,
+    storageProvider: "postgres",
+  };
+}
+
 
 
 const app = express();
@@ -62,8 +90,8 @@ app.use(express.json({ limit: "1mb" }));
 
 app.use((req, res, next) => {
   const origin = req.headers.origin;
-  const allowAll =
-    config.allowedOrigins.length === 0 || config.allowedOrigins.includes("*");
+  const allowAll = !config.isProduction &&
+    (config.allowedOrigins.length === 0 || hasWildcardOrigin);
 
   if (allowAll) {
     res.setHeader("Access-Control-Allow-Origin", origin || "*");
@@ -149,7 +177,7 @@ async function requireSecurityAdmin(req, res, next) {
 app.post("/admin/unlock", async (req, res) => {
   try {
     const { password } = req.body || {};
-    if (!ADMIN_MASTER_PASSWORD) return res.status(503).json({ error: "ADMIN_TOKEN não configurado no backend." });
+    if (!config.adminTokenStrong) return res.status(503).json({ error: "ADMIN_TOKEN não configurado com segurança no backend." });
     if (!password || password !== ADMIN_MASTER_PASSWORD) return res.status(401).json({ error: "Senha incorreta." });
     
     return res.json({ success: true, adminJwt: signAdminJwt("admin") });
@@ -177,29 +205,32 @@ app.get("/healthz", (_, res) => {
 app.get("/readyz", (_, res) => {
   pingDatabase()
     .then(() => {
-      res.json({
+      const checks = buildReadinessChecks(true);
+      const readyForProduction =
+        !config.isProduction ||
+        (checks.graphqlConfigured &&
+          checks.tip3DecoderAvailable &&
+          checks.feeWalletConfigured &&
+          checks.adminTokenConfigured &&
+          checks.allowedOriginsConfigured);
+
+      if (!readyForProduction) {
+        return res.status(503).json({
+          ok: false,
+          checks,
+        });
+      }
+
+      return res.json({
         ok: true,
-        checks: {
-          databaseConfigured: Boolean(config.databaseUrl),
-          databaseReachable: true,
-          graphqlConfigured: Boolean(config.graphqlUrl),
-          feeWalletConfigured: Boolean(config.feeWallet),
-          adminTokenConfigured: Boolean(config.adminToken),
-          storageProvider: "postgres",
-        },
+        checks,
       });
     })
     .catch(() => {
+      const checks = buildReadinessChecks(false);
       res.status(503).json({
         ok: false,
-        checks: {
-          databaseConfigured: Boolean(config.databaseUrl),
-          databaseReachable: false,
-          graphqlConfigured: Boolean(config.graphqlUrl),
-          feeWalletConfigured: Boolean(config.feeWallet),
-          adminTokenConfigured: Boolean(config.adminToken),
-          storageProvider: "postgres",
-        },
+        checks,
       });
     });
 });
@@ -320,6 +351,12 @@ app.post("/verify-payment", async (req, res) => {
 
 app.post("/launch-request", requireSession, async (req, res) => {
   try {
+    if (config.isProduction && !config.feeWalletConfigured) {
+      return res.status(503).json({ 
+        error: "Launchpad inoperante: FEE_WALLET não configurada para receber taxas de lançamento na Mainnet." 
+      });
+    }
+
     const launchRequest = normalizeLaunchRequest(req.body, req.session);
 
     // ── Rate limit: 1 token per wallet per hour (persistent) ─────────────────
@@ -327,6 +364,9 @@ app.post("/launch-request", requireSession, async (req, res) => {
 
     // ── Duplicate txHash guard (persistent) ──────────────────────────────────
     await checkTxHashDuplicate(launchRequest.payment.txHash);
+
+    // ── Creator must keep enough SHELL for chain deployment costs ────────────
+    await ensureCreatorHasShellBalance(launchRequest.creator.wallet);
 
     const payment = await verifyPayment({
       walletAddress: launchRequest.creator.wallet,
@@ -376,10 +416,16 @@ app.post("/launch-request", requireSession, async (req, res) => {
       deployStatus: deployResult.status
     };
 
-    if (deployResult.status === "on_chain_init" || deployResult.status === "deployed") {
+    if (deployResult.status === "deployed") {
       launchTicket.status = "on_chain_deployed";
       launchTicket.mintingAvailable = true;
       launchTicket.note = `Token criado com sucesso no IPFS (${ipfsHash}) e instanciado na Acki Nacki.`;
+    } else {
+      launchTicket.status = "payment_verified_waiting_blockchain_integration";
+      launchTicket.mintingAvailable = false;
+      launchTicket.note =
+        `Pagamento verificado e metadata em IPFS (${ipfsHash}). ` +
+        `Deploy on-chain pendente (${deployResult.status}).`;
     }
 
     await createLaunchBundle({
@@ -453,6 +499,7 @@ app.get("/launches/public", (_, res) => {
             ipfsHash: launch.ipfsHash,
             tokenRootAddress: launch.tokenRootAddress,
             bondingCurveAddress: launch.bondingCurveAddress,
+            deployStatus: launch.status === "on_chain_deployed" ? "deployed" : "pending",
           },
         })),
 
@@ -496,6 +543,7 @@ app.get("/launches/:id", async (req, res) => {
           ipfsHash: found.ipfsHash,
           tokenRootAddress: found.tokenRootAddress,
           bondingCurveAddress: found.bondingCurveAddress,
+          deployStatus: found.status === "on_chain_deployed" ? "deployed" : "pending",
         },
       },
     });
@@ -520,6 +568,22 @@ app.get("/wallet/:address/balance", async (req, res) => {
 async function start() {
   await pingDatabase();
   await runMigrations();
+
+  if (!config.feeWalletConfigured) {
+    console.warn("[Config] FEE_WALLET inválida ou placeholder. O fluxo de pagamento vai falhar.");
+  }
+
+  if (!isTip3DecoderAvailable()) {
+    console.warn("[Config] Decoder TIP-3 indisponível. Validação de pagamento USDC ficará bloqueada.");
+  }
+
+  if (!config.adminTokenStrong) {
+    console.warn("[Config] ADMIN_TOKEN fraco/inválido. Configure um segredo com 32+ caracteres.");
+  }
+
+  if (config.isProduction && (config.allowedOrigins.length === 0 || hasWildcardOrigin)) {
+    console.warn("[Config] ALLOWED_ORIGINS ausente ou com '*'. Configure origens explícitas em produção.");
+  }
 
   app.listen(config.port, () => {
     console.log(`Backend running on port ${config.port}`);

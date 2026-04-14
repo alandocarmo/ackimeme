@@ -1,16 +1,18 @@
 FROM ubuntu:22.04
 
-RUN apt-get update && apt-get install -y wget tar libssl-dev xz-utils
+RUN apt-get update && apt-get install -y wget tar libssl-dev xz-utils curl
 
-# Baixa o binário oficial do compilador TVM da release gosh_0.79.3 Linux
+# 1. Instalar o Compilador (Sold)
 RUN wget https://github.com/gosh-sh/TVM-Solidity-Compiler/releases/download/gosh_0.79.3/sold_gosh_0.79.3_linux_x86_64.tar.gz -O compiler.tar.gz
 RUN tar -xvzf compiler.tar.gz && rm compiler.tar.gz
-
-# O conteúdo do tar.gz costuma trazer 'solc' ou binários equivalentes e algumas libs.
-# Para evitar ficar perdido onde ele descompactou, jogamos tudo pro bin:
 RUN find . -maxdepth 1 -type f -executable -exec mv {} /usr/local/bin/solc \;
+
+# 2. Instalar o tvm-cli (Acki Nacki SDK)
+RUN wget https://github.com/tvmlabs/tvm-sdk/releases/download/v2.24.16.an/tvm-cli-2.24.16.an-linux-musl-amd64.tar.gz -O tvm-cli.tar.gz
+RUN tar -xvzf tvm-cli.tar.gz && rm tvm-cli.tar.gz
+RUN mv tvm-cli /usr/local/bin/tvm-cli && chmod +x /usr/local/bin/tvm-cli
 
 WORKDIR /contracts
 
-# Ponto de entrada assume que a pasta contracts/ local vai ser montada aqui
-CMD ["sh", "-c", "echo 'Compilando Smart Contracts (TVM)...' && solc ./TokenRoot.sol && solc ./TokenWallet.sol && solc ./BondingCurve.sol && echo 'Compilação terminada. Arquivos gerados disponíveis no host.'"]
+# Default command remains compilation, but we can now run tvm-cli
+CMD ["sh", "-c", "echo 'Toolkit Acki Nacki pronto.'"]

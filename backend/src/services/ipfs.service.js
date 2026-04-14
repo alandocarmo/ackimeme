@@ -20,8 +20,10 @@ const PINATA_SECRET_KEY = process.env.PINATA_SECRET_API_KEY || "";
  */
 async function uploadToIPFS(metadata) {
   if (!PINATA_API_KEY || !PINATA_SECRET_KEY) {
+    if (process.env.NODE_ENV === "production") {
+      throw new Error("Falha Crítica: PINATA_API_KEY ou PINATA_SECRET_API_KEY não configuradas em ambiente de produção.");
+    }
     console.warn("[IPFS] PINATA keys não configuradas. Usando mock hash.");
-    // Retorna um CID de exemplo para não travar o desenvolvimento
     return "QmMockHashForMetadata" + Math.floor(Math.random() * 1000000);
   }
 

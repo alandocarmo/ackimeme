@@ -133,6 +133,10 @@ function normalizeLaunchRequest(body = {}, session = null) {
         appFeeSharePercent: config.appFeeSharePercent,
         feeWallet: config.feeWallet,
       },
+      blockchainFee: {
+        tokenSymbol: "SHELL",
+        minimumCreatorBalance: config.minCreatorShellBalance,
+      },
       launchMode: "bonding_curve_pending",
       bondingCurveStatus: "not_implemented",
       poolAutomationStatus: "not_implemented",

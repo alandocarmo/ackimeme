@@ -8,6 +8,10 @@ function normalizeTokenSymbol(value) {
 }
 
 function getCreationFeeRequirement(tokenSymbol) {
+  if (!config.feeWalletConfigured) {
+    throw new Error("FEE_WALLET não configurada corretamente no backend.");
+  }
+
   const normalizedToken = normalizeTokenSymbol(tokenSymbol);
   const option = config.creationFeeOptions.find(
     (item) => item.tokenSymbol === normalizedToken,

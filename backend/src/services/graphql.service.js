@@ -6,15 +6,66 @@
  * Endpoint público (testnet): https://shellnet.ackinacki.org/graphql
  * Documentação: https://dev.ackinacki.com/graphql/graphql-api
  *
- * O schema usa a raiz `blockchain { ... }` com paginação Relay Cursor.
- * Não existe query `transaction(hash:)` direta — buscamos via
- * `blockchain { transactions(filter: { hash: { eq: $hash } }) { edges { node { ... } } } }`
+ * O schema usa a raiz `blockchain { ... }`.
+ * Para lookup direto por hash/id usamos `blockchain { transaction(hash: $hash) { ... } }`.
  */
 
 const axios = require("axios");
 const { config } = require("../config");
 
 const GRAPHQL_ENDPOINT = config.graphqlUrl || "https://shellnet.ackinacki.org/graphql";
+const TIP3_DEFAULT_DECIMALS = 6;
+const MAX_TIP3_TREE_TRANSACTIONS = 24;
+
+const TIP3_TOKEN_WALLET_ABI = {
+  "ABI version": 2,
+  version: "2.3",
+  header: [],
+  functions: [
+    {
+      name: "transferToWallet",
+      inputs: [
+        { name: "amount", type: "uint128" },
+        { name: "recipientTokenWallet", type: "address" },
+        { name: "remainingGasTo", type: "address" },
+        { name: "notify", type: "bool" },
+        { name: "payload", type: "cell" },
+      ],
+      outputs: [],
+    },
+    {
+      name: "transfer",
+      inputs: [
+        { name: "amount", type: "uint128" },
+        { name: "recipient", type: "address" },
+        { name: "deployWalletValue", type: "uint128" },
+        { name: "remainingGasTo", type: "address" },
+        { name: "notify", type: "bool" },
+        { name: "payload", type: "cell" },
+      ],
+      outputs: [],
+    },
+  ],
+  events: [],
+  data: [],
+};
+const TIP3_METHOD_NAMES = ["transfer", "transferToWallet"];
+
+let tvmClient = null;
+
+try {
+  // `nekoton-wasm` decodifica body de mensagens TIP-3 sem depender do binário
+  // nativo do TVM SDK, que pode falhar em runtimes Node recentes.
+  // Instalado como nekoton-wasm-locklift.
+  // eslint-disable-next-line global-require
+  tvmClient = require("nekoton-wasm-locklift");
+} catch (error) {
+  console.warn("[GraphQL] Decoder TIP-3 indisponível:", error.message);
+}
+
+function isTip3DecoderAvailable() {
+  return Boolean(tvmClient && typeof tvmClient.decodeInput === "function");
+}
 
 /**
  * Executa uma query GraphQL contra o endpoint da Acki Nacki.
@@ -40,16 +91,12 @@ async function gql(query, variables = {}) {
 /**
  * Busca uma transação pelo hash.
  *
- * A API da Acki Nacki não expõe `transaction(hash:)` diretamente.
- * Usamos `blockchain.transactions` com filtro de hash e pegamos o
- * primeiro resultado (hash é único por definição).
- *
  * Retorna null se não encontrada.
  *
  * Campos mapeados para o contrato interno do AckiMeme:
  *   tx.hash      — hash da transação
  *   tx.account_addr — endereço de destino (feeWallet)
- *   tx.in_msg    — mensagem de entrada (contém src, value, body)
+ *   tx.in_message — mensagem de entrada (contém src, value, body)
  *   tx.status    — 0=unknown, 1=preliminary, 2=proposed, 3=finalized, 4=refused
  *   tx.tr_type   — tipo de transação
  */
@@ -61,61 +108,62 @@ async function getTransaction(hash) {
   const query = `
     query GetTx($hash: String!) {
       blockchain {
-        transactions(
-          filter: { hash: { eq: $hash } }
-          first: 1
-        ) {
-          edges {
-            node {
-              hash
-              account_addr
-              status
-              status_name
-              tr_type
-              tr_type_name
-              balance_delta(format: DEC)
-              in_msg {
-                src
-                dst
-                value(format: DEC)
-                msg_type
-                msg_type_name
-                body
-              }
-            }
+        transaction(hash: $hash) {
+          id
+          account_addr
+          status
+          status_name
+          tr_type
+          tr_type_name
+          balance_delta(format: DEC)
+          in_message {
+            id
+            src
+            dst
+            value(format: DEC)
+            msg_type
+            msg_type_name
+            body
           }
         }
       }
     }
   `;
 
-  const data = await gql(query, { hash });
-  const edges = data?.blockchain?.transactions?.edges;
+  let node = null;
+  const hashCandidates = buildTxHashCandidates(hash);
 
-  if (!edges || edges.length === 0) {
-    return null;
+  for (const hashCandidate of hashCandidates) {
+    // eslint-disable-next-line no-await-in-loop
+    const data = await gql(query, { hash: hashCandidate });
+    node = data?.blockchain?.transaction || null;
+    if (node) {
+      break;
+    }
   }
 
-  const node = edges[0].node;
+  if (!node) {
+    return null;
+  }
 
   /**
    * Normaliza para o formato que payments.js espera:
    *   { hash, from, to, amount, token: { symbol }, status }
    *
    * Na Acki Nacki:
-   *   - `from`   = in_msg.src  (quem enviou)
-   *   - `to`     = account_addr ou in_msg.dst  (quem recebeu)
-   *   - `amount` = in_msg.value em nanotokens
+   *   - `from`   = in_message.src  (quem enviou)
+   *   - `to`     = account_addr ou in_message.dst  (quem recebeu)
+   *   - `amount` = in_message.value em nanotokens
    *   - status   = "SUCCESS" quando status_name === "Finalized"
    *
-   * O token nativo é SHELL (VMSHELL). Transações de USDC precisarão
-   * de leitura adicional do body/ABI quando integração TIP-3 estiver pronta.
+   * O token nativo é SHELL (VMSHELL). Para USDC/TIP-3 usamos
+   * `getTip3TransferPayment` com decode de ABI na árvore de transações.
    */
   return {
-    hash: node.hash,
-    from: node.in_msg?.src || "",
-    to: node.account_addr || node.in_msg?.dst || "",
-    amount: nanoToDecimal(node.in_msg?.value || "0"),
+    hash: node.id,
+    from: node.in_message?.src || "",
+    to: node.account_addr || node.in_message?.dst || "",
+    amount: nanoToDecimal(node.in_message?.value || "0"),
     token: {
       symbol: "SHELL", // token nativo; substituir por leitura TIP-3 quando disponível
     },
@@ -133,6 +181,289 @@ function nanoToDecimal(nanoValue) {
   const whole = nano / 1_000_000_000n;
   const frac = nano % 1_000_000_000n;
   return Number(`${whole}.${String(frac).padStart(9, "0")}`);
+}
+
+function normalizeAddress(value) {
+  return String(value || "").trim().toLowerCase();
+}
+
+function buildTxHashCandidates(hash) {
+  const value = String(hash || "").trim();
+  if (!value) {
+    return [];
+  }
+
+  const candidates = [value];
+
+  if (value.startsWith("0x") && value.length > 2) {
+    candidates.push(value.slice(2));
+  } else if (/^[0-9a-f]{64}$/i.test(value)) {
+    candidates.push(`0x${value}`);
+  }
+
+  return [...new Set(candidates)];
+}
+
+function canonicalTxHash(hash) {
+  const value = String(hash || "").trim().toLowerCase();
+  if (value.startsWith("0x") && value.length > 2) {
+    return value.slice(2);
+  }
+  return value;
+}
+
+function extractTip3RawAmount(input = {}) {
+  const candidates = [input.amount, input._value, input.value, input.tokens];
+  for (const candidate of candidates) {
+    if (candidate === undefined || candidate === null) {
+      continue;
+    }
+
+    const sanitized = String(candidate).trim();
+    if (!/^\d+$/.test(sanitized)) {
+      continue;
+    }
+
+    try {
+      return BigInt(sanitized);
+    } catch {
+      // ignore malformed values and continue probing
+    }
+  }
+
+  return null;
+}
+
+function tip3RawToDecimal(rawAmount, decimals = TIP3_DEFAULT_DECIMALS) {
+  const parsedDecimals = Number.isFinite(Number(decimals))
+    ? Math.max(0, Math.trunc(Number(decimals)))
+    : TIP3_DEFAULT_DECIMALS;
+  const base = 10n ** BigInt(parsedDecimals);
+  const whole = rawAmount / base;
+  const fraction = rawAmount % base;
+  return Number(`${whole}.${String(fraction).padStart(parsedDecimals, "0")}`);
+}
+
+function decodeTip3TransferBody(body) {
+  if (!isTip3DecoderAvailable() || !body) {
+    return null;
+  }
+
+  try {
+    const decoded = tvmClient.decodeInput(
+      body,
+      JSON.stringify(TIP3_TOKEN_WALLET_ABI),
+      TIP3_METHOD_NAMES,
+      true,
+    );
+
+    if (!decoded || !decoded.method || !decoded.input) {
+      return null;
+    }
+
+    const functionName = String(decoded.method);
+    if (!TIP3_METHOD_NAMES.includes(functionName)) {
+      return null;
+    }
+
+    const input = decoded.input;
+    const rawAmount = extractTip3RawAmount(input);
+    if (rawAmount === null) {
+      return null;
+    }
+
+    const recipient = normalizeAddress(
+      functionName === "transfer"
+        ? input.recipient
+        : input.recipientTokenWallet,
+    );
+
+    return {
+      functionName,
+      recipient,
+      rawAmount,
+    };
+  } catch {
+    return null;
+  }
+}
+
+async function getTransactionWithMessages(hash) {
+  const query = `
+    query GetTxWithMessages($hash: String!) {
+      blockchain {
+        transaction(hash: $hash) {
+          id
+          account_addr
+          status_name
+          in_message {
+            id
+            src
+            dst
+            body
+            msg_type_name
+            value(format: DEC)
+          }
+          out_messages {
+            id
+            src
+            dst
+            body
+            msg_type_name
+            value(format: DEC)
+            dst_transaction {
+              id
+            }
+          }
+        }
+      }
+    }
+  `;
+
+  const hashCandidates = buildTxHashCandidates(hash);
+
+  for (const hashCandidate of hashCandidates) {
+    // eslint-disable-next-line no-await-in-loop
+    const data = await gql(query, { hash: hashCandidate });
+    const node = data?.blockchain?.transaction || null;
+    if (node) {
+      return node;
+    }
+  }
+
+  return null;
+}
+
+async function collectTransactionTree(rootTxHash) {
+  const visited = new Set();
+  const queue = [String(rootTxHash || "").trim()];
+  const transactions = [];
+
+  while (queue.length > 0 && transactions.length < MAX_TIP3_TREE_TRANSACTIONS) {
+    const txHash = queue.shift();
+    const canonicalHash = canonicalTxHash(txHash);
+    if (!canonicalHash || visited.has(canonicalHash)) {
+      continue;
+    }
+    visited.add(canonicalHash);
+
+    // eslint-disable-next-line no-await-in-loop
+    const tx = await getTransactionWithMessages(txHash);
+    if (!tx) {
+      continue;
+    }
+
+    transactions.push(tx);
+
+    for (const message of tx.out_messages || []) {
+      const nextTxHash = String(message?.dst_transaction?.id || "").trim();
+      const nextCanonical = canonicalTxHash(nextTxHash);
+      if (nextTxHash && nextCanonical && !visited.has(nextCanonical)) {
+        queue.push(nextTxHash);
+      }
+    }
+  }
+
+  return transactions;
+}
+
+async function getTip3TransferPayment({
+  txHash,
+  senderWallet,
+  recipientWallet,
+  decimals = TIP3_DEFAULT_DECIMALS,
+}) {
+  if (!isTip3DecoderAvailable()) {
+    throw new Error(
+      "Decoder TIP-3 indisponível para validação de USDC. " +
+      "Verifique se a dependência nekoton-wasm está instalada no backend.",
+    );
+  }
+
+  const transactions = await collectTransactionTree(txHash);
+  if (transactions.length === 0) {
+    return null;
+  }
+
+  const expectedSender = normalizeAddress(senderWallet);
+  const expectedRecipient = normalizeAddress(recipientWallet);
+  const senderInvolved = transactions.some((tx) => {
+    const account = normalizeAddress(tx.account_addr);
+    const inSrc = normalizeAddress(tx.in_message?.src);
+    const inDst = normalizeAddress(tx.in_message?.dst);
+
+    if (expectedSender && (account === expectedSender || inSrc === expectedSender || inDst === expectedSender)) {
+      return true;
+    }
+
+    for (const outMessage of tx.out_messages || []) {
+      const outSrc = normalizeAddress(outMessage?.src);
+      const outDst = normalizeAddress(outMessage?.dst);
+      if (outSrc === expectedSender || outDst === expectedSender) {
+        return true;
+      }
+    }
+
+    return false;
+  });
+
+  if (expectedSender && !senderInvolved) {
+    return null;
+  }
+
+  const candidates = [];
+
+  for (const tx of transactions) {
+    const txMessages = [
+      ...(tx.in_message ? [tx.in_message] : []),
+      ...(tx.out_messages || []),
+    ];
+
+    for (const message of txMessages) {
+      const decoded = decodeTip3TransferBody(message?.body);
+      if (!decoded) {
+        continue;
+      }
+
+      if (expectedRecipient && decoded.recipient !== expectedRecipient) {
+        continue;
+      }
+
+      candidates.push({
+        sender: normalizeAddress(message?.src),
+        recipient: decoded.recipient,
+        rawAmount: decoded.rawAmount,
+        functionName: decoded.functionName,
+        messageId: message?.id || "",
+        txHash: tx.id || "",
+      });
+    }
+  }
+
+  if (candidates.length === 0) {
+    return null;
+  }
+
+  candidates.sort((a, b) => {
+    if (a.rawAmount === b.rawAmount) return 0;
+    return a.rawAmount > b.rawAmount ? -1 : 1;
+  });
+
+  const winner = candidates[0];
+
+  return {
+    sender: winner.sender,
+    recipient: winner.recipient,
+    amount: tip3RawToDecimal(winner.rawAmount, decimals),
+    rawAmount: winner.rawAmount.toString(),
+    decimals: Number(decimals),
+    proof: {
+      functionName: winner.functionName,
+      messageId: winner.messageId,
+      txHash: winner.txHash,
+      treeTransactionsScanned: transactions.length,
+    },
+  };
 }
 
 /**
@@ -216,6 +547,8 @@ async function getAccountPublicKey(address) {
 }
 
 module.exports = {
+  getTip3TransferPayment,
+  isTip3DecoderAvailable,
   getTransaction,
   getAccountBalance,
   getAccountPublicKey,

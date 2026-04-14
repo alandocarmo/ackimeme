@@ -69,14 +69,14 @@ Observação:
 
 1. O bot abre a Web App configurada em `WEB_APP_URL`.
 2. O frontend busca `/config`, gera challenge de auth por wallet e abre sessão curta com anti-replay.
-3. O feed público geral recebe os `launch-request` criados no fluxo padrão do app.
-4. O launchpad exclusivo fica separado e só publica campanhas criadas pelo admin.
-5. Cada campanha exclusiva pode ter tarefas com recompensa e submission por wallet para revisão manual.
-6. A página `/admin` opera tanto o feed geral quanto o launchpad usando wallet permitida em `ADMIN_WALLETS` ou `ADMIN_TOKEN` como fallback.
+3. O usuário paga fee de uso do dApp em USDC (TIP-3) e o backend valida a transferência.
+4. O backend também exige saldo mínimo em SHELL na carteira do criador para cobrir custo de blockchain.
+5. O feed público geral recebe os `launch-request` criados no fluxo padrão do app.
+6. A página `/admin/security` opera o painel de segurança com `ADMIN_TOKEN`.
 
 ## Seed demo
 
-Para popular o banco com dados de teste do board público e do launchpad exclusivo:
+Para popular o banco com dados de teste do board público:
 
 ```bash
 cd backend && npm run db:seed:demo
@@ -85,8 +85,6 @@ cd backend && npm run db:seed:demo
 O seed atual cria:
 
 - 2 coins demo no feed público geral
-- 2 projetos demo no launchpad exclusivo
-- tarefas demo para cada projeto
 
 O comando é seguro para rerodar: ele substitui apenas os registros demo criados por esse script.
 
@@ -96,7 +94,7 @@ O modo recomendado do protótipo agora é:
 
 - autenticar no app com wallet
 - colocar essa wallet em `ADMIN_WALLETS` no backend
-- abrir `/admin` usando a mesma sessão
+- abrir `/admin/security` para monitoramento
 
 Fallback operacional:
 
@@ -177,8 +175,6 @@ E validar endpoints como:
 
 - `GET /readyz`
 - `GET /launches/public`
-- `GET /launchpad/projects`
-- `GET /admin/launchpad/submissions`
 
 ## Storage atual
 
@@ -186,13 +182,7 @@ E validar endpoints como:
 - migração SQL em [backend/src/migrations/001_init.sql](C:/Users/alanp/ackimeme/backend/src/migrations/001_init.sql)
 - script manual de migração: `cd backend && npm run db:migrate`
 
-O schema já inclui a tabela `reward_tasks` para a próxima rodada do protótipo admin-curated.
-
-Nesta rodada, o protótipo passou a usar tabelas próprias para o launchpad exclusivo:
-
-- `launchpad_projects`
-- `launchpad_tasks`
-- `launchpad_task_submissions`
+O schema já inclui a tabela `reward_tasks` para a próxima rodada do protótipo.
 
 ## Falta conectar
 

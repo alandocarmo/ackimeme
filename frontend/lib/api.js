@@ -27,14 +27,6 @@ async function request(path, options = {}) {
   return data;
 }
 
-function normalizeAdminOptions(value) {
-  if (typeof value === "string") {
-    return { adminToken: value };
-  }
-
-  return value || {};
-}
-
 export function getConfig() {
   return request("/config");
 }
@@ -87,103 +79,8 @@ export function getPublicLaunches() {
   return request("/launches/public");
 }
 
-export function getPublicLaunchpadProjects() {
-  return request("/launchpad/projects");
-}
-
-export function getPublicLaunchpadProject(slug, token) {
-  return request(`/launchpad/projects/${encodeURIComponent(slug)}`, { token });
-}
-
-export function getMyLaunchpadSubmissions(token) {
-  return request("/launchpad/submissions/my", { token });
-}
-
-export function submitLaunchpadTask(projectId, taskId, payload, token) {
-  return request(`/launchpad/tasks/${taskId}/submit`, {
-    method: "POST",
-    body: {
-      ...payload,
-      projectId,
-    },
-    token,
-  });
-}
-
-export function getAdminOverview(options) {
-  return request("/admin/overview", normalizeAdminOptions(options));
-}
-
-export function getAdminLaunches(options) {
-  return request("/admin/launches", normalizeAdminOptions(options));
-}
-
-export function getAdminAccess(options) {
-  return request("/admin/access", normalizeAdminOptions(options));
-}
-
-export function getAdminLaunchpadProjects(options) {
-  return request("/admin/launchpad/projects", normalizeAdminOptions(options));
-}
-
-export function getAdminLaunchpadSubmissions(options) {
-  return request("/admin/launchpad/submissions", normalizeAdminOptions(options));
-}
-
-export function createAdminLaunchpadProject(options, payload) {
-  return request("/admin/launchpad/projects", {
-    method: "POST",
-    body: payload,
-    ...normalizeAdminOptions(options),
-  });
-}
-
-export function updateAdminLaunchpadProject(options, projectId, payload) {
-  return request(`/admin/launchpad/projects/${projectId}`, {
-    method: "PATCH",
-    body: payload,
-    ...normalizeAdminOptions(options),
-  });
-}
-
-export function updateAdminLaunchpadProjectContent(options, projectId, payload) {
-  return request(`/admin/launchpad/projects/${projectId}/content`, {
-    method: "PATCH",
-    body: payload,
-    ...normalizeAdminOptions(options),
-  });
-}
-
-export function createAdminLaunchpadTask(options, projectId, payload) {
-  return request(`/admin/launchpad/projects/${projectId}/tasks`, {
-    method: "POST",
-    body: payload,
-    ...normalizeAdminOptions(options),
-  });
-}
-
-export function updateAdminLaunchpadTask(options, taskId, payload) {
-  return request(`/admin/launchpad/tasks/${taskId}`, {
-    method: "PATCH",
-    body: payload,
-    ...normalizeAdminOptions(options),
-  });
-}
-
-export function updateAdminLaunchpadTaskContent(options, taskId, payload) {
-  return request(`/admin/launchpad/tasks/${taskId}/content`, {
-    method: "PATCH",
-    body: payload,
-    ...normalizeAdminOptions(options),
-  });
-}
-
-export function updateAdminLaunchpadSubmission(options, submissionId, payload) {
-  return request(`/admin/launchpad/submissions/${submissionId}`, {
-    method: "PATCH",
-    body: payload,
-    ...normalizeAdminOptions(options),
-  });
+export function getLaunchById(id) {
+  return request(`/launches/${encodeURIComponent(id)}`);
 }
 
 export function unlockAdmin(password, walletAddress) {
