@@ -7,8 +7,8 @@ const migrationsDir = path.join(__dirname, "migrations");
 
 const pool = new Pool({
   connectionString: config.databaseUrl,
-  ssl: process.env.NODE_ENV === "production" ? { rejectUnauthorized: false } : false,
-  connectionTimeoutMillis: 30000, 
+  ssl: process.env.DATABASE_SSL === "true" ? { rejectUnauthorized: true } : false,
+  connectionTimeoutMillis: 30000,
 });
 
 async function query(text, params = []) {

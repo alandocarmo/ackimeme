@@ -4,6 +4,10 @@ pragma AbiHeader pubkey;
 
 import "./TokenWallet.sol";
 
+interface IBondingCurve {
+    function onTokenBurned(uint256 amount, address refundAddress) external;
+}
+
 contract TokenRoot {
     string public name;
     string public symbol;
@@ -48,14 +52,33 @@ contract TokenRoot {
 
     function mint(address recipient, uint256 amount, uint128 deployWalletValue) public {
         require(msg.sender == owner, 101, "Only owner (BondingCurve) can mint");
+        require(amount > 0, 105, "Amount must be greater than zero");
         tvm.accept();
 
         totalSupply += amount;
-
         address walletInfo = getWalletAddress(recipient);
         
-        // This is a simplified internal message to call receiveTokens on the wallet
-        // In full TIP-3 this involves payload packaging
+        // flag 1: send exact deployWalletValue
         ITokenWallet(walletInfo).receiveTokens{value: varuint16(deployWalletValue), flag: 1}(amount);
+    }
+
+    // ─── Security Fix: Receive burn notification from legitimate TokenWallet ──
+    function notifyBurn(uint256 amount, address refundAddress, address callbackTarget) public {
+        // Assegura que o msg.sender é a carteira genuína do refundAddress.
+        // Impedindo que carteiras maliciosas mintam queimas inexistentes.
+        address expectedWallet = getWalletAddress(refundAddress);
+        require(msg.sender == expectedWallet, 106, "Caller is not a valid TokenWallet");
+        
+        tvm.rawReserve(0, 4); // Mantem apenas o saldo original do contrato e repassa restante do attach pro callback
+
+        totalSupply -= amount;
+        
+        // Pass the execution context to the Bonding Curve to finalize the Trade out (Sell refund)
+        if (callbackTarget.value != 0) {
+            IBondingCurve(callbackTarget).onTokenBurned{value: 0, flag: 128}(amount, refundAddress);
+        } else {
+            // Se nenhum callback de DEX/Curve foi fornecido, reembolso do gas pro usuário
+            refundAddress.transfer({ value: 0, flag: 128, bounce: false });
+        }
     }
 }

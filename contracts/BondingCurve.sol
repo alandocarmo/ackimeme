@@ -76,31 +76,39 @@ contract BondingCurve {
     // ─── Price Function (Bancor-style) ────────────────────────────────────────
     // Safe linear slope avoiding div by zero. Start at 1 nanowVMSHELL, slope = 1 per 10k tokens
     function currentPrice() public view returns (uint128) {
-        return uint128(1 ton + (totalSupply / 1000));
+        // Safe math: totalSupply is uint256, slope is calculated in uint256 before casting down to uint128
+        uint256 base = 1 ton;
+        uint256 slope = totalSupply / 1000;
+        return uint128(base + slope);
     }
 
     function getBuyPrice(uint256 tokenAmount) public view returns (uint128) {
-        return uint128(tokenAmount) * currentPrice();
+        return uint128(tokenAmount * uint256(currentPrice()));
     }
 
     // ─── Buy ─────────────────────────────────────────────────────────────────
     function buy(uint256 tokenAmount) public nonReentrant {
         // LOCK: no buying after migration to DEX.DO
         require(!migrated, 201, "Token migrated to DEX.DO - trade there.");
-        require(tokenAmount > 0, 202);
+        require(tokenAmount > 0, 202, "Amount must be greater than zero");
         require(msg.value > 0, 203, "Send SHELL to buy tokens");
         tvm.accept();
 
         uint128 cost = getBuyPrice(tokenAmount);
         require(msg.value >= cost, 204, "Insufficient SHELL sent");
 
-        reserveBalance += msg.value;
+        reserveBalance += cost; // Only add the actual cost to reserve
         totalSupply += tokenAmount;
 
         // Call tokenRoot.mint(msg.sender, tokenAmount) via async message
-        ITokenRoot(tokenRoot).mint{value: varuint16(0.1 ton)}(msg.sender, tokenAmount, uint128(0.05 ton));
+        ITokenRoot(tokenRoot).mint{value: 0.1 ton}(msg.sender, tokenAmount, 0.05 ton);
 
-        emit TokensBought(msg.sender, msg.value, tokenAmount, currentPrice());
+        // Refund excess SHELL to sender
+        if (msg.value > cost) {
+            msg.sender.transfer({ value: (msg.value - cost), flag: 1, bounce: false });
+        }
+
+        emit TokensBought(msg.sender, uint128(cost), tokenAmount, currentPrice());
 
         // Check migration threshold
         if (reserveBalance >= MIGRATION_THRESHOLD && !migrated) {
@@ -108,39 +116,44 @@ contract BondingCurve {
         }
     }
 
-    // ─── Sell ────────────────────────────────────────────────────────────────
-    function sell(uint256 tokenAmount) public nonReentrant {
-        // LOCK: no selling after migration
-        require(!migrated, 201, "Token migrated to DEX.DO - trade there.");
-        require(tokenAmount > 0, 202);
-        require(totalSupply >= tokenAmount, 205, "Not enough supply to sell back");
-        tvm.accept();
+    // ─── Security Fix: Async Sell via Burn Callback ─────────────────────────
+    // This replaces the old public sell() which was vulnerable to async desync.
+    // Logic: User calls TokenWallet.burn() -> TokenRoot.notifyBurn() -> BondingCurve.onTokenBurned()
+    function onTokenBurned(uint256 amount, address refundAddress) external {
+        // SEGURANÇA CRÍTICA: Somente o TokenRoot real pode confirmar que tokens foram destruídos
+        require(msg.sender == tokenRoot, 107, "Security: Only TokenRoot can confirm burns");
+        require(!migrated, 201, "Token migrated to DEX.DO");
+        
+        // Reservar o gás que chegou na mensagem e usar o saldo do contrato para o refund
+        tvm.rawReserve(0, 4);
 
-        uint128 refund = uint128(tokenAmount) * currentPrice();
-        require(reserveBalance >= refund, 206, "Reserve too low");
+        uint128 refund = uint128(amount * uint256(currentPrice()));
+        
+        // Se por algum motivo o reserve balance for menor que o refund (erro matemático),
+        // capamos o refund para o saldo disponível para evitar quebra do contrato.
+        if (refund > reserveBalance) {
+            refund = reserveBalance;
+        }
 
         reserveBalance -= refund;
-        totalSupply -= tokenAmount;
+        totalSupply -= amount;
 
-        // Burn tokens
-        ITokenRoot(tokenRoot).burn{value: varuint16(0.1 ton)}(msg.sender, tokenAmount, uint128(0.05 ton));
+        // Envia o reembolso para o usuário
+        refundAddress.transfer({ value: refund, flag: 0, bounce: false });
 
-        msg.sender.transfer(varuint16(refund), false, 0);
-
-        emit TokensSold(msg.sender, tokenAmount, refund, currentPrice());
+        emit TokensSold(refundAddress, amount, refund, currentPrice());
     }
 
     // ─── Migration ────────────────────────────────────────────────────────────
     // Called internally when reserve crosses MIGRATION_THRESHOLD.
-    // Liquidity is locked for LOCK_PERIOD — creator cannot withdraw.
     function _migrate() internal {
         migrated = true;
-        migratedAt = block.timestamp;
-        uint32 lockedUntil = block.timestamp + LOCK_PERIOD;
+        migratedAt = uint32(now);
+        uint32 lockedUntil = uint32(now) + LOCK_PERIOD;
 
-        // Call DEX.DO pool to add liquidity securely (real integration payload)
+        // Prepara mensagem para o DEX.DO (payload real sugerido)
         if (dexPool != address(0)) {
-            IDexPool(dexPool).addLiquidity{value: varuint16(reserveBalance)}(reserveBalance, uint128(totalSupply));
+            IDexPool(dexPool).addLiquidity{value: 0, flag: 128}(reserveBalance, uint128(totalSupply));
         }
 
         emit MigratedToDex(dexPool, reserveBalance, lockedUntil);
@@ -150,10 +163,9 @@ contract BondingCurve {
     function withdrawLiquidity() public {
         require(msg.sender == owner, 301);
         require(migrated, 302, "Not migrated yet");
-        require(block.timestamp >= migratedAt + LOCK_PERIOD, 303, "Liquidity still locked");
+        require(now >= migratedAt + LOCK_PERIOD, 303, "Liquidity still locked");
         tvm.accept();
-        // Only allow withdrawal after lock expires
-        msg.sender.transfer(varuint16(reserveBalance), false, 0);
+        msg.sender.transfer({ value: 0, flag: 128, bounce: false });
     }
 
     // ─── Admin: set DEX pool address ─────────────────────────────────────────

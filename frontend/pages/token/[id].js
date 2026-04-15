@@ -101,11 +101,13 @@ export default function TokenPage() {
 
   async function handleTrade() {
     if (!session) return router.push(`/auth?from=/token/${id}`);
-    setIsTrading(true);
-    setTimeout(() => {
-      setIsTrading(false);
-      alert(`${tradeMode === "buy" ? "Buy" : "Sell"} of ${tradeAmount} sent to TVM! (SDK integration pending)`);
-    }, 1500);
+    // Trade on-chain via BondingCurve não está integrado ainda.
+    // Quando o TVM SDK estiver conectado, aqui chamará:
+    //   buy()  → envia SHELL, recebe tokens
+    //   sell() → queima tokens, recebe SHELL
+    alert(
+      "Trading will be available once the Bonding Curve contract is fully deployed and integrated with the TVM SDK. Stay tuned!"
+    );
   }
 
   const stats = token ? calcBondingStats(token.onchainData) : null;
@@ -246,32 +248,42 @@ export default function TokenPage() {
                 </div>
               )}
 
-              {/* Security Audit */}
+              {/* Contract Security Status — based on actual on-chain data */}
               <div style={s.securityCard}>
-                 <p style={s.infoLabel}>Contract Security Audit</p>
+                 <p style={s.infoLabel}>Contract Security Status</p>
                  <div style={s.securityGrid}>
-                    <div style={s.secItem}><span style={s.secIcon}>✅</span> Auto-Pool (Bancor) Enabled</div>
-                    <div style={s.secItem}><span style={s.secIcon}>✅</span> Anti-Rug 30D Lock</div>
-                    <div style={s.secItem}><span style={s.secIcon}>✅</span> Pre-Mints Disabled</div>
-                    <div style={s.secItem}><span style={s.secIcon}>✅</span> Owner Renounced</div>
+                    <div style={s.secItem}>
+                      <span style={s.secIcon}>{token.onchainData?.bondingCurveAddress && !token.onchainData.bondingCurveAddress.includes('pending') ? '✓' : '⏳'}</span>
+                      {' '}Bonding Curve {token.onchainData?.bondingCurveAddress && !token.onchainData.bondingCurveAddress.includes('pending') ? 'Deployed' : 'Pending Deploy'}
+                    </div>
+                    <div style={s.secItem}>
+                      <span style={s.secIcon}>{token.onchainData?.deployStatus === 'deployed' ? '✓' : '⏳'}</span>
+                      {' '}Token Contract {token.onchainData?.deployStatus === 'deployed' ? 'Live' : 'Pending'}
+                    </div>
+                    <div style={s.secItem}>
+                      <span style={s.secIcon}>⏳</span>
+                      {' '}Anti-Rug Lock (30D) — awaiting deploy
+                    </div>
+                    <div style={s.secItem}>
+                      <span style={s.secIcon}>⏳</span>
+                      {' '}DEX.DO Migration — awaiting threshold
+                    </div>
                  </div>
+                 <p style={{...s.curveHint, marginTop: '10px', color: '#52525b'}}>Security features activate once the Bonding Curve contract is fully deployed on-chain.</p>
               </div>
 
-              {/* Bubble Map Visualizer (Simulation) */}
+              {/* Holder Distribution — will show real data once indexer is connected */}
               <div style={s.bubbleMapCard}>
                  <div style={s.bubbleHeader}>
-                    <p style={s.infoLabel}>Holder Distribution (Bubble Map)</p>
-                    <span style={s.livePulse}>LIVE</span>
+                    <p style={s.infoLabel}>Holder Distribution</p>
+                    <span style={{...s.livePulse, color: '#52525b', animation: 'none'}}>COMING SOON</span>
                  </div>
-                 <div style={s.bubbleCanvas}>
-                    <div style={{...s.bubble, width: 80, height: 80, left: '20%', top: '20%', background: 'rgba(255,51,51,0.2)', border: '1px solid #ff3333'}}>Curve</div>
-                    <div style={{...s.bubble, width: 40, height: 40, left: '60%', top: '50%'}}>Whale</div>
-                    <div style={{...s.bubble, width: 30, height: 30, left: '75%', top: '30%'}}>Hold</div>
-                    <div style={{...s.bubble, width: 25, height: 25, left: '40%', top: '70%'}}>Hold</div>
-                    <div style={{...s.bubble, width: 20, height: 20, left: '50%', top: '20%'}}>Hold</div>
-                    <div style={{...s.bubble, width: 15, height: 15, left: '30%', top: '50%'}}>Trader</div>
+                 <div style={{...s.bubbleCanvas, display: 'flex', alignItems: 'center', justifyContent: 'center', flexDirection: 'column'}}>
+                    <span style={{fontSize: '32px', marginBottom: '8px', opacity: 0.3}}>📊</span>
+                    <p style={{color: '#52525b', fontSize: '12px', margin: 0, textAlign: 'center', padding: '0 20px'}}>
+                      Holder distribution data will be available once the token is deployed on-chain and the blockchain indexer is connected.
+                    </p>
                  </div>
-                 <p style={s.curveHint}>Top 100 holders concentration graph. Bubbles represent wallet balances. Red bubble indicates the Bonding Curve reserve.</p>
               </div>
             </div>
 
@@ -311,12 +323,13 @@ export default function TokenPage() {
                   )}
 
                   <button
-                    style={tradeMode === "buy" ? s.tradeBtnBuy : s.tradeBtnSell}
-                    disabled={isTrading || !tradeAmount}
+                    style={{...(tradeMode === "buy" ? s.tradeBtnBuy : s.tradeBtnSell), opacity: 0.6, cursor: 'not-allowed'}}
+                    disabled={true}
                     onClick={handleTrade}
                   >
-                    {isTrading ? "Processing..." : tradeMode === "buy" ? `Buy $${token.coin.symbol}` : `Sell $${token.coin.symbol}`}
+                    🔒 Trading Coming Soon
                   </button>
+                  <p style={{...s.tradeHint, color: '#f97316'}}>Bonding Curve SDK integration in progress</p>
 
                   {!session && (
                     <p style={s.tradeHint}>Connect wallet to trade</p>

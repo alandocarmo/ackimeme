@@ -202,7 +202,7 @@ async function cleanupExpiredAuthData() {
 }
 
 async function createAuthChallenge(challenge, auditEvent) {
-  await cleanupExpiredAuthData();
+
 
   await withTransaction(async (client) => {
     await client.query(
@@ -254,7 +254,7 @@ async function createAuthChallenge(challenge, auditEvent) {
 }
 
 async function getUnusedChallengeById(challengeId) {
-  await cleanupExpiredAuthData();
+
   const result = await query(
     `
       SELECT *
@@ -274,7 +274,7 @@ async function consumeChallengeAndCreateSession({
   session,
   auditEvent,
 }) {
-  await cleanupExpiredAuthData();
+
 
   return withTransaction(async (client) => {
     const challengeUpdate = await client.query(
@@ -345,7 +345,7 @@ async function consumeChallengeAndCreateSession({
 }
 
 async function getSessionByToken(token) {
-  await cleanupExpiredAuthData();
+
   const result = await query(
     `
       SELECT *
@@ -361,7 +361,7 @@ async function getSessionByToken(token) {
 }
 
 async function touchSession(token) {
-  await cleanupExpiredAuthData();
+
   const result = await query(
     `
       UPDATE wallet_sessions

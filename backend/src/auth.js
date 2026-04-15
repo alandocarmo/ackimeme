@@ -175,7 +175,33 @@ async function verifyWalletChallenge({
   // PROVA FORTE DA WALLET (Acki Nacki): Consulta on-chain para garantir consistência
   const walletProof = await getAccountPublicKey(normalizedWallet);
   if (!walletProof.isDeployed) {
-    throw new Error("Carteira preenchida não se encontra na blockchain (Acki Nacki).");
+    const reason = walletProof.reason || "Conta não encontrada ou não ativa.";
+    throw new Error(`Carteira não encontrada na blockchain (Acki Nacki): ${reason}`);
+  }
+
+  // VINCULAÇÃO PUBLIC KEY ↔ WALLET (Segurança Crítica)
+  // Compara a public key informada pelo usuário com a real da wallet na blockchain.
+  // Sem isso, qualquer keypair Ed25519 pode se autenticar como qualquer wallet deployada.
+  const normalizedInputKey = trimString(publicKey).toLowerCase();
+  let proofLevel = "signature_only_until_wallet_contract_binding";
+
+  if (walletProof.publicKey) {
+    const normalizedOnChainKey = String(walletProof.publicKey).toLowerCase();
+    if (normalizedInputKey !== normalizedOnChainKey) {
+      throw new Error(
+        "A public key informada não corresponde à public key da wallet na blockchain. " +
+        "Certifique-se de usar a mesma chave que controla a carteira."
+      );
+    }
+    proofLevel = "strong_tvm_contract_binding";
+  } else {
+    // Public key não pôde ser extraída da BOC — registrar aviso
+    // A assinatura ainda será verificada, mas sem binding forte
+    console.warn(
+      `[Auth] Não foi possível extrair public key on-chain para ${normalizedWallet}. ` +
+      `Proof level degradado para "signature_only_until_wallet_contract_binding". ` +
+      `Verifique se nekoton-wasm está instalado corretamente.`
+    );
   }
 
   // Verifica assinatura usando NodeJS Native Crypto para Ed25519 (Padrão TVM/Everscale)
@@ -197,7 +223,8 @@ async function verifyWalletChallenge({
     token: tokenVal,
     walletAddress: normalizedWallet,
     publicKey: trimString(publicKey),
-    proofLevel: "strong_tvm_contract_binding",
+    proofLevel,
+
     telegramBinding: {
       status: telegram.status,
       userId: telegram.user?.id ? String(telegram.user.id) : "",

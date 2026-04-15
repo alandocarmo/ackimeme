@@ -24,6 +24,7 @@ const {
   updateWalletLastLaunch,
   listLaunchesByWallet,
   listPublicLaunches,
+  cleanupExpiredAuthData,
 } = require("./storage");
 const { createTreasuryPaymentRecord } = require("./treasury");
 const {
@@ -32,6 +33,18 @@ const {
 } = require("./services/graphql.service");
 const { uploadToIPFS, createTokenMetadata } = require("./services/ipfs.service");
 const { deployTokenEcosystem } = require("./services/deployer.service");
+const helmet = require("helmet");
+const rateLimit = require("express-rate-limit");
+const jwt = require("jsonwebtoken");
+
+// ─── Background Jobs ────────────────────────────────────────────────────────
+// Limpeza de sessões e challenges expirados roda a cada 10 minutos 
+// em vez de sobrecarregar os endpoints de autenticação.
+setInterval(() => {
+  cleanupExpiredAuthData().catch((err) =>
+    console.error("[Cron] Erro ao limpar dados de auth expirados:", err.message)
+  );
+}, 10 * 60 * 1000);
 
 
 // ─── Rate Limit & txHash: now persistent in PostgreSQL ───────────────────────
@@ -86,7 +99,22 @@ function buildReadinessChecks(databaseReachable) {
 
 
 const app = express();
-app.use(express.json({ limit: "1mb" }));
+
+// Security middlewares
+app.use(helmet());
+
+// Global Rate Limiting
+const globalLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutos
+  max: 100, // limite de 100 requests por IP a cada 15 min
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { error: "Too many requests from this IP, please try again later." }
+});
+app.use(globalLimiter);
+
+// Parse JSON com limite rígido (100kb é suficiente para os payloads do DApp)
+app.use(express.json({ limit: "100kb" }));
 
 app.use((req, res, next) => {
   const origin = req.headers.origin;
@@ -149,18 +177,15 @@ async function requireSession(req, res, next) {
 const ADMIN_MASTER_PASSWORD = config.adminToken; // reuse ADMIN_TOKEN as master password
 
 function signAdminJwt(walletAddress) {
-  const payload = Buffer.from(JSON.stringify({ w: walletAddress })).toString("base64url");
-  const sig = crypto.createHmac("sha256", ADMIN_MASTER_PASSWORD).update(payload).digest("base64url");
-  return `${payload}.${sig}`;
+  return jwt.sign({ w: walletAddress }, ADMIN_MASTER_PASSWORD, { expiresIn: "4h" });
 }
 
 function verifyAdminJwt(token) {
   try {
-    const [payload, sig] = token.split(".");
-    const expectedSig = crypto.createHmac("sha256", ADMIN_MASTER_PASSWORD).update(payload).digest("base64url");
-    if (sig !== expectedSig) return null;
-    return JSON.parse(Buffer.from(payload, "base64url").toString());
-  } catch { return null; }
+    return jwt.verify(token, ADMIN_MASTER_PASSWORD);
+  } catch { 
+    return null; 
+  }
 }
 
 async function requireSecurityAdmin(req, res, next) {
@@ -299,18 +324,27 @@ app.post("/auth/logout", async (req, res) => {
 
 
 
-// Security Mock Engine
+// Security Engine — anomalies and viral ranking from real database data
 app.use("/admin/security", requireSecurityAdmin, require("./security"));
 
-app.get("/tokens/viral", (req, res) => {
-  res.json({
-    success: true,
-    ranking: [
-      { id: "1", name: "Pepe TVM", symbol: "$PEPET", trendingScore: 99.5, speed: "+1400%", bubbleCluster: 8, contractStatus: "Renounced" },
-      { id: "2", name: "Acki Dog", symbol: "$ACKIDOG", trendingScore: 88.2, speed: "+450%", bubbleCluster: 5, contractStatus: "Renounced" },
-      { id: "3", name: "Shill Net", symbol: "$SHILL", trendingScore: 65.4, speed: "+120%", bubbleCluster: 3, contractStatus: "Renounced" }
-    ]
-  });
+app.get("/tokens/viral", async (req, res) => {
+  try {
+    const launches = await listPublicLaunches(10);
+    res.json({
+      success: true,
+      ranking: launches.map((launch) => ({
+        id: launch.id,
+        name: launch.launchRequest?.coin?.name || "",
+        symbol: launch.launchRequest?.coin?.symbol || "",
+        riskScore: launch.riskProfile?.score || 0,
+        createdAt: launch.createdAt,
+        status: launch.status,
+      })),
+      source: "database",
+    });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
 });
 
 app.post("/verify-payment", async (req, res) => {
@@ -413,7 +447,8 @@ app.post("/launch-request", requireSession, async (req, res) => {
       ipfsHash,
       tokenRootAddress: deployResult.tokenRoot,
       bondingCurveAddress: deployResult.bondingCurve,
-      deployStatus: deployResult.status
+      deployStatus: deployResult.status,
+      deployReason: deployResult.reason || "",
     };
 
     if (deployResult.status === "deployed") {
@@ -425,7 +460,8 @@ app.post("/launch-request", requireSession, async (req, res) => {
       launchTicket.mintingAvailable = false;
       launchTicket.note =
         `Pagamento verificado e metadata em IPFS (${ipfsHash}). ` +
-        `Deploy on-chain pendente (${deployResult.status}).`;
+        `Deploy on-chain: ${deployResult.status}` +
+        (deployResult.reason ? ` — ${deployResult.reason}` : ".");
     }
 
     await createLaunchBundle({
