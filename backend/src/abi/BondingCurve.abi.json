@@ -7,7 +7,7 @@
 			"name": "constructor",
 			"inputs": [
 				{"name":"_owner","type":"address"},
-				{"name":"_tokenRoot","type":"address"},
+				{"name":"_tokenRootAddr","type":"address"},
 				{"name":"_name","type":"string"},
 				{"name":"_symbol","type":"string"},
 				{"name":"_creationFeeTxHash","type":"bytes"}
@@ -33,34 +33,46 @@
 			]
 		},
 		{
-			"name": "buy",
+			"name": "getSellReturn",
 			"inputs": [
 				{"name":"tokenAmount","type":"uint256"}
 			],
 			"outputs": [
-			]
-		},
-		{
-			"name": "sell",
-			"inputs": [
-				{"name":"tokenAmount","type":"uint256"}
-			],
-			"outputs": [
-			]
-		},
-		{
-			"name": "withdrawLiquidity",
-			"inputs": [
-			],
-			"outputs": [
+				{"name":"value0","type":"uint128"}
 			]
 		},
 		{
 			"name": "setDexPool",
 			"inputs": [
-				{"name":"_pool","type":"address"}
+				{"name":"_dexPool","type":"address"}
 			],
 			"outputs": [
+			]
+		},
+		{
+			"name": "buy",
+			"inputs": [
+				{"name":"tokenAmount","type":"uint256"},
+				{"name":"minTokensOut","type":"uint256"}
+			],
+			"outputs": [
+			]
+		},
+		{
+			"name": "onTokenBurned",
+			"inputs": [
+				{"name":"amount","type":"uint256"},
+				{"name":"refundAddress","type":"address"}
+			],
+			"outputs": [
+			]
+		},
+		{
+			"name": "_tokenRoot",
+			"inputs": [
+			],
+			"outputs": [
+				{"name":"_tokenRoot","type":"address"}
 			]
 		},
 		{
@@ -68,7 +80,7 @@
 			"inputs": [
 			],
 			"outputs": [
-				{"name":"reserveBalance","type":"uint128"}
+				{"name":"reserveBalance","type":"uint256"}
 			]
 		},
 		{
@@ -142,6 +154,22 @@
 			"outputs": [
 				{"name":"creationFeeTxHash","type":"bytes"}
 			]
+		},
+		{
+			"name": "pendingReserveByBuyer",
+			"inputs": [
+			],
+			"outputs": [
+				{"name":"pendingReserveByBuyer","type":"map(address,uint256)"}
+			]
+		},
+		{
+			"name": "pendingTokensByBuyer",
+			"inputs": [
+			],
+			"outputs": [
+				{"name":"pendingTokensByBuyer","type":"map(address,uint256)"}
+			]
 		}
 	],
 	"events": [
@@ -149,7 +177,7 @@
 			"name": "TokensBought",
 			"inputs": [
 				{"name":"buyer","type":"address"},
-				{"name":"shellIn","type":"uint128"},
+				{"name":"shellIn","type":"uint256"},
 				{"name":"tokensOut","type":"uint256"},
 				{"name":"newPrice","type":"uint128"}
 			],
@@ -161,7 +189,7 @@
 			"inputs": [
 				{"name":"seller","type":"address"},
 				{"name":"tokensIn","type":"uint256"},
-				{"name":"shellOut","type":"uint128"},
+				{"name":"shellOut","type":"uint256"},
 				{"name":"newPrice","type":"uint128"}
 			],
 			"outputs": [
@@ -182,7 +210,9 @@
 		{"init":true,"name":"_pubkey","type":"uint256"},
 		{"init":false,"name":"_timestamp","type":"uint64"},
 		{"init":false,"name":"_constructorFlag","type":"bool"},
-		{"init":false,"name":"reserveBalance","type":"uint128"},
+		{"init":true,"name":"_tokenRoot","type":"address"},
+		{"init":false,"name":"reserveBalance","type":"uint256"},
+		{"init":false,"name":"_pendingLiquidity","type":"uint128"},
 		{"init":false,"name":"totalSupply","type":"uint256"},
 		{"init":false,"name":"migrated","type":"bool"},
 		{"init":false,"name":"migratedAt","type":"uint32"},
@@ -191,6 +221,9 @@
 		{"init":false,"name":"tokenRoot","type":"address"},
 		{"init":false,"name":"name","type":"string"},
 		{"init":false,"name":"symbol","type":"string"},
-		{"init":false,"name":"creationFeeTxHash","type":"bytes"}
+		{"init":false,"name":"creationFeeTxHash","type":"bytes"},
+		{"init":false,"name":"pendingReserveByBuyer","type":"map(address,uint256)"},
+		{"init":false,"name":"pendingTokensByBuyer","type":"map(address,uint256)"},
+		{"init":false,"name":"_lastBuyer","type":"address"}
 	]
 }

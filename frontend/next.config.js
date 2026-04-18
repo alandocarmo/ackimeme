@@ -17,7 +17,7 @@ const nextConfig = {
       "gateway.pinata.cloud",
       "arweave.net",
     ],
-    unoptimized: true, // necessário para export estático se for usar
+    unoptimized: false, // Issue #35: Imagens agora são otimizadas nativamente no server
   },
 
   async headers() {
@@ -37,6 +37,22 @@ const nextConfig = {
             key: "Permissions-Policy",
             value:
               "camera=(), microphone=(), geolocation=(), browsing-topics=()",
+          },
+          {
+            key: "X-Frame-Options",
+            value: "DENY",
+          },
+          {
+            key: "Content-Security-Policy",
+            value: [
+              "default-src 'self'",
+              "script-src 'self' 'unsafe-eval' https://va.vercel-scripts.com",
+              "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
+              "font-src 'self' https://fonts.gstatic.com",
+              "img-src 'self' data: https://gateway.pinata.cloud https://ipfs.io https://cloudflare-ipfs.com https://arweave.net",
+              "connect-src 'self' https://shellnet.ackinacki.org https://api.pinata.cloud https://api.ackimeme.fun https://va.vercel-scripts.com http://localhost:*",
+              "frame-ancestors 'none'",
+            ].join("; "),
           },
         ],
       },

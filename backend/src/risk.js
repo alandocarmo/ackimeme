@@ -2,7 +2,7 @@ const { randomUUID } = require("crypto");
 
 function createInitialRiskProfile({ launchRequest, session }) {
   const signals = [];
-  let score = 20;
+  let score = 30; // L-04: Increased base score to +30 for new untrusted networks
 
   if (!session?.telegramBinding?.userId) {
     score += 15;
@@ -16,10 +16,6 @@ function createInitialRiskProfile({ launchRequest, session }) {
     signals.push("wallet_contract_binding_pending");
   }
 
-  if (launchRequest.payment.tokenSymbol === "USDC") {
-    score += 5;
-    signals.push("requires_vm_shell_treasury_buffer");
-  }
 
   if (!launchRequest.links.website && !launchRequest.links.telegramUrl) {
     score += 10;

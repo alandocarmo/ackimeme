@@ -40,124 +40,148 @@ export default function SecurityAdmin() {
 
   if (!adminJwt) {
     return (
-      <div className="min-h-screen bg-[#0d0d0d] flex items-center justify-center p-4">
-        <div className="glass-panel p-8 max-w-sm w-full font-mono">
-          <h2 className="text-xl font-bold text-[#ff3333] mb-4">SECURITY OVERRIDE</h2>
-          <form onSubmit={handleLogin} className="space-y-4">
+      <main className="auth-layout" style={{ background: 'var(--bg-deep)' }}>
+        <div className="auth-card" style={{ border: '1px solid var(--accent-warm)' }}>
+          <h2 className="auth-title" style={{ color: 'var(--accent-warm)' }}>SECURITY OVERRIDE</h2>
+          <p className="auth-subtitle">Admin Mission Control</p>
+          <form onSubmit={handleLogin}>
             <input 
               type="password" 
               placeholder="Admin Master Token" 
-              className="w-full bg-black/50 border border-[#333] p-3 text-red-500 font-bold focus:border-red-500 outline-none"
+              className="text-input"
+              style={{ borderColor: 'var(--accent-warm)', color: 'var(--accent-warm)', fontWeight: 'bold' }}
               value={password}
               onChange={e => setPassword(e.target.value)}
             />
-            <button className="w-full bg-[#ff3333] text-black font-bold py-3 hover:bg-red-400 uppercase tracking-widest transition-colors">
+            <button className="btn-primary" style={{ width: '100%', marginTop: '20px', background: 'var(--accent-warm)', color: '#000' }}>
               Access Feed
             </button>
-            {error && <p className="text-red-500 text-sm mt-2">{error}</p>}
+            {error && <p className="error-msg" style={{ marginTop: '16px' }}>{error}</p>}
           </form>
         </div>
-      </div>
+      </main>
     );
   }
 
   return (
-    <div className="min-h-screen bg-[#0a0a0a] text-gray-200 font-mono p-8 selection:bg-red-500/30">
+    <>
+    <main className="admin-layout container">
       <Head><title>AckiMeme - Security Mission Control</title></Head>
 
-      <div className="max-w-7xl mx-auto space-y-8">
-        <header className="border-b border-red-500/20 pb-6 flex justify-between items-end">
+      <div className="animate-fade-in">
+        <header className="threat-monitor-header">
           <div>
-            <h1 className="text-3xl font-black text-white tracking-tighter mix-blend-screen">
-              THREAT<span className="text-red-500">_MONITOR</span>
+            <h1 className="threat-monitor-title">
+              THREAT<span style={{ color: 'var(--accent-warm)' }}>_MONITOR</span>
             </h1>
-            <p className="text-sm text-red-400/60 mt-1 uppercase tracking-widest">
+            <p className="threat-monitor-subtitle">
               Live Network Anomaly Detection System /// Acki Nacki
             </p>
           </div>
-          <div className="flex gap-4">
-             <div className="bg-red-500/10 border border-red-500/30 px-4 py-2 rounded text-red-500 text-xs flex items-center gap-2">
-                <span className="w-2 h-2 rounded-full bg-red-500 animate-pulse"></span>
-                LIVE SENSORS
-             </div>
+          <div className="wallet-badge" style={{ borderColor: 'var(--accent-warm-glow)', color: 'var(--accent-warm)' }}>
+            <span className="wallet-dot" style={{ background: 'var(--accent-warm)', boxShadow: '0 0 8px var(--accent-warm-glow)' }} />
+            LIVE SENSORS
           </div>
         </header>
 
-        <section className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          <div className="glass-panel p-6 border-l-4 border-l-red-500 col-span-2">
-            <h2 className="text-lg font-bold mb-4 flex items-center gap-2">
-               <span className="text-red-500">⚠</span> RECENT ANOMALIES
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: '24px' }}>
+          <div className="card" style={{ borderLeft: '4px solid var(--accent-warm)', overflowX: 'auto' }}>
+            <h2 className="info-label" style={{ marginBottom: '20px', fontSize: '14px', color: 'var(--ink)' }}>
+               RECENT ANOMALIES
             </h2>
-            <div className="overflow-x-auto">
-              <table className="w-full text-left text-sm">
-                <thead>
-                  <tr className="text-gray-500 border-b border-[#222]">
-                    <th className="pb-3 font-normal uppercase tracking-wider">Wallet IP / Signature</th>
-                    <th className="pb-3 font-normal uppercase tracking-wider">Type</th>
-                    <th className="pb-3 font-normal uppercase tracking-wider">Risk Score</th>
-                    <th className="pb-3 font-normal uppercase tracking-wider">Triggers</th>
-                    <th className="pb-3 font-normal uppercase tracking-wider text-right">Action</th>
+            <table className="monitoring-table">
+              <thead>
+                <tr>
+                  <th>Wallet / IP</th>
+                  <th>Type</th>
+                  <th>Risk Score</th>
+                  <th>Triggers</th>
+                  <th style={{ textAlign: 'right' }}>Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                {anomalies.map((ano, i) => (
+                  <tr key={ano.wallet}>
+                    <td>
+                      <div style={{ fontWeight: 700, color: 'var(--ink)' }}>{ano.wallet}</div>
+                      <div className="token-time">{ano.ip}</div>
+                    </td>
+                    <td>
+                      <span className="step-badge" style={{ marginBottom: 0 }}>
+                        {ano.type}
+                      </span>
+                    </td>
+                    <td>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                         <div className="score-bar-bg">
+                           <div className="score-bar-fill" style={{ width: `${ano.score}%` }}></div>
+                         </div>
+                         <span className="token-time" style={{ fontWeight: 800 }}>{ano.score}</span>
+                      </div>
+                    </td>
+                    <td>
+                      <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap' }}>
+                        {ano.triggers.map(t => <span key={t} className="trigger-tag">{t}</span>)}
+                      </div>
+                    </td>
+                    <td style={{ textAlign: 'right' }}>
+                      <button className="filter-btn" style={{ borderColor: 'var(--accent-warm)', color: 'var(--accent-warm)', padding: '4px 12px', fontSize: '11px' }}>
+                        Ban IP
+                      </button>
+                    </td>
                   </tr>
-                </thead>
-                <tbody className="divide-y divide-[#222]">
-                  {anomalies.map((ano, i) => (
-                    <tr key={ano.wallet} className="hover:bg-[#111] transition-colors">
-                      <td className="py-4">
-                        <div className="font-bold text-gray-300">{ano.wallet}</div>
-                        <div className="text-xs text-gray-600">{ano.ip}</div>
-                      </td>
-                      <td className="py-4">
-                        <span className="px-2 py-1 bg-red-500/10 text-red-400 border border-red-500/20 text-xs rounded uppercase tracking-wider">
-                          {ano.type}
-                        </span>
-                      </td>
-                      <td className="py-4">
-                        <div className="flex items-center gap-2">
-                           <div className="w-16 h-2 bg-[#222] rounded overflow-hidden">
-                             <div className="h-full bg-red-500" style={{ width: `${ano.score}%` }}></div>
-                           </div>
-                           <span className="text-xs font-bold">{ano.score}/100</span>
-                        </div>
-                      </td>
-                      <td className="py-4 text-xs text-gray-400">
-                        {ano.triggers.join(" // ")}
-                      </td>
-                      <td className="py-4 text-right">
-                        <button className="text-xs border border-red-500/50 text-red-400 hover:bg-red-500 hover:text-black px-3 py-1 rounded transition-colors uppercase font-bold tracking-wider">
-                          Ban IP
-                        </button>
-                      </td>
-                    </tr>
-                  ))}
-                  {anomalies.length === 0 && (
-                    <tr><td colSpan="5" className="py-8 text-center text-gray-500">No recent anomalies detected.</td></tr>
-                  )}
-                </tbody>
-              </table>
-            </div>
+                ))}
+                {anomalies.length === 0 && (
+                  <tr>
+                    <td colSpan="5" style={{ textAlign: 'center', padding: '48px', color: 'var(--ink-muted)' }}>
+                      No recent anomalies detected.
+                    </td>
+                  </tr>
+                )}
+              </tbody>
+            </table>
           </div>
 
-          <div className="space-y-6">
-             <div className="glass-panel p-6 border-l-4 border-l-orange-500">
-               <h3 className="text-sm font-bold text-gray-400 uppercase tracking-wider mb-2">Automated Security Checks</h3>
-               <div className="space-y-4 mt-6">
-                  <div className="flex items-center justify-between border-b border-[#222] pb-2">
-                    <span className="text-sm">Auto Pool (Pre-bonding)</span>
-                    <span className="text-xs px-2 py-1 bg-green-500/10 text-green-400 border border-green-500/20 rounded">ACTIVE (Bancor)</span>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '24px' }}>
+             <div className="card" style={{ borderLeft: '4px solid var(--accent-cyan)' }}>
+               <h3 className="info-label" style={{ marginBottom: '20px' }}>Security Mechanisms</h3>
+               <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid var(--line-soft)', paddingBottom: '12px' }}>
+                    <span className="info-label" style={{ color: 'var(--ink)' }}>Bonding Curve</span>
+                    <span className="hero-accent" style={{ fontSize: '10px' }}>ACTIVE (Linear)</span>
                   </div>
-                  <div className="flex items-center justify-between border-b border-[#222] pb-2">
-                    <span className="text-sm">Liquidity Lock (Anti-rug)</span>
-                    <span className="text-xs px-2 py-1 bg-green-500/10 text-green-400 border border-green-500/20 rounded">ON-CHAIN (30 Days)</span>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid var(--line-soft)', paddingBottom: '12px' }}>
+                    <span className="info-label" style={{ color: 'var(--ink)' }}>Liquidity Lock (Anti-rug)</span>
+                    <span className="hero-accent" style={{ fontSize: '10px' }}>ON-CHAIN (30 Days)</span>
                   </div>
-                  <div className="flex items-center justify-between">
-                    <span className="text-sm">ML Sniper Detection</span>
-                    <span className="text-xs px-2 py-1 bg-orange-500/10 text-orange-400 border border-orange-500/20 rounded">HEURISTIC SIM</span>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid var(--line-soft)', paddingBottom: '12px' }}>
+                    <span className="info-label" style={{ color: 'var(--ink)' }}>Rate Limiter</span>
+                    <span className="hero-accent" style={{ fontSize: '10px' }}>ACTIVE (Per-wallet + Global)</span>
+                  </div>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <span className="info-label" style={{ color: 'var(--ink)' }}>Fee Token</span>
+                    <span className="hero-accent" style={{ fontSize: '10px' }}>SHELL (Native)</span>
                   </div>
                </div>
              </div>
+
+             <div className="card" style={{ borderLeft: '4px solid var(--accent-warm)' }}>
+                <h3 className="info-label" style={{ marginBottom: '16px', color: 'var(--accent-warm)' }}>System Status</h3>
+                <p className="token-time" style={{ color: 'var(--ink)', fontSize: '13px', lineHeight: 1.6 }}>
+                  Persistent rate limiting active via PostgreSQL. 
+                  Session tokens managed via HttpOnly cookies. 
+                  TxHash deduplication enforced to prevent double-spend.
+                </p>
+             </div>
           </div>
-        </section>
+        </div>
       </div>
-    </div>
+    </main>
+
+    <style jsx>{`
+      .animate-fade-in { animation: fadeInUp 0.4s ease both; }
+      .error-msg { color: var(--red); text-align: center; }
+    `}</style>
+    </>
   );
 }

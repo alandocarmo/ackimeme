@@ -1,11 +1,9 @@
 import Head from "next/head";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { getLaunchById, getSession } from "../../lib/api";
-
-const INITIAL_PRICE = 0.00000003;
-const SESSION_KEY = "ackimeme_session_token";
+import { BondingCurveAbi, TokenWalletAbi, TokenRootAbi } from "../../lib/abi";
 
 function compactWallet(w) {
   const s = String(w || "");
@@ -30,6 +28,14 @@ function formatSupply(val) {
   if (n >= 1e6) return `${(n / 1e6).toFixed(1)}M`;
   if (n >= 1e3) return `${(n / 1e3).toFixed(0)}K`;
   return String(n);
+}
+
+/** Nano to decimal (9 decimals standard in TVM/SHELL) */
+function nanoToDecimal(nano) {
+  const val = BigInt(String(nano || "0").replace(/\D/g, "") || "0");
+  const whole = val / 1_000_000_000n;
+  const frac = val % 1_000_000_000n;
+  return Number(`${whole}.${String(frac).padStart(9, "0")}`);
 }
 
 const MIGRATION_THRESHOLD = 69000;
@@ -72,13 +78,28 @@ export default function TokenPage() {
   const [tradeAmount, setTradeAmount] = useState("");
   const [slippage, setSlippage] = useState("2");
   const [isTrading, setIsTrading] = useState(false);
+  const [onchainPrice, setOnchainPrice] = useState(null); // from getter
 
   useEffect(() => {
     if (typeof window === "undefined") return;
-    const t = window.localStorage.getItem(SESSION_KEY);
-    if (!t) return;
-    getSession(t).then(r => setSession(r.session)).catch(() => {});
+    getSession().then(r => setSession(r.session)).catch(() => {});
   }, []);
+
+  const fetchToken = useCallback(() => {
+    if (!id) return;
+    getLaunchById(id)
+      .then((data) => {
+        setToken(data.launch);
+        setError("");
+      })
+      .catch((err) => {
+        if (String(err.message || "").toLowerCase().includes("404")) {
+          setError("Token não encontrado.");
+        } else {
+          setError(err.message || "Falha ao carregar token.");
+        }
+      });
+  }, [id]);
 
   useEffect(() => {
     if (!id) return;
@@ -99,28 +120,152 @@ export default function TokenPage() {
       .finally(() => setLoading(false));
   }, [id]);
 
+  // FE-05: Polling every 15 seconds to keep data fresh
+  useEffect(() => {
+    if (!id) return;
+    const interval = setInterval(fetchToken, 15000);
+    return () => clearInterval(interval);
+  }, [id, fetchToken]);
+
+  // Try reading current price from on-chain getter via provider
+  useEffect(() => {
+    if (!token?.onchainData?.bondingCurveAddress || token.onchainData.deployStatus !== "deployed") return;
+    
+    async function fetchPrice() {
+      try {
+        const { ProviderRpcClient, Address } = await import('everscale-inpage-provider');
+        const ever = new ProviderRpcClient();
+        if (!(await ever.hasProvider())) return;
+        await ever.ensureInitialized();
+
+        const bc = new ever.Contract(BondingCurveAbi, new Address(token.onchainData.bondingCurveAddress));
+        const result = await bc.methods.currentPrice({}).call();
+        if (result?.value0) {
+          setOnchainPrice(nanoToDecimal(result.value0));
+        }
+      } catch {
+        // Provider not available — use fallback
+      }
+    }
+    fetchPrice();
+  }, [token?.onchainData?.bondingCurveAddress, token?.onchainData?.deployStatus]);
+
+  // M-06: Don't use misleading fallback price. If on-chain price isn't available,
+  // show "awaiting" instead of a 33-million-times-wrong estimate.
+  const currentPrice = onchainPrice;
+
   async function handleTrade() {
     if (!session) return router.push(`/auth?from=/token/${id}`);
-    // Trade on-chain via BondingCurve não está integrado ainda.
-    // Quando o TVM SDK estiver conectado, aqui chamará:
-    //   buy()  → envia SHELL, recebe tokens
-    //   sell() → queima tokens, recebe SHELL
-    alert(
-      "Trading will be available once the Bonding Curve contract is fully deployed and integrated with the TVM SDK. Stay tuned!"
-    );
+    setError("");
+    setIsTrading(true);
+    
+    try {
+      if (!token?.onchainData?.bondingCurveAddress) {
+        throw new Error("Contrato Bonding Curve não disponível. Aguarde o deploy on-chain.");
+      }
+      
+      // Load the Provider Extension
+      const { ProviderRpcClient, Address } = await import('everscale-inpage-provider');
+      const ever = new ProviderRpcClient();
+      if (!(await ever.hasProvider())) throw new Error("Instale a extensão Acki Nacki / EVER Wallet.");
+      
+      await ever.ensureInitialized();
+      const { accountInteraction } = await ever.requestPermissions({ permissions: ['basic', 'accountInteraction'] });
+      if (!accountInteraction) throw new Error("Conexão com a carteira negada.");
+
+      const rawAmount = parseFloat(tradeAmount);
+      if (!tradeAmount || rawAmount <= 0) throw new Error("Valor inválido.");
+
+      const isBuy = tradeMode === "buy";
+      const slippageMod = (100 - parseFloat(slippage)) / 100;
+
+      if (isBuy) {
+        // R-02: Send SHELL as Extra Currency cc[2], NOT as msg.value (VMSHELL)
+        // The BondingCurve.buy() reads payment from msg.currencies[2].
+        // msg.value (amount) is used ONLY for gas.
+        if (!currentPrice) throw new Error("Preço ainda não disponível. Aguarde sync on-chain.");
+
+        const shellToSpend = Math.floor(rawAmount * 1e9); // SHELL in nanotokens
+        const bcContract = new ever.Contract(BondingCurveAbi, new Address(token.onchainData.bondingCurveAddress));
+
+        const expectedTokens = Math.floor(rawAmount / currentPrice);
+        const minOut = Math.floor(expectedTokens * slippageMod);
+
+        const tx = await bcContract.methods.buy({
+          tokenAmount: expectedTokens.toString(),
+          minTokensOut: minOut.toString()
+        }).send({
+          from: accountInteraction.address,
+          amount: "200000000",  // 0.2 SHELL VMSHELL for gas only
+          bounce: true,
+          // SHELL payment via Extra Currency cc[2]
+          currencies: { 2: shellToSpend.toString() }
+        });
+        alert(`Compra realizada! TxHash: ${tx.transaction.id.hash}`);
+      } else {
+        // SELL: Burn tokens via TokenWallet → TokenRoot.notifyBurn → BondingCurve.onTokenBurned
+        if (!token?.onchainData?.tokenRootAddress) {
+          throw new Error("TokenRoot não disponível. Impossível executar sell.");
+        }
+
+        // 1. Resolve user's TokenWallet address
+        const rootContract = new ever.Contract(TokenRootAbi, new Address(token.onchainData.tokenRootAddress));
+        const walletResult = await rootContract.methods.getWalletAddress({
+          ownerAddress: accountInteraction.address
+        }).call();
+        
+        const userWalletAddress = walletResult.value0;
+        if (!userWalletAddress || userWalletAddress.toString() === "0:0000000000000000000000000000000000000000000000000000000000000000") {
+          throw new Error("Você não possui uma TokenWallet para este token. Compre tokens primeiro.");
+        }
+
+        // 2. M-07: Verify user has enough balance for gas before attempting sell
+        const state = await ever.getFullContractState({
+          address: accountInteraction.address
+        });
+        const balanceNano = BigInt(state.state?.balance || "0");
+        const gasNeeded = BigInt("500000000"); // 0.5 SHELL
+        if (balanceNano < gasNeeded) {
+          throw new Error(`Saldo insuficiente para gas. Precisa de pelo menos 0.5 SHELL na carteira. Saldo atual: ${Number(balanceNano) / 1e9} SHELL.`);
+        }
+
+        // 3. Call burn on user's TokenWallet, passing BondingCurve as callbackTarget
+        const walletContract = new ever.Contract(TokenWalletAbi, new Address(userWalletAddress.toString()));
+        
+        const tokensToSell = Math.floor(rawAmount).toString();
+        const tx = await walletContract.methods.burn({
+          amount: tokensToSell,
+          callbackTarget: token.onchainData.bondingCurveAddress
+        }).send({
+          from: accountInteraction.address,
+          amount: "500000000", // 0.5 SHELL for processing gas
+          bounce: true
+        });
+        alert(`Sell successful! TxHash: ${tx.transaction.id.hash}`);
+      }
+      
+    } catch(err) {
+      setError(err.message || "Erro durante o trade.");
+    } finally {
+      setIsTrading(false);
+    }
   }
 
   const stats = token ? calcBondingStats(token.onchainData) : null;
   const color = token ? hashColor(token.coin?.symbol) : "#888";
   const showMissingTokenCta = Boolean(error) && !loading && !token;
 
-  const estimateOutput = () => {
+  // Estimate calculation using current price
+  // M-06: When price isn't available, show clear indication instead of wrong values
+  function getEstimate() {
     const amt = parseFloat(tradeAmount) || 0;
+    if (amt <= 0) return "0";
+    if (!currentPrice) return "aguardando preço...";
     if (tradeMode === "buy") {
-      return formatNum(Math.floor(amt / INITIAL_PRICE));
+      return formatNum(Math.floor(amt / currentPrice));
     }
-    return (amt * INITIAL_PRICE).toFixed(9);
-  };
+    return (amt * currentPrice).toFixed(9);
+  }
 
   return (
     <>
@@ -129,395 +274,240 @@ export default function TokenPage() {
         <meta name="description" content={token?.coin?.tagline || "Memecoin on Acki Nacki"} />
       </Head>
 
-      <main style={s.page}>
-        {loading && <p style={s.loadingMsg}>Loading...</p>}
+      <main className="page-wrapper container" style={{ paddingTop: '40px' }}>
+        {loading && <p className="token-time" style={{ textAlign: 'center', fontSize: '14px' }}>Loading token data...</p>}
+        
         {showMissingTokenCta ? (
-          <div style={s.errorCard}>
-            <p style={s.errorMsgCompact}>{error}</p>
-            <Link href="/" style={s.backToFeedBtn}>Voltar para o feed</Link>
+          <div className="card" style={{ maxWidth: '500px', margin: '80px auto', textAlign: 'center' }}>
+            <p style={{ color: 'var(--red)', marginBottom: '16px' }}>{error}</p>
+            <Link href="/" className="btn-primary" style={{ padding: '10px 20px', fontSize: '13px' }}>Voltar para o feed</Link>
           </div>
         ) : error ? (
-          <p style={s.errorMsg}>{error}</p>
+          <p style={{ color: 'var(--red)', textAlign: 'center', padding: '40px' }}>{error}</p>
         ) : null}
 
         {token && (
-          <div style={s.layout}>
+          <div className="token-detail-layout">
             {/* Left Column: Info */}
-            <div style={s.leftCol}>
+            <div className="detail-main">
               {/* Header */}
-              <div style={s.header}>
-                <div style={{ ...s.tokenIcon, background: `linear-gradient(135deg, ${color}, ${color}44)` }}>
+              <div className="token-header-section">
+                <div className="token-avatar" style={{ width: '64px', height: '64px', borderRadius: '16px', background: `linear-gradient(135deg, ${color}, ${color}44)` }}>
                   {token.coin.logoUrl ? (
-                    <img src={token.coin.logoUrl} alt="" style={s.tokenImg} />
+                    <img src={token.coin.logoUrl} alt="" />
                   ) : (
-                    <span style={s.tokenLetter}>{(token.coin.symbol || "?")[0]}</span>
+                    <span style={{ fontSize: '28px', fontWeight: 800 }}>{(token.coin.symbol || "?")[0]}</span>
                   )}
                 </div>
-                <div style={s.headerInfo}>
-                  <h1 style={s.name}>{token.coin.name}</h1>
-                  <span style={s.ticker}>${token.coin.symbol}</span>
+                <div className="token-title-info">
+                  <h1 className="token-main-title">{token.coin.name}</h1>
+                  <span className="token-ticker">${token.coin.symbol}</span>
                 </div>
-                <div style={s.statusPill}>{token.status.replace(/_/g, " ")}</div>
+                <div className="status-badge">{token.status.replace(/_/g, " ")}</div>
               </div>
 
               {/* Bonding Curve Card */}
-              <div style={s.curveCard}>
-                <div style={s.curveTopRow}>
-                  <span style={s.curveLabel}>⬡ Bonding Curve Progress</span>
-                  <span style={s.curveNet}>Acki Nacki · Fair Launch</span>
+              <div className="card" style={{ border: '1px solid var(--accent-glow)', background: 'rgba(0, 255, 136, 0.02)' }}>
+                <div className="progress-header" style={{ marginBottom: '12px' }}>
+                  <span style={{ color: 'var(--accent)', fontWeight: 700 }}>⬡ Bonding Curve Progress</span>
+                  <span className="token-time">Acki Nacki · Fair Launch</span>
                 </div>
-                <div style={s.curveBarWrap}>
-                  <div style={{
-                    ...s.curveBarFill,
+                
+                <div className="progress-track" style={{ height: '12px', marginBottom: '20px' }}>
+                  <div className="progress-fill" style={{
                     width: stats.progressPct === null ? "0%" : `${stats.progressPct}%`,
-                    minWidth: stats.progressPct === null ? "0px" : s.curveBarFill.minWidth,
-                    opacity: stats.progressPct === null ? 0 : 1,
                     background: parseFloat(stats.progressPct || "0") > 80
                       ? "linear-gradient(90deg, #f97316, #ef4444)"
                       : "linear-gradient(90deg, #00ff88, #00cc6d)",
                   }} />
                 </div>
-                <div style={s.curveStatsGrid}>
-                  <div><p style={s.cStatLabel}>Progress</p><p style={s.cStatVal}>{stats.progressPct === null ? "N/A" : `${stats.progressPct}%`}</p></div>
-                  <div><p style={s.cStatLabel}>Threshold</p><p style={s.cStatVal}>69K SHELL</p></div>
-                  <div><p style={s.cStatLabel}>Reserve</p><p style={s.cStatVal}>{stats.hasOnchainReserve ? `${stats.reserveBalance.toFixed(2)} SHELL` : "awaiting indexer"}</p></div>
-                  <div><p style={s.cStatLabel}>Lock</p><p style={s.cStatVal}>30 days</p></div>
+
+                <div className="token-stats" style={{ borderTop: 'none', paddingTop: 0, marginBottom: '20px' }}>
+                  <div className="stat-box">
+                    <span className="stat-label">Progress</span>
+                    <span className="stat-value" style={{ fontSize: '18px' }}>{stats.progressPct === null ? "N/A" : `${stats.progressPct}%`}</span>
+                  </div>
+                  <div className="stat-box">
+                    <span className="stat-label">Reserve</span>
+                    <span className="stat-value" style={{ fontSize: '18px' }}>{stats.hasOnchainReserve ? `${stats.reserveBalance.toFixed(2)} SHELL` : "awaiting"}</span>
+                  </div>
+                  <div className="stat-box">
+                    <span className="stat-label">Threshold</span>
+                    <span className="stat-value" style={{ fontSize: '18px' }}>69K SHELL</span>
+                  </div>
                 </div>
-                <p style={s.curveHint}>
+                
+                <p className="token-subtitle" style={{ fontSize: '11px', margin: 0, opacity: 0.8 }}>
                   {stats.hasOnchainReserve
                     ? "Liquidity auto-migrates to DEX.DO at 69K SHELL reserve with 30-day anti-rug lock."
-                    : "Progress requires reserveBalance indexed from blockchain. Until then, values stay as N/A."}
+                    : "Progress requires reserveBalance indexed from blockchain. Values stay as awaiting until first trade."}
                 </p>
               </div>
 
-              {/* Info Grid */}
-              <div style={s.infoGrid}>
-                <div style={s.infoItem}><p style={s.infoLabel}>Supply</p><p style={s.infoVal}>{formatSupply(token.coin.totalSupply)}</p></div>
-                <div style={s.infoItem}><p style={s.infoLabel}>Fee Paid</p><p style={s.infoVal}>{token.treasuryPayment?.amount} {token.treasuryPayment?.tokenSymbol}</p></div>
-                <div style={s.infoItem}><p style={s.infoLabel}>Risk</p><p style={s.infoVal}>{token.riskProfile?.score} / {token.riskProfile?.status}</p></div>
-                <div style={s.infoItem}><p style={s.infoLabel}>Created</p><p style={s.infoVal}>{formatDate(token.createdAt)}</p></div>
+              {/* Deployment Status */}
+              <div className="card" style={{ border: '1px dashed var(--ink-faint)' }}>
+                 <p className="info-label">Blockchain Deployment Status</p>
+                 <div className="onchain-info-grid">
+                    <div className="onchain-item">
+                       <p className="stat-label">Status</p>
+                       <p className={`info-value ${token.onchainData?.deployStatus === 'deployed' ? 'hero-accent' : ''}`} style={{ fontSize: '13px' }}>
+                          {token.onchainData?.deployStatus?.replace(/_/g, ' ') || 'unknown'}
+                       </p>
+                    </div>
+                    <div className="onchain-item">
+                       <p className="stat-label">Price</p>
+                       <p className="info-value" style={{ fontSize: '13px' }}>
+                          {onchainPrice ? `${onchainPrice.toFixed(9)} SHELL` : "awaiting sync"}
+                       </p>
+                    </div>
+                 </div>
+                 
+                 {token.onchainData?.deployStatus === 'pending_deployer_configuration' && (
+                    <p style={{ color: 'var(--accent-warm)', fontSize: '11px', marginTop: '12px' }}>
+                      ⚠️ The system is waiting for the administrative deployer to be funded or configured. 
+                      Trading functions are available after on-chain deployment is complete.
+                    </p>
+                 )}
               </div>
 
-              {/* Description */}
+              {/* Info Grid */}
+              <div className="info-card-grid">
+                <div className="info-card">
+                  <p className="info-label">Current Supply</p>
+                  <p className="info-value">{formatSupply(token.onchainData?.tokenSupply || token.coin.totalSupply)}</p>
+                </div>
+                <div className="info-card">
+                  <p className="info-label">Risk Profile</p>
+                  <p className="info-value" style={{ color: token.riskProfile?.score > 70 ? 'var(--accent)' : 'var(--accent-warm)' }}>
+                    {token.riskProfile?.score} / {token.riskProfile?.status}
+                  </p>
+                </div>
+              </div>
+
+              {/* About */}
               {token.coin.description && (
-                <div style={s.descCard}>
-                  <p style={s.infoLabel}>About</p>
-                  <p style={s.descText}>{token.coin.description}</p>
+                <div className="card">
+                  <p className="info-label">About {token.coin.name}</p>
+                  <p style={{ color: 'var(--ink-soft)', fontSize: '14px', lineHeight: 1.6, marginTop: '12px' }}>{token.coin.description}</p>
                 </div>
               )}
 
-              {/* Creator */}
-              <div style={s.creatorCard}>
-                <p style={s.infoLabel}>Created by</p>
-                <code style={s.walletCode}>{token.creatorWallet}</code>
+              {/* On-chain Details */}
+              <div className="card">
+                <p className="info-label">On-Chain Identifiers</p>
+                <div className="onchain-info-grid">
+                  <div className="onchain-item">
+                    <span className="stat-label">IPFS Metadata</span>
+                    {token.onchainData?.ipfsHash ? (
+                      <a href={`https://gateway.pinata.cloud/ipfs/${token.onchainData.ipfsHash}`} target="_blank" rel="noreferrer" className="onchain-link">
+                        {token.onchainData.ipfsHash.slice(0, 10)}...
+                      </a>
+                    ) : <span className="token-time" style={{ display: 'block' }}>Pending</span>}
+                  </div>
+                  <div className="onchain-item">
+                    <span className="stat-label">Token Root</span>
+                    {token.onchainData?.tokenRootAddress ? (
+                      <a href={`https://beescan.live/accounts/account/${token.onchainData.tokenRootAddress}`} target="_blank" rel="noreferrer" className="onchain-link">
+                        {compactWallet(token.onchainData.tokenRootAddress)}
+                      </a>
+                    ) : <span className="token-time" style={{ display: 'block' }}>Pending</span>}
+                  </div>
+                  <div className="onchain-item">
+                    <span className="stat-label">Bonding Curve</span>
+                    {token.onchainData?.bondingCurveAddress ? (
+                      <a href={`https://beescan.live/accounts/account/${token.onchainData.bondingCurveAddress}`} target="_blank" rel="noreferrer" className="onchain-link">
+                        {compactWallet(token.onchainData.bondingCurveAddress)}
+                      </a>
+                    ) : <span className="token-time" style={{ display: 'block' }}>Pending</span>}
+                  </div>
+                </div>
               </div>
 
               {/* Links */}
               {(token.links?.website || token.links?.xUrl || token.links?.telegramUrl) && (
-                <div style={s.linksRow}>
-                  {token.links.website && <a href={token.links.website} target="_blank" rel="noreferrer" style={s.extLink}>🌐 Website</a>}
-                  {token.links.xUrl && <a href={token.links.xUrl} target="_blank" rel="noreferrer" style={s.extLink}>𝕏 Twitter</a>}
-                  {token.links.telegramUrl && <a href={token.links.telegramUrl} target="_blank" rel="noreferrer" style={s.extLink}>✈ Telegram</a>}
+                <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap' }}>
+                  {token.links.website && <a href={token.links.website} target="_blank" rel="noreferrer" className="filter-btn">🌐 Website</a>}
+                  {token.links.xUrl && <a href={token.links.xUrl} target="_blank" rel="noreferrer" className="filter-btn">𝕏 Twitter</a>}
+                  {token.links.telegramUrl && <a href={token.links.telegramUrl} target="_blank" rel="noreferrer" className="filter-btn">✈ Telegram</a>}
                 </div>
               )}
-
-              {/* On-chain data */}
-              {token.onchainData?.ipfsHash && (
-                <div style={s.onchainCard}>
-                  <p style={s.infoLabel}>On-Chain Data</p>
-                  <div style={s.onchainGrid}>
-                    <div>
-                      <p style={s.cStatLabel}>IPFS</p>
-                      <a href={`https://gateway.pinata.cloud/ipfs/${token.onchainData.ipfsHash}`} target="_blank" rel="noreferrer" style={s.onchainLink}>
-                        {token.onchainData.ipfsHash.slice(0, 12)}…
-                      </a>
-                    </div>
-                    <div>
-                      <p style={s.cStatLabel}>Token Root</p>
-                      <a href={`https://shellnet.ackinacki.org/accounts/account/${token.onchainData.tokenRootAddress}`} target="_blank" rel="noreferrer" style={s.onchainLink}>
-                        {compactWallet(token.onchainData.tokenRootAddress)}
-                      </a>
-                    </div>
-                    <div>
-                      <p style={s.cStatLabel}>Bonding Curve</p>
-                      <a href={`https://shellnet.ackinacki.org/accounts/account/${token.onchainData.bondingCurveAddress}`} target="_blank" rel="noreferrer" style={s.onchainLink}>
-                        {compactWallet(token.onchainData.bondingCurveAddress)}
-                      </a>
-                    </div>
-                  </div>
-                </div>
-              )}
-
-              {/* Contract Security Status — based on actual on-chain data */}
-              <div style={s.securityCard}>
-                 <p style={s.infoLabel}>Contract Security Status</p>
-                 <div style={s.securityGrid}>
-                    <div style={s.secItem}>
-                      <span style={s.secIcon}>{token.onchainData?.bondingCurveAddress && !token.onchainData.bondingCurveAddress.includes('pending') ? '✓' : '⏳'}</span>
-                      {' '}Bonding Curve {token.onchainData?.bondingCurveAddress && !token.onchainData.bondingCurveAddress.includes('pending') ? 'Deployed' : 'Pending Deploy'}
-                    </div>
-                    <div style={s.secItem}>
-                      <span style={s.secIcon}>{token.onchainData?.deployStatus === 'deployed' ? '✓' : '⏳'}</span>
-                      {' '}Token Contract {token.onchainData?.deployStatus === 'deployed' ? 'Live' : 'Pending'}
-                    </div>
-                    <div style={s.secItem}>
-                      <span style={s.secIcon}>⏳</span>
-                      {' '}Anti-Rug Lock (30D) — awaiting deploy
-                    </div>
-                    <div style={s.secItem}>
-                      <span style={s.secIcon}>⏳</span>
-                      {' '}DEX.DO Migration — awaiting threshold
-                    </div>
-                 </div>
-                 <p style={{...s.curveHint, marginTop: '10px', color: '#52525b'}}>Security features activate once the Bonding Curve contract is fully deployed on-chain.</p>
-              </div>
-
-              {/* Holder Distribution — will show real data once indexer is connected */}
-              <div style={s.bubbleMapCard}>
-                 <div style={s.bubbleHeader}>
-                    <p style={s.infoLabel}>Holder Distribution</p>
-                    <span style={{...s.livePulse, color: '#52525b', animation: 'none'}}>COMING SOON</span>
-                 </div>
-                 <div style={{...s.bubbleCanvas, display: 'flex', alignItems: 'center', justifyContent: 'center', flexDirection: 'column'}}>
-                    <span style={{fontSize: '32px', marginBottom: '8px', opacity: 0.3}}>📊</span>
-                    <p style={{color: '#52525b', fontSize: '12px', margin: 0, textAlign: 'center', padding: '0 20px'}}>
-                      Holder distribution data will be available once the token is deployed on-chain and the blockchain indexer is connected.
-                    </p>
-                 </div>
-              </div>
             </div>
 
             {/* Right Column: Trade Widget */}
-            <div style={s.rightCol}>
-              <div style={s.tradeCard}>
-                <div style={s.tradeTabs}>
-                  <button style={tradeMode === "buy" ? s.tabActiveBuy : s.tab} onClick={() => setTradeMode("buy")}>BUY</button>
-                  <button style={tradeMode === "sell" ? s.tabActiveSell : s.tab} onClick={() => setTradeMode("sell")}>SELL</button>
+            <aside className="detail-sidebar">
+              <div className="trade-widget">
+                <div className="trade-tabs">
+                  <button className={`trade-tab ${tradeMode === "buy" ? "active-buy" : ""}`} onClick={() => setTradeMode("buy")}>BUY</button>
+                  <button className={`trade-tab ${tradeMode === "sell" ? "active-sell" : ""}`} onClick={() => setTradeMode("sell")}>SELL</button>
                 </div>
 
-                <div style={s.tradeBody}>
-                  <p style={s.tradeLabel}>Amount</p>
-                  <div style={s.tradeInputWrap}>
-                    <input type="number" style={s.tradeInput} placeholder="0.0" value={tradeAmount}
-                      onChange={(e) => setTradeAmount(e.target.value)} />
-                    <span style={s.tradeUnit}>{tradeMode === "buy" ? "SHELL" : token.coin.symbol}</span>
+                <div className="trade-panel">
+                  <div className="trade-field-wrap">
+                    <p className="info-label">Amount to {tradeMode}</p>
+                    <div className="input-container">
+                      <input type="number" placeholder="0.0" value={tradeAmount} onChange={(e) => setTradeAmount(e.target.value)} />
+                      <span className="input-unit">{tradeMode === "buy" ? "SHELL" : token.coin.symbol}</span>
+                    </div>
                   </div>
 
-                  <div style={s.slippageRow}>
-                    <span style={s.slippageLabel}>Slippage</span>
-                    <div style={s.slippageBtns}>
+                  <div className="slippage-row">
+                    <span className="info-label" style={{ fontSize: '9px' }}>Slippage</span>
+                    <div className="slippage-btns">
                       {["1", "2", "5"].map(p => (
-                        <button key={p} style={slippage === p ? s.slipBtnActive : s.slipBtn}
-                          onClick={() => setSlippage(p)}>{p}%</button>
+                        <button key={p} className={`slip-btn ${slippage === p ? "active" : ""}`} onClick={() => setSlippage(p)}>{p}%</button>
                       ))}
                     </div>
                   </div>
 
-                  {tradeAmount && (
-                    <div style={s.estimateBox}>
-                      <span style={s.estimateLabel}>You'll receive ≈</span>
-                      <span style={s.estimateValue}>
-                        {estimateOutput()} {tradeMode === "buy" ? token.coin.symbol : "SHELL"}
-                      </span>
-                    </div>
+                  <div className="estimate-box">
+                    <span className="estimate-label">Receive ≈</span>
+                    <span className="estimate-val">
+                      {getEstimate()} {tradeMode === "buy" ? token.coin.symbol : "SHELL"}
+                    </span>
+                  </div>
+
+                  {onchainPrice && (
+                    <p className="token-time" style={{ textAlign: 'center', fontSize: '10px', marginBottom: '8px' }}>
+                      Current price: {onchainPrice.toFixed(9)} SHELL per token
+                    </p>
                   )}
 
-                  <button
-                    style={{...(tradeMode === "buy" ? s.tradeBtnBuy : s.tradeBtnSell), opacity: 0.6, cursor: 'not-allowed'}}
-                    disabled={true}
+                  <button 
+                    className={`trade-button ${tradeMode === 'buy' ? 'btn-buy' : 'btn-sell'}`}
                     onClick={handleTrade}
+                    disabled={isTrading || token.onchainData?.deployStatus !== 'deployed'}
                   >
-                    🔒 Trading Coming Soon
+                    {isTrading 
+                      ? "Processando Tx..." 
+                      : token.onchainData?.deployStatus !== 'deployed'
+                        ? "Aguardando deploy on-chain..."
+                        : `Finalizar ${tradeMode.toUpperCase()}`
+                    }
                   </button>
-                  <p style={{...s.tradeHint, color: '#f97316'}}>Bonding Curve SDK integration in progress</p>
-
-                  {!session && (
-                    <p style={s.tradeHint}>Connect wallet to trade</p>
+                  
+                  {tradeMode === "sell" && (
+                    <p className="token-time" style={{ textAlign: 'center', marginTop: '8px', fontSize: '10px' }}>
+                      Sell burns your tokens via TokenWallet → BondingCurve refund.
+                    </p>
                   )}
+
+                  <a href="https://shellbuy.ackinax.com" target="_blank" rel="noreferrer"
+                    className="filter-btn" style={{ display: 'block', textAlign: 'center', marginTop: '12px', fontSize: '11px' }}>
+                    💎 Need SHELL? Buy with USDC →
+                  </a>
                 </div>
               </div>
-            </div>
+
+              {!session && (
+                <div className="card" style={{ marginTop: '16px', textAlign: 'center', padding: '16px' }}>
+                  <p className="token-time" style={{ marginBottom: '12px' }}>Sign in to track your trades</p>
+                  <Link href={`/auth?from=/token/${id}`} className="filter-btn" style={{ display: 'block' }}>Connect Wallet</Link>
+                </div>
+              )}
+            </aside>
           </div>
         )}
       </main>
     </>
   );
 }
-
-const s = {
-  page: { minHeight: "100vh", padding: "24px 24px 80px" },
-  loadingMsg: { color: "#52525b", textAlign: "center", padding: "80px 24px", fontSize: "13px" },
-  errorMsg: { color: "#ff4757", textAlign: "center", padding: "80px 24px", fontSize: "13px" },
-  errorMsgCompact: { color: "#ff4757", margin: "0 0 12px", fontSize: "14px" },
-  errorCard: {
-    maxWidth: "520px",
-    margin: "80px auto",
-    textAlign: "center",
-    background: "rgba(22,22,26,0.7)",
-    border: "1px solid rgba(39,39,42,0.5)",
-    borderRadius: "12px",
-    padding: "24px",
-  },
-  backToFeedBtn: {
-    display: "inline-block",
-    marginTop: "6px",
-    textDecoration: "none",
-    color: "#00ff88",
-    border: "1px solid rgba(0,255,136,0.24)",
-    borderRadius: "8px",
-    padding: "8px 14px",
-    fontSize: "12px",
-    fontWeight: 600,
-  },
-  layout: {
-    maxWidth: "1100px", margin: "0 auto",
-    display: "grid", gridTemplateColumns: "1fr 340px", gap: "24px",
-    alignItems: "start",
-  },
-  leftCol: { display: "flex", flexDirection: "column", gap: "16px" },
-  rightCol: { position: "sticky", top: "72px" },
-  // Header
-  header: { display: "flex", alignItems: "center", gap: "14px", flexWrap: "wrap" },
-  tokenIcon: {
-    width: "52px", height: "52px", borderRadius: "14px",
-    display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0,
-  },
-  tokenImg: { width: "100%", height: "100%", objectFit: "cover", borderRadius: "14px" },
-  tokenLetter: { color: "#fff", fontSize: "22px", fontWeight: 700 },
-  headerInfo: { flex: 1 },
-  name: { fontSize: "22px", fontWeight: 700, margin: "0 0 2px", color: "#f4f4f5" },
-  ticker: { color: "#00ff88", fontSize: "14px", fontWeight: 600, fontFamily: "var(--font-mono)" },
-  statusPill: {
-    background: "rgba(0,255,136,0.06)", color: "#00ff88", border: "1px solid rgba(0,255,136,0.2)",
-    fontSize: "10px", padding: "4px 10px", borderRadius: "6px", fontWeight: 600,
-    textTransform: "lowercase", fontFamily: "var(--font-mono)",
-  },
-  // Curve
-  curveCard: {
-    background: "rgba(22,22,26,0.7)", border: "1px solid rgba(0,255,136,0.12)",
-    borderRadius: "12px", padding: "20px", backdropFilter: "blur(8px)",
-  },
-  curveTopRow: { display: "flex", justifyContent: "space-between", marginBottom: "14px" },
-  curveLabel: { color: "#00ff88", fontSize: "11px", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.08em" },
-  curveNet: { color: "#3f3f46", fontSize: "10px", fontFamily: "var(--font-mono)" },
-  curveBarWrap: { height: "10px", background: "rgba(39,39,42,0.5)", borderRadius: "5px", overflow: "hidden", marginBottom: "16px" },
-  curveBarFill: {
-    height: "100%", borderRadius: "5px", minWidth: "4px",
-    transition: "width 0.6s ease", boxShadow: "0 0 10px rgba(0,255,136,0.3)",
-  },
-  curveStatsGrid: { display: "grid", gridTemplateColumns: "repeat(4,1fr)", gap: "12px", marginBottom: "12px" },
-  cStatLabel: { fontSize: "9px", color: "#52525b", textTransform: "uppercase", letterSpacing: "0.1em", margin: "0 0 3px" },
-  cStatVal: { fontSize: "13px", color: "#f4f4f5", margin: 0, fontWeight: 700 },
-  curveHint: { color: "#27272a", fontSize: "10px", margin: 0 },
-  // Info
-  infoGrid: { display: "grid", gridTemplateColumns: "repeat(2,1fr)", gap: "12px" },
-  infoItem: {
-    background: "rgba(22,22,26,0.7)", border: "1px solid rgba(39,39,42,0.4)",
-    borderRadius: "10px", padding: "14px 16px",
-  },
-  infoLabel: { fontSize: "9px", color: "#52525b", textTransform: "uppercase", letterSpacing: "0.1em", margin: "0 0 5px" },
-  infoVal: { fontSize: "14px", color: "#f4f4f5", margin: 0, fontWeight: 700 },
-  descCard: {
-    background: "rgba(22,22,26,0.7)", border: "1px solid rgba(39,39,42,0.4)",
-    borderRadius: "10px", padding: "16px",
-  },
-  descText: { fontSize: "13px", color: "#a1a1aa", lineHeight: 1.7, margin: "6px 0 0" },
-  creatorCard: {
-    background: "rgba(22,22,26,0.7)", border: "1px solid rgba(39,39,42,0.4)",
-    borderRadius: "10px", padding: "14px 16px",
-  },
-  walletCode: { fontSize: "11px", color: "#71717a", wordBreak: "break-all", fontFamily: "var(--font-mono)" },
-  linksRow: { display: "flex", gap: "10px", flexWrap: "wrap" },
-  extLink: {
-    color: "#00ff88", fontSize: "12px", textDecoration: "none",
-    border: "1px solid rgba(0,255,136,0.2)", padding: "7px 14px", borderRadius: "8px",
-    background: "rgba(0,255,136,0.04)", fontWeight: 500,
-  },
-  onchainCard: {
-    background: "rgba(22,22,26,0.7)", border: "1px solid rgba(39,39,42,0.4)",
-    borderRadius: "10px", padding: "16px",
-  },
-  onchainGrid: { display: "grid", gridTemplateColumns: "repeat(3,1fr)", gap: "12px", marginTop: "8px" },
-  onchainLink: { display: "block", fontSize: "11px", color: "#00ff88", textDecoration: "none", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" },
-  // Trade widget
-  tradeCard: {
-    background: "rgba(22,22,26,0.8)", border: "1px solid rgba(39,39,42,0.5)",
-    borderRadius: "14px", overflow: "hidden", backdropFilter: "blur(12px)",
-  },
-  tradeTabs: { display: "flex" },
-  tab: {
-    flex: 1, background: "transparent", border: "none", color: "#52525b",
-    padding: "14px", fontSize: "12px", fontWeight: 700, cursor: "pointer",
-    letterSpacing: "0.1em", borderBottom: "2px solid transparent",
-  },
-  tabActiveBuy: {
-    flex: 1, background: "rgba(0,255,136,0.04)", border: "none", color: "#00ff88",
-    padding: "14px", fontSize: "12px", fontWeight: 700, cursor: "pointer",
-    borderBottom: "2px solid #00ff88", letterSpacing: "0.1em",
-  },
-  tabActiveSell: {
-    flex: 1, background: "rgba(255,71,87,0.04)", border: "none", color: "#ff4757",
-    padding: "14px", fontSize: "12px", fontWeight: 700, cursor: "pointer",
-    borderBottom: "2px solid #ff4757", letterSpacing: "0.1em",
-  },
-  tradeBody: { padding: "20px" },
-  tradeLabel: { color: "#71717a", fontSize: "11px", fontWeight: 600, margin: "0 0 8px", textTransform: "uppercase", letterSpacing: "0.06em" },
-  tradeInputWrap: {
-    display: "flex", alignItems: "center",
-    background: "rgba(9,9,11,0.6)", border: "1px solid rgba(39,39,42,0.5)",
-    borderRadius: "10px", padding: "6px 14px", marginBottom: "16px",
-  },
-  tradeInput: {
-    flex: 1, background: "transparent", border: "none", color: "#f4f4f5",
-    fontSize: "20px", outline: "none", width: "100%", fontFamily: "var(--font-mono)",
-  },
-  tradeUnit: { color: "#52525b", fontSize: "11px", fontWeight: 700, fontFamily: "var(--font-mono)" },
-  slippageRow: { display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "16px" },
-  slippageLabel: { color: "#52525b", fontSize: "10px", textTransform: "uppercase", letterSpacing: "0.1em" },
-  slippageBtns: { display: "flex", gap: "6px" },
-  slipBtn: {
-    background: "rgba(39,39,42,0.5)", border: "none", color: "#71717a",
-    padding: "4px 10px", fontSize: "11px", borderRadius: "6px", cursor: "pointer",
-  },
-  slipBtnActive: {
-    background: "rgba(0,255,136,0.1)", border: "none", color: "#00ff88",
-    padding: "4px 10px", fontSize: "11px", borderRadius: "6px", cursor: "pointer", fontWeight: 600,
-  },
-  estimateBox: {
-    background: "rgba(0,255,136,0.04)", border: "1px solid rgba(0,255,136,0.1)",
-    borderRadius: "8px", padding: "10px 14px", marginBottom: "16px",
-    display: "flex", justifyContent: "space-between", alignItems: "center",
-  },
-  estimateLabel: { color: "#52525b", fontSize: "11px" },
-  estimateValue: { color: "#00ff88", fontSize: "13px", fontWeight: 700, fontFamily: "var(--font-mono)" },
-  tradeBtnBuy: {
-    width: "100%", padding: "14px",
-    background: "linear-gradient(135deg, #00ff88, #00cc6d)",
-    color: "#000", border: "none", borderRadius: "10px",
-    fontWeight: 700, fontSize: "14px", cursor: "pointer",
-    boxShadow: "0 0 20px rgba(0,255,136,0.2)",
-  },
-  tradeBtnSell: {
-    width: "100%", padding: "14px",
-    background: "linear-gradient(135deg, #ff4757, #cc3645)",
-    color: "#fff", border: "none", borderRadius: "10px",
-    fontWeight: 700, fontSize: "14px", cursor: "pointer",
-    boxShadow: "0 0 20px rgba(255,71,87,0.2)",
-  },
-  tradeHint: { color: "#3f3f46", fontSize: "11px", textAlign: "center", marginTop: "12px" },
-  securityCard: {
-    background: "rgba(22,22,26,0.7)", border: "1px dashed rgba(255,165,0,0.4)",
-    borderRadius: "10px", padding: "16px", marginTop: "16px",
-  },
-  securityGrid: { display: "grid", gridTemplateColumns: "1fr 1fr", gap: "10px", marginTop: "12px" },
-  secItem: { fontSize: "12px", color: "#a1a1aa", display: "flex", alignItems: "center", gap: "6px" },
-  secIcon: { fontSize: "14px" },
-  bubbleMapCard: {
-    background: "rgba(22,22,26,0.7)", border: "1px solid rgba(0,255,136,0.12)",
-    borderRadius: "10px", padding: "16px", marginTop: "16px", overflow: "hidden"
-  },
-  bubbleHeader: { display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "12px" },
-  livePulse: { fontSize: "10px", color: "#00ff88", animation: "pulse 2s infinite", fontWeight: "bold" },
-  bubbleCanvas: { position: "relative", height: "180px", background: "rgba(9,9,11,0.6)", borderRadius: "8px", overflow: "hidden", marginBottom: "10px" },
-  bubble: { position: "absolute", borderRadius: "50%", background: "rgba(0,255,136,0.1)", border: "1px solid rgba(0,255,136,0.3)", display: "flex", alignItems: "center", justifyContent: "center", color: "#fff", fontSize: "10px", fontWeight: "bold", boxShadow: "0 0 10px rgba(0,255,136,0.1)" },
-};

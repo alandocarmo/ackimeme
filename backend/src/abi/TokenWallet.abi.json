@@ -28,6 +28,15 @@
 			]
 		},
 		{
+			"name": "burn",
+			"inputs": [
+				{"name":"amount","type":"uint256"},
+				{"name":"callbackTarget","type":"address"}
+			],
+			"outputs": [
+			]
+		},
+		{
 			"name": "root",
 			"inputs": [
 			],

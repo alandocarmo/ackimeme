@@ -12,6 +12,7 @@ async function request(path, options = {}) {
   const response = await fetch(`${API_BASE_URL}${path}`, {
     method: options.method || "GET",
     headers,
+    credentials: "include", // Required for HttpOnly cookies
     body: options.body ? JSON.stringify(options.body) : undefined,
   });
 

@@ -56,6 +56,12 @@ function normalizeLaunchRow(row) {
     ipfsHash: row.ipfs_hash || "",
     tokenRootAddress: row.token_root_address || "",
     bondingCurveAddress: row.bonding_curve_address || "",
+    onchainData: {
+      reserveBalance: row.reserve_balance ? row.reserve_balance.toString() : "0",
+      tokenSupply: row.token_supply ? row.token_supply.toString() : "0",
+      lockedLiquidity: row.locked_liquidity || false,
+      updatedAt: row.onchain_updated_at?.toISOString?.() || row.onchain_updated_at || null,
+    }
   };
 }
 
@@ -173,6 +179,20 @@ function attachLaunchpadRelations(projects, tasks, projectMetrics, taskMetrics) 
       tasks: projectTasks,
     };
   });
+}
+
+async function updateLaunchOnchainState(launchId, { reserveBalance, tokenSupply, lockedLiquidity }) {
+  await query(
+    `
+      UPDATE launches
+      SET reserve_balance = $1,
+          token_supply = $2,
+          locked_liquidity = $3,
+          onchain_updated_at = NOW()
+      WHERE id = $4
+    `,
+    [reserveBalance, tokenSupply, lockedLiquidity, launchId]
+  );
 }
 
 async function cleanupExpiredAuthData() {
@@ -551,12 +571,17 @@ async function listLaunchesByWallet(walletAddress) {
 }
 
 async function listPublicLaunches(limit = 30) {
+  // M-02: Only show tokens that are deployed or waiting for blockchain integration
+  // Excludes draft, payment-failed, or other non-functional states from the public feed
   const result = await query(
     `
       SELECT *
       FROM launches
       WHERE is_public = TRUE
-      ORDER BY created_at DESC
+        AND status IN ('on_chain_deployed', 'payment_verified_waiting_blockchain_integration')
+      ORDER BY
+        CASE WHEN status = 'on_chain_deployed' THEN 0 ELSE 1 END,
+        created_at DESC
       LIMIT $1
     `,
     [limit],
@@ -573,13 +598,16 @@ async function getLaunchById(id) {
   return result.rows.length > 0 ? normalizeLaunchRow(result.rows[0]) : null;
 }
 
-async function listAllLaunches() {
+async function listAllLaunches(limit = 500) {
+  const safeLimit = Math.min(Math.max(1, limit), 500); // M-06: Enforce pagination limit
   const result = await query(
     `
       SELECT *
       FROM launches
       ORDER BY created_at DESC
+      LIMIT $1
     `,
+    [safeLimit]
   );
 
   return result.rows.map(normalizeLaunchRow);
@@ -1631,5 +1659,6 @@ module.exports = {
   updateLaunchpadProjectStatus,
   updateLaunchpadTaskContent,
   updateLaunchpadTaskStatus,
+  updateLaunchOnchainState,
   cleanupExpiredAuthData,
 };

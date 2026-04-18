@@ -3,29 +3,26 @@
  *
  * Verificação de pagamento de fee de criação de coin.
  *
- * Fluxo:
- *   1. Usuário envia SHELL ou USDC para FEE_WALLET na Acki Nacki
- *   2. Frontend manda { walletAddress, txHash, tokenSymbol } para POST /verify-payment
- *   3. Este módulo consulta a blockchain e valida a transação
+ * Fluxo (SHELL-only):
+ *   1. Usuário envia SHELL para FEE_WALLET na Acki Nacki
+ *   2. Frontend manda { walletAddress, txHash, tokenSymbol: "SHELL" } para POST /verify-payment
+ *   3. Este módulo consulta a blockchain e valida a transação nativa
  *
  * Documentação GraphQL: https://dev.ackinacki.com/graphql/graphql-api
  * Endpoint testnet: https://shellnet.ackinacki.org/graphql
  */
 
-const {
-  getTip3TransferPayment,
-  getTransaction,
-} = require("./services/graphql.service");
+const { getTransaction } = require("./services/graphql.service");
 const { getCreationFeeRequirement, normalizeTokenSymbol } = require("./treasury");
 
 /**
- * Verifica se uma transação cumpre os requisitos de fee.
+ * Verifica se uma transação SHELL cumpre os requisitos de fee.
  *
  * @param {{ walletAddress: string, txHash: string, tokenSymbol: string }} params
  * @returns {Promise<object>} Dados do pagamento verificado
  */
 async function verifyPayment({ walletAddress, txHash, tokenSymbol }) {
-  const requirement = getCreationFeeRequirement(tokenSymbol);
+  const requirement = getCreationFeeRequirement(tokenSymbol || "SHELL");
 
   let tx;
   try {
@@ -46,42 +43,6 @@ async function verifyPayment({ walletAddress, txHash, tokenSymbol }) {
     );
   }
 
-  if (requirement.tokenSymbol === "USDC") {
-    const tip3Transfer = await getTip3TransferPayment({
-      txHash,
-      senderWallet: walletAddress,
-      recipientWallet: requirement.feeWallet,
-      decimals: requirement.decimals || 6,
-    });
-
-    if (!tip3Transfer) {
-      throw new Error(
-        "Não foi possível validar transferência TIP-3 USDC para a fee wallet. " +
-          "Confirme txHash, sender e destino.",
-      );
-    }
-
-    if (Number(tip3Transfer.amount) < requirement.minimumAmount) {
-      throw new Error(
-        `Valor USDC insuficiente. Mínimo exigido: ${requirement.minimumAmount} USDC. ` +
-          `Recebido: ${tip3Transfer.amount} USDC.`,
-      );
-    }
-
-    return {
-      success: true,
-      txHash,
-      tokenSymbol: requirement.tokenSymbol,
-      amount: Number(tip3Transfer.amount),
-      rawAmount: tip3Transfer.rawAmount,
-      feeWallet: requirement.feeWallet,
-      minimumAmount: requirement.minimumAmount,
-      networkSettlementToken: requirement.networkSettlementToken,
-      networkSettlementStatus: requirement.networkSettlementStatus,
-      tip3Proof: tip3Transfer.proof,
-    };
-  }
-
   // Valida o remetente (quem enviou a fee)
   const normalizedSender = String(tx.from || "").trim().toLowerCase();
   const normalizedWallet = String(walletAddress || "").trim().toLowerCase();
@@ -97,43 +58,44 @@ async function verifyPayment({ walletAddress, txHash, tokenSymbol }) {
   }
 
   // Valida o destinatário (fee_wallet configurada no backend)
-  if (requirement.feeWallet) {
-    const normalizedDst = String(tx.to || "").trim().toLowerCase();
-    const normalizedFeeWallet = String(requirement.feeWallet || "").trim().toLowerCase();
+  if (!requirement.feeWallet) {
+    throw new Error("fee_wallet não configurada no backend. Impossível validar destino.");
+  }
+  const normalizedDst = String(tx.to || "").trim().toLowerCase();
+  const normalizedFeeWallet = String(requirement.feeWallet || "").trim().toLowerCase();
 
-    if (normalizedDst !== normalizedFeeWallet) {
-      throw new Error(
-        `Destinatário incorreto. Envie para a fee wallet: ${requirement.feeWallet}`,
-      );
-    }
+  if (normalizedDst !== normalizedFeeWallet) {
+    throw new Error(
+      `Destinatário incorreto. Envie para a fee wallet: ${requirement.feeWallet}`,
+    );
   }
 
-  // Valida token nativo (SHELL) no fluxo não-TIP3.
+  // Valida que o token é SHELL (nativo)
   const txTokenSymbol = normalizeTokenSymbol(tx.token?.symbol || "SHELL");
 
-  if (txTokenSymbol !== requirement.tokenSymbol) {
+  if (txTokenSymbol !== "SHELL") {
     throw new Error(
-      `Token incorreto. O pagamento deve ser feito em ${requirement.tokenSymbol}, mas foi detectado ${txTokenSymbol}.`,
+      `Token incorreto. O pagamento deve ser feito em SHELL, mas foi detectado ${txTokenSymbol}.`,
     );
   }
 
   // Valida valor mínimo
   if (Number(tx.amount) < requirement.minimumAmount) {
     throw new Error(
-      `Valor insuficiente. Mínimo exigido: ${requirement.minimumAmount} ${requirement.tokenSymbol}. ` +
-        `Recebido: ${tx.amount} ${requirement.tokenSymbol}.`,
+      `Valor insuficiente. Mínimo exigido: ${requirement.minimumAmount} SHELL (~$3 USD). ` +
+        `Recebido: ${tx.amount} SHELL.`,
     );
   }
 
   return {
     success: true,
     txHash,
-    tokenSymbol: requirement.tokenSymbol,
+    tokenSymbol: "SHELL",
     amount: Number(tx.amount),
     feeWallet: requirement.feeWallet,
     minimumAmount: requirement.minimumAmount,
-    networkSettlementToken: requirement.networkSettlementToken,
-    networkSettlementStatus: requirement.networkSettlementStatus,
+    networkSettlementToken: "SHELL",
+    networkSettlementStatus: "native_shell_direct",
   };
 }
 

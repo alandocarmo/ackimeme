@@ -56,16 +56,34 @@ function buildEd25519PublicKey(publicKeyInput) {
   };
 }
 
+// C-07: The everscale-inpage-provider signData() method hashes the data (SHA-256)
+// before signing. So when verifying a signature from the extension wallet,
+// we must hash the message first. For manual tvm-cli signatures, the raw
+// message is signed directly. We try both modes.
 function verifyDetachedSignature({ message, signature, publicKey }) {
   const signatureBuffer = decodeBuffer(signature, "Signature");
   const keyObject = buildEd25519PublicKey(publicKey);
 
-  return crypto.verify(
+  // Mode 1: Try raw UTF-8 verification (tvm-cli manual signing)
+  const rawValid = crypto.verify(
     null,
     Buffer.from(message, "utf8"),
     keyObject,
     signatureBuffer,
   );
+  if (rawValid) return true;
+
+  // Mode 2: Try SHA-256 hashed verification (everscale-inpage-provider signData)
+  // signData internally does: sign(sha256(base64_decode(data)))
+  // The frontend sends btoa(challengeMsg) as data, so the provider signs sha256(challengeMsg_bytes)
+  const hashedMessage = crypto.createHash("sha256").update(Buffer.from(message, "utf8")).digest();
+  const hashedValid = crypto.verify(
+    null,
+    hashedMessage,
+    keyObject,
+    signatureBuffer,
+  );
+  return hashedValid;
 }
 
 function encodeChallengeMessage({

@@ -85,10 +85,34 @@ function normalizeOptionalUrl(value, fieldName) {
   }
 
   try {
-    return new URL(url).toString();
+    const parsed = new URL(url);
+    // Security: Only allow HTTP/HTTPS to prevent SSRF via file://, ftp://, etc.
+    if (!["http:", "https:"].includes(parsed.protocol)) {
+      throw new Error(`${fieldName} deve usar protocolo HTTP ou HTTPS.`);
+    }
+    return parsed.toString();
   } catch (error) {
+    // Re-throw our own protocol error, wrap others
+    if (error.message.includes("HTTP")) throw error;
     throw new Error(`${fieldName} precisa ser uma URL válida.`);
   }
+}
+
+function normalizeImageUrl(value, fieldName) {
+  const url = normalizeOptionalUrl(value, fieldName);
+  if (!url) return url;
+  
+  try {
+    const pathname = new URL(url).pathname.toLowerCase();
+    const validExtensions = ['.png', '.jpg', '.jpeg', '.gif', '.webp', '.svg'];
+    const match = pathname.match(/\.([a-z0-9]+)$/);
+    if (match && !validExtensions.includes(match[0])) {
+      throw new Error(`${fieldName} possui extensão inválida. Use imagens (${validExtensions.join(', ')}).`);
+    }
+  } catch (err) {
+    if (err.message.includes("extensão inválida")) throw err;
+  }
+  return url;
 }
 
 function normalizeLaunchRequest(body = {}, session = null) {
@@ -105,24 +129,22 @@ function normalizeLaunchRequest(body = {}, session = null) {
     throw new Error("Wallet do criador diverge da sessão autenticada.");
   }
 
-  const tokenSymbol = normalizeTokenSymbol(body.paymentTokenSymbol);
-  const feeRequirement = getCreationFeeRequirement(tokenSymbol);
+  // SHELL-only: all creation fees are paid in SHELL
+  const feeRequirement = getCreationFeeRequirement("SHELL");
 
   return {
     creator: {
       wallet: creatorWallet,
-      sessionId: session?.id || "",
-      telegramUserId: session?.telegramBinding?.userId || "",
     },
     payment: {
       txHash: requireText(body.txHash, "Tx hash", {
         minLength: 6,
         maxLength: 180,
       }),
-      tokenSymbol: feeRequirement.tokenSymbol,
+      tokenSymbol: "SHELL",
       requiredAmount: feeRequirement.minimumAmount,
-      networkSettlementToken: feeRequirement.networkSettlementToken,
-      networkSettlementStatus: feeRequirement.networkSettlementStatus,
+      networkSettlementToken: "SHELL",
+      networkSettlementStatus: "native_shell_direct",
     },
     protocol: {
       distribution: {
@@ -132,13 +154,15 @@ function normalizeLaunchRequest(body = {}, session = null) {
       treasury: {
         appFeeSharePercent: config.appFeeSharePercent,
         feeWallet: config.feeWallet,
+        feeTokenSymbol: "SHELL",
       },
       blockchainFee: {
         tokenSymbol: "SHELL",
         minimumCreatorBalance: config.minCreatorShellBalance,
       },
-      launchMode: "bonding_curve_pending",
-      bondingCurveStatus: "not_implemented",
+      // Item #21
+      launchMode: process.env.ENABLE_ONCHAIN_DEPLOY === "true" ? "bonding_curve_active" : "bonding_curve_pending",
+      bondingCurveStatus: process.env.ENABLE_ONCHAIN_DEPLOY === "true" ? "deployed" : "not_implemented",
       poolAutomationStatus: "not_implemented",
     },
     coin: {
@@ -153,7 +177,7 @@ function normalizeLaunchRequest(body = {}, session = null) {
         maxLength: MAX_DESCRIPTION_LENGTH,
       }),
       totalSupply: normalizeSupply(body.totalSupply),
-      logoUrl: normalizeOptionalUrl(body.logoUrl, "Logo URL"),
+      logoUrl: normalizeImageUrl(body.logoUrl, "Logo URL"),
     },
     links: {
       website: normalizeOptionalUrl(body.website, "Website"),
@@ -173,9 +197,9 @@ function createLaunchTicket({ launchRequest, treasuryPayment, riskProfile }) {
 
   return {
     id: launchId,
-    status: "payment_verified_waiting_blockchain_integration",
-    mintingAvailable: false,
-    note: "Pagamento verificado. Falta conectar o mint on-chain da Acki Nacki no backend.",
+    status: process.env.ENABLE_ONCHAIN_DEPLOY === "true" ? "on_chain_deployed" : "payment_verified_waiting_blockchain_integration",
+    mintingAvailable: process.env.ENABLE_ONCHAIN_DEPLOY === "true",
+    note: process.env.ENABLE_ONCHAIN_DEPLOY === "true" ? "Deploy ativo" : "Pagamento verificado. Falta conectar o mint on-chain da Acki Nacki no backend.",
     launchRequest,
     treasuryPayment,
     riskProfile: {

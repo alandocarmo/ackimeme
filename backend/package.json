@@ -14,6 +14,7 @@
     "@tvmsdk/lib-web": "^2.0.1",
     "axios": "^1.6.0",
     "body-parser": "^1.20.2",
+    "cookie-parser": "^1.4.7",
     "dotenv": "^16.0.0",
     "express": "^4.18.2",
     "express-rate-limit": "^8.3.2",

@@ -12,24 +12,26 @@ function getCreationFeeRequirement(tokenSymbol) {
     throw new Error("FEE_WALLET não configurada corretamente no backend.");
   }
 
-  const normalizedToken = normalizeTokenSymbol(tokenSymbol);
+  const normalizedToken = normalizeTokenSymbol(tokenSymbol || "SHELL");
+
+  // SHELL-only: all creation fees are paid in the native SHELL token
   const option = config.creationFeeOptions.find(
     (item) => item.tokenSymbol === normalizedToken,
   );
 
   if (!option) {
-    throw new Error("Token de taxa não suportado.");
+    throw new Error(
+      `Token de taxa "${normalizedToken}" não suportado. Use SHELL para pagar a taxa de criação.`,
+    );
   }
 
   return {
     ...option,
     feeWallet: config.feeWallet,
     appFeeSharePercent: config.appFeeSharePercent,
-    networkSettlementToken: "VMSHELL",
-    networkSettlementStatus:
-      option.tokenSymbol === "SHELL"
-        ? "can_be_converted_to_vm_shell"
-        : "requires_vm_shell_treasury_buffer",
+    // SHELL is the native token — no secondary settlement needed
+    networkSettlementToken: "SHELL",
+    networkSettlementStatus: "native_shell_direct",
   };
 }
 

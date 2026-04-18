@@ -1,12 +1,12 @@
 const DEFAULT_APP_NAME = "AckiMeme";
 const DEFAULT_NETWORK = "Acki Nacki";
-const DEFAULT_USDC_MIN_PAYMENT = 3; // $3 USDC flat fee for token creation
-const DEFAULT_USDC_DECIMALS = 6;
+const DEFAULT_SHELL_MIN_PAYMENT = 3; // ~$3 USD equivalent in SHELL for token creation
+const DEFAULT_SHELL_DECIMALS = 9;    // SHELL uses 9 decimals (nano)
 const DEFAULT_MIN_CREATOR_SHELL_BALANCE = 1;
 const DEFAULT_AUTH_CHALLENGE_TTL_SECONDS = 5 * 60;
 const DEFAULT_SESSION_TTL_HOURS = 24;
 const DEFAULT_TELEGRAM_AUTH_MAX_AGE_SECONDS = 24 * 60 * 60;
-const DEFAULT_DATABASE_URL = "postgresql://postgres:password@localhost:5432/ackimeme";
+const DEFAULT_DATABASE_URL = "";
 
 function readPositiveNumber(value, fallback) {
   const parsed = Number(value);
@@ -41,7 +41,8 @@ function isPlaceholderValue(value) {
     normalized.includes("placeholder") ||
     normalized.includes("your_") ||
     normalized.includes("example") ||
-    normalized.includes("acki_fee_wallet_here")
+    normalized.includes("acki_fee_wallet_here") ||
+    normalized.includes("configure")
   );
 }
 
@@ -69,15 +70,12 @@ function isStrongSecret(value, minimumLength = 32) {
 function readCreationFeeOptions() {
   return [
     {
-      tokenSymbol: "USDC",
+      tokenSymbol: "SHELL",
       minimumAmount: readPositiveNumber(
-        process.env.CREATION_FEE_USDC,
-        DEFAULT_USDC_MIN_PAYMENT,
+        process.env.CREATION_FEE_SHELL,
+        DEFAULT_SHELL_MIN_PAYMENT,
       ),
-      decimals: readPositiveNumber(
-        process.env.USDC_DECIMALS,
-        DEFAULT_USDC_DECIMALS,
-      ),
+      decimals: DEFAULT_SHELL_DECIMALS,
     },
   ];
 }
@@ -85,6 +83,7 @@ function readCreationFeeOptions() {
 const creationFeeOptions = readCreationFeeOptions();
 const feeWallet = process.env.FEE_WALLET || "";
 const adminToken = process.env.ADMIN_TOKEN || "";
+const jwtSecret = process.env.JWT_SECRET || "";
 const isProduction = process.env.NODE_ENV === "production";
 
 const config = {
@@ -119,6 +118,8 @@ const config = {
   ),
   adminToken,
   adminTokenStrong: isStrongSecret(adminToken, 32),
+  jwtSecret,
+  jwtSecretConfigured: isStrongSecret(jwtSecret, 32) && jwtSecret !== adminToken,
   adminWallets: readCsv(process.env.ADMIN_WALLETS).map((item) => item.toLowerCase()),
   appFeeSharePercent: 100,
   launchDistribution: {
@@ -135,10 +136,12 @@ function buildPublicConfig() {
       feeWallet: config.feeWalletConfigured ? config.feeWallet : "Configure backend/.env",
       creationFees: config.creationFeeOptions,
       appFeeSharePercent: config.appFeeSharePercent,
-      networkSettlementToken: "VMSHELL",
+      // SHELL is the only fee token — it is also the native blockchain gas token
+      feeTokenSymbol: "SHELL",
       blockchainFee: {
         tokenSymbol: "SHELL",
         minimumCreatorBalance: config.minCreatorShellBalance,
+        note: "The creation fee (~$3 in SHELL) plus blockchain gas fees are both paid in SHELL.",
       },
     },
     auth: {
@@ -162,7 +165,42 @@ function buildPublicConfig() {
   };
 }
 
+function validateConfig() {
+  const errors = [];
+
+  if (isProduction) {
+    if (!config.feeWalletConfigured) {
+      errors.push("FEE_WALLET não está configurada corretamente (requer formato 0:abc...)");
+    }
+    if (!config.adminTokenStrong) {
+      errors.push("ADMIN_TOKEN precisa ter pelo menos 32 caracteres em produção.");
+    }
+    if (!config.jwtSecretConfigured) {
+      errors.push("JWT_SECRET precisa ser forte (32+ caracteres) e diferente do ADMIN_TOKEN em produção.");
+    }
+    if (!config.databaseUrl) {
+      errors.push("DATABASE_URL é obrigatória em produção.");
+    }
+    if (!process.env.DEPLOYER_PRIVATE_KEY || process.env.DEPLOYER_PRIVATE_KEY.length !== 64) {
+      errors.push("DEPLOYER_PRIVATE_KEY inválida ou ausente (necessário para deploys on-chain).");
+    }
+    if (!process.env.PINATA_API_KEY || !process.env.PINATA_SECRET_API_KEY) {
+      errors.push("PINATA_API_KEY/SECRET_API_KEY ausentes (necessário para IPFS).");
+    }
+  }
+
+  if (errors.length > 0) {
+    console.error("\n❌ ERRO DE CONFIGURAÇÃO CRÍTICO:");
+    errors.forEach((e) => console.error(`   - ${e}`));
+    console.error("\nA aplicação não pode iniciar sem estas correções no .env\n");
+    process.exit(1);
+  }
+
+  console.log("✅ Configuração validada com sucesso.");
+}
+
 module.exports = {
   buildPublicConfig,
   config,
+  validateConfig,
 };

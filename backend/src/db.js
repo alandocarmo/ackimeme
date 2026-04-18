@@ -8,7 +8,10 @@ const migrationsDir = path.join(__dirname, "migrations");
 const pool = new Pool({
   connectionString: config.databaseUrl,
   ssl: process.env.DATABASE_SSL === "true" ? { rejectUnauthorized: true } : false,
-  connectionTimeoutMillis: 30000,
+  max: 20, // max connection pool size
+  idleTimeoutMillis: 30000,
+  connectionTimeoutMillis: 2000,
+  options: '-c statement_timeout=10000' // aborta queries longas (> 10s)
 });
 
 async function query(text, params = []) {

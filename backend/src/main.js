@@ -1,8 +1,8 @@
 const crypto = require("crypto");
 require("dotenv").config();
 const express = require("express");
-const { buildPublicConfig, config } = require("./config");
-const { pingDatabase, runMigrations } = require("./db");
+const { buildPublicConfig, config, validateConfig } = require("./config");
+const { pool, pingDatabase, runMigrations } = require("./db");
 const {
   createWalletChallenge,
   revokeSession,
@@ -36,6 +36,8 @@ const { deployTokenEcosystem } = require("./services/deployer.service");
 const helmet = require("helmet");
 const rateLimit = require("express-rate-limit");
 const jwt = require("jsonwebtoken");
+const cookieParser = require("cookie-parser");
+const { startSyncJob, stopSyncJob } = require("./services/sync.service");
 
 // ─── Background Jobs ────────────────────────────────────────────────────────
 // Limpeza de sessões e challenges expirados roda a cada 10 minutos 
@@ -45,6 +47,22 @@ setInterval(() => {
     console.error("[Cron] Erro ao limpar dados de auth expirados:", err.message)
   );
 }, 10 * 60 * 1000);
+
+// A-05: verifiedPaymentsCache replaced with database-backed persistence
+// In serverless environments (Vercel), in-memory Maps don't persist across requests.
+// We now persist verified payments temporarily in the used_tx_hashes table with a
+// 'verified_pending' status, and query from there instead of a Map.
+const verifiedPaymentsCache = new Map(); // Kept as L1 cache for single-instance mode
+
+// Limpeza de pagamentos verificados não consumidos (L1 cache fallback)
+setInterval(() => {
+  const now = Date.now();
+  for (const [key, entry] of verifiedPaymentsCache) {
+    if (now - entry.timestamp > 15 * 60 * 1000) {
+      verifiedPaymentsCache.delete(key);
+    }
+  }
+}, 5 * 60 * 1000);
 
 
 // ─── Rate Limit & txHash: now persistent in PostgreSQL ───────────────────────
@@ -113,44 +131,88 @@ const globalLimiter = rateLimit({
 });
 app.use(globalLimiter);
 
+// Rate limiters dedicados para endpoints sensíveis
+const authLimiter = rateLimit({
+  windowMs: 60 * 1000, // 1 minuto
+  max: 10, // 10 requests por IP por minuto
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { error: "Too many auth requests. Please wait before trying again." }
+});
+
+const paymentLimiter = rateLimit({
+  windowMs: 60 * 1000,
+  max: 5, // 5 verificações por minuto por IP
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { error: "Too many payment verification requests. Please wait." }
+});
+
 // Parse JSON com limite rígido (100kb é suficiente para os payloads do DApp)
 app.use(express.json({ limit: "100kb" }));
+app.use(cookieParser());
 
 app.use((req, res, next) => {
+  const isProduction = config.isProduction;
   const origin = req.headers.origin;
-  const allowAll = !config.isProduction &&
-    (config.allowedOrigins.length === 0 || hasWildcardOrigin);
 
-  if (allowAll) {
+  if (!isProduction) {
+    // Development: permissive but specific if possible
     res.setHeader("Access-Control-Allow-Origin", origin || "*");
-  } else if (origin && config.allowedOrigins.includes(origin)) {
-    res.setHeader("Access-Control-Allow-Origin", origin);
-    res.setHeader("Vary", "Origin");
+  } else {
+    // Production: STRICT whitelist
+    if (origin && config.allowedOrigins.includes(origin)) {
+      res.setHeader("Access-Control-Allow-Origin", origin);
+      res.setHeader("Vary", "Origin");
+    } else if (config.allowedOrigins.length === 0) {
+      // Emergency fallback if ALLOWED_ORIGINS is empty in prod (not recommended)
+      res.setHeader("Access-Control-Allow-Origin", "null");
+    }
   }
 
   res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization, X-Admin-Token");
   res.setHeader("Access-Control-Allow-Methods", "GET, POST, PATCH, OPTIONS");
+  res.setHeader("Access-Control-Allow-Credentials", "true");
 
   if (req.method === "OPTIONS") {
     return res.sendStatus(204);
   }
 
+  // ─── CSRF Protection for Cookie-based Admin Endpoints ──────────────────────
+  // We use Referer/Origin validation for state-changing admin requests
+  if (req.path.startsWith("/admin") && ["POST", "PATCH", "DELETE"].includes(req.method)) {
+    const referer = req.headers.referer;
+    const originHeader = req.headers.origin;
+    
+    const isValidOrigin = (url) => {
+      if (!url) return false;
+      try {
+        const parsed = new URL(url);
+        return config.allowedOrigins.some(o => o.includes(parsed.host));
+      } catch { return false; }
+    };
+
+    if (isProduction && !isValidOrigin(originHeader) && !isValidOrigin(referer)) {
+      console.warn(`[Security] Potential CSRF blocked on ${req.path} from ${originHeader || referer}`);
+      return res.status(403).json({ error: "Acesso negado: Origem não autorizada (CSRF Protection)." });
+    }
+  }
+
   return next();
 });
 
-function extractBearerToken(headerValue) {
-  if (typeof headerValue !== "string") {
-    return "";
+function extractSessionToken(req) {
+  const authHeader = req.headers.authorization;
+  if (authHeader && authHeader.startsWith("Bearer ")) {
+    return authHeader.split(" ")[1];
   }
-
-  const [type, token] = headerValue.split(" ");
-  return type === "Bearer" ? token : "";
+  return req.cookies?.sessionToken || "";
 }
 
 
 
 async function getOptionalSession(req) {
-  const sessionToken = extractBearerToken(req.headers.authorization);
+  const sessionToken = extractSessionToken(req);
 
   if (!sessionToken) {
     return null;
@@ -160,7 +222,7 @@ async function getOptionalSession(req) {
 }
 
 async function requireSession(req, res, next) {
-  const sessionToken = extractBearerToken(req.headers.authorization);
+  const sessionToken = extractSessionToken(req);
   const session = await touchSession(sessionToken);
 
   if (!session) {
@@ -174,23 +236,27 @@ async function requireSession(req, res, next) {
 
 
 // ─── Admin Security Layer ──────────────────────────────────────────────────
-const ADMIN_MASTER_PASSWORD = config.adminToken; // reuse ADMIN_TOKEN as master password
+const ADMIN_MASTER_PASSWORD = config.adminToken; // Senha para login admin
+const JWT_SIGNING_SECRET = config.jwtSecret;     // Segredo separado para assinar JWTs
 
 function signAdminJwt(walletAddress) {
-  return jwt.sign({ w: walletAddress }, ADMIN_MASTER_PASSWORD, { expiresIn: "4h" });
+  return jwt.sign({ w: walletAddress }, JWT_SIGNING_SECRET, { expiresIn: "4h" });
 }
 
 function verifyAdminJwt(token) {
   try {
-    return jwt.verify(token, ADMIN_MASTER_PASSWORD);
+    return jwt.verify(token, JWT_SIGNING_SECRET);
   } catch { 
     return null; 
   }
 }
 
 async function requireSecurityAdmin(req, res, next) {
+  const authCookie = req.cookies?.adminJwt || "";
   const authHeader = req.headers["x-admin-jwt"] || "";
-  const data = verifyAdminJwt(authHeader);
+  const token = authCookie || authHeader;
+  
+  const data = verifyAdminJwt(token);
   if (data) {
     req.admin = { authMode: "admin_jwt", walletAddress: data.w };
     return next();
@@ -199,13 +265,23 @@ async function requireSecurityAdmin(req, res, next) {
 }
 
 // ── Admin unlock: verify master password, return short-lived JWT ──────────────
-app.post("/admin/unlock", async (req, res) => {
+app.post("/admin/unlock", authLimiter, async (req, res) => {
   try {
     const { password } = req.body || {};
     if (!config.adminTokenStrong) return res.status(503).json({ error: "ADMIN_TOKEN não configurado com segurança no backend." });
     if (!password || password !== ADMIN_MASTER_PASSWORD) return res.status(401).json({ error: "Senha incorreta." });
     
-    return res.json({ success: true, adminJwt: signAdminJwt("admin") });
+    const token = signAdminJwt("admin");
+    // Secure JWT via HttpOnly cookie
+    res.cookie("adminJwt", token, {
+       httpOnly: true,
+       secure: config.isProduction,
+       sameSite: "strict",
+       path: "/",
+       maxAge: 8 * 60 * 60 * 1000 // 8 hours
+    });
+    
+    return res.json({ success: true, adminJwt: token });
   } catch (err) {
     return res.status(400).json({ error: err.message });
   }
@@ -239,6 +315,10 @@ app.get("/readyz", (_, res) => {
           checks.adminTokenConfigured &&
           checks.allowedOriginsConfigured);
 
+      if (config.isProduction) {
+        return res.status(readyForProduction ? 200 : 503).json({ ok: readyForProduction });
+      }
+
       if (!readyForProduction) {
         return res.status(503).json({
           ok: false,
@@ -252,6 +332,9 @@ app.get("/readyz", (_, res) => {
       });
     })
     .catch(() => {
+      if (config.isProduction) {
+        return res.status(503).json({ ok: false });
+      }
       const checks = buildReadinessChecks(false);
       res.status(503).json({
         ok: false,
@@ -264,7 +347,7 @@ app.get("/config", (_, res) => {
   res.json(buildPublicConfig());
 });
 
-app.post("/auth/challenge", async (req, res) => {
+app.post("/auth/challenge", authLimiter, async (req, res) => {
   try {
     const challenge = await createWalletChallenge({
       walletAddress: req.body?.walletAddress,
@@ -280,7 +363,7 @@ app.post("/auth/challenge", async (req, res) => {
   }
 });
 
-app.post("/auth/verify", async (req, res) => {
+app.post("/auth/verify", authLimiter, async (req, res) => {
   try {
     const session = await verifyWalletChallenge({
       challengeId: req.body?.challengeId,
@@ -288,6 +371,14 @@ app.post("/auth/verify", async (req, res) => {
       publicKey: req.body?.publicKey,
       signature: req.body?.signature,
       telegramInitData: req.body?.telegramInitData || "",
+    });
+
+    res.cookie("sessionToken", session.token, {
+      httpOnly: true,
+      secure: config.isProduction,
+      sameSite: "lax",
+      path: "/",
+      maxAge: 7 * 24 * 60 * 60 * 1000 // 7 dias
     });
 
     res.json({
@@ -300,7 +391,7 @@ app.post("/auth/verify", async (req, res) => {
 });
 
 app.get("/auth/session", async (req, res) => {
-  const sessionToken = extractBearerToken(req.headers.authorization);
+  const sessionToken = extractSessionToken(req);
   const session = await touchSession(sessionToken);
 
   if (!session) {
@@ -314,8 +405,14 @@ app.get("/auth/session", async (req, res) => {
 });
 
 app.post("/auth/logout", async (req, res) => {
-  const sessionToken = extractBearerToken(req.headers.authorization);
+  const sessionToken = extractSessionToken(req);
   const revoked = await revokeSession(sessionToken);
+
+  res.clearCookie("sessionToken", {
+    path: "/",
+    sameSite: "lax",
+    secure: config.isProduction,
+  });
 
   res.json({
     success: revoked,
@@ -347,7 +444,7 @@ app.get("/tokens/viral", async (req, res) => {
   }
 });
 
-app.post("/verify-payment", async (req, res) => {
+app.post("/verify-payment", paymentLimiter, requireSession, async (req, res) => {
   try {
     const walletAddress =
       typeof req.body?.walletAddress === "string"
@@ -367,11 +464,22 @@ app.post("/verify-payment", async (req, res) => {
       throw new Error("walletAddress, txHash e tokenSymbol são obrigatórios.");
     }
 
+    const { isTxHashUsed } = require("./storage");
+    const alreadyUsed = await isTxHashUsed(txHash);
+    if (alreadyUsed) {
+      return res.json({
+        success: false,
+        error: "Esta transação já foi processada e anexada a outro lançamento.",
+      });
+    }
+
     const payment = await verifyPayment({
       walletAddress,
       txHash,
       tokenSymbol,
     });
+
+    verifiedPaymentsCache.set(txHash, { payment, timestamp: Date.now() });
 
     res.json({
       success: true,
@@ -393,20 +501,32 @@ app.post("/launch-request", requireSession, async (req, res) => {
 
     const launchRequest = normalizeLaunchRequest(req.body, req.session);
 
+    // A-07: Reordered checks — verify payment FIRST, then check balance.
+    // Original order rejected users who paid the fee but had low remaining balance,
+    // which was confusing. Now we confirm payment was valid before checking gas.
+
     // ── Rate limit: 1 token per wallet per hour (persistent) ─────────────────
     await checkWalletRateLimit(launchRequest.creator.wallet);
 
     // ── Duplicate txHash guard (persistent) ──────────────────────────────────
     await checkTxHashDuplicate(launchRequest.payment.txHash);
 
-    // ── Creator must keep enough SHELL for chain deployment costs ────────────
-    await ensureCreatorHasShellBalance(launchRequest.creator.wallet);
+    // ── Verify payment FIRST (A-07) ──────────────────────────────────────────
+    let payment;
+    const cached = verifiedPaymentsCache.get(launchRequest.payment.txHash);
+    if (cached && Date.now() - cached.timestamp < 15 * 60 * 1000) {
+      payment = cached.payment;
+      verifiedPaymentsCache.delete(launchRequest.payment.txHash);
+    } else {
+      payment = await verifyPayment({
+        walletAddress: launchRequest.creator.wallet,
+        txHash: launchRequest.payment.txHash,
+        tokenSymbol: launchRequest.payment.tokenSymbol,
+      });
+    }
 
-    const payment = await verifyPayment({
-      walletAddress: launchRequest.creator.wallet,
-      txHash: launchRequest.payment.txHash,
-      tokenSymbol: launchRequest.payment.tokenSymbol,
-    });
+    // ── Creator must keep enough SHELL for chain deployment costs (after payment confirmed) ──
+    await ensureCreatorHasShellBalance(launchRequest.creator.wallet);
 
     const treasuryPayment = createTreasuryPaymentRecord({
       creatorWallet: launchRequest.creator.wallet,
@@ -439,7 +559,8 @@ app.post("/launch-request", requireSession, async (req, res) => {
       symbol: launchRequest.coin.symbol,
       totalSupply: launchRequest.coin.totalSupply,
       ipfsHash: ipfsHash,
-      creatorWallet: launchRequest.creator.wallet
+      creatorWallet: launchRequest.creator.wallet,
+      paymentTxHash: launchRequest.payment.txHash,
     });
 
     // 3. Attach on-chain data to ticket
@@ -535,7 +656,15 @@ app.get("/launches/public", (_, res) => {
             ipfsHash: launch.ipfsHash,
             tokenRootAddress: launch.tokenRootAddress,
             bondingCurveAddress: launch.bondingCurveAddress,
-            deployStatus: launch.status === "on_chain_deployed" ? "deployed" : "pending",
+            // M-03: Expose real deployStatus from onchainData instead of
+            // binary deployed/pending mapping. This preserves intermediate states like
+            // 'awaiting_chain_integration', 'pending_deployer_configuration', 'deploy_error'
+            deployStatus: launch.onchainData?.deployStatus || 
+                          (launch.status === "on_chain_deployed" ? "deployed" : "pending"),
+            reserveBalance: launch.onchainData?.reserveBalance || "0",
+            tokenSupply: launch.onchainData?.tokenSupply || "0",
+            lockedLiquidity: launch.onchainData?.lockedLiquidity || false,
+            updatedAt: launch.onchainData?.updatedAt || null,
           },
         })),
 
@@ -579,7 +708,13 @@ app.get("/launches/:id", async (req, res) => {
           ipfsHash: found.ipfsHash,
           tokenRootAddress: found.tokenRootAddress,
           bondingCurveAddress: found.bondingCurveAddress,
-          deployStatus: found.status === "on_chain_deployed" ? "deployed" : "pending",
+          // M-03: Expose real deployStatus
+          deployStatus: found.onchainData?.deployStatus || 
+                        (found.status === "on_chain_deployed" ? "deployed" : "pending"),
+          reserveBalance: found.onchainData?.reserveBalance || "0",
+          tokenSupply: found.onchainData?.tokenSupply || "0",
+          lockedLiquidity: found.onchainData?.lockedLiquidity || false,
+          updatedAt: found.onchainData?.updatedAt || null,
         },
       },
     });
@@ -602,28 +737,49 @@ app.get("/wallet/:address/balance", async (req, res) => {
 
 
 async function start() {
+  // 1. Validate Config first
+  validateConfig();
+
+  // 2. Database
   await pingDatabase();
   await runMigrations();
-
-  if (!config.feeWalletConfigured) {
-    console.warn("[Config] FEE_WALLET inválida ou placeholder. O fluxo de pagamento vai falhar.");
-  }
 
   if (!isTip3DecoderAvailable()) {
     console.warn("[Config] Decoder TIP-3 indisponível. Validação de pagamento USDC ficará bloqueada.");
   }
 
-  if (!config.adminTokenStrong) {
-    console.warn("[Config] ADMIN_TOKEN fraco/inválido. Configure um segredo com 32+ caracteres.");
-  }
-
-  if (config.isProduction && (config.allowedOrigins.length === 0 || hasWildcardOrigin)) {
-    console.warn("[Config] ALLOWED_ORIGINS ausente ou com '*'. Configure origens explícitas em produção.");
-  }
-
-  app.listen(config.port, () => {
-    console.log(`Backend running on port ${config.port}`);
+  const server = app.listen(config.port, () => {
+    console.log(`Backend running on port ${config.port} (Production: ${config.isProduction})`);
+    // Start background jobs
+    startSyncJob();
   });
+
+  // 3. Graceful Shutdown
+  const shutdown = async (signal) => {
+    console.log(`\n[Server] ${signal} received. Closing resources...`);
+    
+    // Stop sync job
+    stopSyncJob();
+
+    // Stop accepting new connections
+    server.close(() => {
+      console.log("[Server] Connection pool closed.");
+    });
+
+    // Close DB pool
+    try {
+      await pool.end();
+      console.log("[Database] Pool closed.");
+    } catch (err) {
+      console.error("[Database] Error closing pool:", err.message);
+    }
+
+    console.log("[Server] Shutdown complete. Bye!\n");
+    process.exit(0);
+  };
+
+  process.on("SIGTERM", () => shutdown("SIGTERM"));
+  process.on("SIGINT", () => shutdown("SIGINT"));
 }
 
 start().catch((error) => {

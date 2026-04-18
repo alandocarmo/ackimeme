@@ -71,8 +71,7 @@ function createTokenMetadata(launchRequest) {
     external_url: launchRequest.links.website || "",
     attributes: [
       { trait_type: "Platform", value: "AckiMeme" },
-      { trait_type: "LaunchMode", value: "Bonding Curve" },
-      { trait_type: "Creator", value: launchRequest.creator.wallet }
+      { trait_type: "LaunchMode", value: "Bonding Curve" }
     ]
   };
 }

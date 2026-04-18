@@ -52,15 +52,29 @@ const TIP3_TOKEN_WALLET_ABI = {
 const TIP3_METHOD_NAMES = ["transfer", "transferToWallet"];
 
 let tvmClient = null;
+let sdkClient = null;
+let abiContract = null;
 
 try {
   // `nekoton-wasm` decodifica body de mensagens TIP-3 sem depender do binário
   // nativo do TVM SDK, que pode falhar em runtimes Node recentes.
-  // Instalado como nekoton-wasm-locklift.
-  // eslint-disable-next-line global-require
   tvmClient = require("nekoton-wasm-locklift");
 } catch (error) {
   console.warn("[GraphQL] Decoder TIP-3 indisponível:", error.message);
+}
+
+try {
+  const tvmCore = require("@tvmsdk/core");
+  const { libNode } = require("@tvmsdk/lib-node");
+  tvmCore.TvmClient.useBinaryLibrary(libNode);
+  sdkClient = new tvmCore.TvmClient({
+    network: {
+      endpoints: [config.graphqlUrl || "https://shellnet.ackinacki.org/graphql"],
+    },
+  });
+  abiContract = tvmCore.abiContract;
+} catch (error) {
+  console.warn("[GraphQL] TVM SDK indisponível:", error.message);
 }
 
 function isTip3DecoderAvailable() {
@@ -121,6 +135,7 @@ async function getTransaction(hash) {
             src
             dst
             value(format: DEC)
+            currencies
             msg_type
             msg_type_name
             body
@@ -150,22 +165,40 @@ async function getTransaction(hash) {
    * Normaliza para o formato que payments.js espera:
    *   { hash, from, to, amount, token: { symbol }, status }
    *
-   * Na Acki Nacki:
-   *   - `from`   = in_message.src  (quem enviou)
-   *   - `to`     = account_addr ou in_message.dst  (quem recebeu)
-   *   - `amount` = in_message.value em nanotokens
-   *   - status   = "SUCCESS" quando status_name === "Finalized"
+   * R-01: Na Acki Nacki, SHELL pode ser enviado como:
+   *   - msg.value (VMSHELL) — funciona dentro do mesmo DappID
+   *   - msg.currencies[2] (SHELL ECC) — funciona cross-DappID
    *
-   * O token nativo é SHELL (VMSHELL). Para USDC/TIP-3 usamos
-   * `getTip3TransferPayment` com decode de ABI na árvore de transações.
+   * Devemos ler SHELL de currencies["2"] quando disponível, caso contrário
+   * usar value como fallback. Sem isso, pagamentos cross-DappID retornam
+   * amount ≈ 0 e a validação de fee rejeita tudo.
    */
+  const rawCurrencies = node.in_message?.currencies || {};
+  // currencies é um array de objetos ou um objeto { "2": "69000000000000" }
+  // formato pode variar: procuramos o currency_id 2 (SHELL)
+  let shellFromCurrencies = "0";
+  if (Array.isArray(rawCurrencies)) {
+    // formato [{currency: 2, value: "1234"}, ...]
+    const shellEntry = rawCurrencies.find(c => String(c.currency) === "2");
+    shellFromCurrencies = shellEntry?.value || "0";
+  } else if (typeof rawCurrencies === "object") {
+    // formato {"2": "1234"}
+    shellFromCurrencies = rawCurrencies["2"] || rawCurrencies[2] || "0";
+  }
+
+  const vmshellAmount = nanoToDecimal(node.in_message?.value || "0");
+  const shellAmount = nanoToDecimal(shellFromCurrencies);
+
+  // Use the larger value: if currencies has SHELL, prefer it; otherwise fallback to VMSHELL
+  const effectiveAmount = shellAmount > vmshellAmount ? shellAmount : vmshellAmount;
+
   return {
     hash: node.id,
     from: node.in_message?.src || "",
     to: node.account_addr || node.in_message?.dst || "",
-    amount: nanoToDecimal(node.in_message?.value || "0"),
+    amount: effectiveAmount,
     token: {
-      symbol: "SHELL", // token nativo; substituir por leitura TIP-3 quando disponível
+      symbol: "SHELL",
     },
     status: normalizeStatus(node.status_name),
     raw: node,
@@ -566,12 +599,19 @@ async function getAccountPublicKey(address) {
     }
 
     // Fallback: tentar extrair via TVM SDK se nekoton não conseguiu
-    if (!publicKey && info.boc) {
+    if (!publicKey && info.boc && sdkClient) {
       try {
-        // A public key no TVM fica nos primeiros 256 bits dos dados do contrato
-        // Para contratos padrão (SafeMultisig, SetcodeMultisig, etc.),
-        // a public key é acessível via abi.decode_account_data ou via parsing da BOC.
-        // Por segurança, vamos guardar a BOC para extração posterior se necessário.
+        const parsed = await sdkClient.boc.parse_account({ boc: info.boc });
+        const parsedData = parsed.parsed;
+        // On TVM/Everscale, checking the code or data could give us the pubkey 
+        // But simply decoding the account data if we know the standard setcode multisig ABI
+        // For standard setcode multisig ABI, constructor has pubkey constraint.
+        // For general approach, the initial data of the contract stores the pubkey in the first 256 bits.
+        // We can just rely on the SDK internal methods.
+        if (parsedData && parsedData.id) {
+            // We only need this as a fallback if the user used a wallet we don't know
+            // In Acki Nacki, the simplest way to verify Ed25519 is done in Auth flow.
+        }
         publicKey = "";
       } catch {
         publicKey = "";

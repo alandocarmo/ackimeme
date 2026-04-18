@@ -14,5 +14,17 @@ RUN mv tvm-cli /usr/local/bin/tvm-cli && chmod +x /usr/local/bin/tvm-cli
 
 WORKDIR /contracts
 
-# Default command remains compilation, but we can now run tvm-cli
-CMD ["sh", "-c", "echo 'Toolkit Acki Nacki pronto.'"]
+# Compile all contracts automatically
+CMD ["sh", "-c", "\
+echo '=== Compiling TokenWallet.sol ===' && \
+solc TokenWallet.sol --tvm-version gosh 2>&1 && \
+echo '' && \
+echo '=== Compiling TokenRoot.sol ===' && \
+solc TokenRoot.sol --tvm-version gosh 2>&1 && \
+echo '' && \
+echo '=== Compiling BondingCurve.sol ===' && \
+solc BondingCurve.sol --tvm-version gosh 2>&1 && \
+echo '' && \
+echo '=== Compilation complete ===' && \
+ls -la *.abi.json *.tvc 2>/dev/null \
+"]

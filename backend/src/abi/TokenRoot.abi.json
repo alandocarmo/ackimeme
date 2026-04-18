@@ -9,7 +9,9 @@
 				{"name":"_name","type":"string"},
 				{"name":"_symbol","type":"string"},
 				{"name":"_decimals","type":"uint8"},
-				{"name":"_walletCode","type":"cell"}
+				{"name":"_walletCode","type":"cell"},
+				{"name":"_owner","type":"address"},
+				{"name":"_shellToConvert","type":"uint64"}
 			],
 			"outputs": [
 			]
@@ -39,6 +41,44 @@
 				{"name":"recipient","type":"address"},
 				{"name":"amount","type":"uint256"},
 				{"name":"deployWalletValue","type":"uint128"}
+			],
+			"outputs": [
+			]
+		},
+		{
+			"name": "transferOwnership",
+			"inputs": [
+				{"name":"newOwner","type":"address"}
+			],
+			"outputs": [
+			]
+		},
+		{
+			"name": "setBondingCurveCode",
+			"inputs": [
+				{"name":"_code","type":"cell"}
+			],
+			"outputs": [
+			]
+		},
+		{
+			"name": "deployBondingCurve",
+			"inputs": [
+				{"name":"_owner","type":"address"},
+				{"name":"_name","type":"string"},
+				{"name":"_symbol","type":"string"},
+				{"name":"_creationFeeTxHash","type":"bytes"},
+				{"name":"_initialBalance","type":"uint128"}
+			],
+			"outputs": [
+			]
+		},
+		{
+			"name": "notifyBurn",
+			"inputs": [
+				{"name":"amount","type":"uint256"},
+				{"name":"refundAddress","type":"address"},
+				{"name":"callbackTarget","type":"address"}
 			],
 			"outputs": [
 			]
@@ -90,6 +130,30 @@
 			"outputs": [
 				{"name":"walletCode","type":"cell"}
 			]
+		},
+		{
+			"name": "bondingCurveCode",
+			"inputs": [
+			],
+			"outputs": [
+				{"name":"bondingCurveCode","type":"cell"}
+			]
+		},
+		{
+			"name": "bondingCurve",
+			"inputs": [
+			],
+			"outputs": [
+				{"name":"bondingCurve","type":"address"}
+			]
+		},
+		{
+			"name": "pendingMints",
+			"inputs": [
+			],
+			"outputs": [
+				{"name":"pendingMints","type":"map(address,uint256)"}
+			]
 		}
 	],
 	"events": [
@@ -103,6 +167,9 @@
 		{"init":false,"name":"decimals","type":"uint8"},
 		{"init":false,"name":"totalSupply","type":"uint256"},
 		{"init":false,"name":"owner","type":"address"},
-		{"init":false,"name":"walletCode","type":"cell"}
+		{"init":false,"name":"walletCode","type":"cell"},
+		{"init":false,"name":"bondingCurveCode","type":"cell"},
+		{"init":false,"name":"bondingCurve","type":"address"},
+		{"init":false,"name":"pendingMints","type":"map(address,uint256)"}
 	]
 }

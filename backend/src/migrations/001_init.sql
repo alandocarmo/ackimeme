@@ -61,7 +61,7 @@ CREATE TABLE IF NOT EXISTS treasury_payments (
   creator_wallet TEXT NOT NULL,
   tx_hash TEXT NOT NULL,
   token_symbol TEXT NOT NULL,
-  amount NUMERIC(78, 18) NOT NULL,
+  amount NUMERIC(78, 18) NOT NULL CHECK (amount >= 0),
   fee_wallet TEXT NOT NULL,
   app_fee_share_percent INTEGER NOT NULL,
   network_settlement_token TEXT NOT NULL,
@@ -120,3 +120,6 @@ CREATE INDEX IF NOT EXISTS audit_events_type_idx
 
 CREATE INDEX IF NOT EXISTS audit_events_created_at_idx
   ON audit_events (created_at DESC);
+
+CREATE INDEX IF NOT EXISTS audit_events_wallet_address_idx
+  ON audit_events (wallet_address);
