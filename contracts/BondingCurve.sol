@@ -29,10 +29,9 @@ contract BondingCurve {
     uint256 public reserveBalance;       // tracked SHELL balance (nano)
     uint128 private _pendingLiquidity;   // tracked for rollback on migration bounce
     uint256 public totalSupply;
-    bool public migrated;                // true after DEX.DO migration
-    bool public migrationFailed;         // locked state if addLiquidity bounces
+    bool public isAmm;                   // true after reaching threshold (x*y=k)
+    uint256 public ammKLast;             // AMM invariant
     uint32 public migratedAt;            // timestamp of migration
-    address public dexPool;              // DEX.DO pool address post-migration
     address public owner;                // token creator
     address public tokenRoot;            // TokenRoot address
     string public name;
@@ -50,9 +49,9 @@ contract BondingCurve {
     uint32 private _mintSeqno = 1;
 
     // ─── Events ───────────────────────────────────────────────────────────────
-    event TokensBought(address buyer, uint256 shellIn, uint256 tokensOut, uint128 newPrice);
+    event TokensPurchaseInitiated(address buyer, uint256 shellIn, uint256 tokensOut, uint128 newPrice);
     event TokensSold(address seller, uint256 tokensIn, uint256 shellOut, uint128 newPrice);
-    event MigratedToDex(address pool, uint128 liquidity, uint32 lockedUntil);
+    event MigratedToInternalAmm(uint128 liquidity, uint32 timestamp);
 
     // ─── Constructor ──────────────────────────────────────────────────────────
     // BondingCurve is deployed via internal message from TokenRoot.
@@ -72,7 +71,7 @@ contract BondingCurve {
         name = _name;
         symbol = _symbol;
         creationFeeTxHash = _creationFeeTxHash;
-        migrated = false;
+        isAmm = false;
     }
 
     // ─── N3: Auto-replenishment via DappConfig ───────────────────────────────
@@ -94,6 +93,12 @@ contract BondingCurve {
     }
 
     function getBuyPrice(uint256 tokenAmount) public view returns (uint128) {
+        if (isAmm) {
+            uint256 tokenPool = TOTAL_SUPPLY_CAP - totalSupply;
+            require(tokenPool > tokenAmount, 215, "Not enough AMM liquidity");
+            uint256 newReserve = ammKLast / (tokenPool - tokenAmount);
+            return uint128(newReserve - reserveBalance);
+        }
         uint256 base = 1_000; // 0.000001 SHELL base
         uint256 p1 = base + (totalSupply / 4_000_000_000_000);
         uint256 p2 = base + ((totalSupply + tokenAmount) / 4_000_000_000_000);
@@ -104,6 +109,11 @@ contract BondingCurve {
 
     function getSellReturn(uint256 tokenAmount) public view returns (uint128) {
         if (totalSupply == 0 || tokenAmount > totalSupply) return 0;
+        if (isAmm) {
+            uint256 tokenPool = TOTAL_SUPPLY_CAP - totalSupply;
+            uint256 newReserve = ammKLast / (tokenPool + tokenAmount);
+            return uint128(reserveBalance - newReserve);
+        }
         uint256 base = 1_000;
         uint256 p1 = base + ((totalSupply - tokenAmount) / 4_000_000_000_000);
         uint256 p2 = base + (totalSupply / 4_000_000_000_000);
@@ -113,15 +123,14 @@ contract BondingCurve {
 
     // ─── Configuration ───────────────────────────────────────────────────────
     // Fix #6: auth via msg.pubkey() instead of msg.sender = owner
-    function setDexPool(address _dexPool) public {
-        require(msg.pubkey() == tvm.pubkey(), 102, "Only owner pubkey can set DexPool");
+    // ─── AMM Migration overrides external dex.do pool logic
+    function forceAmmMigration() public {
+        require(msg.pubkey() == tvm.pubkey(), 102, "Only owner pubkey can force AMM");
         tvm.accept();
-        _getTokens(); // N3
-        dexPool = _dexPool;
+        _getTokens();
         
-        // Fix Flaw: Trigger migration if threshold was already reached
-        if (reserveBalance >= MIGRATION_THRESHOLD && !migrated) {
-            _migrate();
+        if (reserveBalance >= MIGRATION_THRESHOLD && !isAmm) {
+            _migrateToAmm();
         }
     }
 
@@ -132,8 +141,7 @@ contract BondingCurve {
     function buy(uint256 tokenAmount, uint256 maxShellIn) public {
         _getTokens(); // N3
 
-        require(!migrated, 201, "Token migrated to DEX.DO - trade there.");
-        require(!migrationFailed, 207, "Migration failed, trading halted");
+        // Note: internal AMM means trading continues normally on this same contract!
         require(tokenAmount > 0, 202, "Amount must be greater than zero");
         require(tokenAmount <= MAX_BUY_PER_TX, 205, "Amount exceeds max buy limit");
         require(totalSupply + tokenAmount <= TOTAL_SUPPLY_CAP, 206, "Exceeds total supply cap");
@@ -145,6 +153,7 @@ contract BondingCurve {
         uint256 receivedShell = uint256(shellReceived);
 
         uint256 cost = getBuyPrice(tokenAmount);
+        require(cost > 0, 211, "Purchase amount too small, cost rounds to zero");
         require(cost <= maxShellIn, 208, "Slippage protection triggered: cost exceeds maxShellIn");
         require(receivedShell >= cost, 203, "Insufficient SHELL sent for purchase");
 
@@ -157,7 +166,7 @@ contract BondingCurve {
         pendingReserveByNonce[nonce] = cost;
         pendingTokensByNonce[nonce] = tokenAmount;
 
-        emit TokensBought(msg.sender, cost, tokenAmount, currentPrice());
+        emit TokensPurchaseInitiated(msg.sender, cost, tokenAmount, currentPrice());
 
         // Mint memecoins to buyer via internal message
         ITokenRoot(tokenRoot).mint(nonce, msg.sender, tokenAmount, 0.1 ton); // sends 0.1 VMSHELL for wallet deployment
@@ -171,9 +180,9 @@ contract BondingCurve {
             msg.sender.transfer({ value: 0.05 ton, flag: 1, bounce: false, currencies: refundCurrencies });
         }
 
-        // Check if we reached the migration threshold
-        if (reserveBalance >= MIGRATION_THRESHOLD) {
-            _migrate();
+        // Check if we reached the migration threshold and aren't AMM yet
+        if (reserveBalance >= MIGRATION_THRESHOLD && !isAmm) {
+            _migrateToAmm();
         }
     }
 
@@ -182,16 +191,9 @@ contract BondingCurve {
     function onTokenBurned(uint256 amount, address refundAddress) external {
         require(msg.sender == tokenRoot, 103, "Only TokenRoot can notify burn");
         _getTokens(); // N3
-
-        if (migrated) {
-            // A-01: Use flag:64 instead of flag:128 to avoid destroying the contract
-            // flag:128 = send entire balance and self-destruct (kamikaze)
-            // flag:64  = carry remaining gas without destroying
-            tvm.rawReserve(0.5 ton, 0); // Keep gas
-            uint32 n = ++_mintSeqno;
-            ITokenRoot(tokenRoot).mint{value: 0, flag: 64}(n, refundAddress, amount, 0.1 ton);
-            return;
-        }
+        // Removed the "if (migrated)" block since AMM transition allows users
+        // to continue trading organically on this internal contract.
+        // It calculates returns via getSellReturn using x*y=k formula.
 
         uint256 returnAmount = getSellReturn(amount);
         require(reserveBalance >= returnAmount, 204, "Insufficient reserve for sell");
@@ -209,36 +211,18 @@ contract BondingCurve {
         refundAddress.transfer({ value: 0, flag: 128, bounce: false, currencies: payoutCurrencies });
     }
 
-    // ─── Migration ───────────────────────────────────────────────────────────
-    function _migrate() private {
-        // Fix #7: verify dexPool is configured before attempting migration
-        if (dexPool == address(0)) {
-            // If DEX is not configured, we cannot migrate yet. Wait for owner to configure.
-            return;
-        }
-        
+    // ─── AMM Migration ───────────────────────────────────────────────────────
+    function _migrateToAmm() private {
         uint128 liquidityToMove = uint128(reserveBalance);
         require(TOTAL_SUPPLY_CAP - totalSupply <= MAX_UINT128, 210, "tokensToMove overflow");
-        uint128 tokensToMove = uint128(TOTAL_SUPPLY_CAP - totalSupply); // Send remaining supply to DEX
 
-        migrated = true;
+        isAmm = true;
         migratedAt = uint32(block.timestamp);
         
-        // Zero out local reserves and track them for bounce
-        _pendingLiquidity = uint128(reserveBalance);
-        reserveBalance = 0;
+        // Setup initial x*y=k invariant
+        ammKLast = reserveBalance * (TOTAL_SUPPLY_CAP - totalSupply);
         
-        emit MigratedToDex(dexPool, liquidityToMove, migratedAt + LOCK_PERIOD);
-
-        // Fix Flaw: Mint the tokens directly to the DEX
-        // We use 0.1 ton (100000000) for the deployment gas of the Dex's TokenWallet
-        uint32 n = ++_mintSeqno;
-        ITokenRoot(tokenRoot).mint(n, dexPool, tokensToMove, 100000000);
-
-        // Send SHELL liquidity to DEX via Extra Currencies (cc[2])
-        mapping(uint32 => varuint32) migrationCurrencies;
-        migrationCurrencies[SHELL_CURRENCY_ID] = varuint32(liquidityToMove);
-        IDexPool(dexPool).addLiquidity{value: 1 ton, flag: 1, currencies: migrationCurrencies}(liquidityToMove, tokensToMove);
+        emit MigratedToInternalAmm(liquidityToMove, migratedAt);
     }
 
     // ─── R-05: onBounce handler (corrected) ───────────────────────────────────
@@ -268,11 +252,6 @@ contract BondingCurve {
             delete pendingReserveByNonce[nonce];
             delete pendingTokensByNonce[nonce];
             delete mintIdToBuyer[nonce];
-        } else if (funcId == abi.functionId(IDexPool.addLiquidity)) {
-            // Migration failed, block trading to protect remaining SHELL
-            migrationFailed = true;
-            reserveBalance += _pendingLiquidity;
-            _pendingLiquidity = 0;
         }
     }
 }

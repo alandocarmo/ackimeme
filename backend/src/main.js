@@ -127,7 +127,7 @@ const app = express();
 app.set("trust proxy", 1);
 
 // Security middlewares
-app.use(helmet());
+app.use(helmet({ contentSecurityPolicy: false }));
 
 // Global Rate Limiting
 const globalLimiter = rateLimit({
@@ -513,12 +513,12 @@ app.post("/verify-payment", paymentLimiter, requireSession, async (req, res) => 
       throw new Error("walletAddress, txHash e tokenSymbol são obrigatórios.");
     }
 
-    const { isTxHashUsed } = require("./storage");
-    const alreadyUsed = await isTxHashUsed(txHash);
-    if (alreadyUsed) {
+    const { reserveTxHash } = require("./storage");
+    const reserved = await reserveTxHash(txHash, walletAddress);
+    if (!reserved) {
       return res.json({
         success: false,
-        error: "Esta transação já foi processada e anexada a outro lançamento.",
+        error: "Esta transação já foi processada ou está em andamento simultâneo.",
       });
     }
 
@@ -558,7 +558,11 @@ app.post("/launch-request", requireSession, async (req, res) => {
     await checkWalletRateLimit(launchRequest.creator.wallet);
 
     // ── Duplicate txHash guard (persistent) ──────────────────────────────────
-    await checkTxHashDuplicate(launchRequest.payment.txHash);
+    const { isTxHashUsed } = require("./storage");
+    const used = await isTxHashUsed(launchRequest.payment.txHash);
+    if (used) {
+      throw new Error("Este txHash já foi utilizado para criar outro token. Use uma nova transação.");
+    }
 
     // ── Verify payment FIRST (A-07) ──────────────────────────────────────────
     let payment;

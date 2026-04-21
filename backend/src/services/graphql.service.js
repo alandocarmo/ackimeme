@@ -649,7 +649,10 @@ async function getAccountPublicKey(address) {
       codeHash: info.code_hash || "",
       boc: info.boc || "",
     };
-  } catch {
+  } catch (err) {
+    if (String(err.message || "").includes("Network") || String(err.message || "").includes("timeout")) {
+      console.error(`[GraphQL] getAccountPublicKey falhou para ${address}:`, err.message);
+    }
     return { isDeployed: false };
   }
 }

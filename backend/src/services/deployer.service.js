@@ -214,7 +214,7 @@ async function deployTokenEcosystem({ name, symbol, totalSupply, ipfsHash, creat
           _creationFeeTxHash: Buffer.from(paymentTxHash || "genesis").toString("hex")
         }
       },
-      signer
+      signer: { type: "None" }
     });
 
     if (ENABLE_ONCHAIN_DEPLOY) {

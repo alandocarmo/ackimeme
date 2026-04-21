@@ -1,6 +1,7 @@
 import "../styles/globals.css";
 import Head from "next/head";
 import Link from "next/link";
+import Script from "next/script";
 import { useRouter } from "next/router";
 import { Analytics } from "@vercel/analytics/react";
 import { useEffect, useState } from "react";
@@ -66,9 +67,10 @@ export default function App({ Component, pageProps }) {
   return (
     <>
       <Head>
-        {/* Telegram WebApp SDK — deve ser carregado antes de qualquer interação */}
-        <script src="https://telegram.org/js/telegram-web-app.js" />
+        {/* Removed standard script tag from Head */}
       </Head>
+      {/* Telegram WebApp SDK — deve ser carregado antes de qualquer interação */}
+      <Script src="https://telegram.org/js/telegram-web-app.js" strategy="beforeInteractive" />
       <GlobalNav session={session} />
       <Component {...pageProps} />
       <Analytics />

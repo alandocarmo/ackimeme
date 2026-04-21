@@ -88,6 +88,7 @@
 		{"init":true,"name":"owner","type":"address"},
 		{"init":false,"name":"balance","type":"uint256"},
 		{"init":false,"name":"_burnSeqno","type":"uint32"},
+		{"init":false,"name":"_transferSeqno","type":"uint32"},
 		{"init":false,"name":"pendingBurns","type":"map(uint32,uint256)"},
 		{"init":false,"name":"pendingTransfers","type":"map(uint32,uint256)"}
 	]

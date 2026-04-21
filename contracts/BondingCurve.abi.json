@@ -42,9 +42,8 @@
 			]
 		},
 		{
-			"name": "setDexPool",
+			"name": "forceAmmMigration",
 			"inputs": [
-				{"name":"_dexPool","type":"address"}
 			],
 			"outputs": [
 			]
@@ -92,19 +91,19 @@
 			]
 		},
 		{
-			"name": "migrated",
+			"name": "isAmm",
 			"inputs": [
 			],
 			"outputs": [
-				{"name":"migrated","type":"bool"}
+				{"name":"isAmm","type":"bool"}
 			]
 		},
 		{
-			"name": "migrationFailed",
+			"name": "ammKLast",
 			"inputs": [
 			],
 			"outputs": [
-				{"name":"migrationFailed","type":"bool"}
+				{"name":"ammKLast","type":"uint256"}
 			]
 		},
 		{
@@ -113,14 +112,6 @@
 			],
 			"outputs": [
 				{"name":"migratedAt","type":"uint32"}
-			]
-		},
-		{
-			"name": "dexPool",
-			"inputs": [
-			],
-			"outputs": [
-				{"name":"dexPool","type":"address"}
 			]
 		},
 		{
@@ -190,7 +181,7 @@
 	],
 	"events": [
 		{
-			"name": "TokensBought",
+			"name": "TokensPurchaseInitiated",
 			"inputs": [
 				{"name":"buyer","type":"address"},
 				{"name":"shellIn","type":"uint256"},
@@ -212,11 +203,10 @@
 			]
 		},
 		{
-			"name": "MigratedToDex",
+			"name": "MigratedToInternalAmm",
 			"inputs": [
-				{"name":"pool","type":"address"},
 				{"name":"liquidity","type":"uint128"},
-				{"name":"lockedUntil","type":"uint32"}
+				{"name":"timestamp","type":"uint32"}
 			],
 			"outputs": [
 			]
@@ -230,10 +220,9 @@
 		{"init":false,"name":"reserveBalance","type":"uint256"},
 		{"init":false,"name":"_pendingLiquidity","type":"uint128"},
 		{"init":false,"name":"totalSupply","type":"uint256"},
-		{"init":false,"name":"migrated","type":"bool"},
-		{"init":false,"name":"migrationFailed","type":"bool"},
+		{"init":false,"name":"isAmm","type":"bool"},
+		{"init":false,"name":"ammKLast","type":"uint256"},
 		{"init":false,"name":"migratedAt","type":"uint32"},
-		{"init":false,"name":"dexPool","type":"address"},
 		{"init":false,"name":"owner","type":"address"},
 		{"init":false,"name":"tokenRoot","type":"address"},
 		{"init":false,"name":"name","type":"string"},

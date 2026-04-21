@@ -37,11 +37,13 @@ function createInitialRiskProfile({ launchRequest, session }) {
     signals.push("description_minimal");
   }
 
-  // Supply muito alto ou muito baixo (fora do range razoável)
   const supply = Number(String(launchRequest.coin?.totalSupply || "0").replace(/\D/g, ""));
-  if (supply > 0 && supply < 1000) {
-    score += 10;
-    signals.push("supply_suspiciously_low");
+  if (supply > 900_000_000_000) {
+    score += 20;
+    signals.push("supply_suspiciously_high");
+  } else if (supply > 0 && supply < 100) {
+    score += 5;
+    signals.push("supply_very_low");
   }
 
   return {

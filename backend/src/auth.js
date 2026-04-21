@@ -287,7 +287,7 @@ async function verifyWalletChallenge({
 async function generateQrSession() {
   const sessionId = crypto.randomUUID();
   
-  const deepLink = `${process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:3000'}/auth/qr/webhook/${sessionId}`;
+  const deepLink = `${process.env.BACKEND_URL || process.env.API_BASE_URL || 'http://localhost:3000'}/auth/qr/webhook/${sessionId}`;
   const expiresAt = new Date(Date.now() + 5 * 60 * 1000).toISOString();
 
   await query(`INSERT INTO qr_sessions (id, status, deep_link, expires_at) VALUES ($1, 'pending', $2, $3)`, [sessionId, deepLink, expiresAt]);
@@ -332,7 +332,7 @@ async function processQrWebhook({ sessionId, walletAddress, publicKey }) {
     token: tokenVal,
     walletAddress: normalizedWallet,
     publicKey: normalizedKey,
-    proofLevel: "strong_app_redirect_auth",
+    proofLevel: "qr_redirect_unverified",
     telegramBinding: {
       status: "unbound",
       userId: "",

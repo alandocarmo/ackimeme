@@ -712,6 +712,14 @@ async function markTxHashUsed(txHash, walletAddress) {
   );
 }
 
+async function reserveTxHash(txHash, walletAddress) {
+  const result = await query(
+    `INSERT INTO used_tx_hashes (tx_hash, wallet_address) VALUES ($1, $2) ON CONFLICT (tx_hash) DO NOTHING RETURNING tx_hash`,
+    [String(txHash || "").toLowerCase(), String(walletAddress || "").toLowerCase()],
+  );
+  return result.rowCount > 0;
+}
+
 async function getWalletLastLaunch(walletAddress) {
   const result = await query(
     `SELECT last_launch_at FROM wallet_rate_limits WHERE wallet_address = $1 LIMIT 1`,
@@ -1734,6 +1742,7 @@ module.exports = {
   getLaunchById,
   isTxHashUsed,
   markTxHashUsed,
+  reserveTxHash,
   getWalletLastLaunch,
   updateWalletLastLaunch,
   moderateLaunchpadSubmission,

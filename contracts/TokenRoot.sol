@@ -92,7 +92,7 @@ contract TokenRoot {
     // ensures the TokenWallet contract is automatically deployed.
     // Without stateInit, the first mint to any recipient would bounce.
     function mint(uint32 mintNonce, address recipient, uint256 amount, uint128 deployWalletValue) public {
-        require(msg.sender == bondingCurve && bondingCurve != address(0), 101, "Only BondingCurve can mint");
+        require(msg.sender == bondingCurve && bondingCurve != address(0), 110, "Only BondingCurve can mint");
         require(amount > 0, 105, "Amount must be greater than zero");
         _getTokens(); // N3
 
@@ -125,7 +125,7 @@ contract TokenRoot {
 
     // ─── Fix #4: transferOwnership — permite transferir ownership para o BondingCurve ──
     function transferOwnership(address newOwner) public {
-        require(msg.sender == owner, 101, "Only current owner can transfer ownership");
+        require(msg.sender == owner, 111, "Only current owner can transfer ownership");
         require(newOwner != address(0), 106, "New owner cannot be zero address");
         _getTokens(); // N3
         owner = newOwner;
@@ -136,7 +136,7 @@ contract TokenRoot {
     // o BondingCurve seja deployado sob o mesmo DappID.
     function setBondingCurveCode(TvmCell _code) public {
         require(msg.pubkey() == tvm.pubkey(), 102, "Only deployer can set BC code");
-        require(bondingCurve == address(0), 107, "BondingCurve code already set");
+        require(tvm.hash(bondingCurveCode) == 0, 107, "BondingCurve code already set");
         tvm.accept();
         _getTokens(); // N3
         bondingCurveCode = _code;

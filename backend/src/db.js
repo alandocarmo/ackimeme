@@ -11,7 +11,6 @@ const pool = new Pool({
   max: 20, // max connection pool size
   idleTimeoutMillis: 30000,
   connectionTimeoutMillis: 2000,
-  options: '-c statement_timeout=10000' // aborta queries longas (> 10s)
 });
 
 async function query(text, params = []) {

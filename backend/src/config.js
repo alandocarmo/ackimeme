@@ -190,6 +190,9 @@ function validateConfig() {
     if (!process.env.PINATA_API_KEY || !process.env.PINATA_SECRET_API_KEY) {
       errors.push("PINATA_API_KEY/SECRET_API_KEY ausentes (necessário para IPFS).");
     }
+    if (config.graphqlUrl.includes("shellnet") && !config.graphqlUrl.includes("mainnet")) {
+      errors.push("GRAPHQL_URL aponta para testnet (shellnet) em ambiente de produção. Use o endpoint mainnet.");
+    }
   }
 
   if (errors.length > 0) {

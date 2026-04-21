@@ -14,6 +14,7 @@ contract TokenWallet is ITokenWallet {
     // Previne perda de tokens quando mensagens de burn/transfer bounceiam.
     // Padrão TVM: debitar do saldo, guardar em pending, restaurar se bounced.
     uint32 private _burnSeqno;
+    uint32 private _transferSeqno;
     mapping(uint32 => uint256) public pendingBurns;
     mapping(uint32 => uint256) public pendingTransfers;
 
@@ -51,9 +52,14 @@ contract TokenWallet is ITokenWallet {
         _getTokens(); // N3
         
         // Track: guardar transferência pendente antes de debitar
-        uint32 seqno = _burnSeqno++;
+        uint32 seqno = _transferSeqno++;
         pendingTransfers[seqno] = amount;
         balance -= amount;
+        
+        // Storage leak prevention: clean up old transfers
+        if (seqno >= 50) {
+            delete pendingTransfers[seqno - 50];
+        }
         
         // flag: 64 envia o gás restante para custear a execução na outra ponta
         ITokenWallet(toWallet).receiveTokens{value: 0, flag: 64}(seqno, amount);
@@ -71,6 +77,11 @@ contract TokenWallet is ITokenWallet {
         pendingBurns[seqno] = amount;
         balance -= amount;
         
+        // Storage leak prevention: clean up old burns
+        if (seqno >= 50) {
+            delete pendingBurns[seqno - 50];
+        }
+        
         // Repassa a execução para o TokenRoot informando a quantia deletada e quem deve ser reembolsado
         ITokenRoot(root).notifyBurn{value: 0, flag: 64}(amount, owner, callbackTarget);
     }
@@ -81,33 +92,24 @@ contract TokenWallet is ITokenWallet {
 
         // Se notifyBurn bounceou (TokenRoot não aceitou), restaurar balance
         if (funcId == abi.functionId(ITokenRoot.notifyBurn)) {
-            // O bounce carrega de volta os primeiros 256 bits do payload = amount
-            if (body.bits() >= 256) {
-                uint256 amount = body.load(uint256);
-                balance += amount;
-            } else {
-                // Fallback: restaurar a última pendingBurn registrada
-                if (_burnSeqno > 0) {
-                    uint32 lastSeqno = _burnSeqno - 1;
-                    optional(uint256) pending = pendingBurns.fetch(lastSeqno);
-                    if (pending.hasValue()) {
-                        balance += pending.get();
-                        delete pendingBurns[lastSeqno];
-                    }
+            // Em TVM, restam no máximo 224 bits após ler funcId. uint256 não cabe.
+            // Então confiamos sempre no registro interno separado _burnSeqno
+            if (_burnSeqno > 0) {
+                uint32 lastSeqno = _burnSeqno - 1;
+                optional(uint256) pending = pendingBurns.fetch(lastSeqno);
+                if (pending.hasValue()) {
+                    balance += pending.get();
+                    delete pendingBurns[lastSeqno];
                 }
             }
         }
 
         // Se receiveTokens bounceou em outra wallet, restaurar balance
         if (funcId == abi.functionId(ITokenWallet.receiveTokens)) {
-            if (body.bits() >= 32 + 256) {
-                uint32 nonce = body.load(uint32);
-                uint256 amount = body.load(uint256);
-                balance += amount;
-                delete pendingTransfers[nonce];
-            } else if (_burnSeqno > 0) {
-                // Fallback: tentar restaurar pela última pending transfer
-                uint32 lastSeqno = _burnSeqno - 1;
+            // No bounce de receiveTokens o nonce e amount muitas vezes não cabem se payload fosse maior (mas aqui sim é seqno de 32 e amount de 256 não cabendo os dois). 
+            // Fallback: tentar restaurar pela última pending transfer usando o contador isolado _transferSeqno
+            if (_transferSeqno > 0) {
+                uint32 lastSeqno = _transferSeqno - 1;
                 optional(uint256) pending = pendingTransfers.fetch(lastSeqno);
                 if (pending.hasValue()) {
                     balance += pending.get();

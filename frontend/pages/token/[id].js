@@ -198,14 +198,15 @@ export default function TokenPage() {
         const shellToSpendNano = toNano(tradeAmount);
         const bcContract = new ever.Contract(BondingCurveAbi, new Address(token.onchainData.bondingCurveAddress));
 
-        const expectedTokens = Math.floor(rawAmount / currentPrice);
+        const expectedFullTokens = Math.floor(rawAmount / currentPrice);
+        const expectedNanoTokens = BigInt(expectedFullTokens) * 1000000000n;
         const slippagePct = parseFloat(slippage);
         
         // Calculate max SHELL I'm willing to spend (including slippage)
         const maxShellNano = shellToSpendNano * BigInt(Math.round(100 + slippagePct)) / 100n;
 
         const tx = await bcContract.methods.buy({
-          tokenAmount: expectedTokens.toString(),
+          tokenAmount: expectedNanoTokens.toString(),
           maxShellIn: maxShellNano.toString()
         }).send({
           from: accountInteraction.address,
@@ -421,7 +422,7 @@ export default function TokenPage() {
                   <div className="onchain-item">
                     <span className="stat-label">Token Root</span>
                     {token.onchainData?.tokenRootAddress ? (
-                      <a href={`https://ever.live/accounts/accountDetails?id=${encodeURIComponent(token.onchainData.tokenRootAddress)}`} target="_blank" rel="noreferrer" className="onchain-link">
+                      <a href={`https://ackiscan.com/accounts/account/${token.onchainData.tokenRootAddress}`} target="_blank" rel="noreferrer" className="onchain-link">
                         {compactWallet(token.onchainData.tokenRootAddress)}
                       </a>
                     ) : <span className="token-time" style={{ display: 'block' }}>Pending</span>}
@@ -429,7 +430,7 @@ export default function TokenPage() {
                   <div className="onchain-item">
                     <span className="stat-label">Bonding Curve</span>
                     {token.onchainData?.bondingCurveAddress ? (
-                      <a href={`https://ever.live/accounts/accountDetails?id=${encodeURIComponent(token.onchainData.bondingCurveAddress)}`} target="_blank" rel="noreferrer" className="onchain-link">
+                      <a href={`https://ackiscan.com/accounts/account/${token.onchainData.bondingCurveAddress}`} target="_blank" rel="noreferrer" className="onchain-link">
                         {compactWallet(token.onchainData.bondingCurveAddress)}
                       </a>
                     ) : <span className="token-time" style={{ display: 'block' }}>Pending</span>}
