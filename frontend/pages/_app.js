@@ -1,4 +1,5 @@
 import "../styles/globals.css";
+import Head from "next/head";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { Analytics } from "@vercel/analytics/react";
@@ -46,6 +47,13 @@ export default function App({ Component, pageProps }) {
   useEffect(() => {
     if (typeof window === "undefined") return;
 
+    // Telegram WebApp SDK — notifica o Telegram que o Mini App carregou
+    // e expande para tela cheia. Sem isso, o spinner do Telegram fica eterno.
+    if (window.Telegram?.WebApp) {
+      window.Telegram.WebApp.ready();
+      window.Telegram.WebApp.expand();
+    }
+
     getSession()
       .then((res) => {
         setSession(res.session);
@@ -57,10 +65,13 @@ export default function App({ Component, pageProps }) {
 
   return (
     <>
+      <Head>
+        {/* Telegram WebApp SDK — deve ser carregado antes de qualquer interação */}
+        <script src="https://telegram.org/js/telegram-web-app.js" />
+      </Head>
       <GlobalNav session={session} />
       <Component {...pageProps} />
       <Analytics />
     </>
   );
 }
-

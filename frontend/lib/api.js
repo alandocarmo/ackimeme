@@ -90,3 +90,22 @@ export function unlockAdmin(password, walletAddress) {
     body: { password, walletAddress },
   });
 }
+
+// ─── QR Code Auth Endpoints ──────────────────────────────────────────────────
+
+export function generateQrChallenge() {
+  return request("/auth/qr/generate", {
+    method: "POST",
+  });
+}
+
+export function getQrStatus(sessionId) {
+  return request(`/auth/qr/status/${encodeURIComponent(sessionId)}`);
+}
+
+export function simulateQrWebhook(sessionId, walletAddress) {
+  return request(`/auth/qr/webhook/${encodeURIComponent(sessionId)}`, {
+    method: "POST",
+    body: { walletAddress, publicKey: "mocked_qr_pubkey" },
+  });
+}

@@ -16,6 +16,7 @@ contract BondingCurve {
 
     // ─── C-02: SHELL ECC token ID for cross-DappID payments ──────────────────
     uint32 public constant SHELL_CURRENCY_ID = 2;
+    uint256 private constant MAX_UINT128 = 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF; // 2^128 - 1
 
     // ─── R-04: Static vars MUST precede all state vars ───────────────────────
     // In TVM-Solidity, `static` vars are part of the stateInit (initial data).
@@ -29,6 +30,7 @@ contract BondingCurve {
     uint128 private _pendingLiquidity;   // tracked for rollback on migration bounce
     uint256 public totalSupply;
     bool public migrated;                // true after DEX.DO migration
+    bool public migrationFailed;         // locked state if addLiquidity bounces
     uint32 public migratedAt;            // timestamp of migration
     address public dexPool;              // DEX.DO pool address post-migration
     address public owner;                // token creator
@@ -41,9 +43,11 @@ contract BondingCurve {
     // ─── R-05: Dual mappings for correct onBounce rollback ───────────────────
     // When ITokenRoot.mint bounces, msg.sender = tokenRoot (not the buyer).
     // We track the last buyer separately so onBounce can resolve who to refund.
-    mapping(address => uint256) public pendingReserveByBuyer;  // buyer → SHELL cost
-    mapping(address => uint256) public pendingTokensByBuyer;   // buyer → token amount
-    address private _lastBuyer;  // last buyer address for onBounce resolution
+    mapping(uint32 => uint256) public pendingReserveByNonce;  // nonce → SHELL cost
+    mapping(uint32 => uint256) public pendingTokensByNonce;   // nonce → token amount
+    
+    mapping(uint32 => address) public mintIdToBuyer; // mapping to resolve bounce exact buyer
+    uint32 private _mintSeqno = 1;
 
     // ─── Events ───────────────────────────────────────────────────────────────
     event TokensBought(address buyer, uint256 shellIn, uint256 tokensOut, uint128 newPrice);
@@ -72,7 +76,7 @@ contract BondingCurve {
     }
 
     // ─── N3: Auto-replenishment via DappConfig ───────────────────────────────
-    function _getTokens() private pure {
+    function _getTokens() private {
         if (address(this).balance > 100000000000) { // 100 VMSHELL
             return;
         }
@@ -85,24 +89,24 @@ contract BondingCurve {
     // creating a pump.fun-style economy where early buyers get massive upside.
     function currentPrice() public view returns (uint128) {
         uint256 base = 1_000; // 0.000001 SHELL per token unit (nano)
-        uint256 slope = totalSupply / 1_000_000_000_000;
+        uint256 slope = totalSupply / 4_000_000_000_000;
         return uint128(base + slope);
     }
 
     function getBuyPrice(uint256 tokenAmount) public view returns (uint128) {
         uint256 base = 1_000; // 0.000001 SHELL base
-        uint256 p1 = base + (totalSupply / 1_000_000_000_000);
-        uint256 p2 = base + ((totalSupply + tokenAmount) / 1_000_000_000_000);
+        uint256 p1 = base + (totalSupply / 4_000_000_000_000);
+        uint256 p2 = base + ((totalSupply + tokenAmount) / 4_000_000_000_000);
         uint256 avgPrice = (p1 + p2) / 2;
-        require(avgPrice <= type(uint128).max / tokenAmount, 209, "Overflow detectado");
+        require(tokenAmount == 0 || avgPrice <= MAX_UINT128 / tokenAmount, 209, "Overflow detectado");
         return uint128((avgPrice * tokenAmount) / 1e9);
     }
 
     function getSellReturn(uint256 tokenAmount) public view returns (uint128) {
         if (totalSupply == 0 || tokenAmount > totalSupply) return 0;
         uint256 base = 1_000;
-        uint256 p1 = base + ((totalSupply - tokenAmount) / 1_000_000_000_000);
-        uint256 p2 = base + (totalSupply / 1_000_000_000_000);
+        uint256 p1 = base + ((totalSupply - tokenAmount) / 4_000_000_000_000);
+        uint256 p2 = base + (totalSupply / 4_000_000_000_000);
         uint256 avgPrice = (p1 + p2) / 2;
         return uint128((avgPrice * tokenAmount) / 1e9);
     }
@@ -125,14 +129,14 @@ contract BondingCurve {
     // Users send SHELL as Extra Currency (cc[2]) in internal messages.
     // This works both intra-DappID and cross-DappID, enabling universal composability.
     // msg.value (VMSHELL) is used ONLY for gas, not as payment.
-    function buy(uint256 tokenAmount, uint256 minTokensOut) public {
+    function buy(uint256 tokenAmount, uint256 maxShellIn) public {
         _getTokens(); // N3
 
         require(!migrated, 201, "Token migrated to DEX.DO - trade there.");
+        require(!migrationFailed, 207, "Migration failed, trading halted");
         require(tokenAmount > 0, 202, "Amount must be greater than zero");
         require(tokenAmount <= MAX_BUY_PER_TX, 205, "Amount exceeds max buy limit");
         require(totalSupply + tokenAmount <= TOTAL_SUPPLY_CAP, 206, "Exceeds total supply cap");
-        require(tokenAmount >= minTokensOut, 208, "Slippage protection triggered: tokenAmount < minTokensOut");
 
         // C-02: Read SHELL payment from Extra Currencies map (cc[2])
         // This is the canonical cross-DappID payment method in Acki Nacki.
@@ -141,21 +145,22 @@ contract BondingCurve {
         uint256 receivedShell = uint256(shellReceived);
 
         uint256 cost = getBuyPrice(tokenAmount);
+        require(cost <= maxShellIn, 208, "Slippage protection triggered: cost exceeds maxShellIn");
         require(receivedShell >= cost, 203, "Insufficient SHELL sent for purchase");
 
         // Update state
         totalSupply += tokenAmount;
         reserveBalance += cost;
 
-        // R-05: Track pending reserves AND tokens by buyer for onBounce rollback
-        pendingReserveByBuyer[msg.sender] += cost;
-        pendingTokensByBuyer[msg.sender] += tokenAmount;
-        _lastBuyer = msg.sender;
+        uint32 nonce = ++_mintSeqno;
+        mintIdToBuyer[nonce] = msg.sender;
+        pendingReserveByNonce[nonce] = cost;
+        pendingTokensByNonce[nonce] = tokenAmount;
 
         emit TokensBought(msg.sender, cost, tokenAmount, currentPrice());
 
         // Mint memecoins to buyer via internal message
-        ITokenRoot(tokenRoot).mint(msg.sender, tokenAmount, 0.1 ton); // sends 0.1 VMSHELL for wallet deployment
+        ITokenRoot(tokenRoot).mint(nonce, msg.sender, tokenAmount, 0.1 ton); // sends 0.1 VMSHELL for wallet deployment
 
         // Refund excess SHELL (Extra Currency) back to buyer
         uint256 excess = receivedShell > cost ? receivedShell - cost : 0;
@@ -183,7 +188,8 @@ contract BondingCurve {
             // flag:128 = send entire balance and self-destruct (kamikaze)
             // flag:64  = carry remaining gas without destroying
             tvm.rawReserve(0.5 ton, 0); // Keep gas
-            ITokenRoot(tokenRoot).mint{value: 0, flag: 64}(refundAddress, amount, 0.1 ton);
+            uint32 n = ++_mintSeqno;
+            ITokenRoot(tokenRoot).mint{value: 0, flag: 64}(n, refundAddress, amount, 0.1 ton);
             return;
         }
 
@@ -212,6 +218,7 @@ contract BondingCurve {
         }
         
         uint128 liquidityToMove = uint128(reserveBalance);
+        require(TOTAL_SUPPLY_CAP - totalSupply <= MAX_UINT128, 210, "tokensToMove overflow");
         uint128 tokensToMove = uint128(TOTAL_SUPPLY_CAP - totalSupply); // Send remaining supply to DEX
 
         migrated = true;
@@ -225,7 +232,8 @@ contract BondingCurve {
 
         // Fix Flaw: Mint the tokens directly to the DEX
         // We use 0.1 ton (100000000) for the deployment gas of the Dex's TokenWallet
-        ITokenRoot(tokenRoot).mint(dexPool, tokensToMove, 100000000);
+        uint32 n = ++_mintSeqno;
+        ITokenRoot(tokenRoot).mint(n, dexPool, tokensToMove, 100000000);
 
         // Send SHELL liquidity to DEX via Extra Currencies (cc[2])
         mapping(uint32 => varuint32) migrationCurrencies;
@@ -241,27 +249,28 @@ contract BondingCurve {
         uint32 funcId = body.load(uint32);
         
         if (funcId == abi.functionId(ITokenRoot.mint)) {
-            // Resolve the buyer from _lastBuyer (msg.sender here is tokenRoot, not buyer)
-            address buyer = _lastBuyer;
-            uint256 refundShell = pendingReserveByBuyer[buyer];
-            uint256 refundTokens = pendingTokensByBuyer[buyer];
+            uint32 nonce = body.load(uint32);
+            address buyer = mintIdToBuyer[nonce];
             
-            if (refundShell > 0 && reserveBalance >= refundShell) {
-                // Revert reserve and supply with correct units
-                reserveBalance -= refundShell;   // SHELL nano units
-                totalSupply -= refundTokens;     // Token units (NOT shell units)
+            uint256 refundShell = pendingReserveByNonce[nonce];
+            uint256 refundTokens = pendingTokensByNonce[nonce];
+            
+            if (refundShell > 0 && buyer != address(0)) {
+                // Revert reserve and supply
+                reserveBalance -= refundShell;
+                totalSupply -= refundTokens;
 
                 // Refund SHELL via cc[2] to the actual buyer
                 mapping(uint32 => varuint32) refundCurrencies;
                 refundCurrencies[SHELL_CURRENCY_ID] = varuint32(refundShell);
                 buyer.transfer({value: 0.05 ton, flag: 1, bounce: false, currencies: refundCurrencies});
             }
-            delete pendingReserveByBuyer[buyer];
-            delete pendingTokensByBuyer[buyer];
-            delete _lastBuyer;
+            delete pendingReserveByNonce[nonce];
+            delete pendingTokensByNonce[nonce];
+            delete mintIdToBuyer[nonce];
         } else if (funcId == abi.functionId(IDexPool.addLiquidity)) {
-            // Migration failed, revert state
-            migrated = false;
+            // Migration failed, block trading to protect remaining SHELL
+            migrationFailed = true;
             reserveBalance += _pendingLiquidity;
             _pendingLiquidity = 0;
         }

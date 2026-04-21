@@ -197,9 +197,9 @@ function createLaunchTicket({ launchRequest, treasuryPayment, riskProfile }) {
 
   return {
     id: launchId,
-    status: process.env.ENABLE_ONCHAIN_DEPLOY === "true" ? "on_chain_deployed" : "payment_verified_waiting_blockchain_integration",
-    mintingAvailable: process.env.ENABLE_ONCHAIN_DEPLOY === "true",
-    note: process.env.ENABLE_ONCHAIN_DEPLOY === "true" ? "Deploy ativo" : "Pagamento verificado. Falta conectar o mint on-chain da Acki Nacki no backend.",
+    status: process.env.ENABLE_ONCHAIN_DEPLOY === "true" ? "payment_verified_pending_onchain_deployment" : "payment_verified_waiting_blockchain_integration",
+    mintingAvailable: false,
+    note: process.env.ENABLE_ONCHAIN_DEPLOY === "true" ? "Pagamento verificado. Iniciando deploy on-chain..." : "Pagamento verificado. Falta conectar o mint on-chain da Acki Nacki no backend.",
     launchRequest,
     treasuryPayment,
     riskProfile: {

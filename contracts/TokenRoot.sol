@@ -2,6 +2,7 @@ pragma tvm-solidity >= 0.76.1;
 pragma AbiHeader expire;
 pragma AbiHeader pubkey;
 
+import "./Interfaces.sol";
 import "./TokenWallet.sol";
 import "./BondingCurve.sol";
 
@@ -20,7 +21,7 @@ contract TokenRoot {
     TvmCell public bondingCurveCode;    // ABI+TVC do BondingCurve para deploy interno
     address public bondingCurve;        // Endereço do BondingCurve deployado
 
-    mapping(address => uint256) public pendingMints;
+    mapping(uint32 => uint256) public pendingMintsByNonce;
 
     // ─── Fix #3: owner passado explicitamente (msg.sender = address(0) em ext msg) ───
     // ─── Fix N1: gosh.cnvrtshellq() para converter SHELL em VMSHELL no deploy ────────
@@ -47,7 +48,7 @@ contract TokenRoot {
     }
 
     // ─── N3: Auto-replenishment via DappConfig ───────────────────────────────
-    function _getTokens() private pure {
+    function _getTokens() private {
         if (address(this).balance > 100000000000) { // 100 VMSHELL
             return;
         }
@@ -90,8 +91,8 @@ contract TokenRoot {
     // When sending tokens to a wallet that doesn't exist yet, the stateInit
     // ensures the TokenWallet contract is automatically deployed.
     // Without stateInit, the first mint to any recipient would bounce.
-    function mint(address recipient, uint256 amount, uint128 deployWalletValue) public {
-        require(msg.sender == owner, 101, "Only owner (BondingCurve) can mint");
+    function mint(uint32 mintNonce, address recipient, uint256 amount, uint128 deployWalletValue) public {
+        require(msg.sender == bondingCurve && bondingCurve != address(0), 101, "Only BondingCurve can mint");
         require(amount > 0, 105, "Amount must be greater than zero");
         _getTokens(); // N3
 
@@ -101,22 +102,23 @@ contract TokenRoot {
         TvmCell stateInit = _buildWalletStateInit(recipient);
         address walletAddr = address(tvm.hash(stateInit));
         
-        pendingMints[walletAddr] += amount;
+        pendingMintsByNonce[mintNonce] = amount;
 
         // C-03: Include stateInit in the message so the wallet is deployed
         // if it doesn't exist yet. If it already exists, stateInit is ignored.
         walletAddr.transfer({
             stateInit: stateInit,
             value: varuint16(deployWalletValue),
-            body: _buildReceiveTokensBody(amount),
+            body: _buildReceiveTokensBody(mintNonce, amount),
             flag: 1
         });
     }
 
     // ─── Helper: encode receiveTokens call body ──────────────────────────────
-    function _buildReceiveTokensBody(uint256 amount) private pure inline returns (TvmCell) {
+    function _buildReceiveTokensBody(uint32 nonce, uint256 amount) private pure inline returns (TvmCell) {
         TvmBuilder b;
         b.store(uint32(tvm.functionId(ITokenWallet.receiveTokens)));
+        b.store(nonce);
         b.store(amount);
         return b.toCell();
     }
@@ -189,7 +191,7 @@ contract TokenRoot {
         totalSupply -= amount;
         
         // Pass the execution context to the Bonding Curve to finalize the Trade out (Sell refund)
-        if (callbackTarget.value != 0) {
+        if (callbackTarget != address(0)) {
             IBondingCurve(callbackTarget).onTokenBurned{value: 0, flag: 128}(amount, refundAddress);
         } else {
             // Se nenhum callback de DEX/Curve foi fornecido, reembolso do gas pro usuário
@@ -199,15 +201,17 @@ contract TokenRoot {
 
     // ─── N5: onBounce handler — reverte estado se operações async falharem ───
     onBounce(TvmSlice body) external {
+        tvm.rawReserve(0, 4);
         uint32 funcId = body.load(uint32);
         
         if (funcId == abi.functionId(ITokenWallet.receiveTokens)) {
             // Em caso de bounce no mint (falha de receiveTokens), revertemos o valor
-            // utilizando pendingMints da carteira afetada para garantir precisão e desinflar o saldo fantasma.
-            uint256 failedAmount = pendingMints[msg.sender];
+            // utilizando pendingMintsByNonce para garantir precisão e desinflar o saldo fantasma.
+            uint32 nonce = body.load(uint32);
+            uint256 failedAmount = pendingMintsByNonce[nonce];
             if (failedAmount > 0) {
                 totalSupply -= failedAmount;
-                delete pendingMints[msg.sender];
+                delete pendingMintsByNonce[nonce];
             }
         }
     }

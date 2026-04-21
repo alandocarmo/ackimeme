@@ -1,11 +1,11 @@
 .fragment _getTokens_c9102029_internal, {
-	.loc TokenWallet.sol, 21
+	.loc TokenWallet.sol, 28
 	GETPARAM 7
 	FIRST
 	PUSHINT 100000000000
 	GREATER
 	IFRET
-	.loc TokenWallet.sol, 24
+	.loc TokenWallet.sol, 31
 	PUSHINT 100000000000
 	MINTSHELL
 	.loc TokenWallet.sol, 0
@@ -23,7 +23,13 @@
 	CTOS
 	LDMSGADDR
 	LDU 256
+	LDU 32
+	LDDICT
+	LDDICT
 	ENDS
+	SETGLOB 15
+	SETGLOB 14
+	SETGLOB 13
 	SETGLOB 12
 	SETGLOB 11
 	SETGLOB 10
@@ -54,7 +60,7 @@
 }
 
 .fragment burn_fcd3533c_internal, {
-	.loc TokenWallet.sol, 50
+	.loc TokenWallet.sol, 64
 	PUSHREF {
 		.blob x4f6e6c79206f776e65722063616e206275726e20746f6b656e73
 	}
@@ -62,7 +68,7 @@
 	GETGLOB 11
 	SDEQ
 	THROWARGIFNOT 105
-	.loc TokenWallet.sol, 51
+	.loc TokenWallet.sol, 65
 	PUSHREF {
 		.blob x496e73756666696369656e742062616c616e636520746f206275726e
 	}
@@ -70,19 +76,34 @@
 	PUSH S3
 	GEQ
 	THROWARGIFNOT 104
-	.loc TokenWallet.sol, 52
+	.loc TokenWallet.sol, 66
 	ACCEPT
-	.loc TokenWallet.sol, 53
+	.loc TokenWallet.sol, 67
 	CALLREF {
 		.inline _getTokens_c9102029_internal
 	}
-	.loc TokenWallet.sol, 55
+	.loc TokenWallet.sol, 70
+	GETGLOB 13
+	DUP
+	INC
+	UFITS 32
+	SETGLOB 13
+	.loc TokenWallet.sol, 71
+	GETGLOB 14
+	PUSH S3
+	NEWC
+	STU 256
+	ROTREV
+	PUSHINT 32
+	DICTUSETB
+	SETGLOB 14
+	.loc TokenWallet.sol, 72
 	GETGLOB 12
 	PUSH S2
 	SUB
 	UFITS 256
 	SETGLOB 12
-	.loc TokenWallet.sol, 57
+	.loc TokenWallet.sol, 75
 	GETGLOB 11
 	ROT
 	GETGLOB 10
@@ -108,6 +129,9 @@
 }
 
 .fragment c7_to_c4, {
+	GETGLOB 15
+	GETGLOB 14
+	GETGLOB 13
 	GETGLOB 12
 	GETGLOB 11
 	GETGLOB 10
@@ -118,10 +142,13 @@
 	STU 64
 	STONE
 	STSLICE
-	ROTREV
+	ROLLREV 5
 	NEWC
 	STSLICE
 	STU 256
+	STU 32
+	STDICT
+	STDICT
 	STBREFR
 	ENDC
 	POPROOT
@@ -136,7 +163,7 @@
 	IFREF {
 		.inline c4_to_c7
 	}
-	.loc TokenWallet.sol, 49
+	.loc TokenWallet.sol, 63
 	OVER
 	PUSHCONT {
 		LDREF
@@ -167,7 +194,7 @@
 	GETGLOB 6
 	THROWIF 51
 	ENDS
-	.loc TokenWallet.sol, 14
+	.loc TokenWallet.sol, 21
 	PUSHREF {
 		.blob x4f6e6c7920726f6f742063616e206465706c6f792077616c6c6574
 	}
@@ -203,8 +230,50 @@
 	THROW 0
 }
 
-.fragment receiveTokens_743e0c9b_internal, {
-	.loc TokenWallet.sol, 30
+.fragment pendingBurns, {
+	DROP
+	ENDS
+	CALLREF {
+		.inline c4_to_c7
+	}
+	GETGLOB 14
+	OVER
+	PUSHCONT {
+		PUSHSLICE xc0000000000000000000000000ab562368
+		NEWC
+		STSLICE
+		STDICT
+		ENDC
+		PUSHINT 0
+		SENDRAWMSG
+	}
+	IF
+	THROW 0
+}
+
+.fragment pendingTransfers, {
+	DROP
+	ENDS
+	CALLREF {
+		.inline c4_to_c7
+	}
+	GETGLOB 15
+	OVER
+	PUSHCONT {
+		PUSHSLICE xc0000000000000000000000000ed9f37a9
+		NEWC
+		STSLICE
+		STDICT
+		ENDC
+		PUSHINT 0
+		SENDRAWMSG
+	}
+	IF
+	THROW 0
+}
+
+.fragment receiveTokens_91968921_internal, {
+	.loc TokenWallet.sol, 37
 	PUSHREF {
 		.blob x4f6e6c7920726f6f742063616e206d696e7420746f6b656e7320696e746f2077616c6c6574
 	}
@@ -212,15 +281,16 @@
 	GETGLOB 10
 	SDEQ
 	THROWARGIFNOT 102
-	.loc TokenWallet.sol, 32
+	.loc TokenWallet.sol, 39
 	CALLREF {
 		.inline _getTokens_c9102029_internal
 	}
-	.loc TokenWallet.sol, 33
+	.loc TokenWallet.sol, 43
 	GETGLOB 12
 	ADD
 	SETGLOB 12
 	.loc TokenWallet.sol, 0
+	DROP
 }
 
 .fragment receiveTokens, {
@@ -232,19 +302,23 @@
 	IFREF {
 		.inline c4_to_c7
 	}
-	.loc TokenWallet.sol, 28
+	.loc TokenWallet.sol, 35
 	OVER
 	PUSHCONT {
+		LDU 32
 		LDREF
 		ENDS
 		CTOS
 	}
-	IF
+	PUSHCONT {
+		LDU 32
+	}
+	IFELSE
 	LDU 256
 	ENDS
 	.loc TokenWallet.sol, 0
 	CALLREF {
-		.inline receiveTokens_743e0c9b_internal
+		.inline receiveTokens_91968921_internal
 	}
 	CALLREF {
 		.inline c7_to_c4
@@ -274,7 +348,7 @@
 }
 
 .fragment transfer_a9059cbb_internal, {
-	.loc TokenWallet.sol, 37
+	.loc TokenWallet.sol, 47
 	PUSHREF {
 		.blob x4f6e6c79206f776e65722063616e207472616e73666572
 	}
@@ -282,7 +356,7 @@
 	GETGLOB 11
 	SDEQ
 	THROWARGIFNOT 103
-	.loc TokenWallet.sol, 38
+	.loc TokenWallet.sol, 48
 	PUSHREF {
 		.blob x496e73756666696369656e742062616c616e6365
 	}
@@ -290,26 +364,47 @@
 	PUSH S2
 	GEQ
 	THROWARGIFNOT 104
-	.loc TokenWallet.sol, 40
+	.loc TokenWallet.sol, 50
 	ACCEPT
-	.loc TokenWallet.sol, 41
+	.loc TokenWallet.sol, 51
 	CALLREF {
 		.inline _getTokens_c9102029_internal
 	}
-	.loc TokenWallet.sol, 43
+	.loc TokenWallet.sol, 54
+	GETGLOB 13
+	DUP
+	INC
+	UFITS 32
+	SETGLOB 13
+	.loc TokenWallet.sol, 55
+	DUP
+	GETGLOB 15
+	PUSH S3
+	NEWC
+	STU 256
+	ROTREV
+	PUSHINT 32
+	DICTUSETB
+	SETGLOB 15
+	.loc TokenWallet.sol, 56
 	GETGLOB 12
-	OVER
+	PUSH S2
 	SUB
 	UFITS 256
 	SETGLOB 12
-	.loc TokenWallet.sol, 45
-	SWAP
+	.loc TokenWallet.sol, 59
+	ROT
 	NEWC
 	STSLICECONST x62_
 	STSLICE
-	PUSHINT 1229211062
-	STUR 147
+	PUSHINT 1
+	STUR 115
+	ROTREV
+	NEWC
+	STSLICECONST x53f44cdb
+	STU 32
 	STU 256
+	STBREFR
 	ENDC
 	PUSHINT 64
 	SENDRAWMSG
@@ -325,7 +420,7 @@
 	IFREF {
 		.inline c4_to_c7
 	}
-	.loc TokenWallet.sol, 36
+	.loc TokenWallet.sol, 46
 	OVER
 	PUSHCONT {
 		LDREF
@@ -357,6 +452,12 @@
 			.inline constructor
 		}
 		DUP
+		PUSHINT 727065448
+		EQUAL
+		IFJMPREF {
+			.inline pendingBurns
+		}
+		DUP
 		PUSHINT 912579553
 		EQUAL
 		IFJMPREF {
@@ -370,7 +471,7 @@
 		}
 	}
 	DUP
-	PUSHINT 1229211062
+	PUSHINT 1550657269
 	LEQ
 	IFJMPREF {
 		DUP
@@ -380,23 +481,29 @@
 			.inline balance
 		}
 		DUP
-		PUSHINT 1229211062
+		PUSHINT 1408519387
 		EQUAL
 		IFJMPREF {
 			.inline receiveTokens
 		}
-	}
-	DUP
-	PUSHINT 1550657269
-	EQUAL
-	IFJMPREF {
-		.inline burn
+		DUP
+		PUSHINT 1550657269
+		EQUAL
+		IFJMPREF {
+			.inline burn
+		}
 	}
 	DUP
 	PUSHINT 1594609630
 	EQUAL
 	IFJMPREF {
 		.inline owner
+	}
+	DUP
+	PUSHINT 1839151017
+	EQUAL
+	IFJMPREF {
+		.inline pendingTransfers
 	}
 }
 
@@ -464,13 +571,153 @@
 	IFREF {
 		.inline c4_to_c7
 	}
-	.loc TokenWallet.sol, 64
-	PLDU 32
-	.loc TokenWallet.sol, 65
+	.loc TokenWallet.sol, 80
+	LDU 32
+	XCPU S1, S0
+	.loc TokenWallet.sol, 83
 	PUSHINT 985522602
 	EQUAL
-	DROP
+	PUSHCONT {
+		.loc TokenWallet.sol, 85
+		OVER
+		SBITS
+		PUSHPOW2 8
+		GEQ
+		PUSHCONT {
+			.loc TokenWallet.sol, 86
+			OVER
+			LDU 256
+			POP S3
+			.loc TokenWallet.sol, 87
+			GETGLOB 12
+			ADD
+			SETGLOB 12
+		}
+		PUSHCONT {
+			.loc TokenWallet.sol, 90
+			GETGLOB 13
+			GTINT 0
+			PUSHCONT {
+				.loc TokenWallet.sol, 91
+				GETGLOB 13
+				DEC
+				UFITS 32
+				.loc TokenWallet.sol, 92
+				DUP
+				GETGLOB 14
+				PUSHINT 32
+				DICTUGET
+				NULLSWAPIFNOT
+				PUSHCONT {
+					PLDU 256
+				}
+				IF
+				.loc TokenWallet.sol, 93
+				DUP
+				ISNULL
+				PUSHCONT {
+					.loc TokenWallet.sol, 94
+					BLKPUSH 2, 0
+					ISNULL
+					THROWIF 63
+					GETGLOB 12
+					ADD
+					SETGLOB 12
+					.loc TokenWallet.sol, 95
+					OVER
+					GETGLOB 14
+					PUSHINT 32
+					DICTUDEL
+					DROP
+					SETGLOB 14
+					.loc TokenWallet.sol, 0
+				}
+				IFNOT
+				.loc TokenWallet.sol, 0
+				DROP2
+			}
+			IF
+		}
+		IFELSE
+		.loc TokenWallet.sol, 0
+	}
+	IF
+	.loc TokenWallet.sol, 102
+	PUSHINT 1408519387
+	EQUAL
+	PUSHCONT {
+		.loc TokenWallet.sol, 103
+		DUP
+		SBITS
+		PUSHINT 288
+		GEQ
+		PUSHCONT {
+			.loc TokenWallet.sol, 104
+			LDU 32
+			.loc TokenWallet.sol, 105
+			LDU 256
+			ROTREV
+			.loc TokenWallet.sol, 106
+			GETGLOB 12
+			ADD
+			SETGLOB 12
+			.loc TokenWallet.sol, 107
+			GETGLOB 15
+			PUSHINT 32
+			DICTUDEL
+			DROP
+			SETGLOB 15
+		}
+		PUSHCONT {
+			GETGLOB 13
+			GTINT 0
+			PUSHCONT {
+				.loc TokenWallet.sol, 110
+				GETGLOB 13
+				DEC
+				UFITS 32
+				.loc TokenWallet.sol, 111
+				DUP
+				GETGLOB 15
+				PUSHINT 32
+				DICTUGET
+				NULLSWAPIFNOT
+				PUSHCONT {
+					PLDU 256
+				}
+				IF
+				.loc TokenWallet.sol, 112
+				DUP
+				ISNULL
+				PUSHCONT {
+					.loc TokenWallet.sol, 113
+					BLKPUSH 2, 0
+					ISNULL
+					THROWIF 63
+					GETGLOB 12
+					ADD
+					SETGLOB 12
+					.loc TokenWallet.sol, 114
+					OVER
+					GETGLOB 15
+					PUSHINT 32
+					DICTUDEL
+					DROP
+					SETGLOB 15
+					.loc TokenWallet.sol, 0
+				}
+				IFNOT
+				.loc TokenWallet.sol, 0
+				DROP2
+			}
+			IF
+		}
+		IFELSE
+		.loc TokenWallet.sol, 0
+	}
+	IF
 	.loc TokenWallet.sol, 0
+	DROP
 	CALLREF {
 		.inline c7_to_c4
 	}
@@ -518,15 +765,21 @@
 }
 
 .fragment default_data_cell, {
+	NULL
+	DUP
 	PUSHINT 0
+	DUP
 	PUSHSLICE x2_
 	NEWC
 	PUSHINT 323
 	STZEROES
-	ROTREV
+	ROLLREV 5
 	NEWC
 	STSLICE
 	STU 256
+	STU 32
+	STDICT
+	STDICT
 	STBREFR
 	ENDC
 }

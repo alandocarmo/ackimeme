@@ -21,13 +21,13 @@ async function runTests() {
     console.log(">> ERRO CONTROLADO DEPLOYER (Falta de envs):", error.message);
   }
 
-  // Teste 2: Verify Payment Logic (Mocking USDC txHash that does not exist to see how it fails)
+  // Teste 2: Verify Payment Logic (Mocking SHELL txHash that does not exist to see how it fails)
   try {
-    console.log("\n[- Teste 2: verifyPayment (USDC) -]");
+    console.log("\n[- Teste 2: verifyPayment (SHELL) -]");
     await verifyPayment({
       walletAddress: "0:bdf1f14108bcc289dac252d970a74bee29386e7a7782937f2bcd92e7f2dba1be",
       txHash: "0xFakeHash123",
-      tokenSymbol: "USDC"
+      tokenSymbol: "SHELL"
     });
     console.log(">> SUCESSO PAGAMENTO (Inesperado)");
   } catch (error) {

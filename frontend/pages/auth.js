@@ -1,143 +1,134 @@
 import Head from "next/head";
 import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
-import { createAuthChallenge, getSession, logout, verifyAuthChallenge } from "../lib/api";
-
-const SESSION_STORAGE_KEY = "ackimeme_session_token";
-
-function getTelegramInitData() {
-  if (typeof window === "undefined") return "";
-  return window.Telegram?.WebApp?.initData || "";
-}
+import { useEffect, useState, useRef } from "react";
+import { QRCodeSVG } from "qrcode.react";
+import { generateQrChallenge, getQrStatus, getSession, logout, simulateQrWebhook } from "../lib/api";
 
 export default function AuthPage() {
   const router = useRouter();
   
-  // Sanitiza a query 'from' para mitigar Open Redirect (Issue #34)
   const sanitizeReturnTo = (url) => {
     if (!url || typeof url !== "string") return "/";
     if (url.startsWith("http://") || url.startsWith("https://") || url.startsWith("//")) {
-      return "/"; // Previne redicionamento para domínios externos
+      return "/"; 
     }
     return url.startsWith("/") ? url : "/";
   };
   const returnTo = sanitizeReturnTo(router.query.from);
 
-  const [walletAddress, setWalletAddress] = useState("");
-  const [publicKey, setPublicKey] = useState("");
-  const [signature, setSignature] = useState("");
-  const [challenge, setChallenge] = useState(null);
   const [session, setSession] = useState(null);
-  const [step, setStep] = useState("connect");
+  const [qrData, setQrData] = useState(null);
+  const [step, setStep] = useState("connect"); // connect, done
   const [error, setError] = useState("");
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
+  
+  // Developer simulation states
+  const [devWallet, setDevWallet] = useState("0:1111222233334444555566667777888899990000aaaabbbbccccddddeeeeffff");
+  const [simulating, setSimulating] = useState(false);
 
+  // Use a ref to hold the polling interval so we can clear it safely
+  const pollingRef = useRef(null);
+
+  // 1. On Mount: Check if logged in, otherwise start QR Session
   useEffect(() => {
     if (typeof window === "undefined") return;
+
     getSession()
-      .then((res) => { setSession(res.session); setStep("done"); })
-      .catch(() => { /* not logged in */ });
+      .then((res) => { 
+        setSession(res.session); 
+        setStep("done"); 
+        setLoading(false);
+      })
+      .catch(() => { 
+        // Not logged in. Initialize QR Code
+        initQrLogin();
+      });
+
+    return () => stopPolling();
   }, []);
 
-  async function handleGenerateChallenge() {
-    if (!walletAddress.trim()) { setError("Enter your Acki Nacki wallet address."); return; }
-    setError(""); setLoading(true);
+  const stopPolling = () => {
+    if (pollingRef.current) {
+      clearInterval(pollingRef.current);
+      pollingRef.current = null;
+    }
+  };
+
+  const initQrLogin = async () => {
     try {
-      const res = await createAuthChallenge({ walletAddress: walletAddress.trim(), telegramInitData: getTelegramInitData() });
-      setChallenge(res.challenge);
-      setStep("sign");
-    } catch (err) { setError(err.message); }
-    finally { setLoading(false); }
-  }
-
-  async function connectWithExtension() {
-    setError(""); setLoading(true);
-    try {
-      const { ProviderRpcClient } = await import('everscale-inpage-provider');
-      const ever = new ProviderRpcClient();
-      
-      if (!(await ever.hasProvider())) {
-        throw new Error("Nenhuma extensão de carteira TVM encontrada no navegador. Instale a EVER Wallet ou Acki Nacki Wallet.");
-      }
-
-      await ever.ensureInitialized();
-      const { accountInteraction } = await ever.requestPermissions({ permissions: ['basic', 'accountInteraction'] });
-      
-      if (!accountInteraction) {
-        throw new Error("Conexão cancelada ou negada.");
-      }
-
-      const connectedAddress = accountInteraction.address.toString();
-      const connectedPubkey = accountInteraction.publicKey;
-
-      // Generates challenge string
-      const res = await createAuthChallenge({ 
-        walletAddress: connectedAddress, 
-        telegramInitData: getTelegramInitData() 
-      });
-      const challengeMsg = res.challenge.message;
-
-      // Sign the data (base64) using the provider
-      const encodedMsg = btoa(unescape(encodeURIComponent(challengeMsg)));
-      const signatureResult = await ever.signData({
-        data: encodedMsg,
-        publicKey: connectedPubkey
-      });
-
-      // R-07: Defensive fallback — some provider versions return `signature`
-      // instead of `signatureHex`. Use whichever is available.
-      const sigHex = signatureResult.signatureHex || signatureResult.signature;
-      if (!sigHex) throw new Error("Provider não retornou assinatura válida.");
-
-      // Verification Step
-      const authRes = await verifyAuthChallenge({
-        challengeId: res.challenge.id,
-        walletAddress: connectedAddress,
-        publicKey: connectedPubkey,
-        signature: sigHex,
-        telegramInitData: getTelegramInitData()
-      });
-
-      setSession(authRes.session);
-      setStep("done");
-      setTimeout(() => router.push(String(returnTo)), 1200);
-
+      setLoading(true);
+      setError("");
+      const res = await generateQrChallenge();
+      setQrData({ sessionId: res.sessionId, deepLink: res.deepLink });
+      setStep("connect");
+      startPolling(res.sessionId);
     } catch (err) {
-      console.error(err);
-      setError(err.message || "Erro na conexão via Wallet Extension.");
+      setError("Falha ao gerar o QR Code de autenticação. Tente novamente.");
     } finally {
       setLoading(false);
     }
-  }
+  };
 
-  async function handleVerify() {
-    if (!publicKey.trim() || !signature.trim()) { setError("Paste the public key and signature."); return; }
-    setError(""); setLoading(true);
+  const startPolling = (sessionId) => {
+    stopPolling(); // Ensure clean state
+    let attempts = 0;
+    const MAX_ATTEMPTS = 120; // ~5 minutos a 2.5s cada
+    
+    pollingRef.current = setInterval(async () => {
+      attempts++;
+      if (attempts >= MAX_ATTEMPTS) {
+        stopPolling();
+        setError("Tempo de espera expirado. Clique abaixo para gerar novo QR.");
+        return;
+      }
+      try {
+        const statusRes = await getQrStatus(sessionId);
+        if (statusRes.status === 'done' && statusRes.sessionToken) {
+          // Polling success! App notified webhook
+          stopPolling();
+          
+          // Re-fetch the session properly to populate UI, or just trust the new cookie
+          // We can call getSession() to get real user data now
+          const sessionRes = await getSession();
+          setSession(sessionRes.session);
+          setStep("done");
+          setTimeout(() => router.push(String(returnTo)), 1200);
+        } else if (statusRes.status === 'expired') {
+          stopPolling();
+          setError("QR Code expirado. Geração de novo desafio...");
+          setTimeout(() => initQrLogin(), 2000);
+        }
+      } catch (err) {
+        console.error("Polling error", err);
+      }
+    }, 2500); // Poll every 2.5 seconds
+  };
+
+  async function handleSimulateScan() {
+    if (!qrData?.sessionId) return;
     try {
-      const res = await verifyAuthChallenge({
-        challengeId: challenge.id, walletAddress: walletAddress.trim(),
-        publicKey: publicKey.trim(), signature: signature.trim(),
-        telegramInitData: getTelegramInitData(),
-      });
-      // Issue #8: Token is now set securely via HttpOnly cookie set by the backend.
-      // window.localStorage is no longer used for session tokens.
-      setSession(res.session); setStep("done");
-      setTimeout(() => router.push(String(returnTo)), 1200);
-    } catch (err) { setError(err.message); }
-    finally { setLoading(false); }
+      setSimulating(true);
+      setError("");
+      await simulateQrWebhook(qrData.sessionId, devWallet);
+      // Wait for the polling to pick it up automatically!
+    } catch (err) {
+      setError(err.message || "Erro simulando app");
+      setSimulating(false);
+    }
   }
 
   async function handleLogout() {
     await logout().catch(() => {});
-    setSession(null); setChallenge(null); setStep("connect");
-    setWalletAddress(""); setPublicKey(""); setSignature("");
+    setSession(null); 
+    setStep("connect");
+    initQrLogin();
   }
 
   return (
     <>
       <Head>
         <title>Connect Wallet | AckiMeme</title>
-        <meta name="description" content="Authenticate your wallet to create and trade memecoins on Acki Nacki." />
+        <meta name="description" content="Authenticate your wallet using Acki Nacki App" />
       </Head>
       <main className="auth-layout">
         <div className="hero-glow" style={{ position: 'fixed', top: '50%', transform: 'translate(-50%, -50%)' }} />
@@ -156,58 +147,63 @@ export default function AuthPage() {
               <button className="btn-primary" style={{ width: '100%' }} onClick={() => router.push("/")}>Go to Board →</button>
               <button className="filter-btn" style={{ width: '100%', marginTop: '12px' }} onClick={handleLogout}>Disconnect</button>
             </div>
-          ) : step === "sign" && challenge ? (
-            <div className="animate-fade-in">
-              <div className="step-badge">Step 2/2 — Sign the Challenge</div>
-              <div className="challenge-box">
-                <span className="info-label" style={{ marginBottom: '12px', display: 'block' }}>Message to sign:</span>
-                <code className="challenge-msg">{challenge.message}</code>
-              </div>
-              <p className="token-time" style={{ fontSize: '11px', lineHeight: 1.5, marginBottom: '20px' }}>
-                Copy the message, sign with your wallet, then paste the Public Key and Signature below.<br/><br/>
-                <b>For Devs (tvm-cli):</b><br/>
-                <code style={{ background: 'var(--bg-glass)', padding: '6px', borderRadius: '4px', display: 'block', marginTop: '6px', userSelect: 'all', border: '1px solid var(--line)' }}>
-                  tvm-cli sign --wallet {walletAddress} --sign "{challenge.message}"
-                </code>
-              </p>
-              <input className="text-input" placeholder="Public Key (hex)" value={publicKey}
-                onChange={(e) => setPublicKey(e.target.value)} autoComplete="off" style={{ marginBottom: '12px' }} />
-              <input className="text-input" placeholder="Signature (hex)" value={signature}
-                onChange={(e) => setSignature(e.target.value)} autoComplete="off" style={{ marginBottom: '12px' }} />
-              {error && <p className="error-msg" style={{ marginBottom: '12px', fontSize: '12px' }}>{error}</p>}
-              <button className="btn-primary" style={{ width: '100%' }} onClick={handleVerify} disabled={loading}>
-                {loading ? "Verifying..." : "Verify & Connect"}
-              </button>
-              <button className="filter-btn" style={{ width: '100%', marginTop: '12px' }}
-                onClick={() => { setStep("connect"); setChallenge(null); setError(""); }}>
-                ← Back
-              </button>
-            </div>
           ) : (
             <div className="animate-fade-in">
-              <div className="step-badge">🚀 Conexão Automática</div>
-              <button 
-                className="btn-primary" 
-                style={{ width: '100%', marginBottom: '24px', backgroundColor: 'var(--accent)', color: '#000' }} 
-                onClick={connectWithExtension} 
-                disabled={loading}
-              >
-                {loading ? "Conectando..." : "Connect Extension Wallet"}
-              </button>
+              <div className="step-badge">Scan to Connect</div>
               
-              <div style={{ borderTop: '1px solid var(--line)', margin: '24px 0', position: 'relative' }}>
-                <span style={{ position: 'absolute', top: '-11px', left: '50%', transform: 'translateX(-50%)', backgroundColor: 'var(--bg)', padding: '0 10px', fontSize: '11px', color: 'var(--text-secondary)' }}>ou via tvm-cli</span>
+              <div className="qr-container" style={{ margin: '24px 0', display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '200px' }}>
+                {loading ? (
+                  <p className="token-time">Generating secure connection...</p>
+                ) : qrData ? (
+                  <div style={{ background: '#fff', padding: '16px', borderRadius: '12px' }}>
+                    <QRCodeSVG 
+                      value={qrData.deepLink} 
+                      size={220}
+                      bgColor={"#ffffff"}
+                      fgColor={"#000000"}
+                      level={"L"}
+                      includeMargin={false}
+                    />
+                  </div>
+                ) : null}
               </div>
 
-              <div className="step-badge">Manual Input (Devs)</div>
-              <input className="text-input" placeholder="0:abc123… (Acki Nacki address)" value={walletAddress}
-                onChange={(e) => setWalletAddress(e.target.value)} autoComplete="off" style={{ marginBottom: '12px' }} />
-              {error && <p className="error-msg" style={{ marginBottom: '12px', fontSize: '12px' }}>{error}</p>}
-              <button className="filter-btn" style={{ width: '100%' }} onClick={handleGenerateChallenge} disabled={loading}>
-                {loading ? "Gerando..." : "Generate Manual Challenge"}
-              </button>
+              {error ? (
+                <p className="error-msg" style={{ marginBottom: '16px', fontSize: '12px', textAlign: 'center' }}>{error}</p>
+              ) : (
+                <p className="token-time" style={{ textAlign: 'center', marginBottom: '24px' }}>
+                  Open your <b>Acki Nacki Wallet</b> app<br/>and scan this QR Code to log in.
+                </p>
+              )}
+              
+              {process.env.NEXT_PUBLIC_ENABLE_DEV_TOOLS === "true" && (
+                <>
+                  <div style={{ borderTop: '1px solid var(--line)', margin: '24px 0', position: 'relative' }}>
+                    <span style={{ position: 'absolute', top: '-11px', left: '50%', transform: 'translateX(-50%)', backgroundColor: 'var(--bg)', padding: '0 10px', fontSize: '11px', color: 'var(--text-secondary)' }}>Developer Tools</span>
+                  </div>
+
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                    <input 
+                      className="text-input" 
+                      style={{ fontSize: '12px', padding: '8px' }}
+                      value={devWallet}
+                      onChange={(e) => setDevWallet(e.target.value)}
+                      placeholder="Simulated Wallet Address"
+                    />
+                    <button 
+                      className="filter-btn" 
+                      style={{ width: '100%' }} 
+                      onClick={handleSimulateScan}
+                      disabled={simulating || loading}
+                    >
+                      {simulating ? "Simulating App..." : "Simulate Mobile App Scan"}
+                    </button>
+                  </div>
+                </>
+              )}
+
               <div style={{ borderTop: '1px solid var(--line)', margin: '24px 0' }} />
-              <button className="filter-btn" style={{ width: '100%' }} onClick={() => router.push("/")}>← Back to Board</button>
+              <button className="filter-btn" style={{ width: '100%', borderColor: 'transparent', background: 'transparent' }} onClick={() => router.push("/")}>← Back to Board</button>
             </div>
           )}
         </div>
@@ -216,6 +212,7 @@ export default function AuthPage() {
       <style jsx>{`
         .animate-fade-in { animation: fadeInUp 0.4s ease both; }
         .error-msg { color: var(--red); text-align: center; }
+        .qr-container { transition: all 0.3s ease; }
       `}</style>
     </>
   );

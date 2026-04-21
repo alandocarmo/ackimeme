@@ -38,6 +38,7 @@
 		{
 			"name": "mint",
 			"inputs": [
+				{"name":"mintNonce","type":"uint32"},
 				{"name":"recipient","type":"address"},
 				{"name":"amount","type":"uint256"},
 				{"name":"deployWalletValue","type":"uint128"}
@@ -148,11 +149,11 @@
 			]
 		},
 		{
-			"name": "pendingMints",
+			"name": "pendingMintsByNonce",
 			"inputs": [
 			],
 			"outputs": [
-				{"name":"pendingMints","type":"map(address,uint256)"}
+				{"name":"pendingMintsByNonce","type":"map(uint32,uint256)"}
 			]
 		}
 	],
@@ -170,6 +171,6 @@
 		{"init":false,"name":"walletCode","type":"cell"},
 		{"init":false,"name":"bondingCurveCode","type":"cell"},
 		{"init":false,"name":"bondingCurve","type":"address"},
-		{"init":false,"name":"pendingMints","type":"map(address,uint256)"}
+		{"init":false,"name":"pendingMintsByNonce","type":"map(uint32,uint256)"}
 	]
 }

@@ -1,6 +1,8 @@
 # AckiMeme
 
 Mini App para Telegram focado em lançamento de memecoins na blockchain Acki Nacki.
+Os usuários acessam via bot do Telegram que abre o DApp no navegador integrado.
+Toda a economia usa SHELL (token nativo da Acki Nacki) para fees e trading.
 
 ## Estrutura
 
@@ -69,8 +71,8 @@ Observação:
 
 1. O bot abre a Web App configurada em `WEB_APP_URL`.
 2. O frontend busca `/config`, gera challenge de auth por wallet e abre sessão curta com anti-replay.
-3. O usuário paga fee de uso do dApp em USDC (TIP-3) e o backend valida a transferência.
-4. O backend também exige saldo mínimo em SHELL na carteira do criador para cobrir custo de blockchain.
+3. O usuário paga fee de criação em SHELL (nativo da Acki Nacki) e o backend valida a transferência on-chain.
+4. O backend exige saldo mínimo em SHELL na carteira do criador para cobrir gas fees.
 5. O feed público geral recebe os `launch-request` criados no fluxo padrão do app.
 6. A página `/admin/security` opera o painel de segurança com `ADMIN_TOKEN`.
 
@@ -187,6 +189,6 @@ O schema já inclui a tabela `reward_tasks` para a próxima rodada do protótipo
 ## Falta conectar
 
 - vínculo forte entre wallet contract e public key do tipo exato de wallet Acki Nacki
-- factory/deploy on-chain do token
-- vault de reserva travada com regra 80/20 on-chain
-- bonding curve, pool automática, anti-sniper e risk engine completo
+- factory/deploy on-chain do token (configurar ENABLE_ONCHAIN_DEPLOY=true)
+- mecanismo de migração de liquidez quando DEX.DO suportar pools
+- monitoramento avançado (Sentry ou equivalente)

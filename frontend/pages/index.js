@@ -73,13 +73,33 @@ export default function Home() {
       .then((r) => { setLaunches(r.launches || []); setError(""); })
       .catch((e) => setError(e.message));
 
-    const interval = setInterval(() => {
-      getPublicLaunches()
-        .then((r) => { setLaunches(r.launches || []); })
-        .catch(() => {});
-    }, 12000);
+    let interval = null;
 
-    return () => clearInterval(interval);
+    const startPolling = () => {
+      if (interval) return;
+      interval = setInterval(() => {
+        getPublicLaunches()
+          .then((r) => { setLaunches(r.launches || []); })
+          .catch(() => {});
+      }, 12000);
+    };
+
+    const stopPolling = () => {
+      if (interval) { clearInterval(interval); interval = null; }
+    };
+
+    // Pausar polling quando a aba não está visível (economiza bateria no Telegram WebApp)
+    const handleVisibility = () => {
+      if (document.hidden) { stopPolling(); } else { startPolling(); }
+    };
+
+    startPolling();
+    document.addEventListener("visibilitychange", handleVisibility);
+
+    return () => {
+      stopPolling();
+      document.removeEventListener("visibilitychange", handleVisibility);
+    };
   }, []);
 
   let filtered = launches.filter((l) => matchesSearch(l, deferredSearch));

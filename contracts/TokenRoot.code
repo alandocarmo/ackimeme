@@ -1,16 +1,22 @@
 .fragment _buildWalletStateInit_0db42ffa_internal, {
-	.loc TokenRoot.sol, 68
+	.loc TokenRoot.sol, 69
+	NULL
+	DUP
 	PUSHINT 0
-	SWAP
+	DUP
+	ROLL 4
 	MYADDR
 	NEWC
 	PUSHINT 321
 	STZEROES
 	STSLICE
-	ROTREV
+	ROLLREV 5
 	NEWC
 	STSLICE
 	STU 256
+	STU 32
+	STDICT
+	STDICT
 	STBREFR
 	ENDC
 	GETGLOB 15
@@ -24,13 +30,13 @@
 }
 
 .fragment _getTokens_c9102029_internal, {
-	.loc TokenRoot.sol, 51
+	.loc TokenRoot.sol, 52
 	GETPARAM 7
 	FIRST
 	PUSHINT 100000000000
 	GREATER
 	IFRET
-	.loc TokenRoot.sol, 54
+	.loc TokenRoot.sol, 55
 	PUSHINT 100000000000
 	MINTSHELL
 	.loc TokenRoot.sol, 0
@@ -178,12 +184,12 @@
 	LDMSGADDR
 	LDU 64
 	ENDS
-	.loc TokenRoot.sol, 36
+	.loc TokenRoot.sol, 37
 	CNVRTSHELLQ
-	.loc TokenRoot.sol, 38
+	.loc TokenRoot.sol, 39
 	GETGLOB 2
 	THROWIFNOT 101
-	.loc TokenRoot.sol, 39
+	.loc TokenRoot.sol, 40
 	GETGLOB 5
 	DUP
 	ISNULL
@@ -195,21 +201,21 @@
 	GETGLOB 2
 	EQUAL
 	THROWIFNOT 102
-	.loc TokenRoot.sol, 40
+	.loc TokenRoot.sol, 41
 	ACCEPT
-	.loc TokenRoot.sol, 42
+	.loc TokenRoot.sol, 43
 	ROLL 4
 	SETGLOB 10
-	.loc TokenRoot.sol, 43
+	.loc TokenRoot.sol, 44
 	ROLL 3
 	SETGLOB 11
-	.loc TokenRoot.sol, 44
+	.loc TokenRoot.sol, 45
 	ROT
 	SETGLOB 12
-	.loc TokenRoot.sol, 45
+	.loc TokenRoot.sol, 46
 	SWAP
 	SETGLOB 15
-	.loc TokenRoot.sol, 46
+	.loc TokenRoot.sol, 47
 	SETGLOB 14
 	.loc TokenRoot.sol, 0
 	CALLREF {
@@ -240,7 +246,7 @@
 }
 
 .fragment deployBondingCurve_9584288c_internal, {
-	.loc TokenRoot.sol, 150
+	.loc TokenRoot.sol, 152
 	PUSHREF {
 		.blob x4f6e6c79206465706c6f7965722063616e206465706c6f79204243
 	}
@@ -255,7 +261,7 @@
 	GETGLOB 2
 	EQUAL
 	THROWARGIFNOT 102
-	.loc TokenRoot.sol, 151
+	.loc TokenRoot.sol, 153
 	PUSHREF {
 		.blob x426f6e64696e67437572766520616c7265616479206465706c6f796564
 	}
@@ -265,52 +271,54 @@
 	}
 	SDEQ
 	THROWARGIFNOT 108
-	.loc TokenRoot.sol, 152
+	.loc TokenRoot.sol, 154
 	ACCEPT
-	.loc TokenRoot.sol, 153
+	.loc TokenRoot.sol, 155
 	CALLREF {
 		.inline _getTokens_c9102029_internal
 	}
-	.loc TokenRoot.sol, 156
-	PUSHSLICE x2_
+	.loc TokenRoot.sol, 158
+	PUSHINT 0
 	NULL
-	DUP
+	BLKPUSH 2, 0
 	PUSHREF {
 	}
 	BLKPUSH 2, 0
 	PUSHSLICE x2_
 	BLKPUSH 2, 0
 	PUSHINT 0
-	BLKPUSH 4, 0
+	BLKPUSH 5, 0
 	MYADDR
 	NEWC
 	PUSHINT 321
 	STZEROES
 	STSLICE
-	ROLLREV 14
+	ROLLREV 16
 	NEWC
 	STU 256
 	STU 128
 	STU 256
 	STI 1
+	STI 1
 	STU 32
+	ROLLREV 10
+	NEWC
+	STSLICE
 	ROLLREV 9
 	NEWC
 	STSLICE
 	ROLLREV 8
 	NEWC
 	STSLICE
-	ROLLREV 7
-	NEWC
-	STSLICE
 	STREF
 	STREF
 	STREF
-	ROLLREV 3
+	ROLLREV 4
 	NEWC
 	STDICT
 	STDICT
-	STSLICE
+	STDICT
+	STU 32
 	STBREFR
 	STBREFR
 	STBREFR
@@ -324,7 +332,7 @@
 	STDICT
 	STZERO
 	ENDC
-	.loc TokenRoot.sol, 165
+	.loc TokenRoot.sol, 167
 	BLKSWAP 3, 2
 	XCHG S2
 	MYADDR
@@ -386,10 +394,10 @@
 	ENDC
 	PUSHINT 1
 	SENDRAWMSG
-	.loc TokenRoot.sol, 171
+	.loc TokenRoot.sol, 173
 	DUP
 	SETGLOB 17
-	.loc TokenRoot.sol, 172
+	.loc TokenRoot.sol, 174
 	SETGLOB 14
 	.loc TokenRoot.sol, 0
 }
@@ -403,7 +411,7 @@
 	IFREF {
 		.inline c4_to_c7
 	}
-	.loc TokenRoot.sol, 143
+	.loc TokenRoot.sol, 145
 	OVER
 	PUSHCONT {
 		LDREF
@@ -428,7 +436,7 @@
 }
 
 .fragment deployWallet_726ee909_internal, {
-	.loc TokenRoot.sol, 77
+	.loc TokenRoot.sol, 78
 	PUSHREF {
 		.blob x556e617574686f72697a65642063616c6c20746f206465706c6f7957616c6c6574
 	}
@@ -440,16 +448,16 @@
 	SDEQ
 	OR
 	THROWARGIFNOT 109
-	.loc TokenRoot.sol, 78
+	.loc TokenRoot.sol, 79
 	CALLREF {
 		.inline _getTokens_c9102029_internal
 	}
-	.loc TokenRoot.sol, 80
+	.loc TokenRoot.sol, 81
 	SWAP
 	CALLREF {
 		.inline _buildWalletStateInit_0db42ffa_internal
 	}
-	.loc TokenRoot.sol, 81
+	.loc TokenRoot.sol, 82
 	DUP
 	HASHCU
 	NEWC
@@ -507,7 +515,7 @@
 	IFREF {
 		.inline c4_to_c7
 	}
-	.loc TokenRoot.sol, 75
+	.loc TokenRoot.sol, 76
 	OVER
 	PUSHCONT {
 		LDREF
@@ -555,18 +563,24 @@
 }
 
 .fragment getWalletAddress_1fd9afa5_internal, {
-	.loc TokenRoot.sol, 58
+	.loc TokenRoot.sol, 59
+	NULL
+	DUP
 	PUSHINT 0
-	SWAP
+	DUP
+	ROLL 4
 	MYADDR
 	NEWC
 	PUSHINT 321
 	STZEROES
 	STSLICE
-	ROTREV
+	ROLLREV 5
 	NEWC
 	STSLICE
 	STU 256
+	STU 32
+	STDICT
+	STDICT
 	STBREFR
 	ENDC
 	GETGLOB 15
@@ -576,7 +590,7 @@
 	STDICT
 	STZERO
 	ENDC
-	.loc TokenRoot.sol, 63
+	.loc TokenRoot.sol, 64
 	HASHCU
 	NEWC
 	STSLICECONST x801_
@@ -611,7 +625,7 @@
 	IFREF {
 		.inline c4_to_c7
 	}
-	.loc TokenRoot.sol, 57
+	.loc TokenRoot.sol, 58
 	OVER
 	PUSHCONT {
 		LDREF
@@ -657,37 +671,44 @@
 	THROW 0
 }
 
-.fragment mint_499d1081_internal, {
-	.loc TokenRoot.sol, 94
+.fragment mint_f8b0a561_internal, {
+	.loc TokenRoot.sol, 95
 	PUSHREF {
-		.blob x4f6e6c79206f776e65722028426f6e64696e674375727665292063616e206d696e74
+		.blob x4f6e6c7920426f6e64696e6743757276652063616e206d696e74
 	}
 	GETGLOB 9
-	GETGLOB 14
+	GETGLOB 17
 	SDEQ
+	GETGLOB 17
+	PUSHREFSLICE {
+		.blob x8000000000000000000000000000000000000000000000000000000000000000001_
+	}
+	SDEQ
+	NOT
+	AND
 	THROWARGIFNOT 101
-	.loc TokenRoot.sol, 95
+	.loc TokenRoot.sol, 96
 	PUSHREF {
 		.blob x416d6f756e74206d7573742062652067726561746572207468616e207a65726f
 	}
 	PUSH S2
 	GTINT 0
 	THROWARGIFNOT 105
-	.loc TokenRoot.sol, 96
+	.loc TokenRoot.sol, 97
 	CALLREF {
 		.inline _getTokens_c9102029_internal
 	}
-	.loc TokenRoot.sol, 98
+	.loc TokenRoot.sol, 99
 	GETGLOB 13
 	PUSH S2
 	ADD
 	SETGLOB 13
-	.loc TokenRoot.sol, 101
+	.loc TokenRoot.sol, 102
 	ROT
 	CALLREF {
 		.inline _buildWalletStateInit_0db42ffa_internal
 	}
-	.loc TokenRoot.sol, 102
+	.loc TokenRoot.sol, 103
 	DUP
 	HASHCU
 	NEWC
@@ -695,26 +716,17 @@
 	STU 256
 	ENDC
 	CTOS
-	.loc TokenRoot.sol, 104
-	PUSH2 S3, S0
+	.loc TokenRoot.sol, 105
+	PUSH S4
 	GETGLOB 18
-	DUP2
-	PUSHINT 267
-	DICTGET
-	ZEROSWAPIFNOT
-	PUSHCONT {
-		PLDU 256
-	}
-	IF
-	ROLL 3
-	ADD
+	PUSH S5
 	NEWC
 	STU 256
 	ROTREV
-	PUSHINT 267
-	DICTSETB
+	PUSHINT 32
+	DICTUSETB
 	SETGLOB 18
-	.loc TokenRoot.sol, 108
+	.loc TokenRoot.sol, 109
 	ROT
 	UFITS 120
 	SWAP
@@ -750,13 +762,16 @@
 	}
 	STREFR
 	STONE
-	SWAP
-	.loc TokenRoot.sol, 119
-	NEWC
-	STSLICECONST x494445b6
+	ROTREV
 	.loc TokenRoot.sol, 120
-	STU 256
+	NEWC
+	STSLICECONST x53f44cdb
 	.loc TokenRoot.sol, 121
+	XCHG S1, S2
+	STU 32
+	.loc TokenRoot.sol, 122
+	STU 256
+	.loc TokenRoot.sol, 123
 	STBREFR
 	.loc TokenRoot.sol, 0
 	ENDC
@@ -773,21 +788,30 @@
 	IFREF {
 		.inline c4_to_c7
 	}
-	.loc TokenRoot.sol, 93
+	.loc TokenRoot.sol, 94
 	OVER
 	PUSHCONT {
+		LDU 32
+		LDREF
+		ENDS
+		CTOS
+		LDMSGADDR
+		LDU 256
+	}
+	PUSHCONT {
+		LDU 32
+		LDMSGADDR
+		LDU 256
 		LDREF
 		ENDS
 		CTOS
 	}
-	IF
-	LDMSGADDR
-	LDU 256
+	IFELSE
 	LDU 128
 	ENDS
 	.loc TokenRoot.sol, 0
 	CALLREF {
-		.inline mint_499d1081_internal
+		.inline mint_f8b0a561_internal
 	}
 	CALLREF {
 		.inline c7_to_c4
@@ -817,12 +841,12 @@
 }
 
 .fragment notifyBurn_f3a04ef8_internal, {
-	.loc TokenRoot.sol, 179
+	.loc TokenRoot.sol, 181
 	OVER
 	CALLREF {
 		.inline getWalletAddress_1fd9afa5_internal
 	}
-	.loc TokenRoot.sol, 180
+	.loc TokenRoot.sol, 182
 	PUSHREF {
 		.blob x43616c6c6572206973206e6f7420612076616c696420546f6b656e57616c6c6574
 	}
@@ -830,7 +854,7 @@
 	ROT
 	SDEQ
 	THROWARGIFNOT 106
-	.loc TokenRoot.sol, 183
+	.loc TokenRoot.sol, 185
 	PUSHREF {
 		.blob x63616c6c6261636b546172676574206d757374206265207265676973746572656420426f6e64696e674375727665
 	}
@@ -844,27 +868,37 @@
 	SDEQ
 	OR
 	THROWARGIFNOT 107
-	.loc TokenRoot.sol, 185
+	.loc TokenRoot.sol, 187
 	CALLREF {
 		.inline _getTokens_c9102029_internal
 	}
-	.loc TokenRoot.sol, 187
+	.loc TokenRoot.sol, 189
 	PUSHINT 0
 	PUSHINT 4
 	RAWRESERVE
-	.loc TokenRoot.sol, 189
+	.loc TokenRoot.sol, 191
 	GETGLOB 13
 	PUSH S3
 	SUB
 	UFITS 256
 	SETGLOB 13
-	.loc TokenRoot.sol, 192
+	.loc TokenRoot.sol, 194
 	DUP
-	PARSEMSGADDR
-	INDEX 3
-	PLDU 256
+	PUSHREFSLICE {
+		.blob x8000000000000000000000000000000000000000000000000000000000000000001_
+	}
+	SDEQ
 	PUSHCONT {
-		.loc TokenRoot.sol, 193
+		.loc TokenRoot.sol, 198
+		OVER
+		NEWC
+		STSLICECONST x42_
+		STSLICE
+		PUSHINT 115
+		STZEROES
+	}
+	PUSHCONT {
+		.loc TokenRoot.sol, 195
 		PUSH3 S1, S2, S0
 		NEWC
 		STSLICECONST x62_
@@ -877,15 +911,6 @@
 		STU 256
 		STSLICE
 		STBREFR
-	}
-	PUSHCONT {
-		.loc TokenRoot.sol, 196
-		OVER
-		NEWC
-		STSLICECONST x42_
-		STSLICE
-		PUSHINT 115
-		STZEROES
 	}
 	IFELSE
 	ENDC
@@ -904,7 +929,7 @@
 	IFREF {
 		.inline c4_to_c7
 	}
-	.loc TokenRoot.sol, 176
+	.loc TokenRoot.sol, 178
 	OVER
 	PUSHCONT {
 		LDREF
@@ -950,7 +975,7 @@
 	THROW 0
 }
 
-.fragment pendingMints, {
+.fragment pendingMintsByNonce, {
 	DROP
 	ENDS
 	CALLREF {
@@ -959,7 +984,7 @@
 	GETGLOB 18
 	OVER
 	PUSHCONT {
-		PUSHSLICE xc0000000000000000000000000d5815d5d
+		PUSHSLICE xc0000000000000000000000000af1b1fab
 		NEWC
 		STSLICE
 		STDICT
@@ -972,7 +997,7 @@
 }
 
 .fragment setBondingCurveCode_8b471235_internal, {
-	.loc TokenRoot.sol, 136
+	.loc TokenRoot.sol, 138
 	PUSHREF {
 		.blob x4f6e6c79206465706c6f7965722063616e2073657420424320636f6465
 	}
@@ -987,7 +1012,7 @@
 	GETGLOB 2
 	EQUAL
 	THROWARGIFNOT 102
-	.loc TokenRoot.sol, 137
+	.loc TokenRoot.sol, 139
 	PUSHREF {
 		.blob x426f6e64696e67437572766520636f646520616c726561647920736574
 	}
@@ -997,13 +1022,13 @@
 	}
 	SDEQ
 	THROWARGIFNOT 107
-	.loc TokenRoot.sol, 138
+	.loc TokenRoot.sol, 140
 	ACCEPT
-	.loc TokenRoot.sol, 139
+	.loc TokenRoot.sol, 141
 	CALLREF {
 		.inline _getTokens_c9102029_internal
 	}
-	.loc TokenRoot.sol, 140
+	.loc TokenRoot.sol, 142
 	SETGLOB 16
 	.loc TokenRoot.sol, 0
 }
@@ -1017,7 +1042,7 @@
 	IFREF {
 		.inline c4_to_c7
 	}
-	.loc TokenRoot.sol, 135
+	.loc TokenRoot.sol, 137
 	LDREF
 	ENDS
 	.loc TokenRoot.sol, 0
@@ -1073,7 +1098,7 @@
 }
 
 .fragment transferOwnership_f2fde38b_internal, {
-	.loc TokenRoot.sol, 126
+	.loc TokenRoot.sol, 128
 	PUSHREF {
 		.blob x4f6e6c792063757272656e74206f776e65722063616e207472616e73666572206f776e657273686970
 	}
@@ -1081,7 +1106,7 @@
 	GETGLOB 14
 	SDEQ
 	THROWARGIFNOT 101
-	.loc TokenRoot.sol, 127
+	.loc TokenRoot.sol, 129
 	PUSHREF {
 		.blob x4e6577206f776e65722063616e6e6f74206265207a65726f2061646472657373
 	}
@@ -1092,11 +1117,11 @@
 	SDEQ
 	NOT
 	THROWARGIFNOT 106
-	.loc TokenRoot.sol, 128
+	.loc TokenRoot.sol, 130
 	CALLREF {
 		.inline _getTokens_c9102029_internal
 	}
-	.loc TokenRoot.sol, 129
+	.loc TokenRoot.sol, 131
 	SETGLOB 14
 	.loc TokenRoot.sol, 0
 }
@@ -1110,7 +1135,7 @@
 	IFREF {
 		.inline c4_to_c7
 	}
-	.loc TokenRoot.sol, 125
+	.loc TokenRoot.sol, 127
 	OVER
 	PUSHCONT {
 		LDREF
@@ -1209,11 +1234,11 @@
 		}
 	}
 	DUP
-	PUSHINT 1308434373
+	PUSHINT 1177672565
 	LEQ
 	IFJMPREF {
 		DUP
-		PUSHINT 985522602
+		PUSHINT 790306731
 		LEQ
 		IFJMPREF {
 			DUP
@@ -1223,11 +1248,17 @@
 				.inline symbol
 			}
 			DUP
-			PUSHINT 985522602
+			PUSHINT 790306731
 			EQUAL
 			IFJMPREF {
-				.inline notifyBurn
+				.inline pendingMintsByNonce
 			}
+		}
+		DUP
+		PUSHINT 985522602
+		EQUAL
+		IFJMPREF {
+			.inline notifyBurn
 		}
 		DUP
 		PUSHINT 1131000478
@@ -1241,22 +1272,22 @@
 		IFJMPREF {
 			.inline getWalletAddress
 		}
+	}
+	DUP
+	PUSHINT 1594609630
+	LEQ
+	IFJMPREF {
+		DUP
+		PUSHINT 1302170929
+		EQUAL
+		IFJMPREF {
+			.inline mint
+		}
 		DUP
 		PUSHINT 1308434373
 		EQUAL
 		IFJMPREF {
 			.inline deployWallet
-		}
-	}
-	DUP
-	PUSHINT 1791368911
-	LEQ
-	IFJMPREF {
-		DUP
-		PUSHINT 1434541405
-		EQUAL
-		IFJMPREF {
-			.inline pendingMints
 		}
 		DUP
 		PUSHINT 1594609630
@@ -1264,22 +1295,16 @@
 		IFJMPREF {
 			.inline owner
 		}
-		DUP
-		PUSHINT 1791368911
-		EQUAL
-		IFJMPREF {
-			.inline bondingCurve
-		}
 	}
 	DUP
 	PUSHINT 1863307883
 	LEQ
 	IFJMPREF {
 		DUP
-		PUSHINT 1853372319
+		PUSHINT 1791368911
 		EQUAL
 		IFJMPREF {
-			.inline mint
+			.inline bondingCurve
 		}
 		DUP
 		PUSHINT 1863307883
@@ -1358,47 +1383,55 @@
 	IFREF {
 		.inline c4_to_c7
 	}
-	.loc TokenRoot.sol, 202
-	PLDU 32
 	.loc TokenRoot.sol, 204
-	PUSHINT 1229211062
+	PUSHINT 0
+	PUSHINT 4
+	RAWRESERVE
+	.loc TokenRoot.sol, 205
+	LDU 32
+	SWAP
+	.loc TokenRoot.sol, 207
+	PUSHINT 1408519387
 	EQUAL
 	PUSHCONT {
-		.loc TokenRoot.sol, 207
-		GETGLOB 9
+		.loc TokenRoot.sol, 210
+		LDU 32
+		XCPU S1, S0
+		.loc TokenRoot.sol, 211
 		GETGLOB 18
-		PUSHINT 267
-		DICTGET
+		PUSHINT 32
+		DICTUGET
 		ZEROSWAPIFNOT
 		PUSHCONT {
 			PLDU 256
 		}
 		IF
-		.loc TokenRoot.sol, 208
+		.loc TokenRoot.sol, 212
 		DUP
 		GTINT 0
 		PUSHCONT {
-			.loc TokenRoot.sol, 209
+			.loc TokenRoot.sol, 213
 			GETGLOB 13
 			OVER
 			SUB
 			UFITS 256
 			SETGLOB 13
-			.loc TokenRoot.sol, 210
-			GETGLOB 9
+			.loc TokenRoot.sol, 214
+			OVER
 			GETGLOB 18
-			PUSHINT 267
-			DICTDEL
+			PUSHINT 32
+			DICTUDEL
 			DROP
 			SETGLOB 18
 			.loc TokenRoot.sol, 0
 		}
 		IF
 		.loc TokenRoot.sol, 0
-		DROP
+		DROP2
 	}
 	IF
 	.loc TokenRoot.sol, 0
+	DROP
 	CALLREF {
 		.inline c7_to_c4
 	}

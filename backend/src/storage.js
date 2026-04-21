@@ -181,18 +181,24 @@ function attachLaunchpadRelations(projects, tasks, projectMetrics, taskMetrics) 
   });
 }
 
-async function updateLaunchOnchainState(launchId, { reserveBalance, tokenSupply, lockedLiquidity }) {
-  await query(
-    `
-      UPDATE launches
-      SET reserve_balance = $1,
-          token_supply = $2,
-          locked_liquidity = $3,
-          onchain_updated_at = NOW()
-      WHERE id = $4
-    `,
-    [reserveBalance, tokenSupply, lockedLiquidity, launchId]
-  );
+async function updateLaunchOnchainState(launchId, { reserveBalance, tokenSupply, lockedLiquidity, status }) {
+  const sets = [
+    `reserve_balance = $1`,
+    `token_supply = $2`,
+    `locked_liquidity = $3`,
+    `onchain_updated_at = NOW()`
+  ];
+  const params = [reserveBalance, tokenSupply, lockedLiquidity];
+
+  if (status) {
+    params.push(status);
+    sets.push(`status = $${params.length}`);
+  }
+
+  params.push(launchId);
+  const queryStr = `UPDATE launches SET ${sets.join(', ')} WHERE id = $${params.length}`;
+
+  await query(queryStr, params);
 }
 
 async function cleanupExpiredAuthData() {
@@ -216,6 +222,13 @@ async function cleanupExpiredAuthData() {
   await query(
     `
       DELETE FROM wallet_sessions
+      WHERE expires_at <= NOW()
+    `,
+  );
+
+  await query(
+    `
+      DELETE FROM qr_sessions
       WHERE expires_at <= NOW()
     `,
   );
@@ -312,6 +325,60 @@ async function consumeChallengeAndCreateSession({
       throw new Error("Challenge não encontrado ou já utilizado.");
     }
 
+    await client.query(
+      `
+        INSERT INTO wallet_sessions (
+          id,
+          token,
+          wallet_address,
+          public_key,
+          proof_level,
+          telegram_binding,
+          issued_at,
+          expires_at,
+          last_seen_at
+        ) VALUES ($1, $2, $3, $4, $5, $6::jsonb, $7, $8, $9)
+      `,
+      [
+        session.id,
+        session.token,
+        session.walletAddress,
+        session.publicKey,
+        session.proofLevel,
+        JSON.stringify(session.telegramBinding),
+        session.issuedAt,
+        session.expiresAt,
+        session.lastSeenAt,
+      ],
+    );
+
+    await client.query(
+      `
+        INSERT INTO audit_events (
+          id,
+          type,
+          created_at,
+          wallet_address,
+          session_id,
+          payload
+        ) VALUES ($1, $2, $3, $4, $5, $6::jsonb)
+      `,
+      [
+        auditEvent.id,
+        auditEvent.type,
+        auditEvent.createdAt,
+        auditEvent.walletAddress,
+        auditEvent.sessionId,
+        JSON.stringify(auditEvent.payload || {}),
+      ],
+    );
+
+    return session;
+  });
+}
+
+async function createSessionOnly({ session, auditEvent }) {
+  return withTransaction(async (client) => {
     await client.query(
       `
         INSERT INTO wallet_sessions (
@@ -582,6 +649,21 @@ async function listPublicLaunches(limit = 30) {
       ORDER BY
         CASE WHEN status = 'on_chain_deployed' THEN 0 ELSE 1 END,
         created_at DESC
+      LIMIT $1
+    `,
+    [limit],
+  );
+
+  return result.rows.map(normalizeLaunchRow);
+}
+
+async function listLaunchesForSync(limit = 10) {
+  const result = await query(
+    `
+      SELECT *
+      FROM launches
+      WHERE status IN ('on_chain_deployed')
+      ORDER BY onchain_updated_at ASC NULLS FIRST
       LIMIT $1
     `,
     [limit],
@@ -1638,6 +1720,7 @@ module.exports = {
   consumeChallengeAndCreateSession,
   getAdminOverview,
   getPublicLaunchpadProjectBySlug,
+  createSessionOnly,
   getSessionByToken,
   getUnusedChallengeById,
   listAdminLaunchpadProjects,
@@ -1647,6 +1730,7 @@ module.exports = {
   listLaunchesByWallet,
   listPublicLaunchpadProjects,
   listPublicLaunches,
+  listLaunchesForSync,
   getLaunchById,
   isTxHashUsed,
   markTxHashUsed,

@@ -5,12 +5,12 @@ pragma tvm-solidity >= 0.76.1;
 // when contracts import each other.
 
 interface ITokenRoot {
-    function mint(address recipient, uint256 amount, uint128 deployWalletValue) external;
+    function mint(uint32 mintNonce, address recipient, uint256 amount, uint128 deployWalletValue) external;
     function notifyBurn(uint256 amount, address refundAddress, address callbackTarget) external;
 }
 
 interface ITokenWallet {
-    function receiveTokens(uint256 amount) external;
+    function receiveTokens(uint32 nonce, uint256 amount) external;
 }
 
 interface IBondingCurve {

@@ -1,6 +1,7 @@
 const crypto = require("crypto");
 const { config } = require("./config");
 const { getAccountPublicKey } = require("./services/graphql.service");
+const { query } = require("./db");
 const {
   createAuthChallenge: persistAuthChallenge,
   consumeChallengeAndCreateSession,
@@ -8,6 +9,7 @@ const {
   getUnusedChallengeById,
   revokeSession,
   touchSession,
+  createSessionOnly,
 } = require("./storage");
 const { verifyTelegramInitData } = require("./telegram");
 
@@ -222,6 +224,14 @@ async function verifyWalletChallenge({
     );
   }
 
+  // A-01: Bloqueia autenticação fraca (sem binding de publicKey) em produção.
+  if (config.isProduction && proofLevel !== "strong_tvm_contract_binding") {
+    throw new Error(
+      "Em produção, a extração de chave pública on-chain é obrigatória " +
+      "para prevenir impersonation. Instale nekoton-wasm ou @tvmsdk/core."
+    );
+  }
+
   // Verifica assinatura usando NodeJS Native Crypto para Ed25519 (Padrão TVM/Everscale)
   const signatureValid = verifyDetachedSignature({
     message: challenge.message,
@@ -272,6 +282,88 @@ async function verifyWalletChallenge({
   return session;
 }
 
+// ─── QR Code Auth (Deep Link Polling) ───────────────────────────────────────
+
+async function generateQrSession() {
+  const sessionId = crypto.randomUUID();
+  
+  const deepLink = `${process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:3000'}/auth/qr/webhook/${sessionId}`;
+  const expiresAt = new Date(Date.now() + 5 * 60 * 1000).toISOString();
+
+  await query(`INSERT INTO qr_sessions (id, status, deep_link, expires_at) VALUES ($1, 'pending', $2, $3)`, [sessionId, deepLink, expiresAt]);
+
+  return { sessionId, deepLink, expiresAt };
+}
+
+async function getQrSessionStatus(sessionId) {
+  const res = await query(`SELECT * FROM qr_sessions WHERE id=$1`, [sessionId]);
+  if (res.rowCount === 0) {
+    return { status: 'expired' };
+  }
+  const session = res.rows[0];
+  
+  if (session.status === 'done') {
+    // Return the token, then remove from DB to prevent replay
+    await query(`DELETE FROM qr_sessions WHERE id=$1`, [sessionId]);
+    return { status: 'done', sessionToken: session.session_token };
+  }
+  
+  return { status: session.status };
+}
+
+async function processQrWebhook({ sessionId, walletAddress, publicKey }) {
+  const res = await query(`SELECT * FROM qr_sessions WHERE id=$1`, [sessionId]);
+  if (res.rowCount === 0) {
+    throw new Error("Sessão HTTP do QR Code expirada ou inválida.");
+  }
+  const sessionData = res.rows[0];
+  if (sessionData.status !== 'pending') {
+    throw new Error("Sessão HTTP do QR Code expirada ou inválida.");
+  }
+  
+  const normalizedWallet = trimString(walletAddress);
+  const normalizedKey = trimString(publicKey) || "qr_scan_no_key";
+
+  const realSessionId = crypto.randomUUID();
+  const tokenVal = crypto.randomBytes(32).toString("hex");
+
+  const session = {
+    id: realSessionId,
+    token: tokenVal,
+    walletAddress: normalizedWallet,
+    publicKey: normalizedKey,
+    proofLevel: "strong_app_redirect_auth",
+    telegramBinding: {
+      status: "unbound",
+      userId: "",
+      username: "",
+      firstName: "",
+    },
+    issuedAt: new Date().toISOString(),
+    expiresAt: new Date(
+      Date.now() + config.sessionTtlHours * 60 * 60 * 1000,
+    ).toISOString(),
+    lastSeenAt: new Date().toISOString(),
+  };
+
+  await createSessionOnly({
+    session,
+    auditEvent: {
+      id: crypto.randomUUID(),
+      type: "auth.session.created_via_qr",
+      createdAt: new Date().toISOString(),
+      walletAddress: session.walletAddress,
+      sessionId: session.id,
+      payload: { qrSessionId: sessionId },
+    },
+  });
+
+  // Mark as done so the frontend polling can pick it up
+  await query(`UPDATE qr_sessions SET status='done', session_token=$1 WHERE id=$2`, [session.token, sessionId]);
+
+  return { success: true };
+}
+
 async function getSessionFromToken(token) {
   return getSessionByToken(trimString(token));
 }
@@ -282,4 +374,7 @@ module.exports = {
   revokeSession,
   touchSession,
   verifyWalletChallenge,
+  generateQrSession,
+  getQrSessionStatus,
+  processQrWebhook,
 };

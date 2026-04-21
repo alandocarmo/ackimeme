@@ -16,6 +16,14 @@ const { getTransaction } = require("./services/graphql.service");
 const { getCreationFeeRequirement, normalizeTokenSymbol } = require("./treasury");
 
 /**
+ * Normaliza endereço TVM Acki Nacki: lowercase, trim, sem espaços.
+ * Formato padrão: "0:hex64"
+ */
+function normalizeTvmAddress(value) {
+  return String(value || "").trim().toLowerCase().replace(/\s+/g, "");
+}
+
+/**
  * Verifica se uma transação SHELL cumpre os requisitos de fee.
  *
  * @param {{ walletAddress: string, txHash: string, tokenSymbol: string }} params
@@ -43,9 +51,9 @@ async function verifyPayment({ walletAddress, txHash, tokenSymbol }) {
     );
   }
 
-  // Valida o remetente (quem enviou a fee)
-  const normalizedSender = String(tx.from || "").trim().toLowerCase();
-  const normalizedWallet = String(walletAddress || "").trim().toLowerCase();
+  // Valida o remetente (quem enviou a fee) — normalização TVM
+  const normalizedSender = normalizeTvmAddress(tx.from);
+  const normalizedWallet = normalizeTvmAddress(walletAddress);
 
   if (!normalizedSender || !normalizedWallet) {
     throw new Error("Não foi possível identificar o remetente da transação.");
@@ -61,8 +69,8 @@ async function verifyPayment({ walletAddress, txHash, tokenSymbol }) {
   if (!requirement.feeWallet) {
     throw new Error("fee_wallet não configurada no backend. Impossível validar destino.");
   }
-  const normalizedDst = String(tx.to || "").trim().toLowerCase();
-  const normalizedFeeWallet = String(requirement.feeWallet || "").trim().toLowerCase();
+  const normalizedDst = normalizeTvmAddress(tx.to);
+  const normalizedFeeWallet = normalizeTvmAddress(requirement.feeWallet);
 
   if (normalizedDst !== normalizedFeeWallet) {
     throw new Error(
@@ -79,8 +87,11 @@ async function verifyPayment({ walletAddress, txHash, tokenSymbol }) {
     );
   }
 
-  // Valida valor mínimo
-  if (Number(tx.amount) < requirement.minimumAmount) {
+  // Valida valor mínimo via BigInt para evitar perdas de precisão flutuante
+  const receivedNano = BigInt(String(tx.nanoAmount || "0").replace(/\D/g, "") || "0");
+  const requiredNano = BigInt(requirement.minimumAmount) * 1_000_000_000n;
+
+  if (receivedNano < requiredNano) {
     throw new Error(
       `Valor insuficiente. Mínimo exigido: ${requirement.minimumAmount} SHELL (~$3 USD). ` +
         `Recebido: ${tx.amount} SHELL.`,

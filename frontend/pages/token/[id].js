@@ -38,6 +38,15 @@ function nanoToDecimal(nano) {
   return Number(`${whole}.${String(frac).padStart(9, "0")}`);
 }
 
+/** Helper to convert decimal string to BigInt nano (9 decimals) avoiding float imprecision */
+function toNano(valStr) {
+  if (!valStr || isNaN(parseFloat(valStr))) return 0n;
+  const [whole = "0", frac = ""] = String(valStr).split(".");
+  const fracPad = frac.padEnd(9, "0").slice(0, 9);
+  return BigInt(whole) * 1_000_000_000n + BigInt(fracPad || "0");
+}
+
+
 const MIGRATION_THRESHOLD = 69000;
 
 function readReserveBalance(onchainData) {
@@ -78,6 +87,7 @@ export default function TokenPage() {
   const [tradeAmount, setTradeAmount] = useState("");
   const [slippage, setSlippage] = useState("2");
   const [isTrading, setIsTrading] = useState(false);
+  const [tradeSuccess, setTradeSuccess] = useState("");
   const [onchainPrice, setOnchainPrice] = useState(null); // from getter
 
   useEffect(() => {
@@ -185,23 +195,26 @@ export default function TokenPage() {
         // msg.value (amount) is used ONLY for gas.
         if (!currentPrice) throw new Error("Preço ainda não disponível. Aguarde sync on-chain.");
 
-        const shellToSpend = Math.floor(rawAmount * 1e9); // SHELL in nanotokens
+        const shellToSpendNano = toNano(tradeAmount);
         const bcContract = new ever.Contract(BondingCurveAbi, new Address(token.onchainData.bondingCurveAddress));
 
         const expectedTokens = Math.floor(rawAmount / currentPrice);
-        const minOut = Math.floor(expectedTokens * slippageMod);
+        const slippagePct = parseFloat(slippage);
+        
+        // Calculate max SHELL I'm willing to spend (including slippage)
+        const maxShellNano = shellToSpendNano * BigInt(Math.round(100 + slippagePct)) / 100n;
 
         const tx = await bcContract.methods.buy({
           tokenAmount: expectedTokens.toString(),
-          minTokensOut: minOut.toString()
+          maxShellIn: maxShellNano.toString()
         }).send({
           from: accountInteraction.address,
           amount: "200000000",  // 0.2 SHELL VMSHELL for gas only
           bounce: true,
-          // SHELL payment via Extra Currency cc[2]
-          currencies: { 2: shellToSpend.toString() }
+          // SHELL payment via Extra Currency cc[2] (Acki Nacki Standard)
+          currencies: { 2: maxShellNano.toString() }
         });
-        alert(`Compra realizada! TxHash: ${tx.transaction.id.hash}`);
+        setTradeSuccess(`Compra realizada com sucesso! Tx: ${tx.transaction.id.hash}`);
       } else {
         // SELL: Burn tokens via TokenWallet → TokenRoot.notifyBurn → BondingCurve.onTokenBurned
         if (!token?.onchainData?.tokenRootAddress) {
@@ -232,19 +245,20 @@ export default function TokenPage() {
         // 3. Call burn on user's TokenWallet, passing BondingCurve as callbackTarget
         const walletContract = new ever.Contract(TokenWalletAbi, new Address(userWalletAddress.toString()));
         
-        const tokensToSell = Math.floor(rawAmount).toString();
+        const tokensToSellNano = toNano(tradeAmount);
         const tx = await walletContract.methods.burn({
-          amount: tokensToSell,
+          amount: tokensToSellNano.toString(),
           callbackTarget: token.onchainData.bondingCurveAddress
         }).send({
           from: accountInteraction.address,
           amount: "500000000", // 0.5 SHELL for processing gas
           bounce: true
         });
-        alert(`Sell successful! TxHash: ${tx.transaction.id.hash}`);
+        setTradeSuccess(`Venda realizada com sucesso!`);
       }
       
     } catch(err) {
+      setTradeSuccess("");
       setError(err.message || "Erro durante o trade.");
     } finally {
       setIsTrading(false);
@@ -407,7 +421,7 @@ export default function TokenPage() {
                   <div className="onchain-item">
                     <span className="stat-label">Token Root</span>
                     {token.onchainData?.tokenRootAddress ? (
-                      <a href={`https://beescan.live/accounts/account/${token.onchainData.tokenRootAddress}`} target="_blank" rel="noreferrer" className="onchain-link">
+                      <a href={`https://ever.live/accounts/accountDetails?id=${encodeURIComponent(token.onchainData.tokenRootAddress)}`} target="_blank" rel="noreferrer" className="onchain-link">
                         {compactWallet(token.onchainData.tokenRootAddress)}
                       </a>
                     ) : <span className="token-time" style={{ display: 'block' }}>Pending</span>}
@@ -415,7 +429,7 @@ export default function TokenPage() {
                   <div className="onchain-item">
                     <span className="stat-label">Bonding Curve</span>
                     {token.onchainData?.bondingCurveAddress ? (
-                      <a href={`https://beescan.live/accounts/account/${token.onchainData.bondingCurveAddress}`} target="_blank" rel="noreferrer" className="onchain-link">
+                      <a href={`https://ever.live/accounts/accountDetails?id=${encodeURIComponent(token.onchainData.bondingCurveAddress)}`} target="_blank" rel="noreferrer" className="onchain-link">
                         {compactWallet(token.onchainData.bondingCurveAddress)}
                       </a>
                     ) : <span className="token-time" style={{ display: 'block' }}>Pending</span>}
@@ -484,6 +498,12 @@ export default function TokenPage() {
                         : `Finalizar ${tradeMode.toUpperCase()}`
                     }
                   </button>
+                  
+                  {tradeSuccess && (
+                    <p className="hero-accent" style={{ textAlign: 'center', marginTop: '12px', fontSize: '13px', fontWeight: 600 }}>
+                      {tradeSuccess}
+                    </p>
+                  )}
                   
                   {tradeMode === "sell" && (
                     <p className="token-time" style={{ textAlign: 'center', marginTop: '8px', fontSize: '10px' }}>

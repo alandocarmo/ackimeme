@@ -8,6 +8,9 @@ const {
   revokeSession,
   touchSession,
   verifyWalletChallenge,
+  generateQrSession,
+  getQrSessionStatus,
+  processQrWebhook,
 } = require("./auth");
 const {
   createLaunchTicket,
@@ -118,6 +121,11 @@ function buildReadinessChecks(databaseReachable) {
 
 const app = express();
 
+// Trust proxy (Vercel, Nginx, CloudFlare) — necessário para:
+// 1. express-rate-limit usar o IP real do cliente (não o IP do proxy)
+// 2. req.ip retornar o IP correto nos logs e auditoria
+app.set("trust proxy", 1);
+
 // Security middlewares
 app.use(helmet());
 
@@ -211,15 +219,6 @@ function extractSessionToken(req) {
 
 
 
-async function getOptionalSession(req) {
-  const sessionToken = extractSessionToken(req);
-
-  if (!sessionToken) {
-    return null;
-  }
-
-  return touchSession(sessionToken);
-}
 
 async function requireSession(req, res, next) {
   const sessionToken = extractSessionToken(req);
@@ -373,10 +372,12 @@ app.post("/auth/verify", authLimiter, async (req, res) => {
       telegramInitData: req.body?.telegramInitData || "",
     });
 
+    // sameSite: "none" é necessário para cookies dentro de iframe do Telegram WebApp.
+    // "lax" bloqueia cookies cross-site (iframe), impossibilitando sessões no Telegram.
     res.cookie("sessionToken", session.token, {
       httpOnly: true,
       secure: config.isProduction,
-      sameSite: "lax",
+      sameSite: config.isProduction ? "none" : "lax",
       path: "/",
       maxAge: 7 * 24 * 60 * 60 * 1000 // 7 dias
     });
@@ -389,6 +390,54 @@ app.post("/auth/verify", authLimiter, async (req, res) => {
     res.status(400).json({ error: error.message });
   }
 });
+
+// ─── QR Deep Link Endpoints ──────────────────────────────────────────────────
+
+app.post("/auth/qr/generate", authLimiter, async (req, res) => {
+  try {
+    const sessionData = await generateQrSession();
+    res.json({ success: true, ...sessionData });
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+});
+
+app.get("/auth/qr/status/:sessionId", async (req, res) => {
+  try {
+    const statusData = await getQrSessionStatus(req.params.sessionId);
+    res.json({ success: true, ...statusData });
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+});
+
+app.post("/auth/qr/webhook/:sessionId", async (req, res) => {
+  if (config.isProduction && !process.env.QR_WEBHOOK_SECRET) {
+    return res.status(404).json({ error: "Not found." }); // ocultar em prod
+  }
+
+  if (config.isProduction) {
+    const appSecret = req.headers["x-app-webhook-secret"];
+    if (!appSecret || appSecret !== process.env.QR_WEBHOOK_SECRET) {
+      return res.status(401).json({ error: "Webhook não autorizado." });
+    }
+  }
+
+  try {
+    // In a real implementation this endpoint is called by the Mobile App via webhook.
+    // It would contain a signed payload. For the mock, we assume the payload is correct.
+    const result = await processQrWebhook({
+      sessionId: req.params.sessionId,
+      walletAddress: req.body?.walletAddress,
+      publicKey: req.body?.publicKey,
+    });
+    res.json(result);
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+});
+
+// ─────────────────────────────────────────────────────────────────────────────
 
 app.get("/auth/session", async (req, res) => {
   const sessionToken = extractSessionToken(req);
@@ -410,7 +459,7 @@ app.post("/auth/logout", async (req, res) => {
 
   res.clearCookie("sessionToken", {
     path: "/",
-    sameSite: "lax",
+    sameSite: config.isProduction ? "none" : "lax",
     secure: config.isProduction,
   });
 

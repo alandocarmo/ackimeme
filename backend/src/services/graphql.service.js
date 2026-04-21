@@ -83,23 +83,46 @@ function isTip3DecoderAvailable() {
 
 /**
  * Executa uma query GraphQL contra o endpoint da Acki Nacki.
+ * Inclui retry com backoff exponencial para resiliência contra
+ * falhas de rede transitórias e timeouts do endpoint.
  */
-async function gql(query, variables = {}) {
-  const res = await axios.post(
-    GRAPHQL_ENDPOINT,
-    { query, variables },
-    {
-      headers: { "Content-Type": "application/json" },
-      timeout: 15000,
-    },
-  );
+async function gql(query, variables = {}, retries = 3) {
+  let lastError;
 
-  if (res.data.errors && res.data.errors.length > 0) {
-    const msg = res.data.errors.map((e) => e.message).join("; ");
-    throw new Error(`GraphQL error: ${msg}`);
+  for (let attempt = 0; attempt < retries; attempt++) {
+    try {
+      const res = await axios.post(
+        GRAPHQL_ENDPOINT,
+        { query, variables },
+        {
+          headers: { "Content-Type": "application/json" },
+          timeout: 15000,
+        },
+      );
+
+      if (res.data.errors && res.data.errors.length > 0) {
+        const msg = res.data.errors.map((e) => e.message).join("; ");
+        throw new Error(`GraphQL error: ${msg}`);
+      }
+
+      return res.data.data;
+    } catch (err) {
+      lastError = err;
+
+      // Não fazer retry para erros de lógica GraphQL (422, 400)
+      if (err.response && err.response.status >= 400 && err.response.status < 500) {
+        throw err;
+      }
+
+      // Backoff exponencial: 1s, 2s, 4s
+      if (attempt < retries - 1) {
+        const delay = Math.pow(2, attempt) * 1000;
+        await new Promise((r) => setTimeout(r, delay));
+      }
+    }
   }
 
-  return res.data.data;
+  throw lastError;
 }
 
 /**
@@ -197,6 +220,7 @@ async function getTransaction(hash) {
     from: node.in_message?.src || "",
     to: node.account_addr || node.in_message?.dst || "",
     amount: effectiveAmount,
+    nanoAmount: shellAmount > vmshellAmount ? shellFromCurrencies : (node.in_message?.value || "0"),
     token: {
       symbol: "SHELL",
     },

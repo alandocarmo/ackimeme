@@ -53,7 +53,7 @@
 			"name": "buy",
 			"inputs": [
 				{"name":"tokenAmount","type":"uint256"},
-				{"name":"minTokensOut","type":"uint256"}
+				{"name":"maxShellIn","type":"uint256"}
 			],
 			"outputs": [
 			]
@@ -97,6 +97,14 @@
 			],
 			"outputs": [
 				{"name":"migrated","type":"bool"}
+			]
+		},
+		{
+			"name": "migrationFailed",
+			"inputs": [
+			],
+			"outputs": [
+				{"name":"migrationFailed","type":"bool"}
 			]
 		},
 		{
@@ -156,19 +164,27 @@
 			]
 		},
 		{
-			"name": "pendingReserveByBuyer",
+			"name": "pendingReserveByNonce",
 			"inputs": [
 			],
 			"outputs": [
-				{"name":"pendingReserveByBuyer","type":"map(address,uint256)"}
+				{"name":"pendingReserveByNonce","type":"map(uint32,uint256)"}
 			]
 		},
 		{
-			"name": "pendingTokensByBuyer",
+			"name": "pendingTokensByNonce",
 			"inputs": [
 			],
 			"outputs": [
-				{"name":"pendingTokensByBuyer","type":"map(address,uint256)"}
+				{"name":"pendingTokensByNonce","type":"map(uint32,uint256)"}
+			]
+		},
+		{
+			"name": "mintIdToBuyer",
+			"inputs": [
+			],
+			"outputs": [
+				{"name":"mintIdToBuyer","type":"map(uint32,address)"}
 			]
 		}
 	],
@@ -215,6 +231,7 @@
 		{"init":false,"name":"_pendingLiquidity","type":"uint128"},
 		{"init":false,"name":"totalSupply","type":"uint256"},
 		{"init":false,"name":"migrated","type":"bool"},
+		{"init":false,"name":"migrationFailed","type":"bool"},
 		{"init":false,"name":"migratedAt","type":"uint32"},
 		{"init":false,"name":"dexPool","type":"address"},
 		{"init":false,"name":"owner","type":"address"},
@@ -222,8 +239,9 @@
 		{"init":false,"name":"name","type":"string"},
 		{"init":false,"name":"symbol","type":"string"},
 		{"init":false,"name":"creationFeeTxHash","type":"bytes"},
-		{"init":false,"name":"pendingReserveByBuyer","type":"map(address,uint256)"},
-		{"init":false,"name":"pendingTokensByBuyer","type":"map(address,uint256)"},
-		{"init":false,"name":"_lastBuyer","type":"address"}
+		{"init":false,"name":"pendingReserveByNonce","type":"map(uint32,uint256)"},
+		{"init":false,"name":"pendingTokensByNonce","type":"map(uint32,uint256)"},
+		{"init":false,"name":"mintIdToBuyer","type":"map(uint32,address)"},
+		{"init":false,"name":"_mintSeqno","type":"uint32"}
 	]
 }

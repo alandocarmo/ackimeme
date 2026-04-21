@@ -1,6 +1,6 @@
 const fs = require("fs");
 const path = require("path");
-const { listPublicLaunches, updateLaunchOnchainState } = require("../storage");
+const { listPublicLaunches, listLaunchesForSync, updateLaunchOnchainState } = require("../storage");
 const { getAccountPublicKey } = require("./graphql.service");
 const { config } = require("../config");
 
@@ -80,7 +80,7 @@ async function syncOnchainData() {
     // Each token makes 2-3 GraphQL calls, so 10 tokens = ~30 requests max per cycle.
     // With the default limit of 30, that's ~90 requests which can overwhelm the API.
     const SYNC_BATCH_SIZE = 10;
-    const launches = await listPublicLaunches(SYNC_BATCH_SIZE);
+    const launches = await listLaunchesForSync(SYNC_BATCH_SIZE);
     let updatedCount = 0;
     
     for (const launch of launches) {
@@ -107,6 +107,12 @@ async function syncOnchainData() {
           lockedLiquidity = migratedOut.migrated;
         }
 
+        const failedOut = await runLocalGetter(bcState.boc, launch.bondingCurveAddress, bondingCurveAbiPath, "migrationFailed");
+        let status = launch.status;
+        if (failedOut && failedOut.migrationFailed) {
+          status = "trading_halted_migration_failure";
+        }
+
         // Run Local Getters with TokenRoot BOC
         if (launch.tokenRootAddress) {
           const rootState = await getAccountPublicKey(launch.tokenRootAddress);
@@ -121,7 +127,8 @@ async function syncOnchainData() {
         await updateLaunchOnchainState(launch.id, {
           reserveBalance: reserveBalance.toString(),
           tokenSupply: tokenSupply.toString(),
-          lockedLiquidity
+          lockedLiquidity,
+          status
         });
         updatedCount++;
       }

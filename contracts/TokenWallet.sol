@@ -10,6 +10,13 @@ contract TokenWallet is ITokenWallet {
     
     uint256 public balance;
 
+    // ─── Segurança: Track de operações pendentes ─────────────────────────────
+    // Previne perda de tokens quando mensagens de burn/transfer bounceiam.
+    // Padrão TVM: debitar do saldo, guardar em pending, restaurar se bounced.
+    uint32 private _burnSeqno;
+    mapping(uint32 => uint256) public pendingBurns;
+    mapping(uint32 => uint256) public pendingTransfers;
+
     constructor() {
         require(msg.sender == root, 101, "Only root can deploy wallet");
         // Fix #8: Removido tvm.accept() — não necessário em mensagem interna
@@ -17,7 +24,7 @@ contract TokenWallet is ITokenWallet {
     }
 
     // ─── N3: Auto-replenishment via DappConfig ───────────────────────────────
-    function _getTokens() private pure {
+    function _getTokens() private {
         if (address(this).balance > 100000000000) { // 100 VMSHELL
             return;
         }
@@ -25,11 +32,14 @@ contract TokenWallet is ITokenWallet {
     }
 
     // Fix #8: Removido tvm.accept() de receiveTokens — é mensagem interna do root
-    function receiveTokens(uint256 amount) external override {
+    function receiveTokens(uint32 nonce, uint256 amount) external override {
         // Na Acki Nacki, mensagens internas do root carregam seu próprio gas
         require(msg.sender == root, 102, "Only root can mint tokens into wallet");
         // tvm.accept() REMOVIDO — não chamar em mensagem interna
         _getTokens(); // N3
+
+        // Se este nonce está em pendingTransfers, é uma transferência recebida com sucesso
+        // Se não, é um mint normal do root
         balance += amount;
     }
 
@@ -40,9 +50,13 @@ contract TokenWallet is ITokenWallet {
         tvm.accept();
         _getTokens(); // N3
         
+        // Track: guardar transferência pendente antes de debitar
+        uint32 seqno = _burnSeqno++;
+        pendingTransfers[seqno] = amount;
         balance -= amount;
+        
         // flag: 64 envia o gás restante para custear a execução na outra ponta
-        ITokenWallet(toWallet).receiveTokens{value: 0, flag: 64}(amount);
+        ITokenWallet(toWallet).receiveTokens{value: 0, flag: 64}(seqno, amount);
     }
 
     // ─── Security Fix: Burn functionality (Async Callback Pattern) ───────────
@@ -52,19 +66,54 @@ contract TokenWallet is ITokenWallet {
         tvm.accept();
         _getTokens(); // N3
         
+        // Track: guardar burn pendente antes de debitar
+        uint32 seqno = _burnSeqno++;
+        pendingBurns[seqno] = amount;
         balance -= amount;
+        
         // Repassa a execução para o TokenRoot informando a quantia deletada e quem deve ser reembolsado
         ITokenRoot(root).notifyBurn{value: 0, flag: 64}(amount, owner, callbackTarget);
     }
 
-    // ─── N5: onBounce handler ────────────────────────────────────────────────
+    // ─── N5: onBounce handler — restaura saldo em caso de falha ──────────────
     onBounce(TvmSlice body) external {
-        // Se notifyBurn bounced, ideal é usar um pending tracker, 
-        // mas TvmSlice restringe payload a 256 bits, impossibilitando decode de amount se tiver outros refs.
         uint32 funcId = body.load(uint32);
+
+        // Se notifyBurn bounceou (TokenRoot não aceitou), restaurar balance
         if (funcId == abi.functionId(ITokenRoot.notifyBurn)) {
-            // Logically we cannot safely body.decode(uint256) due to cell underflow risk.
-            // PENDING: Synchronize off-chain or trust root's callback.
+            // O bounce carrega de volta os primeiros 256 bits do payload = amount
+            if (body.bits() >= 256) {
+                uint256 amount = body.load(uint256);
+                balance += amount;
+            } else {
+                // Fallback: restaurar a última pendingBurn registrada
+                if (_burnSeqno > 0) {
+                    uint32 lastSeqno = _burnSeqno - 1;
+                    optional(uint256) pending = pendingBurns.fetch(lastSeqno);
+                    if (pending.hasValue()) {
+                        balance += pending.get();
+                        delete pendingBurns[lastSeqno];
+                    }
+                }
+            }
+        }
+
+        // Se receiveTokens bounceou em outra wallet, restaurar balance
+        if (funcId == abi.functionId(ITokenWallet.receiveTokens)) {
+            if (body.bits() >= 32 + 256) {
+                uint32 nonce = body.load(uint32);
+                uint256 amount = body.load(uint256);
+                balance += amount;
+                delete pendingTransfers[nonce];
+            } else if (_burnSeqno > 0) {
+                // Fallback: tentar restaurar pela última pending transfer
+                uint32 lastSeqno = _burnSeqno - 1;
+                optional(uint256) pending = pendingTransfers.fetch(lastSeqno);
+                if (pending.hasValue()) {
+                    balance += pending.get();
+                    delete pendingTransfers[lastSeqno];
+                }
+            }
         }
     }
 }

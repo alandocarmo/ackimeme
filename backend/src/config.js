@@ -184,6 +184,9 @@ function validateConfig() {
     if (!process.env.DEPLOYER_PRIVATE_KEY || process.env.DEPLOYER_PRIVATE_KEY.length !== 64) {
       errors.push("DEPLOYER_PRIVATE_KEY inválida ou ausente (necessário para deploys on-chain).");
     }
+    if (process.env.ENABLE_ONCHAIN_DEPLOY !== "true") {
+      errors.push("ENABLE_ONCHAIN_DEPLOY deve ser 'true' na produção (sem simulações).");
+    }
     if (!process.env.PINATA_API_KEY || !process.env.PINATA_SECRET_API_KEY) {
       errors.push("PINATA_API_KEY/SECRET_API_KEY ausentes (necessário para IPFS).");
     }

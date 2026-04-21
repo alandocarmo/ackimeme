@@ -8,16 +8,16 @@ const nextConfig = {
     NEXT_PUBLIC_SITE_URL: process.env.NEXT_PUBLIC_SITE_URL,
   },
 
-  // Domínios permitidos para carregamento de imagens externas (logo, cover)
+  // Next.js 14: remotePatterns substitui domains (deprecated)
   images: {
-    domains: [
-      "ackimeme.fun",
-      "ipfs.io",
-      "cloudflare-ipfs.com",
-      "gateway.pinata.cloud",
-      "arweave.net",
+    remotePatterns: [
+      { protocol: "https", hostname: "ackimeme.fun" },
+      { protocol: "https", hostname: "gateway.pinata.cloud" },
+      { protocol: "https", hostname: "ipfs.io" },
+      { protocol: "https", hostname: "cloudflare-ipfs.com" },
+      { protocol: "https", hostname: "arweave.net" },
     ],
-    unoptimized: false, // Issue #35: Imagens agora são otimizadas nativamente no server
+    unoptimized: false,
   },
 
   async headers() {
@@ -38,20 +38,18 @@ const nextConfig = {
             value:
               "camera=(), microphone=(), geolocation=(), browsing-topics=()",
           },
-          {
-            key: "X-Frame-Options",
-            value: "DENY",
-          },
+          // X-Frame-Options removido — conflita com frame-ancestors CSP e
+          // bloqueia o Telegram WebApp (iframe). O CSP abaixo define a política.
           {
             key: "Content-Security-Policy",
             value: [
               "default-src 'self'",
-              "script-src 'self' 'unsafe-eval' https://va.vercel-scripts.com",
+              "script-src 'self' 'unsafe-eval' https://va.vercel-scripts.com https://telegram.org",
               "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
               "font-src 'self' https://fonts.gstatic.com",
               "img-src 'self' data: https://gateway.pinata.cloud https://ipfs.io https://cloudflare-ipfs.com https://arweave.net",
-              "connect-src 'self' https://shellnet.ackinacki.org https://api.pinata.cloud https://api.ackimeme.fun https://va.vercel-scripts.com http://localhost:*",
-              "frame-ancestors 'none'",
+              "connect-src 'self' https://shellnet.ackinacki.org https://mainnet.ackinacki.org https://api.pinata.cloud https://api.ackimeme.fun https://va.vercel-scripts.com http://localhost:*",
+              "frame-ancestors 'self' https://web.telegram.org https://*.telegram.org",
             ].join("; "),
           },
         ],

@@ -13,6 +13,7 @@
 		{
 			"name": "receiveTokens",
 			"inputs": [
+				{"name":"nonce","type":"uint32"},
 				{"name":"amount","type":"uint256"}
 			],
 			"outputs": [
