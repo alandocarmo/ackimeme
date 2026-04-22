@@ -251,10 +251,10 @@ export default function CreatePage() {
                     </p>
                   </div>
 
-                  <a href="https://shellbuy.ackinax.com" target="_blank" rel="noreferrer"
+                  <Link href="/buy-shell?from=/create"
                     className="filter-btn" style={{ display: 'block', textAlign: 'center', marginTop: '12px', fontSize: '11px' }}>
-                    💎 Buy SHELL with USDC here →
-                  </a>
+                    💎 Buy SHELL with USDC (in-app) →
+                  </Link>
 
                   <label style={{ display: 'block', marginTop: '24px' }}>
                     <span className="input-label">Transaction Hash</span>
@@ -327,4 +327,3 @@ export default function CreatePage() {
     </>
   );
 }
-

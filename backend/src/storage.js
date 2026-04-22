@@ -57,11 +57,35 @@ function normalizeLaunchRow(row) {
     tokenRootAddress: row.token_root_address || "",
     bondingCurveAddress: row.bonding_curve_address || "",
     onchainData: {
+      deployStatus: row.deploy_status || "pending",
+      deployReason: row.deploy_reason || "",
       reserveBalance: row.reserve_balance ? row.reserve_balance.toString() : "0",
       tokenSupply: row.token_supply ? row.token_supply.toString() : "0",
       lockedLiquidity: row.locked_liquidity || false,
       updatedAt: row.onchain_updated_at?.toISOString?.() || row.onchain_updated_at || null,
     }
+  };
+}
+
+function normalizeShellBuyOrderRow(row) {
+  if (!row) {
+    return null;
+  }
+
+  return {
+    id: row.id,
+    walletAddress: row.wallet_address,
+    txHash: row.tx_hash,
+    usdcAmount: Number(row.usdc_amount || 0),
+    shellAmount: Number(row.shell_amount || 0),
+    usdcRecipient: row.usdc_recipient,
+    status: row.status,
+    paymentProof: row.payment_proof || {},
+    note: row.note || "",
+    createdAt: row.created_at?.toISOString?.() || row.created_at,
+    updatedAt: row.updated_at?.toISOString?.() || row.updated_at,
+    onChainVerifiedAt:
+      row.on_chain_verified_at?.toISOString?.() || row.on_chain_verified_at || "",
   };
 }
 
@@ -493,7 +517,9 @@ async function createLaunchBundle({ launchTicket, auditEvent }) {
           created_at,
           ipfs_hash,
           token_root_address,
-          bonding_curve_address
+          bonding_curve_address,
+          deploy_status,
+          deploy_reason
         ) VALUES (
 
           $1,
@@ -509,7 +535,9 @@ async function createLaunchBundle({ launchTicket, auditEvent }) {
           $11,
           $12,
           $13,
-          $14
+          $14,
+          $15,
+          $16
         )
 
       `,
@@ -528,6 +556,8 @@ async function createLaunchBundle({ launchTicket, auditEvent }) {
         launchTicket.onchainData?.ipfsHash || null,
         launchTicket.onchainData?.tokenRootAddress || null,
         launchTicket.onchainData?.bondingCurveAddress || null,
+        launchTicket.onchainData?.deployStatus || "pending",
+        launchTicket.onchainData?.deployReason || "",
       ],
 
     );
@@ -720,6 +750,13 @@ async function reserveTxHash(txHash, walletAddress) {
   return result.rowCount > 0;
 }
 
+async function releaseTxHashReservation(txHash) {
+  await query(
+    `DELETE FROM used_tx_hashes WHERE tx_hash = $1`,
+    [String(txHash || "").toLowerCase()],
+  );
+}
+
 async function getWalletLastLaunch(walletAddress) {
   const result = await query(
     `SELECT last_launch_at FROM wallet_rate_limits WHERE wallet_address = $1 LIMIT 1`,
@@ -734,6 +771,79 @@ async function updateWalletLastLaunch(walletAddress) {
      ON CONFLICT (wallet_address) DO UPDATE SET last_launch_at = NOW()`,
     [String(walletAddress || "").toLowerCase()],
   );
+}
+
+async function createShellBuyOrder(order) {
+  await query(
+    `
+      INSERT INTO shell_buy_orders (
+        id,
+        wallet_address,
+        tx_hash,
+        usdc_amount,
+        shell_amount,
+        usdc_recipient,
+        status,
+        payment_proof,
+        note,
+        created_at,
+        updated_at,
+        on_chain_verified_at
+      )
+      VALUES (
+        $1, $2, $3, $4, $5, $6, $7, $8::jsonb, $9, $10, $11, $12
+      )
+    `,
+    [
+      order.id,
+      String(order.walletAddress || "").toLowerCase(),
+      String(order.txHash || "").toLowerCase(),
+      order.usdcAmount,
+      order.shellAmount,
+      String(order.usdcRecipient || "").toLowerCase(),
+      String(order.status || "payment_confirmed"),
+      JSON.stringify(order.paymentProof || {}),
+      String(order.note || ""),
+      order.createdAt,
+      order.updatedAt,
+      order.onChainVerifiedAt,
+    ],
+  );
+}
+
+async function getShellBuyOrderByTxHash(txHash) {
+  const result = await query(
+    `SELECT * FROM shell_buy_orders WHERE tx_hash = $1 LIMIT 1`,
+    [String(txHash || "").toLowerCase()],
+  );
+  return result.rows.length > 0
+    ? normalizeShellBuyOrderRow(result.rows[0])
+    : null;
+}
+
+async function getShellBuyOrderById(id) {
+  const result = await query(
+    `SELECT * FROM shell_buy_orders WHERE id = $1 LIMIT 1`,
+    [id],
+  );
+  return result.rows.length > 0
+    ? normalizeShellBuyOrderRow(result.rows[0])
+    : null;
+}
+
+async function listShellBuyOrdersByWallet(walletAddress, limit = 20) {
+  const safeLimit = Math.min(Math.max(1, limit), 100);
+  const result = await query(
+    `
+      SELECT *
+      FROM shell_buy_orders
+      WHERE wallet_address = $1
+      ORDER BY created_at DESC
+      LIMIT $2
+    `,
+    [String(walletAddress || "").toLowerCase(), safeLimit],
+  );
+  return result.rows.map(normalizeShellBuyOrderRow);
 }
 
 async function createLaunchpadProject({ project, auditEvent }) {
@@ -1740,9 +1850,14 @@ module.exports = {
   listPublicLaunches,
   listLaunchesForSync,
   getLaunchById,
+  createShellBuyOrder,
+  getShellBuyOrderById,
+  getShellBuyOrderByTxHash,
+  listShellBuyOrdersByWallet,
   isTxHashUsed,
   markTxHashUsed,
   reserveTxHash,
+  releaseTxHashReservation,
   getWalletLastLaunch,
   updateWalletLastLaunch,
   moderateLaunchpadSubmission,

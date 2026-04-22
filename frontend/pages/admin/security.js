@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from "react";
 import Head from "next/head";
-import { useRouter } from "next/router";
+import { getSecurityAnomalies, unlockAdmin } from "../../lib/api";
 
 export default function SecurityAdmin() {
-  const router = useRouter();
   const [anomalies, setAnomalies] = useState([]);
   const [password, setPassword] = useState("");
   const [adminJwt, setAdminJwt] = useState("");
@@ -12,15 +11,9 @@ export default function SecurityAdmin() {
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/admin/unlock`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ password })
-      });
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.error);
-      setAdminJwt(data.adminJwt);
-      fetchAnomalies(data.adminJwt);
+      const data = await unlockAdmin(password);
+      setAdminJwt(data.adminJwt || "");
+      fetchAnomalies(data.adminJwt || "");
     } catch(err) {
       setError(err.message);
     }
@@ -28,15 +21,21 @@ export default function SecurityAdmin() {
 
   const fetchAnomalies = async (token) => {
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/admin/security/anomalies`, {
-        headers: { "x-admin-jwt": token }
-      });
-      const data = await res.json();
-      if (res.ok) setAnomalies(data.anomalies || []);
+      const data = await getSecurityAnomalies(token);
+      setAnomalies(data.anomalies || []);
     } catch (err) {
       console.error(err);
     }
   }
+
+  useEffect(() => {
+    if (!adminJwt) return undefined;
+    fetchAnomalies(adminJwt);
+    const interval = setInterval(() => {
+      fetchAnomalies(adminJwt);
+    }, 10000);
+    return () => clearInterval(interval);
+  }, [adminJwt]);
 
   if (!adminJwt) {
     return (

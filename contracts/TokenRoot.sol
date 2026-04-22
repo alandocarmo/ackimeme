@@ -103,6 +103,11 @@ contract TokenRoot {
         address walletAddr = address(tvm.hash(stateInit));
         
         pendingMintsByNonce[mintNonce] = amount;
+        
+        // A-03: Storage leak prevention: clean up old mints
+        if (mintNonce >= 50) {
+            delete pendingMintsByNonce[mintNonce - 50];
+        }
 
         // C-03: Include stateInit in the message so the wallet is deployed
         // if it doesn't exist yet. If it already exists, stateInit is ignored.

@@ -8,17 +8,13 @@ const { config } = require("../config");
 // Wrapped in try/catch to prevent backend crash if SDK is not installed
 let tvmCore = null;
 let client = null;
-try {
-  tvmCore = require("@tvmsdk/core");
-  const { libNode } = require("@tvmsdk/lib-node");
-  tvmCore.TvmClient.useBinaryLibrary(libNode);
-  client = new tvmCore.TvmClient({
-    network: {
-      endpoints: [config.graphqlUrl || "https://shellnet.ackinacki.org/graphql"],
-    },
-  });
-} catch (err) {
-  console.warn("[SyncJob] TVM SDK indisponível. On-chain sync disabled.", err.message);
+const { getTvmClient, getTvmCore, sdkAvailable } = require("./tvm-client");
+
+if (sdkAvailable) {
+  tvmCore = getTvmCore();
+  client = getTvmClient();
+} else {
+  console.warn("[SyncJob] TVM SDK indisponível. On-chain sync disabled.");
 }
 
 // ABI Cache to avoid disk I/O in loop
@@ -102,16 +98,14 @@ async function syncOnchainData() {
           reserveBalance = reserveOut.reserveBalance;
         }
 
-        const migratedOut = await runLocalGetter(bcState.boc, launch.bondingCurveAddress, bondingCurveAbiPath, "migrated");
-        if (migratedOut && migratedOut.migrated !== undefined) {
-          lockedLiquidity = migratedOut.migrated;
+        // A-04: BondingCurve was refactored to internal AMM — getter is `isAmm`, not `migrated`
+        const ammOut = await runLocalGetter(bcState.boc, launch.bondingCurveAddress, bondingCurveAbiPath, "isAmm");
+        if (ammOut && ammOut.isAmm !== undefined) {
+          lockedLiquidity = ammOut.isAmm;
         }
 
-        const failedOut = await runLocalGetter(bcState.boc, launch.bondingCurveAddress, bondingCurveAbiPath, "migrationFailed");
+        // `migrationFailed` no longer exists in the contract — AMM is internal
         let status = launch.status;
-        if (failedOut && failedOut.migrationFailed) {
-          status = "trading_halted_migration_failure";
-        }
 
         // Run Local Getters with TokenRoot BOC
         if (launch.tokenRootAddress) {

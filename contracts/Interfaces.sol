@@ -16,7 +16,3 @@ interface ITokenWallet {
 interface IBondingCurve {
     function onTokenBurned(uint256 amount, address refundAddress) external;
 }
-
-interface IDexPool {
-    function addLiquidity(uint128 shellAmount, uint128 tokenAmount) external;
-}

@@ -75,6 +75,17 @@ Observação:
 4. O backend exige saldo mínimo em SHELL na carteira do criador para cobrir gas fees.
 5. O feed público geral recebe os `launch-request` criados no fluxo padrão do app.
 6. A página `/admin/security` opera o painel de segurança com `ADMIN_TOKEN`.
+7. A página `/buy-shell` permite validar compras in-app USDC → SHELL (TIP-3) quando `ENABLE_SHELL_BUY=true`.
+
+Configuração mínima no `backend/.env` para habilitar compra in-app:
+
+```env
+ENABLE_SHELL_BUY=true
+SHELL_BUY_USDC_RECIPIENT=0:SEU_ENDERECO_RECEBEDOR_USDC
+SHELL_BUY_MIN_USDC=1
+SHELL_BUY_SHELL_PER_USDC=100
+SHELL_BUY_USDC_DECIMALS=6
+```
 
 ## Seed demo
 

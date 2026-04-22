@@ -13,7 +13,11 @@
 const axios = require("axios");
 const { config } = require("../config");
 
+// Audit #1: No silent fallback to shellnet — GRAPHQL_URL must be configured
 const GRAPHQL_ENDPOINT = config.graphqlUrl || "https://shellnet.ackinacki.org/graphql";
+if (!config.graphqlUrl) {
+  console.warn("[GraphQL] ⚠️  GRAPHQL_URL não configurada! Usando shellnet (testnet) como fallback. NÃO use isso em produção.");
+}
 const TIP3_DEFAULT_DECIMALS = 6;
 const MAX_TIP3_TREE_TRANSACTIONS = 24;
 
@@ -63,19 +67,18 @@ try {
   console.warn("[GraphQL] Decoder TIP-3 indisponível:", error.message);
 }
 
-try {
-  const tvmCore = require("@tvmsdk/core");
-  const { libNode } = require("@tvmsdk/lib-node");
-  tvmCore.TvmClient.useBinaryLibrary(libNode);
-  sdkClient = new tvmCore.TvmClient({
-    network: {
-      endpoints: [config.graphqlUrl || "https://shellnet.ackinacki.org/graphql"],
-    },
-  });
-  abiContract = tvmCore.abiContract;
-} catch (error) {
-  console.warn("[GraphQL] TVM SDK indisponível:", error.message);
+const { getTvmClient, getTvmCore, sdkAvailable: isTvmSdkAvailable } = require("./tvm-client");
+let sdkClient = null;
+let abiContract = null;
+
+if (isTvmSdkAvailable) {
+  const core = getTvmCore();
+  sdkClient = getTvmClient();
+  abiContract = core.abiContract;
+} else {
+  console.warn("[GraphQL] TVM SDK indisponível. Dependências faltando.");
 }
+sdkAvailable = isTvmSdkAvailable;
 
 function isTip3DecoderAvailable() {
   return Boolean(tvmClient && typeof tvmClient.decodeInput === "function");
@@ -224,7 +227,7 @@ async function getTransaction(hash) {
     token: {
       symbol: "SHELL",
     },
-    status: normalizeStatus(node.status_name),
+    status: normalizeStatus(node.status, node.status_name),
     raw: node,
   };
 }
@@ -527,7 +530,18 @@ async function getTip3TransferPayment({
  * Mapeia status_name da Acki Nacki para o formato interno.
  * Acki Nacki status names: Unknown, Preliminary, Proposed, Finalized, Refused
  */
-function normalizeStatus(statusName) {
+/**
+ * Audit #2: Use numeric `status` field as primary source (more reliable).
+ * Fallback to legacy `status_name` string for backward compatibility.
+ * Acki Nacki GraphQL status codes:
+ *   0 = Unknown, 1 = Preliminary, 2 = Proposed, 3 = Finalized, 4 = Refused
+ */
+function normalizeStatus(statusInt, statusName) {
+  // Primary: numeric field (never null if transaction exists)
+  if (statusInt === 3) return "SUCCESS";
+  if (statusInt === 4) return "FAILED";
+  if (typeof statusInt === "number" && statusInt >= 0 && statusInt < 3) return "PENDING";
+  // Fallback: legacy string field (may be null in some API versions)
   const name = String(statusName || "").toLowerCase();
   if (name === "finalized") return "SUCCESS";
   if (name === "refused") return "FAILED";
@@ -546,6 +560,7 @@ async function getAccountBalance(address) {
           info {
             balance(format: DEC)
             address
+            acc_type
             acc_type_name
           }
         }
@@ -563,7 +578,8 @@ async function getAccountBalance(address) {
   return {
     address: info.address,
     balance: nanoToDecimal(info.balance || "0"),
-    status: info.acc_type_name,
+    // Audit #2: prefer numeric acc_type (1=Active) with _name fallback
+    status: info.acc_type_name || (info.acc_type === 1 ? "Active" : "Inactive"),
   };
 }
 
@@ -585,6 +601,7 @@ async function getAccountPublicKey(address) {
           info {
             balance(format: DEC)
             address
+            acc_type
             acc_type_name
             code_hash
             boc
@@ -602,12 +619,13 @@ async function getAccountPublicKey(address) {
       return { isDeployed: false };
     }
 
-    const isActive = String(info.acc_type_name || "").toLowerCase() === "active";
+    // Audit #2: prefer numeric acc_type (1=Active) with _name fallback
+    const isActive = info.acc_type === 1 || String(info.acc_type_name || "").toLowerCase() === "active";
     if (!isActive) {
       return {
         isDeployed: false,
         balance: nanoToDecimal(info.balance || "0"),
-        reason: `Account status is "${info.acc_type_name}", not Active.`,
+        reason: `Account status is "${info.acc_type_name || info.acc_type}", not Active.`,
       };
     }
 

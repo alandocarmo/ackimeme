@@ -2,7 +2,10 @@ const DEFAULT_APP_NAME = "AckiMeme";
 const DEFAULT_NETWORK = "Acki Nacki";
 const DEFAULT_SHELL_MIN_PAYMENT = 3; // ~$3 USD equivalent in SHELL for token creation
 const DEFAULT_SHELL_DECIMALS = 9;    // SHELL uses 9 decimals (nano)
+const DEFAULT_USDC_DECIMALS = 6;
 const DEFAULT_MIN_CREATOR_SHELL_BALANCE = 1;
+const DEFAULT_SHELL_BUY_MIN_USDC = 1;
+const DEFAULT_SHELL_PER_USDC = 100;
 const DEFAULT_AUTH_CHALLENGE_TTL_SECONDS = 5 * 60;
 const DEFAULT_SESSION_TTL_HOURS = 24;
 const DEFAULT_TELEGRAM_AUTH_MAX_AGE_SECONDS = 24 * 60 * 60;
@@ -27,6 +30,14 @@ function readCsv(value) {
     .split(",")
     .map((item) => item.trim())
     .filter(Boolean);
+}
+
+function readPositiveInteger(value, fallback) {
+  const parsed = Number(value);
+  if (!Number.isFinite(parsed) || parsed <= 0) {
+    return fallback;
+  }
+  return Math.trunc(parsed);
 }
 
 function isPlaceholderValue(value) {
@@ -85,6 +96,8 @@ const feeWallet = process.env.FEE_WALLET || "";
 const adminToken = process.env.ADMIN_TOKEN || "";
 const jwtSecret = process.env.JWT_SECRET || "";
 const isProduction = process.env.NODE_ENV === "production";
+const shellBuyUsdcRecipient = process.env.SHELL_BUY_USDC_RECIPIENT || "";
+const shellBuyEnabled = process.env.ENABLE_SHELL_BUY === "true";
 
 const config = {
   port: readPositiveNumber(process.env.PORT, 3000),
@@ -122,6 +135,24 @@ const config = {
   jwtSecretConfigured: isStrongSecret(jwtSecret, 32) && jwtSecret !== adminToken,
   adminWallets: readCsv(process.env.ADMIN_WALLETS).map((item) => item.toLowerCase()),
   appFeeSharePercent: 100,
+  shellBuy: {
+    enabled: shellBuyEnabled,
+    usdcRecipient: shellBuyUsdcRecipient,
+    usdcRecipientConfigured: isConfiguredWallet(shellBuyUsdcRecipient),
+    usdcTokenSymbol: "USDC",
+    usdcDecimals: readPositiveInteger(
+      process.env.SHELL_BUY_USDC_DECIMALS,
+      DEFAULT_USDC_DECIMALS,
+    ),
+    minUsdcAmount: readPositiveNumber(
+      process.env.SHELL_BUY_MIN_USDC,
+      DEFAULT_SHELL_BUY_MIN_USDC,
+    ),
+    shellPerUsdc: readPositiveNumber(
+      process.env.SHELL_BUY_SHELL_PER_USDC,
+      DEFAULT_SHELL_PER_USDC,
+    ),
+  },
   launchDistribution: {
     type: "pump_fun_bonding_curve",
     fairLaunch: true,
@@ -143,6 +174,18 @@ function buildPublicConfig() {
         minimumCreatorBalance: config.minCreatorShellBalance,
         note: "The creation fee (~$3 in SHELL) plus blockchain gas fees are both paid in SHELL.",
       },
+    },
+    shellBuy: {
+      enabled: config.shellBuy.enabled && config.shellBuy.usdcRecipientConfigured,
+      usdcTokenSymbol: config.shellBuy.usdcTokenSymbol,
+      usdcRecipient: config.shellBuy.usdcRecipientConfigured
+        ? config.shellBuy.usdcRecipient
+        : "Configure SHELL_BUY_USDC_RECIPIENT no backend/.env",
+      minUsdcAmount: config.shellBuy.minUsdcAmount,
+      shellPerUsdc: config.shellBuy.shellPerUsdc,
+      usdcDecimals: config.shellBuy.usdcDecimals,
+      note:
+        "Fluxo in-app: envie USDC (TIP-3) para o contrato de acumulação e valide o txHash.",
     },
     auth: {
       challengeTtlSeconds: config.authChallengeTtlSeconds,
@@ -190,8 +233,16 @@ function validateConfig() {
     if (!process.env.PINATA_API_KEY || !process.env.PINATA_SECRET_API_KEY) {
       errors.push("PINATA_API_KEY/SECRET_API_KEY ausentes (necessário para IPFS).");
     }
-    if (config.graphqlUrl.includes("shellnet") && !config.graphqlUrl.includes("mainnet")) {
+    // Audit #1: GRAPHQL_URL é obrigatória — sem ela os serviços caem para shellnet (testnet)
+    if (!config.graphqlUrl) {
+      errors.push("GRAPHQL_URL é obrigatória em produção. Sem ela, GraphQL/Deployer/Sync caem para shellnet (testnet).");
+    } else if (config.graphqlUrl.includes("shellnet") && !config.graphqlUrl.includes("mainnet")) {
       errors.push("GRAPHQL_URL aponta para testnet (shellnet) em ambiente de produção. Use o endpoint mainnet.");
+    }
+    if (config.shellBuy.enabled && !config.shellBuy.usdcRecipientConfigured) {
+      errors.push(
+        "ENABLE_SHELL_BUY=true exige SHELL_BUY_USDC_RECIPIENT válido (0:... ou dev-wallet-local).",
+      );
     }
   }
 

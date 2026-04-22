@@ -33,22 +33,17 @@ let sdkAvailable = false;
 let abiContract = null;
 let signerKeys = null;
 
-try {
-  const tvmCore = require("@tvmsdk/core");
-  const { libNode } = require("@tvmsdk/lib-node");
+const { getTvmClient, getTvmCore, sdkAvailable: isTvmSdkAvailable } = require("./tvm-client");
 
-  tvmCore.TvmClient.useBinaryLibrary(libNode);
-  client = new tvmCore.TvmClient({
-    network: {
-      endpoints: [config.graphqlUrl || "https://shellnet.ackinacki.org/graphql"],
-    },
-  });
-  abiContract = tvmCore.abiContract;
-  signerKeys = tvmCore.signerKeys;
+if (isTvmSdkAvailable) {
+  const core = getTvmCore();
+  client = getTvmClient();
+  abiContract = core.abiContract;
+  signerKeys = core.signerKeys;
   sdkAvailable = true;
-  console.log("[Deployer] TVM SDK Library carregada (libNode).");
-} catch (e) {
-  console.warn("[Deployer] TVM SDK indisponível. Deploy on-chain não será possível.", e.message);
+  console.log("[Deployer] TVM SDK Library carregada (via tvm-client singleton).");
+} else {
+  console.warn("[Deployer] TVM SDK indisponível. Deploy on-chain não será possível.");
 }
 
 /**

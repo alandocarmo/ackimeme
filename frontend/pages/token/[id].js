@@ -422,7 +422,7 @@ export default function TokenPage() {
                   <div className="onchain-item">
                     <span className="stat-label">Token Root</span>
                     {token.onchainData?.tokenRootAddress ? (
-                      <a href={`https://ackiscan.com/accounts/account/${token.onchainData.tokenRootAddress}`} target="_blank" rel="noreferrer" className="onchain-link">
+                      <a href={`https://ackiscan.com/accounts/${token.onchainData.tokenRootAddress}`} target="_blank" rel="noreferrer" className="onchain-link">
                         {compactWallet(token.onchainData.tokenRootAddress)}
                       </a>
                     ) : <span className="token-time" style={{ display: 'block' }}>Pending</span>}
@@ -430,7 +430,7 @@ export default function TokenPage() {
                   <div className="onchain-item">
                     <span className="stat-label">Bonding Curve</span>
                     {token.onchainData?.bondingCurveAddress ? (
-                      <a href={`https://ackiscan.com/accounts/account/${token.onchainData.bondingCurveAddress}`} target="_blank" rel="noreferrer" className="onchain-link">
+                      <a href={`https://ackiscan.com/accounts/${token.onchainData.bondingCurveAddress}`} target="_blank" rel="noreferrer" className="onchain-link">
                         {compactWallet(token.onchainData.bondingCurveAddress)}
                       </a>
                     ) : <span className="token-time" style={{ display: 'block' }}>Pending</span>}
@@ -512,10 +512,10 @@ export default function TokenPage() {
                     </p>
                   )}
 
-                  <a href="https://shellbuy.ackinax.com" target="_blank" rel="noreferrer"
+                  <Link href={`/buy-shell?from=/token/${id}`}
                     className="filter-btn" style={{ display: 'block', textAlign: 'center', marginTop: '12px', fontSize: '11px' }}>
-                    💎 Need SHELL? Buy with USDC →
-                  </a>
+                    💎 Need SHELL? Buy with USDC in-app →
+                  </Link>
                 </div>
               </div>
 

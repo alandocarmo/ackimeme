@@ -22,9 +22,15 @@ const {
   createLaunchBundle,
   getLaunchById,
   getWalletLastLaunch,
+  getShellBuyOrderById,
+  getShellBuyOrderByTxHash,
   isTxHashUsed,
+  listShellBuyOrdersByWallet,
   markTxHashUsed,
+  reserveTxHash,
+  releaseTxHashReservation,
   updateWalletLastLaunch,
+  createShellBuyOrder,
   listLaunchesByWallet,
   listPublicLaunches,
   cleanupExpiredAuthData,
@@ -32,6 +38,7 @@ const {
 const { createTreasuryPaymentRecord } = require("./treasury");
 const {
   getAccountBalance,
+  getTip3TransferPayment,
   isTip3DecoderAvailable,
 } = require("./services/graphql.service");
 const { uploadToIPFS, createTokenMetadata } = require("./services/ipfs.service");
@@ -51,11 +58,10 @@ setInterval(() => {
   );
 }, 10 * 60 * 1000);
 
-// A-05: verifiedPaymentsCache replaced with database-backed persistence
-// In serverless environments (Vercel), in-memory Maps don't persist across requests.
-// We now persist verified payments temporarily in the used_tx_hashes table with a
-// 'verified_pending' status, and query from there instead of a Map.
-const verifiedPaymentsCache = new Map(); // Kept as L1 cache for single-instance mode
+// Audit #5: L1 in-memory cache for single-instance mode.
+// In serverless/multi-instance environments, this cache may be empty on subsequent requests.
+// The /launch-request endpoint handles this gracefully by re-verifying on-chain if cache misses.
+const verifiedPaymentsCache = new Map();
 
 // Limpeza de pagamentos verificados não consumidos (L1 cache fallback)
 setInterval(() => {
@@ -103,12 +109,30 @@ async function ensureCreatorHasShellBalance(walletAddress) {
   }
 }
 
+function isShellBuyAvailable() {
+  return (
+    config.shellBuy.enabled &&
+    config.shellBuy.usdcRecipientConfigured &&
+    isTip3DecoderAvailable()
+  );
+}
+
+function calcShellAmountFromUsdc(usdcAmount) {
+  const parsedAmount = Number(usdcAmount || 0);
+  if (!Number.isFinite(parsedAmount) || parsedAmount <= 0) {
+    return 0;
+  }
+  return Number((parsedAmount * config.shellBuy.shellPerUsdc).toFixed(9));
+}
+
 function buildReadinessChecks(databaseReachable) {
   return {
     databaseConfigured: Boolean(config.databaseUrl),
     databaseReachable,
     graphqlConfigured: Boolean(config.graphqlUrl),
     tip3DecoderAvailable: isTip3DecoderAvailable(),
+    shellBuyEnabled: config.shellBuy.enabled,
+    shellBuyReady: !config.shellBuy.enabled || isShellBuyAvailable(),
     feeWalletConfigured: config.feeWalletConfigured,
     adminTokenConfigured: config.adminTokenStrong,
     allowedOriginsConfigured:
@@ -127,7 +151,17 @@ const app = express();
 app.set("trust proxy", 1);
 
 // Security middlewares
-app.use(helmet({ contentSecurityPolicy: false }));
+// A-12: Configurar CSP apropriado em vez de desabilitar
+app.use(helmet({
+  contentSecurityPolicy: {
+    directives: {
+      defaultSrc: ["'none'"], // Backend is an API, shouldn't load external resources
+      baseUri: ["'none'"],
+      formAction: ["'none'"],
+      frameAncestors: ["'none'"],
+    },
+  },
+}));
 
 // Global Rate Limiting
 const globalLimiter = rateLimit({
@@ -192,11 +226,17 @@ app.use((req, res, next) => {
     const referer = req.headers.referer;
     const originHeader = req.headers.origin;
     
+    // Audit #6: Exact host comparison instead of substring to prevent CSRF bypass
     const isValidOrigin = (url) => {
       if (!url) return false;
       try {
         const parsed = new URL(url);
-        return config.allowedOrigins.some(o => o.includes(parsed.host));
+        return config.allowedOrigins.some(o => {
+          try {
+            const allowed = new URL(o);
+            return allowed.host === parsed.host;
+          } catch { return false; }
+        });
       } catch { return false; }
     };
 
@@ -215,6 +255,16 @@ function extractSessionToken(req) {
     return authHeader.split(" ")[1];
   }
   return req.cookies?.sessionToken || "";
+}
+
+function setSessionCookie(res, sessionToken) {
+  res.cookie("sessionToken", sessionToken, {
+    httpOnly: true,
+    secure: config.isProduction,
+    sameSite: config.isProduction ? "none" : "lax",
+    path: "/",
+    maxAge: 7 * 24 * 60 * 60 * 1000, // 7 dias
+  });
 }
 
 
@@ -280,7 +330,8 @@ app.post("/admin/unlock", authLimiter, async (req, res) => {
        maxAge: 8 * 60 * 60 * 1000 // 8 hours
     });
     
-    return res.json({ success: true, adminJwt: token });
+    // A-06: JWT only via HttpOnly cookie — not in response body (prevents XSS exposure)
+    return res.json({ success: true });
   } catch (err) {
     return res.status(400).json({ error: err.message });
   }
@@ -310,6 +361,7 @@ app.get("/readyz", (_, res) => {
         !config.isProduction ||
         (checks.graphqlConfigured &&
           checks.tip3DecoderAvailable &&
+          checks.shellBuyReady &&
           checks.feeWalletConfigured &&
           checks.adminTokenConfigured &&
           checks.allowedOriginsConfigured);
@@ -374,13 +426,7 @@ app.post("/auth/verify", authLimiter, async (req, res) => {
 
     // sameSite: "none" é necessário para cookies dentro de iframe do Telegram WebApp.
     // "lax" bloqueia cookies cross-site (iframe), impossibilitando sessões no Telegram.
-    res.cookie("sessionToken", session.token, {
-      httpOnly: true,
-      secure: config.isProduction,
-      sameSite: config.isProduction ? "none" : "lax",
-      path: "/",
-      maxAge: 7 * 24 * 60 * 60 * 1000 // 7 dias
-    });
+    setSessionCookie(res, session.token);
 
     res.json({
       success: true,
@@ -405,6 +451,9 @@ app.post("/auth/qr/generate", authLimiter, async (req, res) => {
 app.get("/auth/qr/status/:sessionId", async (req, res) => {
   try {
     const statusData = await getQrSessionStatus(req.params.sessionId);
+    if (statusData?.status === "done" && statusData?.sessionToken) {
+      setSessionCookie(res, statusData.sessionToken);
+    }
     res.json({ success: true, ...statusData });
   } catch (error) {
     res.status(400).json({ error: error.message });
@@ -430,6 +479,7 @@ app.post("/auth/qr/webhook/:sessionId", async (req, res) => {
       sessionId: req.params.sessionId,
       walletAddress: req.body?.walletAddress,
       publicKey: req.body?.publicKey,
+      signature: req.body?.signature,
     });
     res.json(result);
   } catch (error) {
@@ -495,12 +545,13 @@ app.get("/tokens/viral", async (req, res) => {
 
 app.post("/verify-payment", paymentLimiter, requireSession, async (req, res) => {
   try {
-    const walletAddress =
+    const walletFromBody =
       typeof req.body?.walletAddress === "string"
         ? req.body.walletAddress.trim()
         : typeof req.body?.wallet === "string"
           ? req.body.wallet.trim()
           : "";
+    const walletAddress = String(req.session?.walletAddress || "").trim();
     const txHash = typeof req.body?.txHash === "string" ? req.body.txHash.trim() : "";
     const tokenSymbol =
       typeof req.body?.tokenSymbol === "string"
@@ -509,17 +560,16 @@ app.post("/verify-payment", paymentLimiter, requireSession, async (req, res) => 
           ? req.body.paymentTokenSymbol.trim()
           : "";
 
-    if (!walletAddress || !txHash || !tokenSymbol) {
-      throw new Error("walletAddress, txHash e tokenSymbol são obrigatórios.");
+    if (!walletAddress) {
+      throw new Error("Sessão inválida para validar pagamento.");
     }
 
-    const { reserveTxHash } = require("./storage");
-    const reserved = await reserveTxHash(txHash, walletAddress);
-    if (!reserved) {
-      return res.json({
-        success: false,
-        error: "Esta transação já foi processada ou está em andamento simultâneo.",
-      });
+    if (walletFromBody && walletFromBody !== walletAddress) {
+      throw new Error("walletAddress no payload diverge da sessão autenticada.");
+    }
+
+    if (!txHash || !tokenSymbol) {
+      throw new Error("txHash e tokenSymbol são obrigatórios.");
     }
 
     const payment = await verifyPayment({
@@ -540,7 +590,153 @@ app.post("/verify-payment", paymentLimiter, requireSession, async (req, res) => 
   }
 });
 
+app.post("/shell-buy/verify", paymentLimiter, requireSession, async (req, res) => {
+  try {
+    if (!config.shellBuy.enabled) {
+      return res.status(503).json({
+        error: "Compra de SHELL via USDC está desativada no backend.",
+      });
+    }
+
+    if (!config.shellBuy.usdcRecipientConfigured) {
+      return res.status(503).json({
+        error: "Destino USDC da compra de SHELL não está configurado no backend.",
+      });
+    }
+
+    if (!isTip3DecoderAvailable()) {
+      return res.status(503).json({
+        error:
+          "Validação TIP-3 indisponível no backend. Não é possível confirmar pagamentos USDC.",
+      });
+    }
+
+    const walletAddress = String(req.session?.walletAddress || "").trim();
+    const txHash = String(req.body?.txHash || "").trim();
+
+    if (!walletAddress) {
+      throw new Error("Sessão inválida para validar compra de SHELL.");
+    }
+
+    if (!txHash) {
+      throw new Error("txHash é obrigatório para validar compra de SHELL.");
+    }
+
+    const existingOrder = await getShellBuyOrderByTxHash(txHash);
+    if (existingOrder) {
+      if (existingOrder.walletAddress !== walletAddress.toLowerCase()) {
+        throw new Error("Este txHash já foi validado para outra wallet.");
+      }
+
+      return res.json({
+        success: true,
+        duplicate: true,
+        order: existingOrder,
+      });
+    }
+
+    const payment = await getTip3TransferPayment({
+      txHash,
+      senderWallet: walletAddress,
+      recipientWallet: config.shellBuy.usdcRecipient,
+      decimals: config.shellBuy.usdcDecimals,
+    });
+
+    if (!payment) {
+      throw new Error(
+        "Não foi encontrada transferência TIP-3 USDC válida para o endereço configurado.",
+      );
+    }
+
+    if (Number(payment.amount) < config.shellBuy.minUsdcAmount) {
+      throw new Error(
+        `Valor USDC insuficiente. Mínimo: ${config.shellBuy.minUsdcAmount} USDC.`,
+      );
+    }
+
+    const shellAmount = calcShellAmountFromUsdc(payment.amount);
+    if (!shellAmount) {
+      throw new Error("Falha ao calcular quantidade de SHELL a partir do pagamento USDC.");
+    }
+
+    const nowIso = new Date().toISOString();
+    const order = {
+      id: crypto.randomUUID(),
+      walletAddress,
+      txHash,
+      usdcAmount: Number(payment.amount),
+      shellAmount,
+      usdcRecipient: config.shellBuy.usdcRecipient,
+      status: "payment_confirmed_waiting_settlement",
+      paymentProof: {
+        sender: payment.sender,
+        recipient: payment.recipient,
+        rawAmount: payment.rawAmount,
+        decimals: payment.decimals,
+        proof: payment.proof || {},
+      },
+      note:
+        "Pagamento USDC confirmado. O settlement de SHELL depende do Accumulator/Exchange.",
+      createdAt: nowIso,
+      updatedAt: nowIso,
+      onChainVerifiedAt: nowIso,
+    };
+
+    try {
+      await createShellBuyOrder(order);
+    } catch (dbError) {
+      if (dbError && dbError.code === "23505") {
+        const concurrentOrder = await getShellBuyOrderByTxHash(txHash);
+        if (concurrentOrder) {
+          if (concurrentOrder.walletAddress !== walletAddress.toLowerCase()) {
+            throw new Error("Este txHash já foi validado para outra wallet.");
+          }
+          return res.json({
+            success: true,
+            duplicate: true,
+            order: concurrentOrder,
+          });
+        }
+      }
+      throw dbError;
+    }
+
+    res.json({
+      success: true,
+      verifiedAt: nowIso,
+      order,
+    });
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+});
+
+app.get("/shell-buy/my-orders", requireSession, async (req, res) => {
+  try {
+    const orders = await listShellBuyOrdersByWallet(req.session.walletAddress, 30);
+    res.json({ success: true, orders });
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+});
+
+app.get("/shell-buy/order/:id", requireSession, async (req, res) => {
+  try {
+    const order = await getShellBuyOrderById(req.params.id);
+    if (!order || order.walletAddress !== String(req.session.walletAddress || "").toLowerCase()) {
+      return res.status(404).json({ error: "Pedido não encontrado." });
+    }
+
+    res.json({ success: true, order });
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+});
+
 app.post("/launch-request", requireSession, async (req, res) => {
+  let txHashReserved = false;
+  let reservedTxHash = "";
+
   try {
     if (config.isProduction && !config.feeWalletConfigured) {
       return res.status(503).json({ 
@@ -557,12 +753,16 @@ app.post("/launch-request", requireSession, async (req, res) => {
     // ── Rate limit: 1 token per wallet per hour (persistent) ─────────────────
     await checkWalletRateLimit(launchRequest.creator.wallet);
 
-    // ── Duplicate txHash guard (persistent) ──────────────────────────────────
-    const { isTxHashUsed } = require("./storage");
-    const used = await isTxHashUsed(launchRequest.payment.txHash);
-    if (used) {
+    // ── Duplicate txHash guard with reservation (persistent + race-safe) ────
+    const reserved = await reserveTxHash(
+      launchRequest.payment.txHash,
+      launchRequest.creator.wallet,
+    );
+    if (!reserved) {
       throw new Error("Este txHash já foi utilizado para criar outro token. Use uma nova transação.");
     }
+    txHashReserved = true;
+    reservedTxHash = launchRequest.payment.txHash;
 
     // ── Verify payment FIRST (A-07) ──────────────────────────────────────────
     let payment;
@@ -651,8 +851,7 @@ app.post("/launch-request", requireSession, async (req, res) => {
       },
     });
 
-    // Persist rate limit and txHash after successful creation
-    await markTxHashUsed(launchRequest.payment.txHash, launchRequest.creator.wallet);
+    // Persist rate limit after successful creation (txHash already reserved)
     await updateWalletLastLaunch(launchRequest.creator.wallet);
 
     res.json({
@@ -660,6 +859,9 @@ app.post("/launch-request", requireSession, async (req, res) => {
       launchRequest: launchTicket,
     });
   } catch (error) {
+    if (txHashReserved && reservedTxHash) {
+      await releaseTxHashReservation(reservedTxHash).catch(() => {});
+    }
     res.status(400).json({ error: error.message });
   }
 });
@@ -799,6 +1001,11 @@ async function start() {
 
   if (!isTip3DecoderAvailable()) {
     console.warn("[Config] Decoder TIP-3 indisponível. Validação de pagamento USDC ficará bloqueada.");
+  }
+  if (config.shellBuy.enabled && !config.shellBuy.usdcRecipientConfigured) {
+    console.warn(
+      "[Config] ENABLE_SHELL_BUY está ativo, mas SHELL_BUY_USDC_RECIPIENT é inválido.",
+    );
   }
 
   const server = app.listen(config.port, () => {

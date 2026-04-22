@@ -1,5 +1,16 @@
-const API_BASE_URL =
-  process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:3000";
+function resolveApiBaseUrl() {
+  if (process.env.NEXT_PUBLIC_API_BASE_URL) {
+    return process.env.NEXT_PUBLIC_API_BASE_URL;
+  }
+
+  if (typeof window !== "undefined") {
+    return window.location.origin;
+  }
+
+  return "http://localhost:3000";
+}
+
+const API_BASE_URL = resolveApiBaseUrl();
 
 async function request(path, options = {}) {
   const headers = {
@@ -89,6 +100,23 @@ export function unlockAdmin(password, walletAddress) {
     method: "POST",
     body: { password, walletAddress },
   });
+}
+
+export function getSecurityAnomalies(adminJwt) {
+  return request("/admin/security/anomalies", {
+    headers: adminJwt ? { "x-admin-jwt": adminJwt } : {},
+  });
+}
+
+export function verifyShellBuyPayment(payload) {
+  return request("/shell-buy/verify", {
+    method: "POST",
+    body: payload,
+  });
+}
+
+export function getMyShellBuyOrders() {
+  return request("/shell-buy/my-orders");
 }
 
 // ─── QR Code Auth Endpoints ──────────────────────────────────────────────────

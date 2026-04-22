@@ -83,16 +83,21 @@ export default function AuthPage() {
       }
       try {
         const statusRes = await getQrStatus(sessionId);
-        if (statusRes.status === 'done' && statusRes.sessionToken) {
+        if (statusRes.status === 'done') {
           // Polling success! App notified webhook
           stopPolling();
           
           // Re-fetch the session properly to populate UI, or just trust the new cookie
           // We can call getSession() to get real user data now
-          const sessionRes = await getSession();
-          setSession(sessionRes.session);
-          setStep("done");
-          setTimeout(() => router.push(String(returnTo)), 1200);
+          try {
+            const sessionRes = await getSession();
+            setSession(sessionRes.session);
+            setStep("done");
+            setTimeout(() => router.push(String(returnTo)), 1200);
+          } catch {
+            setError("Login QR concluído, mas a sessão ainda não propagou. Tente novamente em alguns segundos.");
+            setTimeout(() => initQrLogin(), 2000);
+          }
         } else if (statusRes.status === 'expired') {
           stopPolling();
           setError("QR Code expirado. Geração de novo desafio...");
@@ -113,6 +118,7 @@ export default function AuthPage() {
       // Wait for the polling to pick it up automatically!
     } catch (err) {
       setError(err.message || "Erro simulando app");
+    } finally {
       setSimulating(false);
     }
   }

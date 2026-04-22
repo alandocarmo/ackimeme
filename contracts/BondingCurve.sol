@@ -6,7 +6,6 @@ import "./Interfaces.sol";
 
 contract BondingCurve {
     // ─── Constants ────────────────────────────────────────────────────────────
-    uint256 public constant MIGRATION_THRESHOLD_SHELL = 69_000;
     uint128 public constant MIGRATION_THRESHOLD = 69_000 ton; // 69,000 SHELL in nano
     uint32 public constant LOCK_PERIOD = 30 days;
     // R-03: Removed `bytes public constant DAPP_ID` — dynamic bytes cannot be constant
@@ -141,6 +140,9 @@ contract BondingCurve {
     function buy(uint256 tokenAmount, uint256 maxShellIn) public {
         _getTokens(); // N3
 
+        // A-09: Ensure caller sent enough VMSHELL for gas (mint + refund)
+        require(msg.value >= 0.2 ton, 213, "Insufficient VMSHELL gas. Send at least 0.2 VMSHELL as msg.value");
+
         // Note: internal AMM means trading continues normally on this same contract!
         require(tokenAmount > 0, 202, "Amount must be greater than zero");
         require(tokenAmount <= MAX_BUY_PER_TX, 205, "Amount exceeds max buy limit");
@@ -243,6 +245,17 @@ contract BondingCurve {
                 // Revert reserve and supply
                 reserveBalance -= refundShell;
                 totalSupply -= refundTokens;
+
+                // A-11: If reversal drops reserve below migration threshold,
+                // rollback AMM state to prevent corrupted x*y=k invariant
+                if (isAmm && reserveBalance < MIGRATION_THRESHOLD) {
+                    isAmm = false;
+                    ammKLast = 0;
+                    migratedAt = 0;
+                } else if (isAmm) {
+                    // Recalculate AMM invariant with corrected values
+                    ammKLast = reserveBalance * (TOTAL_SUPPLY_CAP - totalSupply);
+                }
 
                 // Refund SHELL via cc[2] to the actual buyer
                 mapping(uint32 => varuint32) refundCurrencies;

@@ -107,6 +107,17 @@ function encodeChallengeMessage({
   ].join("\n");
 }
 
+function encodeQrSessionMessage({ sessionId, walletAddress, expiresAt }) {
+  return [
+    "AckiMeme Wallet Login",
+    "Action: qr_login",
+    `Network: ${config.network}`,
+    `Session ID: ${sessionId}`,
+    `Wallet: ${walletAddress}`,
+    `Expires At: ${expiresAt}`,
+  ].join("\n");
+}
+
 // Removidas funções legacy de crypto. Detached Signature agora validada na TVM.
 
 async function createWalletChallenge({ walletAddress, telegramInitData }) {
@@ -286,9 +297,9 @@ async function verifyWalletChallenge({
 
 async function generateQrSession() {
   const sessionId = crypto.randomUUID();
-  
-  const deepLink = `${process.env.BACKEND_URL || process.env.API_BASE_URL || 'http://localhost:3000'}/auth/qr/webhook/${sessionId}`;
   const expiresAt = new Date(Date.now() + 5 * 60 * 1000).toISOString();
+  const baseUrl = (process.env.BACKEND_URL || process.env.API_BASE_URL || "http://localhost:3000").replace(/\/$/, "");
+  const deepLink = `${baseUrl}/auth/qr/webhook/${sessionId}?expiresAt=${encodeURIComponent(expiresAt)}`;
 
   await query(`INSERT INTO qr_sessions (id, status, deep_link, expires_at) VALUES ($1, 'pending', $2, $3)`, [sessionId, deepLink, expiresAt]);
 
@@ -311,7 +322,7 @@ async function getQrSessionStatus(sessionId) {
   return { status: session.status };
 }
 
-async function processQrWebhook({ sessionId, walletAddress, publicKey }) {
+async function processQrWebhook({ sessionId, walletAddress, publicKey, signature }) {
   const res = await query(`SELECT * FROM qr_sessions WHERE id=$1`, [sessionId]);
   if (res.rowCount === 0) {
     throw new Error("Sessão HTTP do QR Code expirada ou inválida.");
@@ -322,7 +333,54 @@ async function processQrWebhook({ sessionId, walletAddress, publicKey }) {
   }
   
   const normalizedWallet = trimString(walletAddress);
-  const normalizedKey = trimString(publicKey) || "qr_scan_no_key";
+  const normalizedKey = trimString(publicKey);
+  const normalizedSignature = trimString(signature);
+  const expiresAtIso = new Date(sessionData.expires_at).toISOString();
+
+  if (!normalizedWallet) {
+    throw new Error("walletAddress é obrigatório no webhook QR.");
+  }
+
+  let proofLevel = "qr_dev_unverified";
+
+  if (normalizedKey && normalizedSignature) {
+    const walletProof = await getAccountPublicKey(normalizedWallet);
+    if (!walletProof.isDeployed) {
+      throw new Error("Carteira informada no QR não está ativa na blockchain.");
+    }
+
+    if (!walletProof.publicKey) {
+      throw new Error(
+        "Não foi possível extrair a public key on-chain para validar o login por QR.",
+      );
+    }
+
+    if (String(walletProof.publicKey).toLowerCase() !== normalizedKey.toLowerCase()) {
+      throw new Error("Public key do webhook QR não corresponde à carteira on-chain.");
+    }
+
+    const qrMessage = encodeQrSessionMessage({
+      sessionId,
+      walletAddress: normalizedWallet,
+      expiresAt: expiresAtIso,
+    });
+
+    const signatureValid = verifyDetachedSignature({
+      message: qrMessage,
+      signature: normalizedSignature,
+      publicKey: normalizedKey,
+    });
+
+    if (!signatureValid) {
+      throw new Error("Assinatura inválida no login por QR.");
+    }
+
+    proofLevel = "strong_tvm_contract_binding";
+  } else if (config.isProduction) {
+    throw new Error(
+      "QR login em produção exige publicKey + signature para comprovar posse da carteira.",
+    );
+  }
 
   const realSessionId = crypto.randomUUID();
   const tokenVal = crypto.randomBytes(32).toString("hex");
@@ -331,8 +389,8 @@ async function processQrWebhook({ sessionId, walletAddress, publicKey }) {
     id: realSessionId,
     token: tokenVal,
     walletAddress: normalizedWallet,
-    publicKey: normalizedKey,
-    proofLevel: "qr_redirect_unverified",
+    publicKey: normalizedKey || "qr_scan_no_key",
+    proofLevel,
     telegramBinding: {
       status: "unbound",
       userId: "",
