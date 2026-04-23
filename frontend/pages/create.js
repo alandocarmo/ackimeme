@@ -251,10 +251,7 @@ export default function CreatePage() {
                     </p>
                   </div>
 
-                  <Link href="/buy-shell?from=/create"
-                    className="filter-btn" style={{ display: 'block', textAlign: 'center', marginTop: '12px', fontSize: '11px' }}>
-                    💎 Buy SHELL with USDC (in-app) →
-                  </Link>
+                  {/* BUG-5: Removed /buy-shell link — USDC→SHELL settlement not implemented */}
 
                   <label style={{ display: 'block', marginTop: '24px' }}>
                     <span className="input-label">Transaction Hash</span>

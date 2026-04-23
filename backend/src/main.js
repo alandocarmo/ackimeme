@@ -977,6 +977,61 @@ app.get("/launches/:id", async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 });
+// ── Comments API (Feature: Chat) ──────────────────────────────────────────────
+app.get("/launches/:id/comments", async (req, res) => {
+  try {
+    const { getCommentsByLaunchId } = require("./storage");
+    const limit = parseInt(req.query.limit) || 50;
+    const comments = await getCommentsByLaunchId(req.params.id, limit);
+    res.json({ success: true, comments });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+const commentRateLimits = new Map();
+
+app.post("/launches/:id/comments", requireSession, async (req, res) => {
+  try {
+    const wallet = req.session.walletAddress;
+    const now = Date.now();
+    const lastCommentTime = commentRateLimits.get(wallet) || 0;
+    
+    // DESIGN-5: Rate limit (1 comment per 30s per wallet)
+    if (now - lastCommentTime < 30000) {
+      return res.status(429).json({ error: "Aguarde 30 segundos antes de postar outro comentário." });
+    }
+
+    const { addComment } = require("./storage");
+    const content = String(req.body.content || "").trim();
+    
+    if (!content || content.length > 500) {
+      return res.status(400).json({ error: "Comentário deve ter entre 1 e 500 caracteres." });
+    }
+
+    // DESIGN-5: Basic URL/link filtering to prevent spam/phishing
+    const urlRegex = /(https?:\/\/[^\s]+)|(www\.[^\s]+)|([a-zA-Z0-9-]+\.[a-zA-Z]{2,}(\/[^\s]*)?)/i;
+    if (urlRegex.test(content)) {
+      return res.status(400).json({ error: "Links não são permitidos nos comentários por segurança." });
+    }
+
+    commentRateLimits.set(wallet, now);
+
+    const comment = {
+      id: crypto.randomUUID(),
+      launchId: req.params.id,
+      walletAddress: req.session.walletAddress,
+      content,
+      createdAt: new Date().toISOString()
+    };
+
+    const savedComment = await addComment(comment);
+    res.json({ success: true, comment: savedComment });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
 
 // ── GET wallet SHELL balance (for UI pre-flight check) ───────────────────────
 app.get("/wallet/:address/balance", async (req, res) => {

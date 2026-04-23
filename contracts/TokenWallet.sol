@@ -47,8 +47,7 @@ contract TokenWallet is ITokenWallet {
     function transfer(address toWallet, uint256 amount) public {
         require(msg.sender == owner, 103, "Only owner can transfer");
         require(balance >= amount, 104, "Insufficient balance");
-        // tvm.accept() mantido — owner pode enviar via msg externa
-        tvm.accept();
+        // BUG-6: tvm.accept() REMOVIDO - owner calls are internal messages and bring their own gas
         _getTokens(); // N3
         
         // Track: guardar transferência pendente antes de debitar
@@ -57,8 +56,8 @@ contract TokenWallet is ITokenWallet {
         balance -= amount;
         
         // Storage leak prevention: clean up old transfers
-        if (seqno >= 50) {
-            delete pendingTransfers[seqno - 50];
+        if (seqno >= 500) {
+            delete pendingTransfers[seqno - 500];
         }
         
         // flag: 64 envia o gás restante para custear a execução na outra ponta
@@ -69,7 +68,7 @@ contract TokenWallet is ITokenWallet {
     function burn(uint256 amount, address callbackTarget) public {
         require(msg.sender == owner, 105, "Only owner can burn tokens");
         require(balance >= amount, 104, "Insufficient balance to burn");
-        tvm.accept();
+        // BUG-6: tvm.accept() REMOVIDO
         _getTokens(); // N3
         
         // Track: guardar burn pendente antes de debitar
@@ -78,8 +77,8 @@ contract TokenWallet is ITokenWallet {
         balance -= amount;
         
         // Storage leak prevention: clean up old burns
-        if (seqno >= 50) {
-            delete pendingBurns[seqno - 50];
+        if (seqno >= 500) {
+            delete pendingBurns[seqno - 500];
         }
         
         // Repassa a execução para o TokenRoot informando a quantia deletada e quem deve ser reembolsado

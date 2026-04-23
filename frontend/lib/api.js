@@ -131,9 +131,17 @@ export function getQrStatus(sessionId) {
   return request(`/auth/qr/status/${encodeURIComponent(sessionId)}`);
 }
 
-export function simulateQrWebhook(sessionId, walletAddress) {
-  return request(`/auth/qr/webhook/${encodeURIComponent(sessionId)}`, {
+// Removed simulateQrWebhook as it sends mocked keys which is invalid in production.
+
+// ─── Comments API ────────────────────────────────────────────────────────────
+
+export function getComments(launchId) {
+  return request(`/launches/${encodeURIComponent(launchId)}/comments`);
+}
+
+export function postComment(launchId, content) {
+  return request(`/launches/${encodeURIComponent(launchId)}/comments`, {
     method: "POST",
-    body: { walletAddress, publicKey: "mocked_qr_pubkey" },
+    body: { content },
   });
 }

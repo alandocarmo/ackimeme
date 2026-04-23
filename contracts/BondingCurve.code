@@ -1497,17 +1497,25 @@
 	IFREF {
 		.inline c4_to_c7
 	}
-	.loc BondingCurve.sol, 235
+	.loc BondingCurve.sol, 236
+	PUSHREF {
+		.blob x426f756e6365206e6f742066726f6d20746f6b656e526f6f74
+	}
+	GETGLOB 9
+	GETGLOB 18
+	SDEQ
+	THROWARGIFNOT 150
+	.loc BondingCurve.sol, 238
 	LDU 32
 	SWAP
-	.loc BondingCurve.sol, 237
+	.loc BondingCurve.sol, 240
 	PUSHINT 1302170929
 	EQUAL
 	PUSHCONT {
-		.loc BondingCurve.sol, 238
+		.loc BondingCurve.sol, 241
 		LDU 32
 		XCPU S1, S0
-		.loc BondingCurve.sol, 239
+		.loc BondingCurve.sol, 242
 		GETGLOB 24
 		PUSHINT 32
 		DICTUGET
@@ -1515,7 +1523,7 @@
 			PUSHSLICE x2_
 		}
 		IFNOT
-		.loc BondingCurve.sol, 241
+		.loc BondingCurve.sol, 244
 		OVER
 		GETGLOB 22
 		PUSHINT 32
@@ -1525,7 +1533,7 @@
 			PLDU 256
 		}
 		IF
-		.loc BondingCurve.sol, 242
+		.loc BondingCurve.sol, 245
 		PUSH S2
 		GETGLOB 23
 		PUSHINT 32
@@ -1535,7 +1543,7 @@
 			PLDU 256
 		}
 		IF
-		.loc BondingCurve.sol, 244
+		.loc BondingCurve.sol, 247
 		OVER
 		GTINT 0
 		PUSH S3
@@ -1546,39 +1554,39 @@
 		NOT
 		AND
 		PUSHCONT {
-			.loc BondingCurve.sol, 246
+			.loc BondingCurve.sol, 249
 			GETGLOB 11
 			PUSH S2
 			SUB
 			UFITS 256
 			SETGLOB 11
-			.loc BondingCurve.sol, 247
+			.loc BondingCurve.sol, 250
 			GETGLOB 13
 			OVER
 			SUB
 			UFITS 256
 			SETGLOB 13
-			.loc BondingCurve.sol, 251
+			.loc BondingCurve.sol, 254
 			GETGLOB 14
 			GETGLOB 11
 			PUSHINT 69000000000000
 			LESS
 			AND
 			PUSHCONT {
-				.loc BondingCurve.sol, 252
+				.loc BondingCurve.sol, 255
 				FALSE
 				SETGLOB 14
-				.loc BondingCurve.sol, 253
+				.loc BondingCurve.sol, 256
 				PUSHINT 0
 				SETGLOB 15
-				.loc BondingCurve.sol, 254
+				.loc BondingCurve.sol, 257
 				PUSHINT 0
 				SETGLOB 16
 			}
 			PUSHCONT {
 				GETGLOB 14
 				PUSHCONT {
-					.loc BondingCurve.sol, 257
+					.loc BondingCurve.sol, 260
 					GETGLOB 11
 					PUSHINT 1000000000000000000
 					GETGLOB 13
@@ -1591,7 +1599,7 @@
 				IF
 			}
 			IFELSE
-			.loc BondingCurve.sol, 262
+			.loc BondingCurve.sol, 265
 			OVER
 			UFITS 248
 			PUSHINT 2
@@ -1602,7 +1610,7 @@
 			ROTREV
 			PUSHINT 32
 			DICTUSETB
-			.loc BondingCurve.sol, 263
+			.loc BondingCurve.sol, 266
 			PUSH S3
 			NEWC
 			STSLICECONST x42_
@@ -1617,7 +1625,7 @@
 			.loc BondingCurve.sol, 0
 		}
 		IF
-		.loc BondingCurve.sol, 265
+		.loc BondingCurve.sol, 268
 		BLKDROP 3
 		DUP
 		GETGLOB 22
@@ -1625,14 +1633,14 @@
 		DICTUDEL
 		DROP
 		SETGLOB 22
-		.loc BondingCurve.sol, 266
+		.loc BondingCurve.sol, 269
 		DUP
 		GETGLOB 23
 		PUSHINT 32
 		DICTUDEL
 		DROP
 		SETGLOB 23
-		.loc BondingCurve.sol, 267
+		.loc BondingCurve.sol, 270
 		GETGLOB 24
 		PUSHINT 32
 		DICTUDEL

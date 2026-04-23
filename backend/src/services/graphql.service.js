@@ -68,17 +68,16 @@ try {
 }
 
 const { getTvmClient, getTvmCore, sdkAvailable: isTvmSdkAvailable } = require("./tvm-client");
-let sdkClient = null;
-let abiContract = null;
 
+let sdkAvailable = false;
 if (isTvmSdkAvailable) {
   const core = getTvmCore();
   sdkClient = getTvmClient();
   abiContract = core.abiContract;
+  sdkAvailable = true;
 } else {
   console.warn("[GraphQL] TVM SDK indisponível. Dependências faltando.");
 }
-sdkAvailable = isTvmSdkAvailable;
 
 function isTip3DecoderAvailable() {
   return Boolean(tvmClient && typeof tvmClient.decodeInput === "function");

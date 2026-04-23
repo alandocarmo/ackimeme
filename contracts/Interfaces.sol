@@ -14,5 +14,5 @@ interface ITokenWallet {
 }
 
 interface IBondingCurve {
-    function onTokenBurned(uint256 amount, address refundAddress) external;
+    function onTokenBurned(uint32 burnNonce, uint256 amount, address refundAddress) external;
 }

@@ -2,7 +2,7 @@ import Head from "next/head";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useEffect, useState, useCallback } from "react";
-import { getLaunchById, getSession } from "../../lib/api";
+import { getLaunchById, getSession, getComments, postComment } from "../../lib/api";
 import { BondingCurveAbi, TokenWalletAbi, TokenRootAbi } from "../../lib/abi";
 
 function compactWallet(w) {
@@ -30,6 +30,77 @@ function formatSupply(val) {
   return String(n);
 }
 
+function PriceChart({ currentPrice, progressPct }) {
+  const points = [];
+  const pct = parseFloat(progressPct || "0");
+  for (let i = 0; i <= 40; i++) {
+     const x = (i / 40) * 100;
+     const y = 70 - (Math.pow(i / 40, 1.8) * 50); 
+     points.push(`${x},${y}`);
+  }
+  
+  const currentX = pct;
+  const currentY = 70 - (Math.pow(pct / 100, 1.8) * 50);
+
+  return (
+    <div className="card chart-card" style={{ height: '240px', padding: '0', position: 'relative', overflow: 'hidden', border: '1px solid var(--ink-faint)', background: 'linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(0,255,136,0.02) 100%)' }}>
+       <div style={{ position: 'absolute', top: '20px', left: '20px', zIndex: 10 }}>
+          <p className="info-label" style={{ margin: 0, fontSize: '10px' }}>BONDING CURVE MODEL</p>
+          <p style={{ margin: 0, fontSize: '22px', fontWeight: 900, color: 'var(--accent)', letterSpacing: '-0.5px' }}>
+            {currentPrice ? `${currentPrice.toFixed(9)}` : '---'} <span style={{ fontSize: '12px', fontWeight: 400 }}>SHELL</span>
+          </p>
+       </div>
+       
+       <svg viewBox="0 0 100 80" preserveAspectRatio="none" style={{ width: '100%', height: '100%', position: 'absolute', bottom: 0, left: 0 }}>
+          <defs>
+            <linearGradient id="chartGradient" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stopColor="var(--accent)" stopOpacity="0.15" />
+              <stop offset="100%" stopColor="var(--accent)" stopOpacity="0" />
+            </linearGradient>
+            <filter id="glow">
+              <feGaussianBlur stdDeviation="1.5" result="coloredBlur"/>
+              <feMerge>
+                <feMergeNode in="coloredBlur"/><feMergeNode in="SourceGraphic"/>
+              </feMerge>
+            </filter>
+          </defs>
+          
+          {/* Grid lines */}
+          <line x1="0" y1="20" x2="100" y2="20" stroke="var(--ink-faint)" strokeWidth="0.1" />
+          <line x1="0" y1="45" x2="100" y2="45" stroke="var(--ink-faint)" strokeWidth="0.1" />
+          
+          <polyline
+            fill="none"
+            stroke="var(--accent)"
+            strokeWidth="0.6"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            points={points.join(' ')}
+            style={{ filter: 'url(#glow)' }}
+          />
+          <path
+            d={`M 0 80 L ${points.join(' L ')} L 100 80 Z`}
+            fill="url(#chartGradient)"
+          />
+          
+          <circle 
+            cx={currentX} 
+            cy={currentY} 
+            r="1.2" 
+            fill="var(--bg)"
+            stroke="var(--accent)"
+            strokeWidth="0.5"
+            style={{ filter: 'drop-shadow(0 0 5px var(--accent))' }}
+          />
+       </svg>
+       
+       <div style={{ position: 'absolute', bottom: '10px', right: '15px', color: 'var(--ink-soft)', fontSize: '10px' }}>
+         Bonding Curve: {pct}%
+       </div>
+    </div>
+  );
+}
+
 /** Nano to decimal (9 decimals standard in TVM/SHELL) */
 function nanoToDecimal(nano) {
   const val = BigInt(String(nano || "0").replace(/\D/g, "") || "0");
@@ -47,7 +118,7 @@ function toNano(valStr) {
 }
 
 
-const MIGRATION_THRESHOLD = 69000;
+const MIGRATION_THRESHOLD_NANO = 69_000_000_000_000; // 69K SHELL in nano
 
 function readReserveBalance(onchainData) {
   const parsed = Number(onchainData?.reserveBalance);
@@ -61,10 +132,11 @@ function calcBondingStats(onchainData) {
   const reserveBalance = readReserveBalance(onchainData);
   const hasOnchainReserve = Number.isFinite(reserveBalance);
   const progressPct = hasOnchainReserve
-    ? Math.min((reserveBalance / MIGRATION_THRESHOLD) * 100, 100).toFixed(1)
+    ? Math.min((reserveBalance / MIGRATION_THRESHOLD_NANO) * 100, 100).toFixed(1)
     : null;
+  const reserveShell = hasOnchainReserve ? reserveBalance / 1e9 : null;
 
-  return { reserveBalance, hasOnchainReserve, progressPct };
+  return { reserveBalance, reserveShell, hasOnchainReserve, progressPct };
 }
 
 function hashColor(str) {
@@ -89,6 +161,11 @@ export default function TokenPage() {
   const [isTrading, setIsTrading] = useState(false);
   const [tradeSuccess, setTradeSuccess] = useState("");
   const [onchainPrice, setOnchainPrice] = useState(null); // from getter
+
+  // Chat/Comments state
+  const [comments, setComments] = useState([]);
+  const [newComment, setNewComment] = useState("");
+  const [isPosting, setIsPosting] = useState(false);
 
   useEffect(() => {
     if (typeof window === "undefined") return;
@@ -133,9 +210,35 @@ export default function TokenPage() {
   // FE-05: Polling every 15 seconds to keep data fresh
   useEffect(() => {
     if (!id) return;
-    const interval = setInterval(fetchToken, 15000);
+    
+    function fetchAll() {
+      fetchToken();
+      getComments(id).then(r => setComments(r.comments || [])).catch(() => {});
+    }
+    
+    // Initial fetch for comments
+    getComments(id).then(r => setComments(r.comments || [])).catch(() => {});
+    
+    const interval = setInterval(fetchAll, 15000);
     return () => clearInterval(interval);
   }, [id, fetchToken]);
+
+  async function handlePostComment(e) {
+    e.preventDefault();
+    if (!session) return router.push(`/auth?from=/token/${id}`);
+    if (!newComment.trim() || isPosting) return;
+
+    setIsPosting(true);
+    try {
+      const res = await postComment(id, newComment);
+      setComments((prev) => [res.comment, ...prev]);
+      setNewComment("");
+    } catch (err) {
+      alert(err.message || "Erro ao postar comentário.");
+    } finally {
+      setIsPosting(false);
+    }
+  }
 
   // Try reading current price from on-chain getter via provider
   useEffect(() => {
@@ -149,7 +252,7 @@ export default function TokenPage() {
         await ever.ensureInitialized();
 
         const bc = new ever.Contract(BondingCurveAbi, new Address(token.onchainData.bondingCurveAddress));
-        const result = await bc.methods.currentPrice({}).call();
+        const result = await bc.methods.getBuyPrice({ tokenAmount: "1000000000" }).call();
         if (result?.value0) {
           setOnchainPrice(nanoToDecimal(result.value0));
         }
@@ -187,7 +290,7 @@ export default function TokenPage() {
       if (!tradeAmount || rawAmount <= 0) throw new Error("Valor inválido.");
 
       const isBuy = tradeMode === "buy";
-      const slippageMod = (100 - parseFloat(slippage)) / 100;
+      const slippagePct = parseFloat(slippage);
 
       if (isBuy) {
         // R-02: Send SHELL as Extra Currency cc[2], NOT as msg.value (VMSHELL)
@@ -195,15 +298,17 @@ export default function TokenPage() {
         // msg.value (amount) is used ONLY for gas.
         if (!currentPrice) throw new Error("Preço ainda não disponível. Aguarde sync on-chain.");
 
-        const shellToSpendNano = toNano(tradeAmount);
         const bcContract = new ever.Contract(BondingCurveAbi, new Address(token.onchainData.bondingCurveAddress));
 
-        const expectedFullTokens = Math.floor(rawAmount / currentPrice);
-        const expectedNanoTokens = BigInt(expectedFullTokens) * 1000000000n;
-        const slippagePct = parseFloat(slippage);
+        const expectedFullTokens = rawAmount / currentPrice;
+        const expectedNanoTokens = BigInt(Math.floor(expectedFullTokens * 1000000000));
         
-        // Calculate max SHELL I'm willing to spend (including slippage)
-        const maxShellNano = shellToSpendNano * BigInt(Math.round(100 + slippagePct)) / 100n;
+        // BUG-1 FIX: Get the actual cost from the on-chain getter, not from user input
+        const costResult = await bcContract.methods.getBuyPrice({ tokenAmount: expectedNanoTokens.toString() }).call();
+        const baseCostNano = BigInt(costResult.value0);
+        
+        // Apply slippage to the REAL cost, not to the input
+        const maxShellNano = baseCostNano * BigInt(Math.round(100 + slippagePct)) / 100n;
 
         const tx = await bcContract.methods.buy({
           tokenAmount: expectedNanoTokens.toString(),
@@ -277,7 +382,8 @@ export default function TokenPage() {
     if (amt <= 0) return "0";
     if (!currentPrice) return "aguardando preço...";
     if (tradeMode === "buy") {
-      return formatNum(Math.floor(amt / currentPrice));
+      const expectedFullTokens = amt / currentPrice;
+      return formatNum(expectedFullTokens.toFixed(2));
     }
     return (amt * currentPrice).toFixed(9);
   }
@@ -321,6 +427,9 @@ export default function TokenPage() {
                 <div className="status-badge">{token.status.replace(/_/g, " ")}</div>
               </div>
 
+              {/* GAP-1: Price Chart */}
+              <PriceChart currentPrice={onchainPrice} progressPct={stats.progressPct} />
+
               {/* Bonding Curve Card */}
               <div className="card" style={{ border: '1px solid var(--accent-glow)', background: 'rgba(0, 255, 136, 0.02)' }}>
                 <div className="progress-header" style={{ marginBottom: '12px' }}>
@@ -344,7 +453,7 @@ export default function TokenPage() {
                   </div>
                   <div className="stat-box">
                     <span className="stat-label">Reserve</span>
-                    <span className="stat-value" style={{ fontSize: '18px' }}>{stats.hasOnchainReserve ? `${stats.reserveBalance.toFixed(2)} SHELL` : "awaiting"}</span>
+                    <span className="stat-value" style={{ fontSize: '18px' }}>{stats.hasOnchainReserve ? `${stats.reserveShell.toFixed(2)} SHELL` : "awaiting"}</span>
                   </div>
                   <div className="stat-box">
                     <span className="stat-label">Threshold</span>
@@ -422,7 +531,7 @@ export default function TokenPage() {
                   <div className="onchain-item">
                     <span className="stat-label">Token Root</span>
                     {token.onchainData?.tokenRootAddress ? (
-                      <a href={`https://ackiscan.com/accounts/${token.onchainData.tokenRootAddress}`} target="_blank" rel="noreferrer" className="onchain-link">
+                      <a href={`https://beescan.live/accounts/${token.onchainData.tokenRootAddress}`} target="_blank" rel="noreferrer" className="onchain-link">
                         {compactWallet(token.onchainData.tokenRootAddress)}
                       </a>
                     ) : <span className="token-time" style={{ display: 'block' }}>Pending</span>}
@@ -430,7 +539,7 @@ export default function TokenPage() {
                   <div className="onchain-item">
                     <span className="stat-label">Bonding Curve</span>
                     {token.onchainData?.bondingCurveAddress ? (
-                      <a href={`https://ackiscan.com/accounts/${token.onchainData.bondingCurveAddress}`} target="_blank" rel="noreferrer" className="onchain-link">
+                      <a href={`https://beescan.live/accounts/${token.onchainData.bondingCurveAddress}`} target="_blank" rel="noreferrer" className="onchain-link">
                         {compactWallet(token.onchainData.bondingCurveAddress)}
                       </a>
                     ) : <span className="token-time" style={{ display: 'block' }}>Pending</span>}
@@ -439,6 +548,7 @@ export default function TokenPage() {
               </div>
 
               {/* Links */}
+              {/* Links */}
               {(token.links?.website || token.links?.xUrl || token.links?.telegramUrl) && (
                 <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap' }}>
                   {token.links.website && <a href={token.links.website} target="_blank" rel="noreferrer" className="filter-btn">🌐 Website</a>}
@@ -446,6 +556,56 @@ export default function TokenPage() {
                   {token.links.telegramUrl && <a href={token.links.telegramUrl} target="_blank" rel="noreferrer" className="filter-btn">✈ Telegram</a>}
                 </div>
               )}
+
+              {/* Chat / Comments Section */}
+              <div className="card" style={{ marginTop: '24px' }}>
+                <p className="info-label" style={{ marginBottom: '16px' }}>💬 Community Chat</p>
+                
+                {/* Chat Feed */}
+                <div className="chat-feed" style={{ maxHeight: '400px', overflowY: 'auto', marginBottom: '16px', display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                  {comments.length === 0 ? (
+                    <p className="token-time" style={{ textAlign: 'center', padding: '20px' }}>No comments yet. Be the first to hype it up!</p>
+                  ) : (
+                    comments.map(c => (
+                      <div key={c.id} style={{ background: 'var(--bg-deep)', padding: '12px', borderRadius: '8px', borderLeft: `2px solid ${hashColor(c.walletAddress)}` }}>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '4px' }}>
+                          <span style={{ fontSize: '12px', color: hashColor(c.walletAddress), fontWeight: 600 }}>
+                            {compactWallet(c.walletAddress)}
+                          </span>
+                          <span style={{ fontSize: '10px', color: 'var(--ink-soft)' }}>
+                            {formatDate(c.createdAt)}
+                          </span>
+                        </div>
+                        <p style={{ margin: 0, fontSize: '13px', color: 'var(--ink)', lineHeight: 1.5, wordBreak: 'break-word' }}>
+                          {c.content}
+                        </p>
+                      </div>
+                    ))
+                  )}
+                </div>
+
+                {/* Comment Input */}
+                <form onSubmit={handlePostComment} style={{ display: 'flex', gap: '8px' }}>
+                  <input
+                    type="text"
+                    className="text-input"
+                    style={{ flex: 1 }}
+                    placeholder={session ? "Write a comment..." : "Sign in to comment"}
+                    value={newComment}
+                    onChange={e => setNewComment(e.target.value)}
+                    disabled={!session || isPosting}
+                    maxLength={500}
+                  />
+                  <button 
+                    type="submit" 
+                    className="btn-primary" 
+                    disabled={!session || !newComment.trim() || isPosting}
+                    style={{ padding: '0 20px', fontSize: '13px' }}
+                  >
+                    {isPosting ? "..." : "Post"}
+                  </button>
+                </form>
+              </div>
             </div>
 
             {/* Right Column: Trade Widget */}
@@ -512,10 +672,7 @@ export default function TokenPage() {
                     </p>
                   )}
 
-                  <Link href={`/buy-shell?from=/token/${id}`}
-                    className="filter-btn" style={{ display: 'block', textAlign: 'center', marginTop: '12px', fontSize: '11px' }}>
-                    💎 Need SHELL? Buy with USDC in-app →
-                  </Link>
+                  {/* BUG-5: Removed /buy-shell link — USDC→SHELL settlement not implemented */}
                 </div>
               </div>
 

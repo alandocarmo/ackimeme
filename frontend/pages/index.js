@@ -28,21 +28,21 @@ function formatSupply(val) {
   return String(n);
 }
 
-const MIGRATION_THRESHOLD = 69000;
+const MIGRATION_THRESHOLD_NANO = 69_000_000_000_000; // 69K SHELL in nano (contract uses nano)
 
 function readReserveBalance(onchainData) {
   const parsed = Number(onchainData?.reserveBalance);
   if (!Number.isFinite(parsed) || parsed < 0) {
     return null;
   }
-  return parsed;
+  return parsed; // returns nano-SHELL
 }
 
-function calcProgressFromReserve(reserveBalance) {
-  if (!Number.isFinite(reserveBalance)) {
+function calcProgressFromReserve(reserveNano) {
+  if (!Number.isFinite(reserveNano)) {
     return null;
   }
-  return Math.min((reserveBalance / MIGRATION_THRESHOLD) * 100, 100).toFixed(1);
+  return Math.min((reserveNano / MIGRATION_THRESHOLD_NANO) * 100, 100).toFixed(1);
 }
 
 function matchesSearch(launch, q) {
@@ -239,7 +239,7 @@ export default function Home() {
                       <div className="stat-box">
                         <span className="stat-label">reserve</span>
                         <span className="stat-value">
-                          {reserveBalance === null ? "on-chain pending" : `${reserveBalance.toFixed(2)} SHELL`}
+                          {reserveBalance === null ? "on-chain pending" : `${(reserveBalance / 1e9).toFixed(2)} SHELL`}
                         </span>
                       </div>
                       <div className="stat-box">

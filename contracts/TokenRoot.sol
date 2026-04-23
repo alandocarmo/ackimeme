@@ -23,6 +23,11 @@ contract TokenRoot {
 
     mapping(uint32 => uint256) public pendingMintsByNonce;
 
+    // BUG-2 FIX: Track pending burn amounts by seqno for safe onBounce rollback.
+    // Bounce body only has 224 bits after funcId — uint256 (256 bits) causes cell underflow.
+    mapping(uint32 => uint256) private _pendingBurnAmounts;
+    uint32 private _burnSeqno = 1;
+
     // ─── Fix #3: owner passado explicitamente (msg.sender = address(0) em ext msg) ───
     // ─── Fix N1: gosh.cnvrtshellq() para converter SHELL em VMSHELL no deploy ────────
     constructor(
@@ -104,9 +109,9 @@ contract TokenRoot {
         
         pendingMintsByNonce[mintNonce] = amount;
         
-        // A-03: Storage leak prevention: clean up old mints
-        if (mintNonce >= 50) {
-            delete pendingMintsByNonce[mintNonce - 50];
+        // A-03: Storage leak prevention: clean up old mints (increased window to 500)
+        if (mintNonce >= 500) {
+            delete pendingMintsByNonce[mintNonce - 500];
         }
 
         // C-03: Include stateInit in the message so the wallet is deployed
@@ -121,11 +126,7 @@ contract TokenRoot {
 
     // ─── Helper: encode receiveTokens call body ──────────────────────────────
     function _buildReceiveTokensBody(uint32 nonce, uint256 amount) private pure inline returns (TvmCell) {
-        TvmBuilder b;
-        b.store(uint32(tvm.functionId(ITokenWallet.receiveTokens)));
-        b.store(nonce);
-        b.store(amount);
-        return b.toCell();
+        return abi.encodeBody(ITokenWallet.receiveTokens, nonce, amount);
     }
 
     // ─── Fix #4: transferOwnership — permite transferir ownership para o BondingCurve ──
@@ -141,7 +142,7 @@ contract TokenRoot {
     // o BondingCurve seja deployado sob o mesmo DappID.
     function setBondingCurveCode(TvmCell _code) public {
         require(msg.pubkey() == tvm.pubkey(), 102, "Only deployer can set BC code");
-        require(tvm.hash(bondingCurveCode) == 0, 107, "BondingCurve code already set");
+        require(bondingCurveCode.toSlice().empty(), 107, "BondingCurve code already set");
         tvm.accept();
         _getTokens(); // N3
         bondingCurveCode = _code;
@@ -194,10 +195,13 @@ contract TokenRoot {
         tvm.rawReserve(0, 4); // Mantem apenas o saldo original do contrato e repassa restante do attach pro callback
 
         totalSupply -= amount;
-        
+
         // Pass the execution context to the Bonding Curve to finalize the Trade out (Sell refund)
         if (callbackTarget != address(0)) {
-            IBondingCurve(callbackTarget).onTokenBurned{value: 0, flag: 128}(amount, refundAddress);
+            // BUG-2 FIX: Track pending burn amount by seqno for safe onBounce rollback
+            uint32 burnNonce = ++_burnSeqno;
+            _pendingBurnAmounts[burnNonce] = amount;
+            IBondingCurve(callbackTarget).onTokenBurned{value: 0, flag: 128}(burnNonce, amount, refundAddress);
         } else {
             // Se nenhum callback de DEX/Curve foi fornecido, reembolso do gas pro usuário
             refundAddress.transfer({ value: 0, flag: 128, bounce: false });
@@ -217,6 +221,18 @@ contract TokenRoot {
             if (failedAmount > 0) {
                 totalSupply -= failedAmount;
                 delete pendingMintsByNonce[nonce];
+            }
+        }
+        
+        // BUG-2 FIX: Handle IBondingCurve.onTokenBurned bounce using nonce mapping
+        // Bounce body has only 224 bits after funcId. We read uint32 burnNonce (32 bits)
+        // which fits safely, then look up the amount from our mapping.
+        if (funcId == abi.functionId(IBondingCurve.onTokenBurned)) {
+            uint32 burnNonce = body.load(uint32);
+            uint256 amount = _pendingBurnAmounts[burnNonce];
+            if (amount > 0) {
+                totalSupply += amount; // Revert the burn
+                delete _pendingBurnAmounts[burnNonce];
             }
         }
     }

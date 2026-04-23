@@ -24,6 +24,9 @@ function GlobalNav({ session, isAdmin }) {
         <Link href="/" className="nav-link">
           ◈ Board
         </Link>
+        <Link href="/portfolio" className="nav-link">
+          👜 Portfolio
+        </Link>
         <Link href="/create" className="btn-primary" style={{ fontSize: '12px', padding: '8px 16px' }}>
           🚀 Create
         </Link>

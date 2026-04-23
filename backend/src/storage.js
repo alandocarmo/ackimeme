@@ -1829,6 +1829,44 @@ async function getAdminOverview() {
   };
 }
 
+// ─── Token Comments (Feature: Chat) ──────────────────────────────────────────
+
+async function addComment(comment) {
+  const sql = `
+    INSERT INTO token_comments (id, launch_id, wallet_address, content, created_at)
+    VALUES ($1, $2, $3, $4, $5)
+    RETURNING *;
+  `;
+  const values = [
+    comment.id,
+    comment.launchId,
+    comment.walletAddress,
+    comment.content,
+    comment.createdAt,
+  ];
+  
+  const result = await query(sql, values);
+  return result.rows[0];
+}
+
+async function getCommentsByLaunchId(launchId, limit = 50) {
+  const sql = `
+    SELECT id, launch_id, wallet_address, content, created_at
+    FROM token_comments
+    WHERE launch_id = $1
+    ORDER BY created_at DESC
+    LIMIT $2;
+  `;
+  const result = await query(sql, [launchId, limit]);
+  return result.rows.map(row => ({
+    id: row.id,
+    launchId: row.launch_id,
+    walletAddress: row.wallet_address,
+    content: row.content,
+    createdAt: row.created_at?.toISOString?.() || row.created_at,
+  }));
+}
+
 module.exports = {
   createAuthChallenge,
   createLaunchBundle,
@@ -1869,4 +1907,6 @@ module.exports = {
   updateLaunchpadTaskStatus,
   updateLaunchOnchainState,
   cleanupExpiredAuthData,
+  addComment,
+  getCommentsByLaunchId,
 };

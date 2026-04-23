@@ -190,7 +190,7 @@ contract BondingCurve {
 
     // ─── Receiver for async burns (Sell) ─────────────────────────────────────
     // Called by TokenRoot after TokenWallet burns tokens
-    function onTokenBurned(uint256 amount, address refundAddress) external {
+    function onTokenBurned(uint32 burnNonce, uint256 amount, address refundAddress) external {
         require(msg.sender == tokenRoot, 103, "Only TokenRoot can notify burn");
         _getTokens(); // N3
         // Removed the "if (migrated)" block since AMM transition allows users
@@ -232,6 +232,9 @@ contract BondingCurve {
     // We use _lastBuyer to resolve who to refund. This is safe because TVM processes
     // messages sequentially — there cannot be a concurrent buy between mint and bounce.
     onBounce(TvmSlice body) external {
+        // SEC-2: Ensure the bounce actually came from our TokenRoot
+        require(msg.sender == tokenRoot, 150, "Bounce not from tokenRoot");
+        
         uint32 funcId = body.load(uint32);
         
         if (funcId == abi.functionId(ITokenRoot.mint)) {

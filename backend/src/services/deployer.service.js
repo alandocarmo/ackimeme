@@ -248,7 +248,7 @@ async function deployTokenEcosystem({ name, symbol, totalSupply, ipfsHash, creat
       
       // Wait for deployment
       let isDeployed = false;
-      for (let i = 0; i < 15; i++) {
+      for (let i = 0; i < 30; i++) {
         await new Promise((res) => setTimeout(res, 2000));
         const pubKey = await getAccountPublicKey(bondingCurveAddress);
         if (pubKey.isDeployed) {

@@ -2,7 +2,7 @@ import Head from "next/head";
 import { useRouter } from "next/router";
 import { useEffect, useState, useRef } from "react";
 import { QRCodeSVG } from "qrcode.react";
-import { generateQrChallenge, getQrStatus, getSession, logout, simulateQrWebhook } from "../lib/api";
+import { generateQrChallenge, getQrStatus, getSession, logout } from "../lib/api";
 
 export default function AuthPage() {
   const router = useRouter();
@@ -109,19 +109,7 @@ export default function AuthPage() {
     }, 2500); // Poll every 2.5 seconds
   };
 
-  async function handleSimulateScan() {
-    if (!qrData?.sessionId) return;
-    try {
-      setSimulating(true);
-      setError("");
-      await simulateQrWebhook(qrData.sessionId, devWallet);
-      // Wait for the polling to pick it up automatically!
-    } catch (err) {
-      setError(err.message || "Erro simulando app");
-    } finally {
-      setSimulating(false);
-    }
-  }
+  // Dev simulation removed for production.
 
   async function handleLogout() {
     await logout().catch(() => {});
@@ -182,31 +170,7 @@ export default function AuthPage() {
                 </p>
               )}
               
-              {process.env.NEXT_PUBLIC_ENABLE_DEV_TOOLS === "true" && (
-                <>
-                  <div style={{ borderTop: '1px solid var(--line)', margin: '24px 0', position: 'relative' }}>
-                    <span style={{ position: 'absolute', top: '-11px', left: '50%', transform: 'translateX(-50%)', backgroundColor: 'var(--bg)', padding: '0 10px', fontSize: '11px', color: 'var(--text-secondary)' }}>Developer Tools</span>
-                  </div>
-
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-                    <input 
-                      className="text-input" 
-                      style={{ fontSize: '12px', padding: '8px' }}
-                      value={devWallet}
-                      onChange={(e) => setDevWallet(e.target.value)}
-                      placeholder="Simulated Wallet Address"
-                    />
-                    <button 
-                      className="filter-btn" 
-                      style={{ width: '100%' }} 
-                      onClick={handleSimulateScan}
-                      disabled={simulating || loading}
-                    >
-                      {simulating ? "Simulating App..." : "Simulate Mobile App Scan"}
-                    </button>
-                  </div>
-                </>
-              )}
+              {/* Dev Tools removed */}
 
               <div style={{ borderTop: '1px solid var(--line)', margin: '24px 0' }} />
               <button className="filter-btn" style={{ width: '100%', borderColor: 'transparent', background: 'transparent' }} onClick={() => router.push("/")}>← Back to Board</button>
