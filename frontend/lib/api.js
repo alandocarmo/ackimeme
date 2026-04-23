@@ -102,10 +102,8 @@ export function unlockAdmin(password, walletAddress) {
   });
 }
 
-export function getSecurityAnomalies(adminJwt) {
-  return request("/admin/security/anomalies", {
-    headers: adminJwt ? { "x-admin-jwt": adminJwt } : {},
-  });
+export function getSecurityAnomalies() {
+  return request("/admin/security/anomalies");
 }
 
 export function verifyShellBuyPayment(payload) {

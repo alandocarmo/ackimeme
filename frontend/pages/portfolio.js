@@ -76,9 +76,9 @@ export default function PortfolioPage() {
 
           const walletContract = new ever.Contract(TokenWalletAbi, new Address(walletAddr));
           const balanceRes = await walletContract.methods.balance({}).call();
-          const balanceNano = balanceRes.value0;
+          const balanceNano = balanceRes.balance;
           
-          if (BigInt(balanceNano) > 0n) {
+          if (BigInt(String(balanceNano || "0")) > 0n) {
             return {
               ...launch,
               balance: nanoToDecimal(balanceNano),

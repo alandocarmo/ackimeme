@@ -5,23 +5,23 @@ import { getSecurityAnomalies, unlockAdmin } from "../../lib/api";
 export default function SecurityAdmin() {
   const [anomalies, setAnomalies] = useState([]);
   const [password, setPassword] = useState("");
-  const [adminJwt, setAdminJwt] = useState("");
+  const [loggedIn, setLoggedIn] = useState(false);
   const [error, setError] = useState("");
 
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
-      const data = await unlockAdmin(password);
-      setAdminJwt(data.adminJwt || "");
-      fetchAnomalies(data.adminJwt || "");
+      await unlockAdmin(password);
+      setLoggedIn(true);
+      fetchAnomalies();
     } catch(err) {
       setError(err.message);
     }
   }
 
-  const fetchAnomalies = async (token) => {
+  const fetchAnomalies = async () => {
     try {
-      const data = await getSecurityAnomalies(token);
+      const data = await getSecurityAnomalies();
       setAnomalies(data.anomalies || []);
     } catch (err) {
       console.error(err);
@@ -29,15 +29,15 @@ export default function SecurityAdmin() {
   }
 
   useEffect(() => {
-    if (!adminJwt) return undefined;
-    fetchAnomalies(adminJwt);
+    if (!loggedIn) return undefined;
+    fetchAnomalies();
     const interval = setInterval(() => {
-      fetchAnomalies(adminJwt);
+      fetchAnomalies();
     }, 10000);
     return () => clearInterval(interval);
-  }, [adminJwt]);
+  }, [loggedIn]);
 
-  if (!adminJwt) {
+  if (!loggedIn) {
     return (
       <main className="auth-layout" style={{ background: 'var(--bg-deep)' }}>
         <div className="auth-card" style={{ border: '1px solid var(--accent-warm)' }}>
@@ -124,7 +124,7 @@ export default function SecurityAdmin() {
                       </div>
                     </td>
                     <td style={{ textAlign: 'right' }}>
-                      <button className="filter-btn" style={{ borderColor: 'var(--accent-warm)', color: 'var(--accent-warm)', padding: '4px 12px', fontSize: '11px' }}>
+                      <button disabled title="Funcionalidade em desenvolvimento" className="filter-btn" style={{ borderColor: 'var(--line-soft)', color: 'var(--line-soft)', padding: '4px 12px', fontSize: '11px', cursor: 'not-allowed' }}>
                         Ban IP
                       </button>
                     </td>
