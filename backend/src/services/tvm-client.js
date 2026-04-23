@@ -6,8 +6,10 @@ let sdkAvailable = false;
 
 try {
   tvmCore = require("@tvmsdk/core");
-  const { libNode } = require("@tvmsdk/lib-node");
-  tvmCore.TvmClient.useBinaryLibrary(libNode);
+  // CRÍTICO: Usar lib-web (WASM) no backend em vez de lib-node (C++) 
+  // para evitar problemas de compatibilidade com Node 22 no Render
+  const { libWeb } = require("@tvmsdk/lib-web");
+  tvmCore.TvmClient.useBinaryLibrary(libWeb);
   sdkAvailable = true;
 } catch (e) {
   console.warn("[TvmClient] SDK Core não disponível.", e.message);
