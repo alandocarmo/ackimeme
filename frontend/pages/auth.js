@@ -22,11 +22,7 @@ export default function AuthPage() {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(true);
   
-  // Developer simulation states
-  const [devWallet, setDevWallet] = useState("0:1111222233334444555566667777888899990000aaaabbbbccccddddeeeeffff");
-  const [simulating, setSimulating] = useState(false);
-
-  // Use a ref to hold the polling interval so we can clear it safely
+  // Polling ref
   const pollingRef = useRef(null);
 
   // 1. On Mount: Check if logged in, otherwise start QR Session

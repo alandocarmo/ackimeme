@@ -203,7 +203,7 @@ async function deployTokenEcosystem({ name, symbol, totalSupply, ipfsHash, creat
         function_name: "constructor",
         input: {
           _owner: creatorWallet,
-          _tokenRoot: tokenRootAddress,
+          _tokenRootAddr: tokenRootAddress,
           _name: name,
           _symbol: symbol,
           _creationFeeTxHash: Buffer.from(paymentTxHash || "genesis").toString("hex")
@@ -216,11 +216,13 @@ async function deployTokenEcosystem({ name, symbol, totalSupply, ipfsHash, creat
       console.log(`[Deployer] Atualizando TokenRoot com BondingCurve code e deployando (DappID)...`);
       const trAbi = loadContractFiles("TokenRoot").abi;
 
+      const { code: bcCodeCell } = await client.boc.get_code_from_tvc({ tvc: bcTvc });
+
       await client.processing.process_message({
         message_encode_params: {
           address: tokenRootAddress,
           abi: abiContract(trAbi),
-          call_set: { function_name: "setBondingCurveCode", input: { _code: bcTvc } },
+          call_set: { function_name: "setBondingCurveCode", input: { _code: bcCodeCell } },
           signer
         },
         send_events: false

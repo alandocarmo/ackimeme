@@ -34,6 +34,8 @@ const {
   listLaunchesByWallet,
   listPublicLaunches,
   cleanupExpiredAuthData,
+  getCommentsByLaunchId,
+  addComment,
 } = require("./storage");
 const { createTreasuryPaymentRecord } = require("./treasury");
 const {
@@ -86,12 +88,7 @@ async function checkWalletRateLimit(walletAddress) {
   }
 }
 
-async function checkTxHashDuplicate(txHash) {
-  const used = await isTxHashUsed(txHash);
-  if (used) {
-    throw new Error("Este txHash já foi utilizado para criar outro token. Use uma nova transação.");
-  }
-}
+
 
 async function ensureCreatorHasShellBalance(walletAddress) {
   const balanceInfo = await getAccountBalance(walletAddress);
@@ -980,7 +977,6 @@ app.get("/launches/:id", async (req, res) => {
 // ── Comments API (Feature: Chat) ──────────────────────────────────────────────
 app.get("/launches/:id/comments", async (req, res) => {
   try {
-    const { getCommentsByLaunchId } = require("./storage");
     const limit = parseInt(req.query.limit) || 50;
     const comments = await getCommentsByLaunchId(req.params.id, limit);
     res.json({ success: true, comments });
@@ -1002,7 +998,6 @@ app.post("/launches/:id/comments", requireSession, async (req, res) => {
       return res.status(429).json({ error: "Aguarde 30 segundos antes de postar outro comentário." });
     }
 
-    const { addComment } = require("./storage");
     const content = String(req.body.content || "").trim();
     
     if (!content || content.length > 500) {

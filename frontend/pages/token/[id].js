@@ -300,8 +300,13 @@ export default function TokenPage() {
 
         const bcContract = new ever.Contract(BondingCurveAbi, new Address(token.onchainData.bondingCurveAddress));
 
-        const expectedFullTokens = rawAmount / currentPrice;
-        const expectedNanoTokens = BigInt(Math.floor(expectedFullTokens * 1000000000));
+        const rawAmountNano = toNano(tradeAmount);
+        // currentPrice is a float of SHELL, convert it safely to nano
+        const currentPriceNano = BigInt(Math.floor(currentPrice * 1e9));
+        
+        // Use BigInt math: (rawAmountNano * 1e9) / currentPriceNano
+        // This avoids float64 limit overflow for very small currentPrice
+        const expectedNanoTokens = (rawAmountNano * 1000000000n) / currentPriceNano;
         
         // BUG-1 FIX: Get the actual cost from the on-chain getter, not from user input
         const costResult = await bcContract.methods.getBuyPrice({ tokenAmount: expectedNanoTokens.toString() }).call();

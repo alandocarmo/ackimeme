@@ -299,7 +299,9 @@ async function generateQrSession() {
   const sessionId = crypto.randomUUID();
   const expiresAt = new Date(Date.now() + 5 * 60 * 1000).toISOString();
   const baseUrl = (process.env.BACKEND_URL || process.env.API_BASE_URL || "http://localhost:3000").replace(/\/$/, "");
-  const deepLink = `${baseUrl}/auth/qr/webhook/${sessionId}?expiresAt=${encodeURIComponent(expiresAt)}`;
+  const webhookUrl = `${baseUrl}/auth/qr/webhook/${sessionId}`;
+  // BUG 5: Wallet apps expect a URI scheme, not a raw POST webhook URL in the QR code
+  const deepLink = `ackinacki://login?session=${sessionId}&endpoint=${encodeURIComponent(webhookUrl)}&expiresAt=${encodeURIComponent(expiresAt)}`;
 
   await query(`INSERT INTO qr_sessions (id, status, deep_link, expires_at) VALUES ($1, 'pending', $2, $3)`, [sessionId, deepLink, expiresAt]);
 

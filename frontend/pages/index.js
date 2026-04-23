@@ -106,7 +106,7 @@ export default function Home() {
 
   // Sort by filter
   if (filter === "trending") {
-    filtered = [...filtered].sort((a, b) => (b.riskProfile?.score || 0) - (a.riskProfile?.score || 0));
+    filtered = [...filtered].sort((a, b) => Number(b.onchainData?.reserveBalance || 0) - Number(a.onchainData?.reserveBalance || 0));
   } else if (filter === "finishing") {
     filtered = [...filtered].sort((a, b) => {
       const pa = parseFloat(calcProgressFromReserve(readReserveBalance(a.onchainData)) || "0");
