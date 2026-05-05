@@ -1,7 +1,7 @@
 const fs = require("fs");
 const path = require("path");
 const { listPublicLaunches, listLaunchesForSync, updateLaunchOnchainState } = require("../storage");
-const { getAccountPublicKey } = require("./graphql.service");
+const { getAccountState } = require("./graphql.service");
 const { config } = require("../config");
 
 // TVM SDK Initialization for local BOC decoding
@@ -84,7 +84,7 @@ async function syncOnchainData() {
         continue;
       }
 
-      const bcState = await getAccountPublicKey(launch.bondingCurveAddress);
+      const bcState = await getAccountState(launch.bondingCurveAddress);
       
       if (bcState.isDeployed && bcState.boc) {
         // Fallbacks
@@ -109,7 +109,7 @@ async function syncOnchainData() {
 
         // Run Local Getters with TokenRoot BOC
         if (launch.tokenRootAddress) {
-          const rootState = await getAccountPublicKey(launch.tokenRootAddress);
+          const rootState = await getAccountState(launch.tokenRootAddress);
           if (rootState.isDeployed && rootState.boc) {
              const supplyOut = await runLocalGetter(rootState.boc, launch.tokenRootAddress, tokenRootAbiPath, "totalSupply");
              if (supplyOut && supplyOut.totalSupply) {

@@ -9,6 +9,11 @@ import "./BondingCurve.sol";
 
 
 contract TokenRoot {
+    // ─── R-04: static vars FIRST — determinam o stateInit hash (= endereço do contrato) ──
+    // deployNonce garante endereços únicos mesmo com mesmo nome/symbol.
+    // Calculado pelo backend como sha256(creator + symbol + paymentTxHash).
+    uint256 static public deployNonce;
+
     string public name;
     string public symbol;
     uint8 public decimals;
@@ -28,8 +33,9 @@ contract TokenRoot {
     mapping(uint32 => uint256) private _pendingBurnAmounts;
     uint32 private _burnSeqno = 1;
 
-    // ─── Fix #3: owner passado explicitamente (msg.sender = address(0) em ext msg) ───
-    // ─── Fix N1: gosh.cnvrtshellq() para converter SHELL em VMSHELL no deploy ────────
+    // ─── Fix N1: tvm.accept() ANTES de gosh.cnvrtshellq() ────────────────────
+    // Em mensagens externas, o contrato só pode gastar gas do próprio saldo
+    // após tvm.accept(). Ordem correta: checks → tvm.accept() → side effects.
     constructor(
         string _name,
         string _symbol,
@@ -38,12 +44,14 @@ contract TokenRoot {
         address _owner,
         uint64 _shellToConvert
     ) {
-        // N1: Converte SHELL em VMSHELL — obrigatório para deploy via mensagem externa
-        gosh.cnvrtshellq(_shellToConvert);
-
         require(tvm.pubkey() != 0, 101);
         require(msg.pubkey() == tvm.pubkey(), 102);
         tvm.accept();
+
+        // N1: Converte SHELL em VMSHELL após aceitar gas — ordem correta
+        if (_shellToConvert > 0) {
+            gosh.cnvrtshellq(_shellToConvert);
+        }
 
         name = _name;
         symbol = _symbol;
@@ -52,13 +60,7 @@ contract TokenRoot {
         owner = _owner;  // Fix #3: owner explícito em vez de msg.sender
     }
 
-    // ─── N3: Auto-replenishment via DappConfig ───────────────────────────────
-    function _getTokens() private {
-        if (address(this).balance > 100000000000) { // 100 VMSHELL
-            return;
-        }
-        gosh.mintshell(100000000000); // 100 VMSHELL
-    }
+
 
     function getWalletAddress(address ownerAddress) public view returns (address) {
         TvmCell stateInit = tvm.buildStateInit({
@@ -81,7 +83,6 @@ contract TokenRoot {
     function deployWallet(address ownerAddress, uint128 deployValue) public returns (address) {
         // M-01: Removed unauthorized tvm.accept() and restricted to owner or bonding curve
         require(msg.sender == owner || msg.sender == bondingCurve, 109, "Unauthorized call to deployWallet");
-        _getTokens(); // N3
         
         TvmCell stateInit = _buildWalletStateInit(ownerAddress);
         address wallet = new TokenWallet{
@@ -99,7 +100,6 @@ contract TokenRoot {
     function mint(uint32 mintNonce, address recipient, uint256 amount, uint128 deployWalletValue) public {
         require(msg.sender == bondingCurve && bondingCurve != address(0), 110, "Only BondingCurve can mint");
         require(amount > 0, 105, "Amount must be greater than zero");
-        _getTokens(); // N3
 
         totalSupply += amount;
         
@@ -133,7 +133,6 @@ contract TokenRoot {
     function transferOwnership(address newOwner) public {
         require(msg.sender == owner, 111, "Only current owner can transfer ownership");
         require(newOwner != address(0), 106, "New owner cannot be zero address");
-        _getTokens(); // N3
         owner = newOwner;
     }
 
@@ -141,10 +140,8 @@ contract TokenRoot {
     // O backend chama esta função após deployar o TokenRoot para que
     // o BondingCurve seja deployado sob o mesmo DappID.
     function setBondingCurveCode(TvmCell _code) public {
-        require(msg.pubkey() == tvm.pubkey(), 102, "Only deployer can set BC code");
+        require(msg.sender == owner, 102, "Only owner can set BC code");
         require(bondingCurveCode.toSlice().empty(), 107, "BondingCurve code already set");
-        tvm.accept();
-        _getTokens(); // N3
         bondingCurveCode = _code;
     }
 
@@ -155,10 +152,8 @@ contract TokenRoot {
         bytes _creationFeeTxHash,
         uint128 _initialBalance
     ) public {
-        require(msg.pubkey() == tvm.pubkey(), 102, "Only deployer can deploy BC");
+        require(msg.sender == owner, 102, "Only owner can deploy BC");
         require(bondingCurve == address(0), 108, "BondingCurve already deployed");
-        tvm.accept();
-        _getTokens(); // N3
 
         // C-05: Build stateInit with static _tokenRoot for unique address per token
         TvmCell stateInit = tvm.buildStateInit({
@@ -181,7 +176,7 @@ contract TokenRoot {
     }
 
     // ─── Security Fix: Receive burn notification from legitimate TokenWallet ──
-    function notifyBurn(uint256 amount, address refundAddress, address callbackTarget) public {
+    function notifyBurn(uint32 seqno, uint256 amount, address refundAddress, address callbackTarget) public {
         // Assegura que o msg.sender é a carteira genuína do refundAddress.
         // Impedindo que carteiras maliciosas mintem queimas inexistentes.
         address expectedWallet = getWalletAddress(refundAddress);
@@ -189,8 +184,6 @@ contract TokenRoot {
         
         // H-03: Validate callbackTarget prevents arbitrary contract execution draining
         require(callbackTarget == bondingCurve || callbackTarget == address(0), 107, "callbackTarget must be registered BondingCurve");
-
-        _getTokens(); // N3
         
         tvm.rawReserve(0, 4); // Mantem apenas o saldo original do contrato e repassa restante do attach pro callback
 

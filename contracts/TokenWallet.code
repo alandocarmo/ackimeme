@@ -124,18 +124,19 @@
 	}
 	IF
 	.loc TokenWallet.sol, 85
-	DROP
+	SWAP
 	GETGLOB 11
-	ROT
+	SWAP2
 	GETGLOB 10
 	NEWC
 	STSLICECONST x62_
 	STSLICE
 	PUSHINT 1
 	STUR 115
-	ROLLREV 3
+	ROLLREV 4
 	NEWC
-	STSLICECONST x3abde1aa
+	STSLICECONST x050a28bd
+	STU 32
 	STU 256
 	STSLICE
 	SWAP
@@ -611,110 +612,95 @@
 	IFREF {
 		.inline c4_to_c7
 	}
-	.loc TokenWallet.sol, 90
-	PLDU 32
 	.loc TokenWallet.sol, 93
-	DUP
-	PUSHINT 985522602
+	LDU 32
+	XCPU S1, S0
+	.loc TokenWallet.sol, 97
+	PUSHINT 84551869
 	EQUAL
 	PUSHCONT {
-		.loc TokenWallet.sol, 96
-		GETGLOB 13
-		GTINT 0
+		.loc TokenWallet.sol, 98
+		OVER
+		LDU 32
+		POP S3
+		.loc TokenWallet.sol, 99
+		DUP
+		GETGLOB 15
+		PUSHINT 32
+		DICTUGET
+		NULLSWAPIFNOT
 		PUSHCONT {
-			.loc TokenWallet.sol, 97
-			GETGLOB 13
-			DEC
-			UFITS 32
-			.loc TokenWallet.sol, 98
-			DUP
-			GETGLOB 15
-			PUSHINT 32
-			DICTUGET
-			NULLSWAPIFNOT
-			PUSHCONT {
-				PLDU 256
-			}
-			IF
-			.loc TokenWallet.sol, 99
-			DUP
-			ISNULL
-			PUSHCONT {
-				.loc TokenWallet.sol, 100
-				BLKPUSH 2, 0
-				ISNULL
-				THROWIF 63
-				GETGLOB 12
-				ADD
-				SETGLOB 12
-				.loc TokenWallet.sol, 101
-				OVER
-				GETGLOB 15
-				PUSHINT 32
-				DICTUDEL
-				DROP
-				SETGLOB 15
-				.loc TokenWallet.sol, 0
-			}
-			IFNOT
-			.loc TokenWallet.sol, 0
-			DROP2
+			PLDU 256
 		}
 		IF
+		.loc TokenWallet.sol, 100
+		DUP
+		ISNULL
+		PUSHCONT {
+			.loc TokenWallet.sol, 101
+			BLKPUSH 2, 0
+			ISNULL
+			THROWIF 63
+			GETGLOB 12
+			ADD
+			SETGLOB 12
+			.loc TokenWallet.sol, 102
+			OVER
+			GETGLOB 15
+			PUSHINT 32
+			DICTUDEL
+			DROP
+			SETGLOB 15
+			.loc TokenWallet.sol, 0
+		}
+		IFNOT
 		.loc TokenWallet.sol, 0
+		DROP2
 	}
 	IF
-	.loc TokenWallet.sol, 107
+	.loc TokenWallet.sol, 108
 	PUSHINT 1408519387
 	EQUAL
 	PUSHCONT {
 		.loc TokenWallet.sol, 110
-		GETGLOB 14
-		GTINT 0
+		LDU 32
+		XCPU S1, S0
+		.loc TokenWallet.sol, 111
+		GETGLOB 16
+		PUSHINT 32
+		DICTUGET
+		NULLSWAPIFNOT
 		PUSHCONT {
-			.loc TokenWallet.sol, 111
-			GETGLOB 14
-			DEC
-			UFITS 32
-			.loc TokenWallet.sol, 112
-			DUP
-			GETGLOB 16
-			PUSHINT 32
-			DICTUGET
-			NULLSWAPIFNOT
-			PUSHCONT {
-				PLDU 256
-			}
-			IF
-			.loc TokenWallet.sol, 113
-			DUP
-			ISNULL
-			PUSHCONT {
-				.loc TokenWallet.sol, 114
-				BLKPUSH 2, 0
-				ISNULL
-				THROWIF 63
-				GETGLOB 12
-				ADD
-				SETGLOB 12
-				.loc TokenWallet.sol, 115
-				OVER
-				GETGLOB 16
-				PUSHINT 32
-				DICTUDEL
-				DROP
-				SETGLOB 16
-				.loc TokenWallet.sol, 0
-			}
-			IFNOT
-			.loc TokenWallet.sol, 0
-			DROP2
+			PLDU 256
 		}
 		IF
+		.loc TokenWallet.sol, 112
+		DUP
+		ISNULL
+		PUSHCONT {
+			.loc TokenWallet.sol, 113
+			BLKPUSH 2, 0
+			ISNULL
+			THROWIF 63
+			GETGLOB 12
+			ADD
+			SETGLOB 12
+			.loc TokenWallet.sol, 114
+			OVER
+			GETGLOB 16
+			PUSHINT 32
+			DICTUDEL
+			DROP
+			SETGLOB 16
+			.loc TokenWallet.sol, 0
+		}
+		IFNOT
 		.loc TokenWallet.sol, 0
+		DROP2
 	}
 	IF
 	.loc TokenWallet.sol, 0
+	DROP
 	CALLREF {
 		.inline c7_to_c4
 	}

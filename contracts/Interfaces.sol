@@ -6,7 +6,7 @@ pragma tvm-solidity >= 0.76.1;
 
 interface ITokenRoot {
     function mint(uint32 mintNonce, address recipient, uint256 amount, uint128 deployWalletValue) external;
-    function notifyBurn(uint256 amount, address refundAddress, address callbackTarget) external;
+    function notifyBurn(uint32 seqno, uint256 amount, address refundAddress, address callbackTarget) external;
 }
 
 interface ITokenWallet {

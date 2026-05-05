@@ -61,6 +61,23 @@ function hashColor(str) {
   return `hsl(${h}, 65%, 55%)`;
 }
 
+function computeAggregateStats(launches) {
+  let totalReserve = 0;
+  let activeCount = 0;
+  for (const l of launches) {
+    const r = Number(l.onchainData?.reserveBalance || 0);
+    if (r > 0) {
+      totalReserve += r;
+      activeCount++;
+    }
+  }
+  return {
+    totalTokens: launches.length,
+    totalReserveShell: (totalReserve / 1e9).toFixed(1),
+    activeTrading: activeCount,
+  };
+}
+
 export default function Home() {
   const [launches, setLaunches] = useState([]);
   const [error, setError] = useState("");
@@ -131,12 +148,56 @@ export default function Home() {
             <span className="hero-accent">on Acki Nacki</span>
           </h1>
           <p className="hero-subtitle">
-            fair launch · bonding curve · auto-migrate to DEX.DO at 69K SHELL
+            fair launch · bonding curve · auto-migrate to AMM at 69K SHELL
           </p>
           <Link href="/create" className="btn-primary">
             🚀 Launch your coin
           </Link>
         </section>
+
+        {/* Live Stats Banner */}
+        {launches.length > 0 && (() => {
+          const agg = computeAggregateStats(launches);
+          return (
+            <div className="container">
+              <div className="stats-banner">
+                <div className="stats-banner-item">
+                  <span className="stats-banner-value"><span className="accent">{agg.totalTokens}</span></span>
+                  <span className="stats-banner-label">Tokens Launched</span>
+                </div>
+                <div className="stats-banner-item">
+                  <span className="stats-banner-value"><span className="cyan">{agg.totalReserveShell}</span></span>
+                  <span className="stats-banner-label">SHELL Locked</span>
+                </div>
+                <div className="stats-banner-item">
+                  <span className="stats-banner-value"><span className="warm">{agg.activeTrading}</span></span>
+                  <span className="stats-banner-label">Active Trading</span>
+                </div>
+                <div className="stats-banner-item">
+                  <span className="stats-banner-value"><span className="purple">●</span></span>
+                  <span className="stats-banner-label">Acki Nacki Live</span>
+                </div>
+              </div>
+            </div>
+          );
+        })()}
+
+        {/* Activity Ticker */}
+        {launches.length > 0 && (
+          <div className="activity-ticker">
+            <div className="ticker-track">
+              {/* Duplicate items for seamless loop */}
+              {[...launches, ...launches].slice(0, 20).map((l, i) => (
+                <span className="ticker-item" key={`tick-${i}`}>
+                  <span className="ticker-dot" />
+                  <span className="ticker-action ticker-launch">LAUNCHED</span>
+                  <span>${l.coin?.symbol}</span>
+                  <span style={{ color: 'var(--ink-muted)' }}>{formatTimeAgo(l.createdAt)}</span>
+                </span>
+              ))}
+            </div>
+          </div>
+        )}
 
         {/* Controls */}
         <div className="container">
@@ -187,7 +248,7 @@ export default function Home() {
                     <div className="token-card-header">
                       <div className="token-avatar" style={{ background: `linear-gradient(135deg, ${color}, ${color}44)` }}>
                         {launch.coin?.logoUrl ? (
-                          <img src={launch.coin.logoUrl} alt="" />
+                          <img src={launch.coin.logoUrl} alt="" referrerPolicy="no-referrer" />
                         ) : (
                           <span style={{ color: '#fff', fontSize: '18px', fontWeight: 700 }}>
                             {(launch.coin?.symbol || "?")[0]}
@@ -226,7 +287,7 @@ export default function Home() {
                         <span>{progress === null ? "N/A" : `${progress}%`}</span>
                       </div>
                       <div className="progress-track">
-                        <div className="progress-fill" style={{
+                        <div className={`progress-fill${parseFloat(progress || "0") > 80 ? " near-complete" : ""}`} style={{
                           width: progress === null ? "0%" : `${progress}%`,
                           background: parseFloat(progress || "0") > 80
                             ? "linear-gradient(90deg, #f97316, #ef4444)"
@@ -260,6 +321,20 @@ export default function Home() {
           </div>
         </div>
       </main>
+
+      {/* Footer */}
+      <footer className="site-footer">
+        <div className="footer-brand">
+          <span className="footer-brand-icon">⬡</span>
+          <span className="footer-brand-text">AckiMeme</span>
+        </div>
+        <p className="footer-tagline">fair launch memecoins on acki nacki blockchain</p>
+        <div className="footer-links">
+          <a href="https://docs.ackinacki.com" target="_blank" rel="noreferrer" className="footer-link">Acki Nacki Docs</a>
+          <a href="https://beescan.live" target="_blank" rel="noreferrer" className="footer-link">BeeScan Explorer</a>
+          <Link href="/create" className="footer-link" style={{ color: 'var(--accent)' }}>Launch a Coin</Link>
+        </div>
+      </footer>
       
       <style jsx>{`
         .empty-state { text-align: center; padding: 80px 24px; }

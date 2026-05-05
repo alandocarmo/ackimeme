@@ -47,7 +47,12 @@ export default function CreatePage() {
   }, []);
 
   function updateField(field, value) {
-    const v = field === "symbol" ? sanitizeSymbol(value) : value;
+    let v = value;
+    if (field === "symbol") {
+      v = sanitizeSymbol(value);
+    } else if (field === "totalSupply") {
+      v = String(value || "").replace(/[^\d]/g, "");
+    }
     setForm((prev) => ({ ...prev, [field]: v }));
   }
 

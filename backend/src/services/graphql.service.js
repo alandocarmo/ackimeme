@@ -62,7 +62,7 @@ let abiContract = null;
 try {
   // `nekoton-wasm` decodifica body de mensagens TIP-3 sem depender do binário
   // nativo do TVM SDK, que pode falhar em runtimes Node recentes.
-  tvmClient = require("nekoton-wasm-locklift");
+  tvmClient = require("nekoton-wasm");
 } catch (error) {
   console.warn("[GraphQL] Decoder TIP-3 indisponível:", error.message);
 }
@@ -674,11 +674,46 @@ async function getAccountPublicKey(address) {
   }
 }
 
+/**
+ * Busca apenas o estado da conta (boc) sem verificações de Auth rigorosas.
+ * Útil para o serviço de sync ler dados on-chain de contratos inativos ou recém-criados.
+ */
+async function getAccountState(address) {
+  const accountQuery = `
+    query getAccount($address: String!) {
+      blockchain {
+        account(address: $address) {
+          info {
+            boc
+          }
+        }
+      }
+    }
+  `;
+
+  try {
+    const data = await gql(accountQuery, { address });
+    const info = data?.blockchain?.account?.info;
+
+    if (!info) {
+      return { isDeployed: false, boc: "" };
+    }
+
+    return {
+      isDeployed: true,
+      boc: info.boc || "",
+    };
+  } catch (err) {
+    return { isDeployed: false, boc: "" };
+  }
+}
+
 module.exports = {
   getTip3TransferPayment,
   isTip3DecoderAvailable,
   getTransaction,
   getAccountBalance,
   getAccountPublicKey,
+  getAccountState,
   nanoToDecimal,
 };

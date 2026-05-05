@@ -24,6 +24,16 @@ export default function AuthPage() {
   
   // Polling ref
   const pollingRef = useRef(null);
+  const stepRef = useRef("connect");
+  const qrSessionIdRef = useRef("");
+
+  useEffect(() => {
+    stepRef.current = step;
+  }, [step]);
+
+  useEffect(() => {
+    qrSessionIdRef.current = qrData?.sessionId || "";
+  }, [qrData]);
 
   // 1. On Mount: Check if logged in, otherwise start QR Session
   useEffect(() => {
@@ -40,7 +50,21 @@ export default function AuthPage() {
         initQrLogin();
       });
 
-    return () => stopPolling();
+    // Audit #26: Pause polling when tab is hidden to save bandwidth
+    const handleVisibility = () => {
+      if (document.hidden) {
+        stopPolling();
+      } else if (stepRef.current !== "done" && qrSessionIdRef.current) {
+        startPolling(qrSessionIdRef.current);
+      }
+      // Polling resumes automatically when initQrLogin is called or on next user interaction
+    };
+    document.addEventListener("visibilitychange", handleVisibility);
+
+    return () => {
+      stopPolling();
+      document.removeEventListener("visibilitychange", handleVisibility);
+    };
   }, []);
 
   const stopPolling = () => {
@@ -56,6 +80,7 @@ export default function AuthPage() {
       setError("");
       const res = await generateQrChallenge();
       setQrData({ sessionId: res.sessionId, deepLink: res.deepLink });
+      qrSessionIdRef.current = res.sessionId;
       setStep("connect");
       startPolling(res.sessionId);
     } catch (err) {
@@ -66,7 +91,11 @@ export default function AuthPage() {
   };
 
   const startPolling = (sessionId) => {
+    const effectiveSessionId = sessionId || qrSessionIdRef.current;
+    if (!effectiveSessionId) return;
+
     stopPolling(); // Ensure clean state
+    qrSessionIdRef.current = effectiveSessionId;
     let attempts = 0;
     const MAX_ATTEMPTS = 120; // ~5 minutos a 2.5s cada
     
@@ -78,16 +107,18 @@ export default function AuthPage() {
         return;
       }
       try {
-        const statusRes = await getQrStatus(sessionId);
+        const statusRes = await getQrStatus(effectiveSessionId);
         if (statusRes.status === 'done') {
           // Polling success! App notified webhook
           stopPolling();
+          qrSessionIdRef.current = "";
           
           // Re-fetch the session properly to populate UI, or just trust the new cookie
           // We can call getSession() to get real user data now
           try {
             const sessionRes = await getSession();
             setSession(sessionRes.session);
+            window.dispatchEvent(new Event('session-changed'));
             setStep("done");
             setTimeout(() => router.push(String(returnTo)), 1200);
           } catch {
@@ -110,6 +141,7 @@ export default function AuthPage() {
   async function handleLogout() {
     await logout().catch(() => {});
     setSession(null); 
+    window.dispatchEvent(new Event('session-changed'));
     setStep("connect");
     initQrLogin();
   }

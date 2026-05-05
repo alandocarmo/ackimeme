@@ -26,7 +26,6 @@ function normalizeSessionRow(row) {
 
   return {
     id: row.id,
-    token: row.token,
     walletAddress: row.wallet_address,
     publicKey: row.public_key,
     proofLevel: row.proof_level,
@@ -1846,7 +1845,16 @@ async function addComment(comment) {
   ];
   
   const result = await query(sql, values);
-  return result.rows[0];
+  // Audit #18: Normalize to camelCase so frontend receives consistent keys
+  // (walletAddress, createdAt) instead of raw PostgreSQL snake_case (wallet_address, created_at)
+  const row = result.rows[0];
+  return {
+    id: row.id,
+    launchId: row.launch_id,
+    walletAddress: row.wallet_address,
+    content: row.content,
+    createdAt: row.created_at?.toISOString?.() || row.created_at,
+  };
 }
 
 async function getCommentsByLaunchId(launchId, limit = 50) {

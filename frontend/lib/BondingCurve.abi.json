@@ -60,6 +60,7 @@
 		{
 			"name": "onTokenBurned",
 			"inputs": [
+				{"name":"burnNonce","type":"uint32"},
 				{"name":"amount","type":"uint256"},
 				{"name":"refundAddress","type":"address"}
 			],
@@ -218,7 +219,6 @@
 		{"init":false,"name":"_constructorFlag","type":"bool"},
 		{"init":true,"name":"_tokenRoot","type":"address"},
 		{"init":false,"name":"reserveBalance","type":"uint256"},
-		{"init":false,"name":"_pendingLiquidity","type":"uint128"},
 		{"init":false,"name":"totalSupply","type":"uint256"},
 		{"init":false,"name":"isAmm","type":"bool"},
 		{"init":false,"name":"ammKLast","type":"uint256"},

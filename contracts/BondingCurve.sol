@@ -13,26 +13,26 @@ contract BondingCurve {
     uint256 public constant MAX_BUY_PER_TX = 50_000_000 * 1e9;
     uint256 public constant TOTAL_SUPPLY_CAP = 1_000_000_000 * 1e9; // 1 billion tokens
 
-    // ─── C-02: SHELL ECC token ID for cross-DappID payments ──────────────────
-    uint32 public constant SHELL_CURRENCY_ID = 2;
+    // ─── C-02: ECC token IDs for Acki Nacki ecosystem ─────────────────────────
+    // V-AM-01: Explicit ID constants prevent confusion attacks across the
+    // NACKL/SHELL/USDC token ecosystem. Only SHELL (ID=2) is valid payment.
+    uint32 public constant NACKL_CURRENCY_ID = 1;   // Staking & store of value
+    uint32 public constant SHELL_CURRENCY_ID = 2;    // Utility token (gas, fees) — ACCEPTED
+    uint32 public constant USDC_CURRENCY_ID  = 3;    // Stablecoin
     uint256 private constant MAX_UINT128 = 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF; // 2^128 - 1
 
     // ─── R-04: Static vars MUST precede all state vars ───────────────────────
-    // In TVM-Solidity, `static` vars are part of the stateInit (initial data).
-    // Their position affects the cell tree layout. Declaring them after state vars
-    // causes the stateInit hash (= contract address) to diverge between the SDK
-    // prediction and the actual deployed contract.
     address static public _tokenRoot;    // unique per deploy — makes each BondingCurve address distinct
 
     // ─── State ────────────────────────────────────────────────────────────────
     uint256 public reserveBalance;       // tracked SHELL balance (nano)
-    uint128 private _pendingLiquidity;   // tracked for rollback on migration bounce
     uint256 public totalSupply;
-    bool public isAmm;                   // true after reaching threshold (x*y=k)
+    bool public isAmm;                   // true after reaching threshold (x*y=k internal pool)
     uint256 public ammKLast;             // AMM invariant
     uint32 public migratedAt;            // timestamp of migration
     address public owner;                // token creator
-    address public tokenRoot;            // TokenRoot address
+    // NOTE: tokenRoot removed — use _tokenRoot (static) everywhere for consistency.
+    // _tokenRoot is set via stateInit and never changes, making it the canonical reference.
     string public name;
     string public symbol;
 
@@ -54,8 +54,7 @@ contract BondingCurve {
 
     // ─── Constructor ──────────────────────────────────────────────────────────
     // BondingCurve is deployed via internal message from TokenRoot.
-    // N2: Deploy via internal message, sharing DappID.
-    // N1: No need for gosh.cnvrtshellq() here since it's an internal deploy.
+    // msg.sender == address(TokenRoot) == _tokenRoot (stateInit static var).
     constructor(
         address _owner,
         address _tokenRootAddr,
@@ -63,23 +62,18 @@ contract BondingCurve {
         string _symbol,
         bytes _creationFeeTxHash
     ) {
-        require(msg.sender == _tokenRootAddr, 101, "Only root can deploy BondingCurve");
-        
+        require(msg.sender == _tokenRoot, 101, "Only TokenRoot can deploy BondingCurve");
+        require(_tokenRootAddr == _tokenRoot, 104, "tokenRootAddr must match static _tokenRoot");
+
         owner = _owner;
-        tokenRoot = _tokenRootAddr;
+        // _tokenRoot is the canonical reference — no separate tokenRoot variable needed
         name = _name;
         symbol = _symbol;
         creationFeeTxHash = _creationFeeTxHash;
         isAmm = false;
     }
 
-    // ─── N3: Auto-replenishment via DappConfig ───────────────────────────────
-    function _getTokens() private {
-        if (address(this).balance > 100000000000) { // 100 VMSHELL
-            return;
-        }
-        gosh.mintshell(100000000000); // 100 VMSHELL
-    }
+
 
     // ─── A-04: Price & Mathematics (adjusted base for meme economy) ──────────
     // Base price: 0.000001 SHELL per token-unit (= 1_000 nanotokens)
@@ -121,16 +115,14 @@ contract BondingCurve {
     }
 
     // ─── Configuration ───────────────────────────────────────────────────────
-    // Fix #6: auth via msg.pubkey() instead of msg.sender = owner
-    // ─── AMM Migration overrides external dex.do pool logic
+    // Fix: auth via msg.sender == owner (internal message from owner's wallet)
+    // instead of msg.pubkey() which only works for external messages.
+    // Browser wallets (EVER Wallet, etc.) send internal messages where msg.pubkey() == 0.
     function forceAmmMigration() public {
-        require(msg.pubkey() == tvm.pubkey(), 102, "Only owner pubkey can force AMM");
-        tvm.accept();
-        _getTokens();
-        
-        if (reserveBalance >= MIGRATION_THRESHOLD && !isAmm) {
-            _migrateToAmm();
-        }
+        require(msg.sender == owner, 102, "Only owner can force AMM");
+        require(reserveBalance >= MIGRATION_THRESHOLD, 108, "Threshold not reached");
+        require(!isAmm, 109, "Already migrated to AMM");
+        _migrateToAmm();
     }
 
     // ─── C-02: Buy via msg.currencies[2] (SHELL ECC cross-DappID) ────────────
@@ -138,10 +130,15 @@ contract BondingCurve {
     // This works both intra-DappID and cross-DappID, enabling universal composability.
     // msg.value (VMSHELL) is used ONLY for gas, not as payment.
     function buy(uint256 tokenAmount, uint256 maxShellIn) public {
-        _getTokens(); // N3
 
         // A-09: Ensure caller sent enough VMSHELL for gas (mint + refund)
         require(msg.value >= 0.2 ton, 213, "Insufficient VMSHELL gas. Send at least 0.2 VMSHELL as msg.value");
+
+        // V-AM-01: Reject transactions that accidentally/maliciously include NACKL or USDC
+        // instead of SHELL. Without this check, a confusion attack could credit the
+        // buyer with tokens while the BondingCurve receives the wrong ECC currency.
+        require(uint256(msg.currencies[NACKL_CURRENCY_ID]) == 0, 217, "NACKL not accepted. Send SHELL (ECC ID=2)");
+        require(uint256(msg.currencies[USDC_CURRENCY_ID]) == 0, 218, "USDC not accepted. Send SHELL (ECC ID=2)");
 
         // Note: internal AMM means trading continues normally on this same contract!
         require(tokenAmount > 0, 202, "Amount must be greater than zero");
@@ -171,7 +168,7 @@ contract BondingCurve {
         emit TokensPurchaseInitiated(msg.sender, cost, tokenAmount, currentPrice());
 
         // Mint memecoins to buyer via internal message
-        ITokenRoot(tokenRoot).mint(nonce, msg.sender, tokenAmount, 0.1 ton); // sends 0.1 VMSHELL for wallet deployment
+        ITokenRoot(_tokenRoot).mint(nonce, msg.sender, tokenAmount, 0.1 ton); // sends 0.1 VMSHELL for wallet deployment
 
         // Refund excess SHELL (Extra Currency) back to buyer
         uint256 excess = receivedShell > cost ? receivedShell - cost : 0;
@@ -191,13 +188,14 @@ contract BondingCurve {
     // ─── Receiver for async burns (Sell) ─────────────────────────────────────
     // Called by TokenRoot after TokenWallet burns tokens
     function onTokenBurned(uint32 burnNonce, uint256 amount, address refundAddress) external {
-        require(msg.sender == tokenRoot, 103, "Only TokenRoot can notify burn");
-        _getTokens(); // N3
+        require(msg.sender == _tokenRoot, 103, "Only TokenRoot can notify burn");
         // Removed the "if (migrated)" block since AMM transition allows users
         // to continue trading organically on this internal contract.
         // It calculates returns via getSellReturn using x*y=k formula.
 
         uint256 returnAmount = getSellReturn(amount);
+        // Audit #8: Prevent silent zero-return sells where user burns tokens and gets nothing
+        require(returnAmount > 0, 216, "Sell amount too small, return rounds to zero");
         require(reserveBalance >= returnAmount, 204, "Insufficient reserve for sell");
 
         totalSupply -= amount;

@@ -207,7 +207,7 @@ app.use((req, res, next) => {
     }
   }
 
-  res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization, X-Admin-Token");
+  res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization, X-Admin-Token, x-admin-jwt");
   res.setHeader("Access-Control-Allow-Methods", "GET, POST, PATCH, OPTIONS");
   res.setHeader("Access-Control-Allow-Credentials", "true");
 
@@ -260,6 +260,14 @@ function setSessionCookie(res, sessionToken) {
     path: "/",
     maxAge: 7 * 24 * 60 * 60 * 1000, // 7 dias
   });
+}
+
+function buildPublicSession(session) {
+  if (!session) {
+    return null;
+  }
+  const { token: _token, ...publicSession } = session;
+  return publicSession;
 }
 
 
@@ -425,7 +433,7 @@ app.post("/auth/verify", authLimiter, async (req, res) => {
 
     res.json({
       success: true,
-      session,
+      session: buildPublicSession(session),
     });
   } catch (error) {
     res.status(400).json({ error: error.message });
@@ -446,10 +454,12 @@ app.post("/auth/qr/generate", authLimiter, async (req, res) => {
 app.get("/auth/qr/status/:sessionId", async (req, res) => {
   try {
     const statusData = await getQrSessionStatus(req.params.sessionId);
-    if (statusData?.status === "done" && statusData?.sessionToken) {
-      setSessionCookie(res, statusData.sessionToken);
+    const sessionToken = statusData?.sessionToken;
+    if (statusData?.status === "done" && sessionToken) {
+      setSessionCookie(res, sessionToken);
     }
-    res.json({ success: true, ...statusData });
+    const { sessionToken: _sessionToken, ...publicStatus } = statusData || {};
+    res.json({ success: true, ...publicStatus });
   } catch (error) {
     res.status(400).json({ error: error.message });
   }
@@ -585,147 +595,22 @@ app.post("/verify-payment", paymentLimiter, requireSession, async (req, res) => 
   }
 });
 
-app.post("/shell-buy/verify", paymentLimiter, requireSession, async (req, res) => {
-  try {
-    if (!config.shellBuy.enabled) {
-      return res.status(503).json({
-        error: "Compra de SHELL via USDC está desativada no backend.",
-      });
-    }
-
-    if (!config.shellBuy.usdcRecipientConfigured) {
-      return res.status(503).json({
-        error: "Destino USDC da compra de SHELL não está configurado no backend.",
-      });
-    }
-
-    if (!isTip3DecoderAvailable()) {
-      return res.status(503).json({
-        error:
-          "Validação TIP-3 indisponível no backend. Não é possível confirmar pagamentos USDC.",
-      });
-    }
-
-    const walletAddress = String(req.session?.walletAddress || "").trim();
-    const txHash = String(req.body?.txHash || "").trim();
-
-    if (!walletAddress) {
-      throw new Error("Sessão inválida para validar compra de SHELL.");
-    }
-
-    if (!txHash) {
-      throw new Error("txHash é obrigatório para validar compra de SHELL.");
-    }
-
-    const existingOrder = await getShellBuyOrderByTxHash(txHash);
-    if (existingOrder) {
-      if (existingOrder.walletAddress !== walletAddress.toLowerCase()) {
-        throw new Error("Este txHash já foi validado para outra wallet.");
-      }
-
-      return res.json({
-        success: true,
-        duplicate: true,
-        order: existingOrder,
-      });
-    }
-
-    const payment = await getTip3TransferPayment({
-      txHash,
-      senderWallet: walletAddress,
-      recipientWallet: config.shellBuy.usdcRecipient,
-      decimals: config.shellBuy.usdcDecimals,
-    });
-
-    if (!payment) {
-      throw new Error(
-        "Não foi encontrada transferência TIP-3 USDC válida para o endereço configurado.",
-      );
-    }
-
-    if (Number(payment.amount) < config.shellBuy.minUsdcAmount) {
-      throw new Error(
-        `Valor USDC insuficiente. Mínimo: ${config.shellBuy.minUsdcAmount} USDC.`,
-      );
-    }
-
-    const shellAmount = calcShellAmountFromUsdc(payment.amount);
-    if (!shellAmount) {
-      throw new Error("Falha ao calcular quantidade de SHELL a partir do pagamento USDC.");
-    }
-
-    const nowIso = new Date().toISOString();
-    const order = {
-      id: crypto.randomUUID(),
-      walletAddress,
-      txHash,
-      usdcAmount: Number(payment.amount),
-      shellAmount,
-      usdcRecipient: config.shellBuy.usdcRecipient,
-      status: "payment_confirmed_waiting_settlement",
-      paymentProof: {
-        sender: payment.sender,
-        recipient: payment.recipient,
-        rawAmount: payment.rawAmount,
-        decimals: payment.decimals,
-        proof: payment.proof || {},
-      },
-      note:
-        "Pagamento USDC confirmado. O settlement de SHELL depende do Accumulator/Exchange.",
-      createdAt: nowIso,
-      updatedAt: nowIso,
-      onChainVerifiedAt: nowIso,
-    };
-
-    try {
-      await createShellBuyOrder(order);
-    } catch (dbError) {
-      if (dbError && dbError.code === "23505") {
-        const concurrentOrder = await getShellBuyOrderByTxHash(txHash);
-        if (concurrentOrder) {
-          if (concurrentOrder.walletAddress !== walletAddress.toLowerCase()) {
-            throw new Error("Este txHash já foi validado para outra wallet.");
-          }
-          return res.json({
-            success: true,
-            duplicate: true,
-            order: concurrentOrder,
-          });
-        }
-      }
-      throw dbError;
-    }
-
-    res.json({
-      success: true,
-      verifiedAt: nowIso,
-      order,
-    });
-  } catch (error) {
-    res.status(400).json({ error: error.message });
-  }
+app.post("/shell-buy/verify", (req, res) => {
+  res.status(410).json({
+    error: "A compra de SHELL agora é feita diretamente no contrato Accumulator on-chain. Atualize sua página.",
+  });
 });
 
-app.get("/shell-buy/my-orders", requireSession, async (req, res) => {
-  try {
-    const orders = await listShellBuyOrdersByWallet(req.session.walletAddress, 30);
-    res.json({ success: true, orders });
-  } catch (error) {
-    res.status(400).json({ error: error.message });
-  }
+app.get("/shell-buy/my-orders", (req, res) => {
+  res.status(410).json({
+    error: "O histórico de ordens manuais foi descontinuado.",
+  });
 });
 
-app.get("/shell-buy/order/:id", requireSession, async (req, res) => {
-  try {
-    const order = await getShellBuyOrderById(req.params.id);
-    if (!order || order.walletAddress !== String(req.session.walletAddress || "").toLowerCase()) {
-      return res.status(404).json({ error: "Pedido não encontrado." });
-    }
-
-    res.json({ success: true, order });
-  } catch (error) {
-    res.status(400).json({ error: error.message });
-  }
+app.get("/shell-buy/order/:id", (req, res) => {
+  res.status(410).json({
+    error: "Ordens manuais foram descontinuadas.",
+  });
 });
 
 app.post("/launch-request", requireSession, async (req, res) => {
@@ -824,27 +709,43 @@ app.post("/launch-request", requireSession, async (req, res) => {
       launchTicket.status = "on_chain_deployed";
       launchTicket.mintingAvailable = true;
       launchTicket.note = `Token criado com sucesso no IPFS (${ipfsHash}) e instanciado na Acki Nacki.`;
-    } else {
+    } else if (
+      deployResult.status === "awaiting_chain_integration" &&
+      process.env.ENABLE_ONCHAIN_DEPLOY !== "true"
+    ) {
       launchTicket.status = "payment_verified_waiting_blockchain_integration";
       launchTicket.mintingAvailable = false;
       launchTicket.note =
-        `Pagamento verificado e metadata em IPFS (${ipfsHash}). ` +
-        `Deploy on-chain: ${deployResult.status}` +
-        (deployResult.reason ? ` — ${deployResult.reason}` : ".");
+        `Token registrado com metadata no IPFS (${ipfsHash}), ` +
+        "aguardando ativação do deploy on-chain no backend.";
+    } else {
+      // P1 FIX: Don't accept the token/payment if deployment fails in a production-like flow
+      // It should revert the request entirely and ask the user to try again
+      throw new Error(`Falha no deploy on-chain: ${deployResult.status} - ${deployResult.reason}`);
     }
 
-    await createLaunchBundle({
-
-      launchTicket,
-      auditEvent: {
-        id: launchTicket.id,
-        type: "launch.created",
-        createdAt: new Date().toISOString(),
-        walletAddress: launchRequest.creator.wallet,
-        launchId: launchTicket.id,
-        payload: {},
-      },
-    });
+    // Audit #20: Handle 23505 unique violation (deploy retry with same token_root_address)
+    try {
+      await createLaunchBundle({
+        launchTicket,
+        auditEvent: {
+          id: launchTicket.id,
+          type: "launch.created",
+          createdAt: new Date().toISOString(),
+          walletAddress: launchRequest.creator.wallet,
+          launchId: launchTicket.id,
+          payload: {},
+        },
+      });
+    } catch (bundleErr) {
+      if (bundleErr && bundleErr.code === "23505") {
+        throw new Error(
+          "Um token com este endereço on-chain já existe. " +
+          "Isso pode ocorrer em retries de deploy. Use uma nova transação de pagamento."
+        );
+      }
+      throw bundleErr;
+    }
 
     // Persist rate limit after successful creation (txHash already reserved)
     await updateWalletLastLaunch(launchRequest.creator.wallet);
@@ -875,6 +776,7 @@ app.get("/launches/my", requireSession, (req, res) => {
 });
 
 app.get("/launches/public", (_, res) => {
+  res.set("Cache-Control", "public, max-age=12");
   listPublicLaunches(30)
     .then((launches) => {
       res.json({
@@ -975,7 +877,9 @@ app.get("/launches/:id", async (req, res) => {
 // ── Comments API (Feature: Chat) ──────────────────────────────────────────────
 app.get("/launches/:id/comments", async (req, res) => {
   try {
-    const limit = parseInt(req.query.limit) || 50;
+    // Audit #P2: Clamp limit to prevent DoS via large queries
+    const rawLimit = parseInt(req.query.limit) || 50;
+    const limit = Math.min(Math.max(rawLimit, 1), 100);
     const comments = await getCommentsByLaunchId(req.params.id, limit);
     res.json({ success: true, comments });
   } catch (err) {
@@ -983,16 +887,30 @@ app.get("/launches/:id/comments", async (req, res) => {
   }
 });
 
-const commentRateLimits = new Map();
+// Audit N3: Rate limiting moved to PostgreSQL (wallet_rate_limits) for persistence across restarts
 
 app.post("/launches/:id/comments", requireSession, async (req, res) => {
   try {
+    const UUID_REGEX = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+    if (!UUID_REGEX.test(req.params.id)) {
+      return res.status(400).json({ error: "Token ID inválido." });
+    }
+
+    // P2 FIX: Ensure launch exists to prevent 500 FK error
+    const launchExists = await require("./db").query(`SELECT id FROM launches WHERE id=$1`, [req.params.id]);
+    if (launchExists.rowCount === 0) {
+      return res.status(404).json({ error: "Token não encontrado." });
+    }
+
     const wallet = req.session.walletAddress;
-    const now = Date.now();
-    const lastCommentTime = commentRateLimits.get(wallet) || 0;
     
-    // DESIGN-5: Rate limit (1 comment per 30s per wallet)
-    if (now - lastCommentTime < 30000) {
+    // DESIGN-5 / Audit N3: Persistent Rate limit (1 comment per 30s per wallet)
+    const { rows } = await require("./db").query(
+      `SELECT last_comment_at FROM wallet_rate_limits WHERE wallet_address = $1`,
+      [wallet]
+    );
+    const lastCommentAt = rows[0]?.last_comment_at;
+    if (lastCommentAt && Date.now() - new Date(lastCommentAt).getTime() < 30000) {
       return res.status(429).json({ error: "Aguarde 30 segundos antes de postar outro comentário." });
     }
 
@@ -1003,12 +921,18 @@ app.post("/launches/:id/comments", requireSession, async (req, res) => {
     }
 
     // DESIGN-5: Basic URL/link filtering to prevent spam/phishing
-    const urlRegex = /(https?:\/\/[^\s]+)|(www\.[^\s]+)|([a-zA-Z0-9-]+\.[a-zA-Z]{2,}(\/[^\s]*)?)/i;
+    // M1: Simplified to avoid blocking legitimate mentions like "ackimeme.fun"
+    const urlRegex = /(https?:\/\/[^\s]+)|(www\.[^\s]+)/i;
     if (urlRegex.test(content)) {
       return res.status(400).json({ error: "Links não são permitidos nos comentários por segurança." });
     }
 
-    commentRateLimits.set(wallet, now);
+    // Upsert the last comment timestamp
+    await require("./db").query(
+      `INSERT INTO wallet_rate_limits (wallet_address, last_comment_at) VALUES ($1, NOW())
+       ON CONFLICT (wallet_address) DO UPDATE SET last_comment_at = NOW()`,
+      [wallet]
+    );
 
     const comment = {
       id: crypto.randomUUID(),

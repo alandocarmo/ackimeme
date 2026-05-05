@@ -10,7 +10,7 @@ const pool = new Pool({
   ssl: process.env.DATABASE_SSL === "true" ? { rejectUnauthorized: true } : false,
   max: 20, // max connection pool size
   idleTimeoutMillis: 30000,
-  connectionTimeoutMillis: 2000,
+  connectionTimeoutMillis: 5000, // Audit #29: 2s was too short for Render free tier cold starts
 });
 
 async function query(text, params = []) {
@@ -75,9 +75,21 @@ async function runMigrations() {
   }
 }
 
-async function pingDatabase() {
-  await query("SELECT 1");
-  return true;
+// Audit #29: Added retry logic for cold-start resilience
+async function pingDatabase(retries = 3, delayMs = 2000) {
+  for (let attempt = 1; attempt <= retries; attempt++) {
+    try {
+      await query("SELECT 1");
+      return true;
+    } catch (err) {
+      console.warn(`[Database] Ping attempt ${attempt}/${retries} failed: ${err.message}`);
+      if (attempt < retries) {
+        await new Promise((r) => setTimeout(r, delayMs));
+      } else {
+        throw err;
+      }
+    }
+  }
 }
 
 module.exports = {

@@ -1,5 +1,6 @@
 const fs = require("fs");
 const path = require("path");
+const crypto = require("crypto");
 const { config } = require("../config");
 const { getAccountPublicKey } = require("./graphql.service");
 
@@ -27,6 +28,7 @@ const ABI_DIR = path.join(__dirname, "../abi");
 
 // Flag de controle — habilita envio real à blockchain
 const ENABLE_ONCHAIN_DEPLOY = process.env.ENABLE_ONCHAIN_DEPLOY === "true";
+const TOKEN_DECIMALS = 9;
 
 let client = null;
 let sdkAvailable = false;
@@ -65,6 +67,62 @@ function loadContractFiles(contractName) {
     abi: JSON.parse(fs.readFileSync(abiPath, "utf-8")),
     tvc: fs.readFileSync(tvcPath).toString("base64"),
   };
+}
+
+function parseTokenSupplyToNano(totalSupply, decimals = TOKEN_DECIMALS) {
+  const digits = String(totalSupply || "").trim().replace(/[.,]/g, "");
+  if (!/^\d+$/.test(digits) || digits === "0") {
+    throw new Error("totalSupply inválido para deploy on-chain.");
+  }
+  return (BigInt(digits) * (10n ** BigInt(decimals))).toString();
+}
+
+function buildDeployNonce({ creatorWallet, symbol, paymentTxHash }) {
+  const input = [
+    "ackimeme-token-root-v1",
+    String(creatorWallet || "").toLowerCase(),
+    String(symbol || "").toUpperCase(),
+    String(paymentTxHash || "").toLowerCase(),
+  ].join(":");
+  const digest = crypto.createHash("sha256").update(input).digest("hex");
+  return BigInt(`0x${digest}`).toString();
+}
+
+function getDeployerReadiness() {
+  const privateKey = process.env.DEPLOYER_PRIVATE_KEY || "";
+  const privateKeyConfigured =
+    Boolean(privateKey) &&
+    !privateKey.includes("CONFIGURE") &&
+    !privateKey.includes("your_") &&
+    /^[0-9a-f]{64}$/i.test(privateKey);
+
+  return {
+    enabled: ENABLE_ONCHAIN_DEPLOY,
+    sdkAvailable: Boolean(sdkAvailable && client),
+    privateKeyConfigured,
+    contractsCompiled:
+      contractFilesExist("TokenRoot") &&
+      contractFilesExist("TokenWallet") &&
+      contractFilesExist("BondingCurve"),
+  };
+}
+
+function assertOnchainDeployReady() {
+  const readiness = getDeployerReadiness();
+  if (!readiness.enabled) {
+    return;
+  }
+
+  const missing = [];
+  if (!readiness.sdkAvailable) missing.push("TVM SDK/lib-node");
+  if (!readiness.privateKeyConfigured) missing.push("DEPLOYER_PRIVATE_KEY");
+  if (!readiness.contractsCompiled) missing.push("ABI/TVC dos contratos");
+
+  if (missing.length > 0) {
+    throw new Error(
+      `Deploy on-chain habilitado, mas indisponível: ${missing.join(", ")}.`,
+    );
+  }
 }
 
 /**
@@ -111,6 +169,8 @@ async function deployContract({ contractName, constructorInput, initialData, sig
  */
 async function deployTokenEcosystem({ name, symbol, totalSupply, ipfsHash, creatorWallet, paymentTxHash }) {
   const privateKey = process.env.DEPLOYER_PRIVATE_KEY;
+  const maxTokenSupply = parseTokenSupplyToNano(totalSupply);
+  const deployNonce = buildDeployNonce({ creatorWallet, symbol, paymentTxHash });
 
   // ── Verificação 1: Private key configurada? ────────────────────────────────
   if (!privateKey || privateKey.includes("CONFIGURE") || privateKey.includes("your_")) {
@@ -174,20 +234,21 @@ async function deployTokenEcosystem({ name, symbol, totalSupply, ipfsHash, creat
     console.log(`[Deployer] Preparando deploy para: ${name} (${symbol})`);
 
     // ── Passo 1: Deploy do TokenRoot ───────────────────────────────────────
-    // O TokenRoot precisa do walletCode (TVC do TokenWallet) para deployar wallets
+    // O TokenRoot precisa do walletCode (apenas a code cell, não a TVC inteira) para deployar wallets
     const walletTvc = loadContractFiles("TokenWallet").tvc;
+    const { code: walletCodeCell } = await client.boc.get_code_from_tvc({ tvc: walletTvc });
 
     const tokenRootAddress = await deployContract({
       contractName: "TokenRoot",
       constructorInput: {
         _name: name,
         _symbol: symbol,
-        _decimals: 9,
-        _walletCode: walletTvc,
+        _decimals: TOKEN_DECIMALS,
+        _walletCode: walletCodeCell,
         _owner: creatorWallet,
         _shellToConvert: 5000000000 // 5 SHELL for VMSHELL conversion upon external deploy
       },
-      initialData: {},
+      initialData: { deployNonce },
       signer,
       label: "TokenRoot",
     });
@@ -250,8 +311,8 @@ async function deployTokenEcosystem({ name, symbol, totalSupply, ipfsHash, creat
       
       // Wait for deployment
       let isDeployed = false;
-      for (let i = 0; i < 30; i++) {
-        await new Promise((res) => setTimeout(res, 2000));
+      for (let i = 0; i < 60; i++) {
+        await new Promise((res) => setTimeout(res, 3000));
         const pubKey = await getAccountPublicKey(bondingCurveAddress);
         if (pubKey.isDeployed) {
            isDeployed = true;
@@ -294,5 +355,7 @@ async function deployTokenEcosystem({ name, symbol, totalSupply, ipfsHash, creat
 }
 
 module.exports = {
+  assertOnchainDeployReady,
   deployTokenEcosystem,
+  getDeployerReadiness,
 };

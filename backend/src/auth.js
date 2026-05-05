@@ -309,7 +309,9 @@ async function generateQrSession() {
 }
 
 async function getQrSessionStatus(sessionId) {
-  const res = await query(`SELECT * FROM qr_sessions WHERE id=$1`, [sessionId]);
+  // N6 FIX: Filter expired sessions in SQL so they return 'expired' immediately
+  // instead of waiting for the cleanup cron (runs every 10 min)
+  const res = await query(`SELECT * FROM qr_sessions WHERE id=$1 AND expires_at > NOW()`, [sessionId]);
   if (res.rowCount === 0) {
     return { status: 'expired' };
   }
@@ -325,103 +327,116 @@ async function getQrSessionStatus(sessionId) {
 }
 
 async function processQrWebhook({ sessionId, walletAddress, publicKey, signature }) {
-  const res = await query(`SELECT * FROM qr_sessions WHERE id=$1`, [sessionId]);
-  if (res.rowCount === 0) {
-    throw new Error("Sessão HTTP do QR Code expirada ou inválida.");
+  // N7 FIX: Atomic claim — prevents race condition on webhook retries.
+  // Uses UPDATE ... WHERE status='pending' as optimistic lock instead of SELECT + UPDATE.
+  const claimRes = await query(
+    `UPDATE qr_sessions SET status='processing' WHERE id=$1 AND status='pending' AND expires_at > NOW() RETURNING *`,
+    [sessionId]
+  );
+  if (claimRes.rowCount === 0) {
+    throw new Error("Sessão HTTP do QR Code expirada, já processada, ou inválida.");
   }
-  const sessionData = res.rows[0];
-  if (sessionData.status !== 'pending') {
-    throw new Error("Sessão HTTP do QR Code expirada ou inválida.");
-  }
-  
-  const normalizedWallet = trimString(walletAddress);
-  const normalizedKey = trimString(publicKey);
-  const normalizedSignature = trimString(signature);
-  const expiresAtIso = new Date(sessionData.expires_at).toISOString();
+  const sessionData = claimRes.rows[0];
 
-  if (!normalizedWallet) {
-    throw new Error("walletAddress é obrigatório no webhook QR.");
-  }
+  try {
+    const normalizedWallet = trimString(walletAddress);
+    const normalizedKey = trimString(publicKey);
+    const normalizedSignature = trimString(signature);
+    const expiresAtIso = new Date(sessionData.expires_at).toISOString();
 
-  let proofLevel = "qr_dev_unverified";
-
-  if (normalizedKey && normalizedSignature) {
-    const walletProof = await getAccountPublicKey(normalizedWallet);
-    if (!walletProof.isDeployed) {
-      throw new Error("Carteira informada no QR não está ativa na blockchain.");
+    if (!normalizedWallet) {
+      throw new Error("walletAddress é obrigatório no webhook QR.");
     }
 
-    if (!walletProof.publicKey) {
+    let proofLevel = "qr_dev_unverified";
+
+    if (normalizedKey && normalizedSignature) {
+      const walletProof = await getAccountPublicKey(normalizedWallet);
+      if (!walletProof.isDeployed) {
+        throw new Error("Carteira informada no QR não está ativa na blockchain.");
+      }
+
+      if (!walletProof.publicKey) {
+        throw new Error(
+          "Não foi possível extrair a public key on-chain para validar o login por QR.",
+        );
+      }
+
+      if (String(walletProof.publicKey).toLowerCase() !== normalizedKey.toLowerCase()) {
+        throw new Error("Public key do webhook QR não corresponde à carteira on-chain.");
+      }
+
+      const qrMessage = encodeQrSessionMessage({
+        sessionId,
+        walletAddress: normalizedWallet,
+        expiresAt: expiresAtIso,
+      });
+
+      const signatureValid = verifyDetachedSignature({
+        message: qrMessage,
+        signature: normalizedSignature,
+        publicKey: normalizedKey,
+      });
+
+      if (!signatureValid) {
+        throw new Error("Assinatura inválida no login por QR.");
+      }
+
+      proofLevel = "strong_tvm_contract_binding";
+    } else if (config.isProduction) {
       throw new Error(
-        "Não foi possível extrair a public key on-chain para validar o login por QR.",
+        "QR login em produção exige publicKey + signature para comprovar posse da carteira.",
       );
     }
 
-    if (String(walletProof.publicKey).toLowerCase() !== normalizedKey.toLowerCase()) {
-      throw new Error("Public key do webhook QR não corresponde à carteira on-chain.");
-    }
+    const realSessionId = crypto.randomUUID();
+    const tokenVal = crypto.randomBytes(32).toString("hex");
 
-    const qrMessage = encodeQrSessionMessage({
-      sessionId,
+    const session = {
+      id: realSessionId,
+      token: tokenVal,
       walletAddress: normalizedWallet,
-      expiresAt: expiresAtIso,
+      publicKey: normalizedKey || "qr_scan_no_key",
+      proofLevel,
+      telegramBinding: {
+        status: "unbound",
+        userId: "",
+        username: "",
+        firstName: "",
+      },
+      issuedAt: new Date().toISOString(),
+      expiresAt: new Date(
+        Date.now() + config.sessionTtlHours * 60 * 60 * 1000,
+      ).toISOString(),
+      lastSeenAt: new Date().toISOString(),
+    };
+
+    await createSessionOnly({
+      session,
+      auditEvent: {
+        id: crypto.randomUUID(),
+        type: "auth.session.created_via_qr",
+        createdAt: new Date().toISOString(),
+        walletAddress: session.walletAddress,
+        sessionId: session.id,
+        payload: { qrSessionId: sessionId },
+      },
     });
 
-    const signatureValid = verifyDetachedSignature({
-      message: qrMessage,
-      signature: normalizedSignature,
-      publicKey: normalizedKey,
-    });
+    // Mark as done so the frontend polling can pick it up
+    await query(`UPDATE qr_sessions SET status='done', session_token=$1 WHERE id=$2`, [session.token, sessionId]);
 
-    if (!signatureValid) {
-      throw new Error("Assinatura inválida no login por QR.");
-    }
-
-    proofLevel = "strong_tvm_contract_binding";
-  } else if (config.isProduction) {
-    throw new Error(
-      "QR login em produção exige publicKey + signature para comprovar posse da carteira.",
-    );
+    return { success: true };
+  } catch (error) {
+    // Rollback processing lock so a retry can happen before expiration.
+    await query(
+      `UPDATE qr_sessions
+       SET status='pending'
+       WHERE id=$1 AND status='processing' AND expires_at > NOW()`,
+      [sessionId],
+    ).catch(() => {});
+    throw error;
   }
-
-  const realSessionId = crypto.randomUUID();
-  const tokenVal = crypto.randomBytes(32).toString("hex");
-
-  const session = {
-    id: realSessionId,
-    token: tokenVal,
-    walletAddress: normalizedWallet,
-    publicKey: normalizedKey || "qr_scan_no_key",
-    proofLevel,
-    telegramBinding: {
-      status: "unbound",
-      userId: "",
-      username: "",
-      firstName: "",
-    },
-    issuedAt: new Date().toISOString(),
-    expiresAt: new Date(
-      Date.now() + config.sessionTtlHours * 60 * 60 * 1000,
-    ).toISOString(),
-    lastSeenAt: new Date().toISOString(),
-  };
-
-  await createSessionOnly({
-    session,
-    auditEvent: {
-      id: crypto.randomUUID(),
-      type: "auth.session.created_via_qr",
-      createdAt: new Date().toISOString(),
-      walletAddress: session.walletAddress,
-      sessionId: session.id,
-      payload: { qrSessionId: sessionId },
-    },
-  });
-
-  // Mark as done so the frontend polling can pick it up
-  await query(`UPDATE qr_sessions SET status='done', session_token=$1 WHERE id=$2`, [session.token, sessionId]);
-
-  return { success: true };
 }
 
 async function getSessionFromToken(token) {

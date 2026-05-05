@@ -11,6 +11,17 @@ const DEFAULT_SESSION_TTL_HOURS = 24;
 const DEFAULT_TELEGRAM_AUTH_MAX_AGE_SECONDS = 24 * 60 * 60;
 const DEFAULT_DATABASE_URL = "";
 
+// V-AM-01: ECC Token ID constants matching on-chain BondingCurve.sol
+// These mirror the contract constants to keep the full stack aligned.
+const ECC_TOKEN_IDS = Object.freeze({
+  NACKL: 1,  // Staking & store of value (9 decimals)
+  SHELL: 2,  // Utility token — the ONLY accepted payment (9 decimals)
+  USDC:  3,  // Stablecoin (6 decimals)
+});
+
+// Official Accumulator rate: 100 SHELL = 1 USDC (fixed on-chain)
+const ACCUMULATOR_OFFICIAL_RATE = 100;
+
 function readPositiveNumber(value, fallback) {
   const parsed = Number(value);
 
@@ -97,6 +108,7 @@ const adminToken = process.env.ADMIN_TOKEN || "";
 const jwtSecret = process.env.JWT_SECRET || "";
 const isProduction = process.env.NODE_ENV === "production";
 const shellBuyUsdcRecipient = process.env.SHELL_BUY_USDC_RECIPIENT || "";
+const shellBuyUsdcRoot = process.env.SHELL_BUY_USDC_ROOT || "";
 const shellBuyEnabled = process.env.ENABLE_SHELL_BUY === "true";
 
 const config = {
@@ -137,6 +149,8 @@ const config = {
   appFeeSharePercent: 100,
   shellBuy: {
     enabled: shellBuyEnabled,
+    usdcRoot: shellBuyUsdcRoot,
+    usdcRootConfigured: isConfiguredWallet(shellBuyUsdcRoot),
     usdcRecipient: shellBuyUsdcRecipient,
     usdcRecipientConfigured: isConfiguredWallet(shellBuyUsdcRecipient),
     usdcTokenSymbol: "USDC",
@@ -176,8 +190,14 @@ function buildPublicConfig() {
       },
     },
     shellBuy: {
-      enabled: config.shellBuy.enabled && config.shellBuy.usdcRecipientConfigured,
+      enabled:
+        config.shellBuy.enabled &&
+        config.shellBuy.usdcRecipientConfigured &&
+        config.shellBuy.usdcRootConfigured,
       usdcTokenSymbol: config.shellBuy.usdcTokenSymbol,
+      usdcRoot: config.shellBuy.usdcRootConfigured
+        ? config.shellBuy.usdcRoot
+        : "Configure SHELL_BUY_USDC_ROOT no backend/.env",
       usdcRecipient: config.shellBuy.usdcRecipientConfigured
         ? config.shellBuy.usdcRecipient
         : "Configure SHELL_BUY_USDC_RECIPIENT no backend/.env",
@@ -244,6 +264,11 @@ function validateConfig() {
         "ENABLE_SHELL_BUY=true exige SHELL_BUY_USDC_RECIPIENT válido (0:... ou dev-wallet-local).",
       );
     }
+    if (config.shellBuy.enabled && !config.shellBuy.usdcRootConfigured) {
+      errors.push(
+        "ENABLE_SHELL_BUY=true exige SHELL_BUY_USDC_ROOT válido para provar que o pagamento é USDC TIP-3 real.",
+      );
+    }
   }
 
   if (errors.length > 0) {
@@ -253,6 +278,15 @@ function validateConfig() {
     process.exit(1);
   }
 
+  // V-AM-01: Warn if configured SHELL/USDC rate diverges from Accumulator
+  if (config.shellBuy.shellPerUsdc !== ACCUMULATOR_OFFICIAL_RATE) {
+    console.warn(
+      `⚠️  SHELL_BUY_SHELL_PER_USDC=${config.shellBuy.shellPerUsdc} ≠ Accumulator official rate (${ACCUMULATOR_OFFICIAL_RATE}).`,
+      `On-chain Accumulator trades at ${ACCUMULATOR_OFFICIAL_RATE} SHELL = 1 USDC.`,
+      `If intentional (e.g. bonus rate), ignore this warning.`,
+    );
+  }
+
   console.log("✅ Configuração validada com sucesso.");
 }
 
@@ -260,4 +294,6 @@ module.exports = {
   buildPublicConfig,
   config,
   validateConfig,
+  ECC_TOKEN_IDS,
+  ACCUMULATOR_OFFICIAL_RATE,
 };

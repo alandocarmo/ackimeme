@@ -58,13 +58,22 @@ export default function App({ Component, pageProps }) {
       window.Telegram.WebApp.expand();
     }
 
-    getSession()
-      .then((res) => {
-        setSession(res.session);
-      })
-      .catch(() => {
-        // Silently fail if cookie is missing
-      });
+    const fetchSession = () => {
+      getSession()
+        .then((res) => {
+          setSession(res.session);
+        })
+        .catch(() => {
+          setSession(null);
+        });
+    };
+
+    fetchSession();
+
+    window.addEventListener("session-changed", fetchSession);
+    return () => {
+      window.removeEventListener("session-changed", fetchSession);
+    };
   }, []);
 
   return (

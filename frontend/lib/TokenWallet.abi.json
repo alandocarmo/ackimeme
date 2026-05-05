@@ -60,6 +60,22 @@
 			"outputs": [
 				{"name":"balance","type":"uint256"}
 			]
+		},
+		{
+			"name": "pendingBurns",
+			"inputs": [
+			],
+			"outputs": [
+				{"name":"pendingBurns","type":"map(uint32,uint256)"}
+			]
+		},
+		{
+			"name": "pendingTransfers",
+			"inputs": [
+			],
+			"outputs": [
+				{"name":"pendingTransfers","type":"map(uint32,uint256)"}
+			]
 		}
 	],
 	"events": [
@@ -70,6 +86,10 @@
 		{"init":false,"name":"_constructorFlag","type":"bool"},
 		{"init":true,"name":"root","type":"address"},
 		{"init":true,"name":"owner","type":"address"},
-		{"init":false,"name":"balance","type":"uint256"}
+		{"init":false,"name":"balance","type":"uint256"},
+		{"init":false,"name":"_burnSeqno","type":"uint32"},
+		{"init":false,"name":"_transferSeqno","type":"uint32"},
+		{"init":false,"name":"pendingBurns","type":"map(uint32,uint256)"},
+		{"init":false,"name":"pendingTransfers","type":"map(uint32,uint256)"}
 	]
 }

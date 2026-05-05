@@ -82,38 +82,36 @@ contract TokenWallet is ITokenWallet {
         }
         
         // Repassa a execução para o TokenRoot informando a quantia deletada e quem deve ser reembolsado
-        ITokenRoot(root).notifyBurn{value: 0, flag: 64}(amount, owner, callbackTarget);
+        ITokenRoot(root).notifyBurn{value: 0, flag: 64}(seqno, amount, owner, callbackTarget);
     }
 
-    // ─── N5: onBounce handler — restaura saldo em caso de falha ──────────────
+    // ─── Audit #6: onBounce handler — read nonce from bounce body for exact rollback ──
+    // Previous implementation used _burnSeqno-1 / _transferSeqno-1 which fails
+    // when multiple operations are pending (wrong amount restored).
+    // Bounce body has 224 bits after funcId. uint32 nonce (32 bits) fits safely.
     onBounce(TvmSlice body) external {
         uint32 funcId = body.load(uint32);
 
-        // Se notifyBurn bounceou (TokenRoot não aceitou), restaurar balance
+        // N8 FIX: notifyBurn now has uint32 seqno as first param, so it fits in 32 bits
+        // and we can read it to exactly restore the correct amount.
         if (funcId == abi.functionId(ITokenRoot.notifyBurn)) {
-            // Em TVM, restam no máximo 224 bits após ler funcId. uint256 não cabe.
-            // Então confiamos sempre no registro interno separado _burnSeqno
-            if (_burnSeqno > 0) {
-                uint32 lastSeqno = _burnSeqno - 1;
-                optional(uint256) pending = pendingBurns.fetch(lastSeqno);
-                if (pending.hasValue()) {
-                    balance += pending.get();
-                    delete pendingBurns[lastSeqno];
-                }
+            uint32 seqno = body.load(uint32);
+            optional(uint256) pending = pendingBurns.fetch(seqno);
+            if (pending.hasValue()) {
+                balance += pending.get();
+                delete pendingBurns[seqno];
             }
         }
 
         // Se receiveTokens bounceou em outra wallet, restaurar balance
+        // receiveTokens(uint32 nonce, uint256 amount) — nonce is first param (32 bits fits!)
         if (funcId == abi.functionId(ITokenWallet.receiveTokens)) {
-            // No bounce de receiveTokens o nonce e amount muitas vezes não cabem se payload fosse maior (mas aqui sim é seqno de 32 e amount de 256 não cabendo os dois). 
-            // Fallback: tentar restaurar pela última pending transfer usando o contador isolado _transferSeqno
-            if (_transferSeqno > 0) {
-                uint32 lastSeqno = _transferSeqno - 1;
-                optional(uint256) pending = pendingTransfers.fetch(lastSeqno);
-                if (pending.hasValue()) {
-                    balance += pending.get();
-                    delete pendingTransfers[lastSeqno];
-                }
+            // Read the nonce from bounce body (uint32 = 32 bits, fits in remaining 224 bits)
+            uint32 nonce = body.load(uint32);
+            optional(uint256) pending = pendingTransfers.fetch(nonce);
+            if (pending.hasValue()) {
+                balance += pending.get();
+                delete pendingTransfers[nonce];
             }
         }
     }

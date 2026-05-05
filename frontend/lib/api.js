@@ -20,23 +20,37 @@ async function request(path, options = {}) {
     ...(options.headers || {}),
   };
 
-  const response = await fetch(`${API_BASE_URL}${path}`, {
-    method: options.method || "GET",
-    headers,
-    credentials: "include", // Required for HttpOnly cookies
-    body: options.body ? JSON.stringify(options.body) : undefined,
-  });
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), options.timeoutMs || 30000);
 
-  const isJson = response.headers
-    .get("content-type")
-    ?.includes("application/json");
-  const data = isJson ? await response.json() : null;
+  try {
+    const response = await fetch(`${API_BASE_URL}${path}`, {
+      method: options.method || "GET",
+      headers,
+      credentials: "include", // Required for HttpOnly cookies
+      body: options.body ? JSON.stringify(options.body) : undefined,
+      signal: controller.signal,
+    });
 
-  if (!response.ok) {
-    throw new Error(data?.error || `Request failed with status ${response.status}`);
+    clearTimeout(timeoutId);
+
+    const isJson = response.headers
+      .get("content-type")
+      ?.includes("application/json");
+    const data = isJson ? await response.json() : null;
+
+    if (!response.ok) {
+      throw new Error(data?.error || `Request failed with status ${response.status}`);
+    }
+
+    return data;
+  } catch (err) {
+    clearTimeout(timeoutId);
+    if (err.name === 'AbortError') {
+      throw new Error('A requisição demorou muito e foi cancelada.');
+    }
+    throw err;
   }
-
-  return data;
 }
 
 export function getConfig() {
@@ -80,6 +94,7 @@ export function createLaunchRequest(payload, token) {
     method: "POST",
     body: payload,
     token,
+    timeoutMs: 90000, // Deploy can take longer
   });
 }
 

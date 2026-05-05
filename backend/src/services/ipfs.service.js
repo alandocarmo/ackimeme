@@ -69,6 +69,8 @@ function createTokenMetadata(launchRequest) {
     description: launchRequest.coin.description,
     image: launchRequest.coin.logoUrl || "",
     external_url: launchRequest.links.website || "",
+    decimals: 9,
+    version: "0.4.0",
     attributes: [
       { trait_type: "Platform", value: "AckiMeme" },
       { trait_type: "LaunchMode", value: "Bonding Curve" }

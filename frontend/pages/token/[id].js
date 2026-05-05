@@ -45,7 +45,7 @@ function PriceChart({ currentPrice, progressPct }) {
   return (
     <div className="card chart-card" style={{ height: '240px', padding: '0', position: 'relative', overflow: 'hidden', border: '1px solid var(--ink-faint)', background: 'linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(0,255,136,0.02) 100%)' }}>
        <div style={{ position: 'absolute', top: '20px', left: '20px', zIndex: 10 }}>
-          <p className="info-label" style={{ margin: 0, fontSize: '10px' }}>BONDING CURVE MODEL</p>
+          <p className="info-label" style={{ margin: 0, fontSize: '10px' }}>BONDING CURVE (THEORETICAL MODEL)</p>
           <p style={{ margin: 0, fontSize: '22px', fontWeight: 900, color: 'var(--accent)', letterSpacing: '-0.5px' }}>
             {currentPrice ? `${currentPrice.toFixed(9)}` : '---'} <span style={{ fontSize: '12px', fontWeight: 400 }}>SHELL</span>
           </p>
@@ -110,9 +110,13 @@ function nanoToDecimal(nano) {
 }
 
 /** Helper to convert decimal string to BigInt nano (9 decimals) avoiding float imprecision */
+// Audit #19: Hardened against scientific notation (e.g. "1e-7") which breaks BigInt()
 function toNano(valStr) {
-  if (!valStr || isNaN(parseFloat(valStr))) return 0n;
-  const [whole = "0", frac = ""] = String(valStr).split(".");
+  const num = parseFloat(valStr);
+  if (!valStr || !Number.isFinite(num) || num < 0) return 0n;
+  // Use toFixed to normalize scientific notation to decimal string
+  const fixed = num.toFixed(9);
+  const [whole = "0", frac = ""] = fixed.split(".");
   const fracPad = frac.padEnd(9, "0").slice(0, 9);
   return BigInt(whole) * 1_000_000_000n + BigInt(fracPad || "0");
 }
@@ -420,7 +424,7 @@ export default function TokenPage() {
               <div className="token-header-section">
                 <div className="token-avatar" style={{ width: '64px', height: '64px', borderRadius: '16px', background: `linear-gradient(135deg, ${color}, ${color}44)` }}>
                   {token.coin.logoUrl ? (
-                    <img src={token.coin.logoUrl} alt="" />
+                    <img src={token.coin.logoUrl} alt="" referrerPolicy="no-referrer" />
                   ) : (
                     <span style={{ fontSize: '28px', fontWeight: 800 }}>{(token.coin.symbol || "?")[0]}</span>
                   )}
@@ -468,7 +472,7 @@ export default function TokenPage() {
                 
                 <p className="token-subtitle" style={{ fontSize: '11px', margin: 0, opacity: 0.8 }}>
                   {stats.hasOnchainReserve
-                    ? "Liquidity auto-migrates to DEX.DO at 69K SHELL reserve with 30-day anti-rug lock."
+                    ? "Liquidity auto-migrates to internal AMM at 69K SHELL reserve."
                     : "Progress requires reserveBalance indexed from blockchain. Values stay as awaiting until first trade."}
                 </p>
               </div>

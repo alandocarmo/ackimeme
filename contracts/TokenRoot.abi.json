@@ -77,6 +77,7 @@
 		{
 			"name": "notifyBurn",
 			"inputs": [
+				{"name":"seqno","type":"uint32"},
 				{"name":"amount","type":"uint256"},
 				{"name":"refundAddress","type":"address"},
 				{"name":"callbackTarget","type":"address"}
@@ -171,6 +172,8 @@
 		{"init":false,"name":"walletCode","type":"cell"},
 		{"init":false,"name":"bondingCurveCode","type":"cell"},
 		{"init":false,"name":"bondingCurve","type":"address"},
-		{"init":false,"name":"pendingMintsByNonce","type":"map(uint32,uint256)"}
+		{"init":false,"name":"pendingMintsByNonce","type":"map(uint32,uint256)"},
+		{"init":false,"name":"_pendingBurnAmounts","type":"map(uint32,uint256)"},
+		{"init":false,"name":"_burnSeqno","type":"uint32"}
 	]
 }
