@@ -244,8 +244,12 @@ function validateConfig() {
     if (!config.databaseUrl) {
       errors.push("DATABASE_URL é obrigatória em produção.");
     }
-    if (!process.env.DEPLOYER_PRIVATE_KEY || process.env.DEPLOYER_PRIVATE_KEY.length !== 64) {
-      errors.push("DEPLOYER_PRIVATE_KEY inválida ou ausente (necessário para deploys on-chain).");
+    const deployerSecret = String(process.env.DEPLOYER_SECRET_KEY || process.env.DEPLOYER_PRIVATE_KEY || "").trim();
+    if (!/^[0-9a-f]{64}([0-9a-f]{64})?$/i.test(deployerSecret)) {
+      errors.push("DEPLOYER_SECRET_KEY inválida ou ausente: use 32 bytes/64 hex raw secret ou 64 bytes/128 hex signer secret.");
+    }
+    if (!process.env.DEPLOYER_WALLET_ADDRESS || !/^[-]?\d+:[0-9a-f]{64}$/i.test(process.env.DEPLOYER_WALLET_ADDRESS)) {
+      errors.push("DEPLOYER_WALLET_ADDRESS inválida ou ausente para pré-financiar endereços futuros.");
     }
     if (process.env.ENABLE_ONCHAIN_DEPLOY !== "true") {
       errors.push("ENABLE_ONCHAIN_DEPLOY deve ser 'true' na produção (sem simulações).");

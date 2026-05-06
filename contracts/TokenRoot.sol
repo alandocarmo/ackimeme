@@ -9,6 +9,9 @@ import "./BondingCurve.sol";
 
 
 contract TokenRoot {
+    uint64 private constant GAS_TOP_UP = 2_000_000_000; // 2 VMSHELL in nano
+    uint128 private constant MIN_EXECUTION_GAS = 1 ton;
+
     // ─── R-04: static vars FIRST — determinam o stateInit hash (= endereço do contrato) ──
     // deployNonce garante endereços únicos mesmo com mesmo nome/symbol.
     // Calculado pelo backend como sha256(creator + symbol + paymentTxHash).
@@ -27,10 +30,19 @@ contract TokenRoot {
     address public bondingCurve;        // Endereço do BondingCurve deployado
 
     mapping(uint32 => uint256) public pendingMintsByNonce;
+    mapping(uint32 => address) private _pendingMintWallets;
+
+    mapping(uint32 => uint256) private _pendingTransferAmounts;
+    mapping(uint32 => address) private _pendingTransferSourceWallets;
+    mapping(uint32 => address) private _pendingTransferRecipientWallets;
+    mapping(uint32 => uint32) private _pendingTransferWalletSeqnos;
+    uint32 private _transferSeqno = 1;
 
     // BUG-2 FIX: Track pending burn amounts by seqno for safe onBounce rollback.
     // Bounce body only has 224 bits after funcId — uint256 (256 bits) causes cell underflow.
     mapping(uint32 => uint256) private _pendingBurnAmounts;
+    mapping(uint32 => address) private _pendingBurnWallets;
+    mapping(uint32 => uint32) private _pendingBurnWalletSeqnos;
     uint32 private _burnSeqno = 1;
 
     // ─── Fix N1: tvm.accept() ANTES de gosh.cnvrtshellq() ────────────────────
@@ -80,9 +92,20 @@ contract TokenRoot {
         });
     }
 
+    function _ensureExecutionGas() private {
+        if (address(this).balance > MIN_EXECUTION_GAS) {
+            return;
+        }
+        gosh.mintshell(GAS_TOP_UP);
+    }
+
     function deployWallet(address ownerAddress, uint128 deployValue) public returns (address) {
         // M-01: Removed unauthorized tvm.accept() and restricted to owner or bonding curve
         require(msg.sender == owner || msg.sender == bondingCurve, 109, "Unauthorized call to deployWallet");
+        if (msg.sender == owner) {
+            tvm.accept();
+            _ensureExecutionGas();
+        }
         
         TvmCell stateInit = _buildWalletStateInit(ownerAddress);
         address wallet = new TokenWallet{
@@ -108,11 +131,7 @@ contract TokenRoot {
         address walletAddr = address(tvm.hash(stateInit));
         
         pendingMintsByNonce[mintNonce] = amount;
-        
-        // A-03: Storage leak prevention: clean up old mints (increased window to 500)
-        if (mintNonce >= 500) {
-            delete pendingMintsByNonce[mintNonce - 500];
-        }
+        _pendingMintWallets[mintNonce] = walletAddr;
 
         // C-03: Include stateInit in the message so the wallet is deployed
         // if it doesn't exist yet. If it already exists, stateInit is ignored.
@@ -129,6 +148,56 @@ contract TokenRoot {
         return abi.encodeBody(ITokenWallet.receiveTokens, nonce, amount);
     }
 
+    function onMintDelivered(uint32 mintNonce) public {
+        address expectedWallet = _pendingMintWallets[mintNonce];
+        require(expectedWallet != address(0), 114, "Unknown mint nonce");
+        require(msg.sender == expectedWallet, 115, "Mint confirmation not from target wallet");
+
+        delete pendingMintsByNonce[mintNonce];
+        delete _pendingMintWallets[mintNonce];
+
+        if (bondingCurve != address(0)) {
+            IBondingCurve(bondingCurve).onMintSuccess{value: 0, flag: 64, bounce: false}(mintNonce);
+        }
+    }
+
+    function transferFromWallet(uint32 walletSeqno, address fromOwner, address recipientOwner, uint256 amount) public {
+        address sourceWallet = getWalletAddress(fromOwner);
+        require(msg.sender == sourceWallet, 116, "Caller is not sender TokenWallet");
+        require(recipientOwner != address(0), 117, "Recipient owner cannot be zero address");
+        require(amount > 0, 118, "Transfer amount must be greater than zero");
+
+        TvmCell stateInit = _buildWalletStateInit(recipientOwner);
+        address recipientWallet = address(tvm.hash(stateInit));
+
+        uint32 transferNonce = ++_transferSeqno;
+        _pendingTransferAmounts[transferNonce] = amount;
+        _pendingTransferSourceWallets[transferNonce] = sourceWallet;
+        _pendingTransferRecipientWallets[transferNonce] = recipientWallet;
+        _pendingTransferWalletSeqnos[transferNonce] = walletSeqno;
+
+        recipientWallet.transfer({
+            stateInit: stateInit,
+            value: 0.1 ton,
+            body: abi.encodeBody(ITokenWallet.receiveTransfer, transferNonce, amount),
+            flag: 1
+        });
+    }
+
+    function onTransferDelivered(uint32 transferNonce) public {
+        address recipientWallet = _pendingTransferRecipientWallets[transferNonce];
+        require(recipientWallet != address(0), 119, "Unknown transfer nonce");
+        require(msg.sender == recipientWallet, 120, "Transfer confirmation not from recipient wallet");
+
+        address sourceWallet = _pendingTransferSourceWallets[transferNonce];
+        uint32 walletSeqno = _pendingTransferWalletSeqnos[transferNonce];
+        _clearTransfer(transferNonce);
+
+        if (sourceWallet != address(0)) {
+            ITokenWallet(sourceWallet).onTransferDelivered{value: 0, flag: 64, bounce: false}(walletSeqno);
+        }
+    }
+
     // ─── Fix #4: transferOwnership — permite transferir ownership para o BondingCurve ──
     function transferOwnership(address newOwner) public {
         require(msg.sender == owner, 111, "Only current owner can transfer ownership");
@@ -140,8 +209,10 @@ contract TokenRoot {
     // O backend chama esta função após deployar o TokenRoot para que
     // o BondingCurve seja deployado sob o mesmo DappID.
     function setBondingCurveCode(TvmCell _code) public {
-        require(msg.sender == owner, 102, "Only owner can set BC code");
+        require(msg.pubkey() == tvm.pubkey(), 102, "Only deployer pubkey can set BC code");
         require(bondingCurveCode.toSlice().empty(), 107, "BondingCurve code already set");
+        tvm.accept();
+        _ensureExecutionGas();
         bondingCurveCode = _code;
     }
 
@@ -150,15 +221,20 @@ contract TokenRoot {
         string _name,
         string _symbol,
         bytes _creationFeeTxHash,
+        uint256 _supplyCap,
         uint128 _initialBalance
     ) public {
-        require(msg.sender == owner, 102, "Only owner can deploy BC");
+        require(msg.pubkey() == tvm.pubkey(), 102, "Only deployer pubkey can deploy BC");
         require(bondingCurve == address(0), 108, "BondingCurve already deployed");
+        require(!bondingCurveCode.toSlice().empty(), 112, "BondingCurve code not set");
+        require(_supplyCap > 0, 113, "Supply cap must be greater than zero");
+        tvm.accept();
+        _ensureExecutionGas();
 
         // C-05: Build stateInit with static _tokenRoot for unique address per token
         TvmCell stateInit = tvm.buildStateInit({
             contr: BondingCurve,
-            varInit: { _tokenRoot: address(this) },
+            varInit: { _tokenRoot: address(this), _supplyCap: _supplyCap },
             code: bondingCurveCode
         });
 
@@ -194,6 +270,8 @@ contract TokenRoot {
             // BUG-2 FIX: Track pending burn amount by seqno for safe onBounce rollback
             uint32 burnNonce = ++_burnSeqno;
             _pendingBurnAmounts[burnNonce] = amount;
+            _pendingBurnWallets[burnNonce] = msg.sender;
+            _pendingBurnWalletSeqnos[burnNonce] = seqno;
             IBondingCurve(callbackTarget).onTokenBurned{value: 0, flag: 128}(burnNonce, amount, refundAddress);
         } else {
             // Se nenhum callback de DEX/Curve foi fornecido, reembolso do gas pro usuário
@@ -201,12 +279,25 @@ contract TokenRoot {
         }
     }
 
+    function _clearTransfer(uint32 transferNonce) private {
+        delete _pendingTransferAmounts[transferNonce];
+        delete _pendingTransferSourceWallets[transferNonce];
+        delete _pendingTransferRecipientWallets[transferNonce];
+        delete _pendingTransferWalletSeqnos[transferNonce];
+    }
+
     // ─── N5: onBounce handler — reverte estado se operações async falharem ───
     onBounce(TvmSlice body) external {
         tvm.rawReserve(0, 4);
+        if (body.bits() < 32) {
+            return;
+        }
         uint32 funcId = body.load(uint32);
         
         if (funcId == abi.functionId(ITokenWallet.receiveTokens)) {
+            if (body.bits() < 32) {
+                return;
+            }
             // Em caso de bounce no mint (falha de receiveTokens), revertemos o valor
             // utilizando pendingMintsByNonce para garantir precisão e desinflar o saldo fantasma.
             uint32 nonce = body.load(uint32);
@@ -214,18 +305,47 @@ contract TokenRoot {
             if (failedAmount > 0) {
                 totalSupply -= failedAmount;
                 delete pendingMintsByNonce[nonce];
+                delete _pendingMintWallets[nonce];
             }
+            if (bondingCurve != address(0)) {
+                IBondingCurve(bondingCurve).onMintFailed{value: 0, flag: 64, bounce: false}(nonce);
+            }
+        }
+
+        if (funcId == abi.functionId(ITokenWallet.receiveTransfer)) {
+            if (body.bits() < 32) {
+                return;
+            }
+            uint32 transferNonce = body.load(uint32);
+            address sourceWallet = _pendingTransferSourceWallets[transferNonce];
+            uint32 walletSeqno = _pendingTransferWalletSeqnos[transferNonce];
+            if (sourceWallet != address(0)) {
+                ITokenWallet(sourceWallet).onTransferFailed{value: 0, flag: 64, bounce: false}(walletSeqno);
+            }
+            _clearTransfer(transferNonce);
         }
         
         // BUG-2 FIX: Handle IBondingCurve.onTokenBurned bounce using nonce mapping
         // Bounce body has only 224 bits after funcId. We read uint32 burnNonce (32 bits)
         // which fits safely, then look up the amount from our mapping.
         if (funcId == abi.functionId(IBondingCurve.onTokenBurned)) {
+            if (body.bits() < 32) {
+                return;
+            }
             uint32 burnNonce = body.load(uint32);
             uint256 amount = _pendingBurnAmounts[burnNonce];
             if (amount > 0) {
                 totalSupply += amount; // Revert the burn
+
+                address wallet = _pendingBurnWallets[burnNonce];
+                uint32 walletSeqno = _pendingBurnWalletSeqnos[burnNonce];
+                if (wallet != address(0)) {
+                    ITokenWallet(wallet).onBurnFailed{value: 0, flag: 64, bounce: false}(walletSeqno);
+                }
+
                 delete _pendingBurnAmounts[burnNonce];
+                delete _pendingBurnWallets[burnNonce];
+                delete _pendingBurnWalletSeqnos[burnNonce];
             }
         }
     }

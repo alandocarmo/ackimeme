@@ -47,6 +47,33 @@
 			]
 		},
 		{
+			"name": "onMintDelivered",
+			"inputs": [
+				{"name":"mintNonce","type":"uint32"}
+			],
+			"outputs": [
+			]
+		},
+		{
+			"name": "transferFromWallet",
+			"inputs": [
+				{"name":"walletSeqno","type":"uint32"},
+				{"name":"fromOwner","type":"address"},
+				{"name":"recipientOwner","type":"address"},
+				{"name":"amount","type":"uint256"}
+			],
+			"outputs": [
+			]
+		},
+		{
+			"name": "onTransferDelivered",
+			"inputs": [
+				{"name":"transferNonce","type":"uint32"}
+			],
+			"outputs": [
+			]
+		},
+		{
 			"name": "transferOwnership",
 			"inputs": [
 				{"name":"newOwner","type":"address"}
@@ -69,6 +96,7 @@
 				{"name":"_name","type":"string"},
 				{"name":"_symbol","type":"string"},
 				{"name":"_creationFeeTxHash","type":"bytes"},
+				{"name":"_supplyCap","type":"uint256"},
 				{"name":"_initialBalance","type":"uint128"}
 			],
 			"outputs": [
@@ -83,6 +111,14 @@
 				{"name":"callbackTarget","type":"address"}
 			],
 			"outputs": [
+			]
+		},
+		{
+			"name": "deployNonce",
+			"inputs": [
+			],
+			"outputs": [
+				{"name":"deployNonce","type":"uint256"}
 			]
 		},
 		{
@@ -164,6 +200,7 @@
 		{"init":true,"name":"_pubkey","type":"uint256"},
 		{"init":false,"name":"_timestamp","type":"uint64"},
 		{"init":false,"name":"_constructorFlag","type":"bool"},
+		{"init":true,"name":"deployNonce","type":"uint256"},
 		{"init":false,"name":"name","type":"string"},
 		{"init":false,"name":"symbol","type":"string"},
 		{"init":false,"name":"decimals","type":"uint8"},
@@ -173,7 +210,15 @@
 		{"init":false,"name":"bondingCurveCode","type":"cell"},
 		{"init":false,"name":"bondingCurve","type":"address"},
 		{"init":false,"name":"pendingMintsByNonce","type":"map(uint32,uint256)"},
+		{"init":false,"name":"_pendingMintWallets","type":"map(uint32,address)"},
+		{"init":false,"name":"_pendingTransferAmounts","type":"map(uint32,uint256)"},
+		{"init":false,"name":"_pendingTransferSourceWallets","type":"map(uint32,address)"},
+		{"init":false,"name":"_pendingTransferRecipientWallets","type":"map(uint32,address)"},
+		{"init":false,"name":"_pendingTransferWalletSeqnos","type":"map(uint32,uint32)"},
+		{"init":false,"name":"_transferSeqno","type":"uint32"},
 		{"init":false,"name":"_pendingBurnAmounts","type":"map(uint32,uint256)"},
+		{"init":false,"name":"_pendingBurnWallets","type":"map(uint32,address)"},
+		{"init":false,"name":"_pendingBurnWalletSeqnos","type":"map(uint32,uint32)"},
 		{"init":false,"name":"_burnSeqno","type":"uint32"}
 	]
 }

@@ -1,18 +1,13 @@
-const { TvmClient } = require("@tvmsdk/core");
-const { libNode } = require("@tvmsdk/lib-node");
-
-TvmClient.useBinaryLibrary(libNode);
+const { getTvmClient, sdkAvailable } = require("../src/services/tvm-client");
 
 async function main() {
-  const client = new TvmClient({
-    network: {
-      endpoints: ["https://shellnet.ackinacki.org"]
-    }
-  });
+  if (!sdkAvailable) {
+    throw new Error("TVM SDK indisponível. Compile tvmsdk.node e configure TVM_SDK_NODE_BINARY.");
+  }
+  const client = getTvmClient();
 
   try {
     // 1. Gera uma seed phrase aleatória
-    const entropy = await client.crypto.generate_random_bytes({ length: 32 });
     const seed = await client.crypto.mnemonic_from_random({ dictionary: 1, word_count: 12 });
     
     // 2. Transforma a seed no par de chaves (Public & Secret)
@@ -23,18 +18,17 @@ async function main() {
       word_count: 12
     });
 
-    console.log("=== SETUP BURLADO COM SUCESSO ===");
+    console.log("=== KEYPAIR TVM SDK GERADO ===");
     console.log("SEU NOVO SEED PHRASE (Anote!):", seed.phrase);
     console.log("SUA CHAVE PÚBLICA (Public):", keyPair.public);
-    console.log("SUA CHAVE SECRETA (Secret / DEPLOYER_PRIVATE_KEY):", keyPair.secret);
+    console.log("SUA CHAVE SECRETA (Secret / DEPLOYER_SECRET_KEY):", keyPair.secret);
     
-    console.log("\nOBS: Com essa Secret Key, você nem precisa de MultiSig para a nossa Demo.");
-    console.log("Basta importar esse Seed Phrase em uma carteira compatível com TVM (Ex: Ever Wallet, Venom Wallet) conectada na Shellnet Acki Nacki e pedir os tokens no faucet direto para ela!");
+    console.log("\nConfigure DEPLOYER_SECRET_KEY, DEPLOYER_PUBLIC_KEY e uma DEPLOYER_WALLET_ADDRESS financiada.");
     
-    client.close();
+    if (typeof client.close === "function") client.close();
   } catch (err) {
     console.error("Erro:", err);
-    client.close();
+    if (typeof client.close === "function") client.close();
   }
 }
 

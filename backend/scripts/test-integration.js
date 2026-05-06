@@ -1,4 +1,4 @@
-// Teste prático do Backend: Deployer e Pamentos
+// Teste prático do Backend: Deployer e Pagamentos
 const { deployTokenEcosystem } = require("../src/services/deployer.service");
 const { verifyPayment } = require("../src/payments");
 
@@ -8,7 +8,7 @@ async function runTests() {
   // Teste 1: Deployer Real
   try {
     console.log("[- Teste 1: deployTokenEcosystem -]");
-    // Usaremos valores default que falharão de forma controlada se faltar a DEPLOYER_PRIVATE_KEY
+    // Usaremos valores default que falharão de forma controlada se faltar a DEPLOYER_SECRET_KEY
     const result = await deployTokenEcosystem({
       name: "Test Coin",
       symbol: "TESTC",

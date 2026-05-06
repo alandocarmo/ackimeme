@@ -80,7 +80,7 @@ async function syncOnchainData() {
     let updatedCount = 0;
     
     for (const launch of launches) {
-      if (launch.status !== "on_chain_deployed" || !launch.bondingCurveAddress) {
+      if (!["on_chain_deployed", "on_chain_pending_recovery"].includes(launch.status) || !launch.bondingCurveAddress) {
         continue;
       }
 
@@ -105,7 +105,7 @@ async function syncOnchainData() {
         }
 
         // `migrationFailed` no longer exists in the contract — AMM is internal
-        let status = launch.status;
+        let status = launch.status === "on_chain_pending_recovery" ? "on_chain_deployed" : launch.status;
 
         // Run Local Getters with TokenRoot BOC
         if (launch.tokenRootAddress) {
@@ -122,7 +122,9 @@ async function syncOnchainData() {
           reserveBalance: reserveBalance.toString(),
           tokenSupply: tokenSupply.toString(),
           lockedLiquidity,
-          status
+          status,
+          deployStatus: "deployed",
+          deployReason: "",
         });
         updatedCount++;
       }

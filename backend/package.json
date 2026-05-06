@@ -1,6 +1,9 @@
 {
   "name": "ackimeme-backend",
   "version": "1.0.0",
+  "engines": {
+    "node": ">=18.19.1 <19"
+  },
   "scripts": {
     "db:migrate": "node scripts/migrate.js",
     "db:seed:demo": "node scripts/seed-demo.js",

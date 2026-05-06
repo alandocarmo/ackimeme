@@ -87,8 +87,15 @@ async function verifyPayment({ walletAddress, txHash, tokenSymbol }) {
     );
   }
 
-  // Valida valor mínimo via BigInt para evitar perdas de precisão flutuante
-  const receivedNano = BigInt(String(tx.nanoAmount || "0").replace(/\D/g, "") || "0");
+  if (tx.paymentSource !== "shell_ecc") {
+    throw new Error(
+      "Pagamento inválido. A fee de criação deve ser enviada como SHELL ECC " +
+        "(msg.currencies[2]); msg.value/VMSHELL é aceito apenas para gas.",
+    );
+  }
+
+  // Valida valor mínimo via BigInt para evitar perdas de precisão flutuante.
+  const receivedNano = BigInt(String(tx.shellNanoAmount || "0").replace(/\D/g, "") || "0");
   const requiredNano = BigInt(requirement.minimumAmount) * 1_000_000_000n;
 
   if (receivedNano < requiredNano) {
@@ -101,8 +108,11 @@ async function verifyPayment({ walletAddress, txHash, tokenSymbol }) {
   return {
     success: true,
     txHash,
+    walletAddress: normalizedWallet,
+    payerWallet: normalizedSender,
     tokenSymbol: "SHELL",
     amount: Number(tx.amount),
+    nanoAmount: receivedNano.toString(),
     feeWallet: requirement.feeWallet,
     minimumAmount: requirement.minimumAmount,
     networkSettlementToken: "SHELL",

@@ -348,10 +348,8 @@ export default function TokenPage() {
         }
 
         // 2. M-07: Verify user has enough balance for gas before attempting sell
-        const state = await ever.getFullContractState({
-          address: accountInteraction.address
-        });
-        const balanceNano = BigInt(state.state?.balance || "0");
+        const balance = await ever.getBalance(accountInteraction.address);
+        const balanceNano = BigInt(balance || "0");
         const gasNeeded = BigInt("500000000"); // 0.5 SHELL
         if (balanceNano < gasNeeded) {
           throw new Error(`Saldo insuficiente para gas. Precisa de pelo menos 0.5 SHELL na carteira. Saldo atual: ${Number(balanceNano) / 1e9} SHELL.`);

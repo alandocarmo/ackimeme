@@ -10,8 +10,10 @@ contract BondingCurve {
     uint32 public constant LOCK_PERIOD = 30 days;
     // R-03: Removed `bytes public constant DAPP_ID` — dynamic bytes cannot be constant
     // in TVM-Solidity (only value types: int, bool, address, bytesN). Not used in any function.
-    uint256 public constant MAX_BUY_PER_TX = 50_000_000 * 1e9;
-    uint256 public constant TOTAL_SUPPLY_CAP = 1_000_000_000 * 1e9; // 1 billion tokens
+    uint256 public constant ABSOLUTE_MAX_BUY_PER_TX = 50_000_000 * 1e9;
+    uint16 public constant MAX_BUY_PER_TX_BPS = 500; // 5% of this launch's supply cap
+    uint64 private constant GAS_TOP_UP = 2_000_000_000; // 2 VMSHELL in nano
+    uint128 private constant MIN_EXECUTION_GAS = 1 ton;
 
     // ─── C-02: ECC token IDs for Acki Nacki ecosystem ─────────────────────────
     // V-AM-01: Explicit ID constants prevent confusion attacks across the
@@ -23,6 +25,7 @@ contract BondingCurve {
 
     // ─── R-04: Static vars MUST precede all state vars ───────────────────────
     address static public _tokenRoot;    // unique per deploy — makes each BondingCurve address distinct
+    uint256 static public _supplyCap;    // max token supply for this launch, in nano-token units
 
     // ─── State ────────────────────────────────────────────────────────────────
     uint256 public reserveBalance;       // tracked SHELL balance (nano)
@@ -64,6 +67,7 @@ contract BondingCurve {
     ) {
         require(msg.sender == _tokenRoot, 101, "Only TokenRoot can deploy BondingCurve");
         require(_tokenRootAddr == _tokenRoot, 104, "tokenRootAddr must match static _tokenRoot");
+        require(_supplyCap > 0, 105, "Supply cap must be set");
 
         owner = _owner;
         // _tokenRoot is the canonical reference — no separate tokenRoot variable needed
@@ -87,7 +91,7 @@ contract BondingCurve {
 
     function getBuyPrice(uint256 tokenAmount) public view returns (uint128) {
         if (isAmm) {
-            uint256 tokenPool = TOTAL_SUPPLY_CAP - totalSupply;
+            uint256 tokenPool = _supplyCap - totalSupply;
             require(tokenPool > tokenAmount, 215, "Not enough AMM liquidity");
             uint256 newReserve = ammKLast / (tokenPool - tokenAmount);
             return uint128(newReserve - reserveBalance);
@@ -103,7 +107,7 @@ contract BondingCurve {
     function getSellReturn(uint256 tokenAmount) public view returns (uint128) {
         if (totalSupply == 0 || tokenAmount > totalSupply) return 0;
         if (isAmm) {
-            uint256 tokenPool = TOTAL_SUPPLY_CAP - totalSupply;
+            uint256 tokenPool = _supplyCap - totalSupply;
             uint256 newReserve = ammKLast / (tokenPool + tokenAmount);
             return uint128(reserveBalance - newReserve);
         }
@@ -114,6 +118,14 @@ contract BondingCurve {
         return uint128((avgPrice * tokenAmount) / 1e9);
     }
 
+    function maxBuyPerTx() public view returns (uint256) {
+        uint256 capBasedLimit = (_supplyCap * MAX_BUY_PER_TX_BPS) / 10_000;
+        if (capBasedLimit == 0) {
+            return 1;
+        }
+        return capBasedLimit < ABSOLUTE_MAX_BUY_PER_TX ? capBasedLimit : ABSOLUTE_MAX_BUY_PER_TX;
+    }
+
     // ─── Configuration ───────────────────────────────────────────────────────
     // Fix: auth via msg.sender == owner (internal message from owner's wallet)
     // instead of msg.pubkey() which only works for external messages.
@@ -122,7 +134,16 @@ contract BondingCurve {
         require(msg.sender == owner, 102, "Only owner can force AMM");
         require(reserveBalance >= MIGRATION_THRESHOLD, 108, "Threshold not reached");
         require(!isAmm, 109, "Already migrated to AMM");
+        tvm.accept();
+        _ensureExecutionGas();
         _migrateToAmm();
+    }
+
+    function _ensureExecutionGas() private {
+        if (address(this).balance > MIN_EXECUTION_GAS) {
+            return;
+        }
+        gosh.mintshell(GAS_TOP_UP);
     }
 
     // ─── C-02: Buy via msg.currencies[2] (SHELL ECC cross-DappID) ────────────
@@ -130,10 +151,6 @@ contract BondingCurve {
     // This works both intra-DappID and cross-DappID, enabling universal composability.
     // msg.value (VMSHELL) is used ONLY for gas, not as payment.
     function buy(uint256 tokenAmount, uint256 maxShellIn) public {
-
-        // A-09: Ensure caller sent enough VMSHELL for gas (mint + refund)
-        require(msg.value >= 0.2 ton, 213, "Insufficient VMSHELL gas. Send at least 0.2 VMSHELL as msg.value");
-
         // V-AM-01: Reject transactions that accidentally/maliciously include NACKL or USDC
         // instead of SHELL. Without this check, a confusion attack could credit the
         // buyer with tokens while the BondingCurve receives the wrong ECC currency.
@@ -142,8 +159,8 @@ contract BondingCurve {
 
         // Note: internal AMM means trading continues normally on this same contract!
         require(tokenAmount > 0, 202, "Amount must be greater than zero");
-        require(tokenAmount <= MAX_BUY_PER_TX, 205, "Amount exceeds max buy limit");
-        require(totalSupply + tokenAmount <= TOTAL_SUPPLY_CAP, 206, "Exceeds total supply cap");
+        require(tokenAmount <= maxBuyPerTx(), 205, "Amount exceeds max buy limit");
+        require(totalSupply + tokenAmount <= _supplyCap, 206, "Exceeds total supply cap");
 
         // C-02: Read SHELL payment from Extra Currencies map (cc[2])
         // This is the canonical cross-DappID payment method in Acki Nacki.
@@ -155,6 +172,12 @@ contract BondingCurve {
         require(cost > 0, 211, "Purchase amount too small, cost rounds to zero");
         require(cost <= maxShellIn, 208, "Slippage protection triggered: cost exceeds maxShellIn");
         require(receivedShell >= cost, 203, "Insufficient SHELL sent for purchase");
+
+        // Cross-Dapp calls arrive with msg.value/VMSHELL zeroed by the protocol.
+        // After validating the paid SHELL ECC amount, the Dapp pays execution gas.
+        tvm.accept();
+        _ensureExecutionGas();
+        require(address(this).balance >= 0.2 ton, 213, "BondingCurve VMSHELL reserve unavailable");
 
         // Update state
         totalSupply += tokenAmount;
@@ -211,61 +234,87 @@ contract BondingCurve {
         refundAddress.transfer({ value: 0, flag: 128, bounce: false, currencies: payoutCurrencies });
     }
 
+    // Called by TokenRoot when wallet deployment or receiveTokens fails after
+    // TokenRoot.mint has already accepted the mint request.
+    function onMintFailed(uint32 mintNonce) external {
+        require(msg.sender == _tokenRoot, 151, "Only TokenRoot can report mint failure");
+        _rollbackMint(mintNonce);
+    }
+
+    // Called by TokenRoot after the target TokenWallet accepted receiveTokens().
+    // This is the positive async counterpart to onMintFailed/onBounce and prevents
+    // permanent growth of pending mint storage on every successful buy.
+    function onMintSuccess(uint32 mintNonce) external {
+        require(msg.sender == _tokenRoot, 152, "Only TokenRoot can confirm mint success");
+        _clearMint(mintNonce);
+    }
+
     // ─── AMM Migration ───────────────────────────────────────────────────────
     function _migrateToAmm() private {
         uint128 liquidityToMove = uint128(reserveBalance);
-        require(TOTAL_SUPPLY_CAP - totalSupply <= MAX_UINT128, 210, "tokensToMove overflow");
+        require(_supplyCap - totalSupply <= MAX_UINT128, 210, "tokensToMove overflow");
 
         isAmm = true;
         migratedAt = uint32(block.timestamp);
         
         // Setup initial x*y=k invariant
-        ammKLast = reserveBalance * (TOTAL_SUPPLY_CAP - totalSupply);
+        ammKLast = reserveBalance * (_supplyCap - totalSupply);
         
         emit MigratedToInternalAmm(liquidityToMove, migratedAt);
     }
 
+    function _rollbackMint(uint32 nonce) private {
+        address buyer = mintIdToBuyer[nonce];
+
+        uint256 refundShell = pendingReserveByNonce[nonce];
+        uint256 refundTokens = pendingTokensByNonce[nonce];
+
+        if (refundShell > 0 && buyer != address(0)) {
+            // Revert reserve and supply
+            reserveBalance -= refundShell;
+            totalSupply -= refundTokens;
+
+            // A-11: If reversal drops reserve below migration threshold,
+            // rollback AMM state to prevent corrupted x*y=k invariant
+            if (isAmm && reserveBalance < MIGRATION_THRESHOLD) {
+                isAmm = false;
+                ammKLast = 0;
+                migratedAt = 0;
+            } else if (isAmm) {
+                // Recalculate AMM invariant with corrected values
+                ammKLast = reserveBalance * (_supplyCap - totalSupply);
+            }
+
+            // Refund SHELL via cc[2] to the actual buyer
+            mapping(uint32 => varuint32) refundCurrencies;
+            refundCurrencies[SHELL_CURRENCY_ID] = varuint32(refundShell);
+            buyer.transfer({value: 0.05 ton, flag: 1, bounce: false, currencies: refundCurrencies});
+        }
+
+        _clearMint(nonce);
+    }
+
+    function _clearMint(uint32 nonce) private {
+        delete pendingReserveByNonce[nonce];
+        delete pendingTokensByNonce[nonce];
+        delete mintIdToBuyer[nonce];
+    }
+
     // ─── R-05: onBounce handler (corrected) ───────────────────────────────────
-    // When ITokenRoot.mint bounces, msg.sender = address(tokenRoot), NOT the buyer.
-    // We use _lastBuyer to resolve who to refund. This is safe because TVM processes
-    // messages sequentially — there cannot be a concurrent buy between mint and bounce.
+    // Direct bounce from ITokenRoot.mint means TokenRoot did not accept the mint.
+    // Later wallet-level failures are reported through onMintFailed().
     onBounce(TvmSlice body) external {
         // SEC-2: Ensure the bounce actually came from our TokenRoot
-        require(msg.sender == tokenRoot, 150, "Bounce not from tokenRoot");
+        require(msg.sender == _tokenRoot, 150, "Bounce not from TokenRoot");
+        if (body.bits() < 64) {
+            return;
+        }
         
         uint32 funcId = body.load(uint32);
         
         if (funcId == abi.functionId(ITokenRoot.mint)) {
             uint32 nonce = body.load(uint32);
-            address buyer = mintIdToBuyer[nonce];
-            
-            uint256 refundShell = pendingReserveByNonce[nonce];
-            uint256 refundTokens = pendingTokensByNonce[nonce];
-            
-            if (refundShell > 0 && buyer != address(0)) {
-                // Revert reserve and supply
-                reserveBalance -= refundShell;
-                totalSupply -= refundTokens;
-
-                // A-11: If reversal drops reserve below migration threshold,
-                // rollback AMM state to prevent corrupted x*y=k invariant
-                if (isAmm && reserveBalance < MIGRATION_THRESHOLD) {
-                    isAmm = false;
-                    ammKLast = 0;
-                    migratedAt = 0;
-                } else if (isAmm) {
-                    // Recalculate AMM invariant with corrected values
-                    ammKLast = reserveBalance * (TOTAL_SUPPLY_CAP - totalSupply);
-                }
-
-                // Refund SHELL via cc[2] to the actual buyer
-                mapping(uint32 => varuint32) refundCurrencies;
-                refundCurrencies[SHELL_CURRENCY_ID] = varuint32(refundShell);
-                buyer.transfer({value: 0.05 ton, flag: 1, bounce: false, currencies: refundCurrencies});
-            }
-            delete pendingReserveByNonce[nonce];
-            delete pendingTokensByNonce[nonce];
-            delete mintIdToBuyer[nonce];
+            _rollbackMint(nonce);
         }
     }
 }

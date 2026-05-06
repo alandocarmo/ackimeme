@@ -200,6 +200,6 @@ O schema já inclui a tabela `reward_tasks` para a próxima rodada do protótipo
 ## Falta conectar
 
 - vínculo forte entre wallet contract e public key do tipo exato de wallet Acki Nacki
-- factory/deploy on-chain do token (configurar ENABLE_ONCHAIN_DEPLOY=true)
-- mecanismo de migração de liquidez quando DEX.DO suportar pools
+- validar oficialmente o deep link mobile `ackinacki://login`; enquanto não houver especificação pública, trate o QR mobile como experimental e mantenha fallback por provider/assinatura manual
+- factory/deploy on-chain do token (configurar `ENABLE_ONCHAIN_DEPLOY=true`, `DEPLOYER_SECRET_KEY` 64 ou 128 hex e `DEPLOYER_WALLET_ADDRESS` financiada para pré-financiar o endereço futuro)
 - monitoramento avançado (Sentry ou equivalente)

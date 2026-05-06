@@ -204,7 +204,10 @@ function attachLaunchpadRelations(projects, tasks, projectMetrics, taskMetrics) 
   });
 }
 
-async function updateLaunchOnchainState(launchId, { reserveBalance, tokenSupply, lockedLiquidity, status }) {
+async function updateLaunchOnchainState(
+  launchId,
+  { reserveBalance, tokenSupply, lockedLiquidity, status, deployStatus, deployReason },
+) {
   const sets = [
     `reserve_balance = $1`,
     `token_supply = $2`,
@@ -216,6 +219,16 @@ async function updateLaunchOnchainState(launchId, { reserveBalance, tokenSupply,
   if (status) {
     params.push(status);
     sets.push(`status = $${params.length}`);
+  }
+
+  if (deployStatus) {
+    params.push(deployStatus);
+    sets.push(`deploy_status = $${params.length}`);
+  }
+
+  if (deployReason !== undefined) {
+    params.push(deployReason);
+    sets.push(`deploy_reason = $${params.length}`);
   }
 
   params.push(launchId);
@@ -691,7 +704,9 @@ async function listLaunchesForSync(limit = 10) {
     `
       SELECT *
       FROM launches
-      WHERE status IN ('on_chain_deployed')
+      WHERE status IN ('on_chain_deployed', 'on_chain_pending_recovery')
+        AND token_root_address IS NOT NULL
+        AND bonding_curve_address IS NOT NULL
       ORDER BY onchain_updated_at ASC NULLS FIRST
       LIMIT $1
     `,

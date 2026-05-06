@@ -44,7 +44,7 @@ const nextConfig = {
             key: "Content-Security-Policy",
             value: [
               "default-src 'self'",
-              `script-src 'self' ${process.env.NODE_ENV === 'development' ? "'unsafe-eval'" : ""} https://va.vercel-scripts.com https://telegram.org`,
+              `script-src 'self' 'wasm-unsafe-eval' ${process.env.NODE_ENV === 'development' ? "'unsafe-eval'" : ""} https://va.vercel-scripts.com https://telegram.org`,
               "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
               "font-src 'self' https://fonts.gstatic.com",
               "img-src 'self' data: https://gateway.pinata.cloud https://ipfs.io https://cloudflare-ipfs.com https://arweave.net",

@@ -29,6 +29,11 @@ const ABI_DIR = path.join(__dirname, "../abi");
 // Flag de controle — habilita envio real à blockchain
 const ENABLE_ONCHAIN_DEPLOY = process.env.ENABLE_ONCHAIN_DEPLOY === "true";
 const TOKEN_DECIMALS = 9;
+const SHELL_CURRENCY_ID = 2;
+const DEFAULT_DEPLOY_PREFUND_SHELL_NANO = "10000000000"; // 10 SHELL ECC
+const DEFAULT_DEPLOY_PREFUND_MESSAGE_VALUE_NANO = "0";
+const DEFAULT_DEPLOY_FUNDING_ATTEMPTS = 40;
+const DEFAULT_BONDING_CURVE_DEPLOY_ATTEMPTS = 200;
 
 let client = null;
 let sdkAvailable = false;
@@ -88,22 +93,216 @@ function buildDeployNonce({ creatorWallet, symbol, paymentTxHash }) {
   return BigInt(`0x${digest}`).toString();
 }
 
+function normalizeHex(value) {
+  return String(value || "").trim().replace(/^0x/i, "");
+}
+
+function isPlaceholder(value) {
+  return !value || value.includes("CONFIGURE") || value.includes("your_") || value.includes("YOUR_");
+}
+
+function getPositiveIntegerEnv(name, fallback) {
+  const value = String(process.env[name] || fallback).trim();
+  if (!/^\d+$/.test(value) || BigInt(value) <= 0n) {
+    throw new Error(`${name} deve ser um inteiro positivo em nano units.`);
+  }
+  return value;
+}
+
+function getNonNegativeIntegerEnv(name, fallback) {
+  const value = String(process.env[name] || fallback).trim();
+  if (!/^\d+$/.test(value)) {
+    throw new Error(`${name} deve ser um inteiro não negativo em nano units.`);
+  }
+  return value;
+}
+
+function loadDeployerKeyConfig() {
+  let fileKeys = {};
+  const keyFile = String(process.env.DEPLOYER_KEYS_FILE || "").trim();
+  if (keyFile && !isPlaceholder(keyFile)) {
+    if (!fs.existsSync(keyFile)) {
+      return { configured: false, usable: false, reason: `DEPLOYER_KEYS_FILE não encontrado: ${keyFile}` };
+    }
+    try {
+      fileKeys = JSON.parse(fs.readFileSync(keyFile, "utf-8"));
+    } catch (err) {
+      return { configured: true, usable: false, reason: `DEPLOYER_KEYS_FILE inválido: ${err.message}` };
+    }
+  }
+
+  const publicKey = normalizeHex(fileKeys.public || fileKeys.publicKey || process.env.DEPLOYER_PUBLIC_KEY);
+  const secretKey = normalizeHex(
+    fileKeys.secret ||
+      fileKeys.secretKey ||
+      process.env.DEPLOYER_SECRET_KEY ||
+      process.env.DEPLOYER_PRIVATE_KEY,
+  );
+
+  if (isPlaceholder(secretKey)) {
+    return { configured: false, usable: false, reason: "DEPLOYER_SECRET_KEY não configurada." };
+  }
+
+  if (!/^[0-9a-f]+$/i.test(secretKey)) {
+    return { configured: true, usable: false, reason: "DEPLOYER_SECRET_KEY deve estar em hexadecimal." };
+  }
+
+  if (secretKey.length !== 64 && secretKey.length !== 128) {
+    return {
+      configured: true,
+      usable: false,
+      reason:
+        "DEPLOYER_SECRET_KEY deve ter 32 bytes/64 hex para nacl_sign_keypair_from_secret_key " +
+        "ou 64 bytes/128 hex no formato signer secret completo.",
+    };
+  }
+
+  if (publicKey && !/^[0-9a-f]{64}$/i.test(publicKey)) {
+    return {
+      configured: true,
+      usable: false,
+      reason: "DEPLOYER_PUBLIC_KEY deve ter 32 bytes/64 caracteres hex.",
+    };
+  }
+
+  return {
+    configured: true,
+    usable: true,
+    publicKey,
+    secretKey,
+    secretFormat: secretKey.length === 64 ? "raw_secret" : "signer_secret",
+  };
+}
+
+async function resolveDeployerKeyPair() {
+  const keyConfig = loadDeployerKeyConfig();
+  if (!keyConfig.usable) {
+    throw new Error(keyConfig.reason);
+  }
+
+  const keyPair =
+    keyConfig.secretFormat === "raw_secret"
+      ? await client.crypto.nacl_sign_keypair_from_secret_key({
+          secret: keyConfig.secretKey,
+        })
+      : {
+          public: keyConfig.secretKey.slice(64),
+          secret: keyConfig.secretKey,
+        };
+
+  if (
+    keyConfig.publicKey &&
+    String(keyPair.public).toLowerCase() !== String(keyConfig.publicKey).toLowerCase()
+  ) {
+    throw new Error("DEPLOYER_PUBLIC_KEY não corresponde à DEPLOYER_SECRET_KEY configurada.");
+  }
+
+  return {
+    public: keyConfig.publicKey || keyPair.public,
+    secret: keyConfig.secretKey,
+  };
+}
+
+async function getAccountBalanceNano(address) {
+  const result = await client.net.query_collection({
+    collection: "accounts",
+    filter: { id: { eq: address } },
+    result: "balance acc_type acc_type_name",
+  });
+  const account = result?.result?.[0];
+  if (!account) {
+    return 0n;
+  }
+  return BigInt(String(account.balance || "0"));
+}
+
+async function waitForFutureAddressFunding(address, minBalanceNano) {
+  const attempts = Number(process.env.DEPLOY_FUNDING_CONFIRM_ATTEMPTS || DEFAULT_DEPLOY_FUNDING_ATTEMPTS);
+  for (let i = 0; i < attempts; i += 1) {
+    const balanceNano = await getAccountBalanceNano(address);
+    if (balanceNano >= BigInt(minBalanceNano)) {
+      return true;
+    }
+    await new Promise((res) => setTimeout(res, 3000));
+  }
+  return false;
+}
+
+async function buildEmptyPayloadCell() {
+  const { boc } = await client.boc.encode_boc({ builder: [] });
+  return boc;
+}
+
+async function prefundFutureContractAddress(address, signer, onChainAttempt) {
+  const walletAddress = String(process.env.DEPLOYER_WALLET_ADDRESS || "").trim();
+  if (!walletAddress || isPlaceholder(walletAddress)) {
+    throw new Error("DEPLOYER_WALLET_ADDRESS deve apontar para a wallet/multisig financiadora do deployer.");
+  }
+
+  const prefundShellNano = getPositiveIntegerEnv(
+    "DEPLOYER_PREFUND_SHELL_NANO",
+    DEFAULT_DEPLOY_PREFUND_SHELL_NANO,
+  );
+  const messageValueNano = getNonNegativeIntegerEnv(
+    "DEPLOYER_PREFUND_MESSAGE_VALUE_NANO",
+    DEFAULT_DEPLOY_PREFUND_MESSAGE_VALUE_NANO,
+  );
+  const walletAbi = loadContractFiles("UpdateCustodianMultisigWallet").abi;
+  const payload = await buildEmptyPayloadCell();
+
+  console.log(
+    `[Deployer] Pré-financiando endereço futuro ${address} com ${prefundShellNano} nanoSHELL ECC...`,
+  );
+  if (typeof onChainAttempt === "function") {
+    onChainAttempt();
+  }
+
+  await client.processing.process_message({
+    message_encode_params: {
+      address: walletAddress,
+      abi: abiContract(walletAbi),
+      call_set: {
+        function_name: "sendTransaction",
+        input: {
+          dest: address,
+          value: messageValueNano,
+          cc: { [SHELL_CURRENCY_ID]: prefundShellNano },
+          bounce: false,
+          flags: 1,
+          payload,
+        },
+      },
+      signer,
+    },
+    send_events: false,
+  });
+
+  const funded = await waitForFutureAddressFunding(address, prefundShellNano);
+  if (!funded) {
+    throw new Error(
+      `Timeout aguardando pré-financiamento do endereço futuro ${address}. ` +
+        "A transação de funding foi enviada; verifique a wallet financiadora e o GraphQL.",
+    );
+  }
+}
+
 function getDeployerReadiness() {
-  const privateKey = process.env.DEPLOYER_PRIVATE_KEY || "";
-  const privateKeyConfigured =
-    Boolean(privateKey) &&
-    !privateKey.includes("CONFIGURE") &&
-    !privateKey.includes("your_") &&
-    /^[0-9a-f]{64}$/i.test(privateKey);
+  const keyConfig = loadDeployerKeyConfig();
+  const fundingWallet = String(process.env.DEPLOYER_WALLET_ADDRESS || "").trim();
+  const fundingWalletConfigured = Boolean(fundingWallet) && !isPlaceholder(fundingWallet);
 
   return {
     enabled: ENABLE_ONCHAIN_DEPLOY,
     sdkAvailable: Boolean(sdkAvailable && client),
-    privateKeyConfigured,
+    privateKeyConfigured: Boolean(keyConfig.usable),
+    keyPairConfigured: Boolean(keyConfig.usable),
+    keyPairReason: keyConfig.usable ? "" : keyConfig.reason,
+    fundingWalletConfigured,
     contractsCompiled:
       contractFilesExist("TokenRoot") &&
       contractFilesExist("TokenWallet") &&
-      contractFilesExist("BondingCurve"),
+      contractFilesExist("BondingCurve") &&
+      contractFilesExist("UpdateCustodianMultisigWallet"),
   };
 }
 
@@ -115,7 +314,8 @@ function assertOnchainDeployReady() {
 
   const missing = [];
   if (!readiness.sdkAvailable) missing.push("TVM SDK/lib-node");
-  if (!readiness.privateKeyConfigured) missing.push("DEPLOYER_PRIVATE_KEY");
+  if (!readiness.keyPairConfigured) missing.push(`DEPLOYER_SECRET_KEY (${readiness.keyPairReason})`);
+  if (!readiness.fundingWalletConfigured) missing.push("DEPLOYER_WALLET_ADDRESS");
   if (!readiness.contractsCompiled) missing.push("ABI/TVC dos contratos");
 
   if (missing.length > 0) {
@@ -129,7 +329,15 @@ function assertOnchainDeployReady() {
  * Prepara os parâmetros de deploy e opcionalmente executa o deploy.
  * Retorna o endereço do contrato (predito ou real).
  */
-async function deployContract({ contractName, constructorInput, initialData, signer, label }) {
+async function deployContract({
+  contractName,
+  constructorInput,
+  initialData,
+  signer,
+  label,
+  onAddressPredicted,
+  onChainAttempt,
+}) {
   const { abi, tvc } = loadContractFiles(contractName);
 
   const deployParams = {
@@ -147,9 +355,16 @@ async function deployContract({ contractName, constructorInput, initialData, sig
 
   // Calcular endereço predito
   const { address } = await client.abi.encode_message(deployParams);
+  if (typeof onAddressPredicted === "function") {
+    onAddressPredicted(address);
+  }
 
   if (ENABLE_ONCHAIN_DEPLOY) {
+    await prefundFutureContractAddress(address, signer, onChainAttempt);
     console.log(`[Deployer] ${label}: Enviando deploy para a blockchain...`);
+    if (typeof onChainAttempt === "function") {
+      onChainAttempt();
+    }
     await client.processing.process_message({
       message_encode_params: deployParams,
       send_events: false,
@@ -168,18 +383,48 @@ async function deployContract({ contractName, constructorInput, initialData, sig
  * NUNCA retorna status "deployed" se a transação não foi realmente enviada à rede.
  */
 async function deployTokenEcosystem({ name, symbol, totalSupply, ipfsHash, creatorWallet, paymentTxHash }) {
-  const privateKey = process.env.DEPLOYER_PRIVATE_KEY;
+  let chainAttempted = false;
+  let tokenRootAddress = "";
+  let bondingCurveAddress = "";
+  const markChainAttempted = () => {
+    chainAttempted = true;
+  };
   const maxTokenSupply = parseTokenSupplyToNano(totalSupply);
   const deployNonce = buildDeployNonce({ creatorWallet, symbol, paymentTxHash });
+  const keyConfig = loadDeployerKeyConfig();
 
-  // ── Verificação 1: Private key configurada? ────────────────────────────────
-  if (!privateKey || privateKey.includes("CONFIGURE") || privateKey.includes("your_")) {
-    console.warn("[Deployer] DEPLOYER_PRIVATE_KEY não configurada. Deploy on-chain indisponível.");
+  // ── Verificação 1: Keypair configurado? ───────────────────────────────────
+  if (!keyConfig.configured) {
+    console.warn("[Deployer] DEPLOYER_SECRET_KEY não configurada. Deploy on-chain indisponível.");
+    if (!ENABLE_ONCHAIN_DEPLOY) {
+      return {
+        tokenRoot: "",
+        bondingCurve: "",
+        status: "awaiting_chain_integration",
+        chainAttempted,
+        reason:
+          "DEPLOYER_SECRET_KEY não configurada. Token registrado off-chain; " +
+          "endereços on-chain serão calculados quando o deployer for configurado.",
+      };
+    }
+
     return {
       tokenRoot: "",
       bondingCurve: "",
       status: "pending_deployer_configuration",
-      reason: "DEPLOYER_PRIVATE_KEY não configurada no backend. Configure o .env para habilitar deploy on-chain.",
+      chainAttempted,
+      reason: "DEPLOYER_SECRET_KEY não configurada no backend. Configure o .env para habilitar deploy on-chain.",
+    };
+  }
+
+  if (!keyConfig.usable) {
+    console.warn(`[Deployer] Keypair do deployer inválido: ${keyConfig.reason}`);
+    return {
+      tokenRoot: "",
+      bondingCurve: "",
+      status: "pending_deployer_configuration",
+      chainAttempted,
+      reason: keyConfig.reason,
     };
   }
 
@@ -190,6 +435,7 @@ async function deployTokenEcosystem({ name, symbol, totalSupply, ipfsHash, creat
       tokenRoot: "",
       bondingCurve: "",
       status: "pending_sdk_configuration",
+      chainAttempted,
       reason: "TVM SDK (libNode) não carregou. Verifique as dependências do backend.",
     };
   }
@@ -201,6 +447,7 @@ async function deployTokenEcosystem({ name, symbol, totalSupply, ipfsHash, creat
       tokenRoot: "",
       bondingCurve: "",
       status: "pending_contract_compilation",
+      chainAttempted,
       reason: "Arquivos ABI/TVC do TokenRoot ou TokenWallet não encontrados na pasta src/abi/.",
     };
   }
@@ -211,18 +458,37 @@ async function deployTokenEcosystem({ name, symbol, totalSupply, ipfsHash, creat
       tokenRoot: "",
       bondingCurve: "",
       status: "pending_contract_compilation",
+      chainAttempted,
       reason: "Arquivos ABI/TVC do BondingCurve não encontrados na pasta src/abi/.",
     };
   }
 
+  if (ENABLE_ONCHAIN_DEPLOY && !contractFilesExist("UpdateCustodianMultisigWallet")) {
+    return {
+      tokenRoot: "",
+      bondingCurve: "",
+      status: "pending_contract_compilation",
+      chainAttempted,
+      reason: "ABI/TVC da UpdateCustodianMultisigWallet não encontrados para pré-financiar deploy.",
+    };
+  }
+
+  if (ENABLE_ONCHAIN_DEPLOY) {
+    const fundingWallet = String(process.env.DEPLOYER_WALLET_ADDRESS || "").trim();
+    if (!fundingWallet || isPlaceholder(fundingWallet)) {
+      return {
+        tokenRoot: "",
+        bondingCurve: "",
+        status: "pending_deployer_configuration",
+        chainAttempted,
+        reason: "DEPLOYER_WALLET_ADDRESS não configurado para pré-financiar endereços futuros.",
+      };
+    }
+  }
+
   // ── Tentativa de deploy ────────────────────────────────────────────────────
   try {
-    // C-06: Use nacl_sign_keypair_from_seed for 32-byte Ed25519 seeds
-    // nacl_sign_keypair_from_secret_key expects 64-byte secret (seed+pubkey concatenated)
-    // but DEPLOYER_PRIVATE_KEY is a 32-byte seed (64 hex chars)
-    const keyPair = await client.crypto.nacl_sign_keypair_from_seed({
-      seed: privateKey,
-    });
+    const keyPair = await resolveDeployerKeyPair();
 
     const signer = signerKeys({
       keys: {
@@ -238,7 +504,7 @@ async function deployTokenEcosystem({ name, symbol, totalSupply, ipfsHash, creat
     const walletTvc = loadContractFiles("TokenWallet").tvc;
     const { code: walletCodeCell } = await client.boc.get_code_from_tvc({ tvc: walletTvc });
 
-    const tokenRootAddress = await deployContract({
+    tokenRootAddress = await deployContract({
       contractName: "TokenRoot",
       constructorInput: {
         _name: name,
@@ -251,15 +517,24 @@ async function deployTokenEcosystem({ name, symbol, totalSupply, ipfsHash, creat
       initialData: { deployNonce },
       signer,
       label: "TokenRoot",
+      onAddressPredicted: (address) => {
+        tokenRootAddress = address;
+      },
+      onChainAttempt: markChainAttempted,
     });
 
     // ── Passo 2: Predizer/Deploy do BondingCurve (Mensagem Interna) ────────
     const { abi: bcAbi, tvc: bcTvc } = loadContractFiles("BondingCurve");
-    // C-05: Include _tokenRoot in initial_data for unique BondingCurve addresses
-    // Without this, all BondingCurves would hash to the same address
-    const { address: bondingCurveAddress } = await client.abi.encode_message({
+    // C-05: Include static vars in initial_data for unique BondingCurve addresses
+    const { address: predictedBondingCurveAddress } = await client.abi.encode_message({
       abi: abiContract(bcAbi),
-      deploy_set: { tvc: bcTvc, initial_data: { _tokenRoot: tokenRootAddress } },
+      deploy_set: {
+        tvc: bcTvc,
+        initial_data: {
+          _tokenRoot: tokenRootAddress,
+          _supplyCap: maxTokenSupply,
+        },
+      },
       call_set: {
         function_name: "constructor",
         input: {
@@ -272,6 +547,7 @@ async function deployTokenEcosystem({ name, symbol, totalSupply, ipfsHash, creat
       },
       signer: { type: "None" }
     });
+    bondingCurveAddress = predictedBondingCurveAddress;
 
     if (ENABLE_ONCHAIN_DEPLOY) {
       console.log(`[Deployer] Atualizando TokenRoot com BondingCurve code e deployando (DappID)...`);
@@ -279,6 +555,7 @@ async function deployTokenEcosystem({ name, symbol, totalSupply, ipfsHash, creat
 
       const { code: bcCodeCell } = await client.boc.get_code_from_tvc({ tvc: bcTvc });
 
+      markChainAttempted();
       await client.processing.process_message({
         message_encode_params: {
           address: tokenRootAddress,
@@ -300,6 +577,7 @@ async function deployTokenEcosystem({ name, symbol, totalSupply, ipfsHash, creat
               _name: name,
               _symbol: symbol,
               _creationFeeTxHash: Buffer.from(paymentTxHash || "genesis").toString("hex"),
+              _supplyCap: maxTokenSupply,
               _initialBalance: 10000000000 // 10 VMSHELL to inner BondingCurve
             }
           },
@@ -311,7 +589,10 @@ async function deployTokenEcosystem({ name, symbol, totalSupply, ipfsHash, creat
       
       // Wait for deployment
       let isDeployed = false;
-      for (let i = 0; i < 60; i++) {
+      const deployAttempts = Number(
+        process.env.BONDING_CURVE_DEPLOY_CONFIRM_ATTEMPTS || DEFAULT_BONDING_CURVE_DEPLOY_ATTEMPTS,
+      );
+      for (let i = 0; i < deployAttempts; i++) {
         await new Promise((res) => setTimeout(res, 3000));
         const pubKey = await getAccountPublicKey(bondingCurveAddress);
         if (pubKey.isDeployed) {
@@ -341,14 +622,27 @@ async function deployTokenEcosystem({ name, symbol, totalSupply, ipfsHash, creat
       tokenRoot: tokenRootAddress,
       bondingCurve: bondingCurveAddress,
       status: deployStatus,
+      chainAttempted,
       reason,
     };
   } catch (error) {
     console.error("[Deployer] Erro na preparação do deploy:", error.message);
+    if (chainAttempted) {
+      return {
+        tokenRoot: tokenRootAddress,
+        bondingCurve: bondingCurveAddress,
+        status: "pending_onchain_recovery",
+        chainAttempted,
+        reason:
+          "Uma transação on-chain já foi enviada antes do erro. " +
+          `Endereços preditos preservados para recuperação: ${error.message}`,
+      };
+    }
     return {
       tokenRoot: "",
       bondingCurve: "",
       status: "deploy_error",
+      chainAttempted,
       reason: `Erro ao preparar deploy: ${error.message}`,
     };
   }

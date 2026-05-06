@@ -63,6 +63,32 @@ setInterval(() => {
 // The /launch-request endpoint handles this gracefully by re-verifying on-chain if cache misses.
 const verifiedPaymentsCache = new Map();
 
+function normalizeCachePart(value) {
+  return String(value || "").trim().toLowerCase();
+}
+
+function buildVerifiedPaymentCacheKey({ walletAddress, txHash, tokenSymbol }) {
+  return [
+    normalizeCachePart(walletAddress),
+    normalizeCachePart(txHash),
+    normalizeCachePart(tokenSymbol || "SHELL"),
+  ].join(":");
+}
+
+function isCachedPaymentUsable(cached, { walletAddress, txHash, tokenSymbol }) {
+  if (!cached || Date.now() - cached.timestamp >= 15 * 60 * 1000) {
+    return false;
+  }
+
+  const payment = cached.payment || {};
+  return (
+    normalizeCachePart(payment.walletAddress || payment.payerWallet) ===
+      normalizeCachePart(walletAddress) &&
+    normalizeCachePart(payment.txHash) === normalizeCachePart(txHash) &&
+    normalizeCachePart(payment.tokenSymbol) === normalizeCachePart(tokenSymbol || "SHELL")
+  );
+}
+
 // Limpeza de pagamentos verificados não consumidos (L1 cache fallback)
 setInterval(() => {
   const now = Date.now();
@@ -583,7 +609,10 @@ app.post("/verify-payment", paymentLimiter, requireSession, async (req, res) => 
       tokenSymbol,
     });
 
-    verifiedPaymentsCache.set(txHash, { payment, timestamp: Date.now() });
+    verifiedPaymentsCache.set(
+      buildVerifiedPaymentCacheKey({ walletAddress, txHash, tokenSymbol }),
+      { payment, timestamp: Date.now() },
+    );
 
     res.json({
       success: true,
@@ -616,6 +645,7 @@ app.get("/shell-buy/order/:id", (req, res) => {
 app.post("/launch-request", requireSession, async (req, res) => {
   let txHashReserved = false;
   let reservedTxHash = "";
+  let chainDeployAttempted = false;
 
   try {
     if (config.isProduction && !config.feeWalletConfigured) {
@@ -646,11 +676,23 @@ app.post("/launch-request", requireSession, async (req, res) => {
 
     // ── Verify payment FIRST (A-07) ──────────────────────────────────────────
     let payment;
-    const cached = verifiedPaymentsCache.get(launchRequest.payment.txHash);
-    if (cached && Date.now() - cached.timestamp < 15 * 60 * 1000) {
+    const paymentCacheKey = buildVerifiedPaymentCacheKey({
+      walletAddress: launchRequest.creator.wallet,
+      txHash: launchRequest.payment.txHash,
+      tokenSymbol: launchRequest.payment.tokenSymbol,
+    });
+    const cached = verifiedPaymentsCache.get(paymentCacheKey);
+    if (
+      isCachedPaymentUsable(cached, {
+        walletAddress: launchRequest.creator.wallet,
+        txHash: launchRequest.payment.txHash,
+        tokenSymbol: launchRequest.payment.tokenSymbol,
+      })
+    ) {
       payment = cached.payment;
-      verifiedPaymentsCache.delete(launchRequest.payment.txHash);
+      verifiedPaymentsCache.delete(paymentCacheKey);
     } else {
+      verifiedPaymentsCache.delete(paymentCacheKey);
       payment = await verifyPayment({
         walletAddress: launchRequest.creator.wallet,
         txHash: launchRequest.payment.txHash,
@@ -695,6 +737,7 @@ app.post("/launch-request", requireSession, async (req, res) => {
       creatorWallet: launchRequest.creator.wallet,
       paymentTxHash: launchRequest.payment.txHash,
     });
+    chainDeployAttempted = Boolean(deployResult.chainAttempted);
 
     // 3. Attach on-chain data to ticket
     launchTicket.onchainData = {
@@ -709,6 +752,12 @@ app.post("/launch-request", requireSession, async (req, res) => {
       launchTicket.status = "on_chain_deployed";
       launchTicket.mintingAvailable = true;
       launchTicket.note = `Token criado com sucesso no IPFS (${ipfsHash}) e instanciado na Acki Nacki.`;
+    } else if (deployResult.status === "pending_onchain_recovery") {
+      launchTicket.status = "on_chain_pending_recovery";
+      launchTicket.mintingAvailable = false;
+      launchTicket.note =
+        `Token registrado com metadata no IPFS (${ipfsHash}); ` +
+        "uma transação on-chain já foi enviada e será confirmada pelo sync/recovery.";
     } else if (
       deployResult.status === "awaiting_chain_integration" &&
       process.env.ENABLE_ONCHAIN_DEPLOY !== "true"
@@ -755,8 +804,12 @@ app.post("/launch-request", requireSession, async (req, res) => {
       launchRequest: launchTicket,
     });
   } catch (error) {
-    if (txHashReserved && reservedTxHash) {
+    if (txHashReserved && reservedTxHash && !chainDeployAttempted) {
       await releaseTxHashReservation(reservedTxHash).catch(() => {});
+    } else if (txHashReserved && reservedTxHash && chainDeployAttempted) {
+      console.warn(
+        `[Launch] Preservando reserva do txHash ${reservedTxHash} porque uma tentativa on-chain já foi iniciada.`,
+      );
     }
     res.status(400).json({ error: error.message });
   }

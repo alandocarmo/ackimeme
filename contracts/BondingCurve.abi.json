@@ -42,6 +42,14 @@
 			]
 		},
 		{
+			"name": "maxBuyPerTx",
+			"inputs": [
+			],
+			"outputs": [
+				{"name":"value0","type":"uint256"}
+			]
+		},
+		{
 			"name": "forceAmmMigration",
 			"inputs": [
 			],
@@ -68,11 +76,35 @@
 			]
 		},
 		{
+			"name": "onMintFailed",
+			"inputs": [
+				{"name":"mintNonce","type":"uint32"}
+			],
+			"outputs": [
+			]
+		},
+		{
+			"name": "onMintSuccess",
+			"inputs": [
+				{"name":"mintNonce","type":"uint32"}
+			],
+			"outputs": [
+			]
+		},
+		{
 			"name": "_tokenRoot",
 			"inputs": [
 			],
 			"outputs": [
 				{"name":"_tokenRoot","type":"address"}
+			]
+		},
+		{
+			"name": "_supplyCap",
+			"inputs": [
+			],
+			"outputs": [
+				{"name":"_supplyCap","type":"uint256"}
 			]
 		},
 		{
@@ -121,14 +153,6 @@
 			],
 			"outputs": [
 				{"name":"owner","type":"address"}
-			]
-		},
-		{
-			"name": "tokenRoot",
-			"inputs": [
-			],
-			"outputs": [
-				{"name":"tokenRoot","type":"address"}
 			]
 		},
 		{
@@ -218,13 +242,13 @@
 		{"init":false,"name":"_timestamp","type":"uint64"},
 		{"init":false,"name":"_constructorFlag","type":"bool"},
 		{"init":true,"name":"_tokenRoot","type":"address"},
+		{"init":true,"name":"_supplyCap","type":"uint256"},
 		{"init":false,"name":"reserveBalance","type":"uint256"},
 		{"init":false,"name":"totalSupply","type":"uint256"},
 		{"init":false,"name":"isAmm","type":"bool"},
 		{"init":false,"name":"ammKLast","type":"uint256"},
 		{"init":false,"name":"migratedAt","type":"uint32"},
 		{"init":false,"name":"owner","type":"address"},
-		{"init":false,"name":"tokenRoot","type":"address"},
 		{"init":false,"name":"name","type":"string"},
 		{"init":false,"name":"symbol","type":"string"},
 		{"init":false,"name":"creationFeeTxHash","type":"bytes"},

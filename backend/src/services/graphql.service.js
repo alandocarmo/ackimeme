@@ -20,6 +20,7 @@ if (!config.graphqlUrl) {
 }
 const TIP3_DEFAULT_DECIMALS = 6;
 const MAX_TIP3_TREE_TRANSACTIONS = 24;
+const SHELL_CURRENCY_ID = 2;
 
 const TIP3_TOKEN_WALLET_ABI = {
   "ABI version": 2,
@@ -194,35 +195,29 @@ async function getTransaction(hash) {
    *   - msg.value (VMSHELL) — funciona dentro do mesmo DappID
    *   - msg.currencies[2] (SHELL ECC) — funciona cross-DappID
    *
-   * Devemos ler SHELL de currencies["2"] quando disponível, caso contrário
-   * usar value como fallback. Sem isso, pagamentos cross-DappID retornam
-   * amount ≈ 0 e a validação de fee rejeita tudo.
+   * Devemos ler a fee de produto de currencies["2"]. msg.value é VMSHELL
+   * e deve ser tratado como gas, não como pagamento de criação.
    */
-  const rawCurrencies = node.in_message?.currencies || {};
-  // currencies é um array de objetos ou um objeto { "2": "69000000000000" }
-  // formato pode variar: procuramos o currency_id 2 (SHELL)
-  let shellFromCurrencies = "0";
-  if (Array.isArray(rawCurrencies)) {
-    // formato [{currency: 2, value: "1234"}, ...]
-    const shellEntry = rawCurrencies.find(c => String(c.currency) === "2");
-    shellFromCurrencies = shellEntry?.value || "0";
-  } else if (typeof rawCurrencies === "object") {
-    // formato {"2": "1234"}
-    shellFromCurrencies = rawCurrencies["2"] || rawCurrencies[2] || "0";
-  }
-
-  const vmshellAmount = nanoToDecimal(node.in_message?.value || "0");
+  const vmshellNanoAmount = String(node.in_message?.value || "0");
+  const shellFromCurrencies = extractCurrencyNano(
+    node.in_message?.currencies,
+    SHELL_CURRENCY_ID,
+  );
+  const shellNano = BigInt(String(shellFromCurrencies || "0").replace(/\D/g, "") || "0");
+  const vmshellAmount = nanoToDecimal(vmshellNanoAmount);
   const shellAmount = nanoToDecimal(shellFromCurrencies);
-
-  // Use the larger value: if currencies has SHELL, prefer it; otherwise fallback to VMSHELL
-  const effectiveAmount = shellAmount > vmshellAmount ? shellAmount : vmshellAmount;
+  const paymentSource = shellNano > 0n ? "shell_ecc" : "vmshell_value";
 
   return {
     hash: node.id,
     from: node.in_message?.src || "",
     to: node.account_addr || node.in_message?.dst || "",
-    amount: effectiveAmount,
-    nanoAmount: shellAmount > vmshellAmount ? shellFromCurrencies : (node.in_message?.value || "0"),
+    amount: shellAmount,
+    nanoAmount: shellFromCurrencies,
+    shellNanoAmount: shellFromCurrencies,
+    vmshellNanoAmount,
+    vmshellAmount,
+    paymentSource,
     token: {
       symbol: "SHELL",
     },
@@ -240,6 +235,47 @@ function nanoToDecimal(nanoValue) {
   const whole = nano / 1_000_000_000n;
   const frac = nano % 1_000_000_000n;
   return Number(`${whole}.${String(frac).padStart(9, "0")}`);
+}
+
+function extractCurrencyNano(currencies, currencyId) {
+  let rawCurrencies = currencies || {};
+
+  if (typeof rawCurrencies === "string") {
+    try {
+      rawCurrencies = JSON.parse(rawCurrencies);
+    } catch {
+      return "0";
+    }
+  }
+
+  if (Array.isArray(rawCurrencies)) {
+    const entry = rawCurrencies.find((item) => {
+      if (Array.isArray(item)) {
+        return String(item[0]) === String(currencyId);
+      }
+
+      const candidate =
+        item?.currency ?? item?.currency_id ?? item?.id ?? item?.key ?? item?.token;
+      return String(candidate) === String(currencyId);
+    });
+
+    if (Array.isArray(entry)) {
+      return String(entry[1] ?? "0");
+    }
+
+    return String(entry?.value ?? entry?.amount ?? entry?.tokens ?? "0");
+  }
+
+  if (rawCurrencies && typeof rawCurrencies === "object") {
+    return String(
+      rawCurrencies[String(currencyId)] ??
+        rawCurrencies[currencyId] ??
+        rawCurrencies[`currency_${currencyId}`] ??
+        "0",
+    );
+  }
+
+  return "0";
 }
 
 function normalizeAddress(value) {
