@@ -123,6 +123,7 @@ function toNano(valStr) {
 
 
 const MIGRATION_THRESHOLD_NANO = 69_000_000_000_000; // 69K SHELL in nano
+const TRADE_FEE_BPS = 100; // 1% total fee — matches BondingCurve.sol constant
 
 function readReserveBalance(onchainData) {
   const parsed = Number(onchainData?.reserveBalance);
@@ -316,8 +317,12 @@ export default function TokenPage() {
         const costResult = await bcContract.methods.getBuyPrice({ tokenAmount: expectedNanoTokens.toString() }).call();
         const baseCostNano = BigInt(costResult.value0);
         
-        // Apply slippage to the REAL cost, not to the input
-        const maxShellNano = baseCostNano * BigInt(Math.round(100 + slippagePct)) / 100n;
+        // Add 1% trade fee on top of base cost (matches BondingCurve.sol TRADE_FEE_BPS)
+        const feeNano = baseCostNano * BigInt(TRADE_FEE_BPS) / 10000n;
+        const totalCostNano = baseCostNano + feeNano;
+        
+        // Apply slippage to the total cost (base + fee)
+        const maxShellNano = totalCostNano * BigInt(Math.round(100 + slippagePct)) / 100n;
 
         const tx = await bcContract.methods.buy({
           tokenAmount: expectedNanoTokens.toString(),
@@ -386,13 +391,17 @@ export default function TokenPage() {
   // M-06: When price isn't available, show clear indication instead of wrong values
   function getEstimate() {
     const amt = parseFloat(tradeAmount) || 0;
-    if (amt <= 0) return "0";
-    if (!currentPrice) return "aguardando preço...";
+    if (amt <= 0) return { value: "0", fee: null };
+    if (!currentPrice) return { value: "aguardando preço...", fee: null };
     if (tradeMode === "buy") {
       const expectedFullTokens = amt / currentPrice;
-      return formatNum(expectedFullTokens.toFixed(2));
+      const feeShell = amt * TRADE_FEE_BPS / 10000;
+      return { value: formatNum(expectedFullTokens.toFixed(2)), fee: feeShell.toFixed(4) };
     }
-    return (amt * currentPrice).toFixed(9);
+    const grossReturn = amt * currentPrice;
+    const fee = grossReturn * TRADE_FEE_BPS / 10000;
+    const netReturn = grossReturn - fee;
+    return { value: netReturn.toFixed(9), fee: fee.toFixed(4) };
   }
 
   return (
@@ -644,9 +653,17 @@ export default function TokenPage() {
                   <div className="estimate-box">
                     <span className="estimate-label">Receive ≈</span>
                     <span className="estimate-val">
-                      {getEstimate()} {tradeMode === "buy" ? token.coin.symbol : "SHELL"}
+                      {typeof getEstimate().value === 'string' ? getEstimate().value : getEstimate().value} {tradeMode === "buy" ? token.coin.symbol : "SHELL"}
                     </span>
                   </div>
+
+                  {getEstimate().fee && (
+                    <div style={{ textAlign: 'center', marginBottom: '8px' }}>
+                      <span className="token-time" style={{ fontSize: '10px', color: 'var(--accent-warm)' }}>
+                        Fee: {getEstimate().fee} SHELL (1% — 0.8% platform + 0.2% burn)
+                      </span>
+                    </div>
+                  )}
 
                   {onchainPrice && (
                     <p className="token-time" style={{ textAlign: 'center', fontSize: '10px', marginBottom: '8px' }}>

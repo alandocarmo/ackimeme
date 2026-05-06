@@ -526,6 +526,8 @@ async function deployTokenEcosystem({ name, symbol, totalSupply, ipfsHash, creat
     // ── Passo 2: Predizer/Deploy do BondingCurve (Mensagem Interna) ────────
     const { abi: bcAbi, tvc: bcTvc } = loadContractFiles("BondingCurve");
     // C-05: Include static vars in initial_data for unique BondingCurve addresses
+    // Fee recipient = platform FEE_WALLET for trade fee distribution
+    const feeRecipient = String(config.feeWallet || "").trim();
     const { address: predictedBondingCurveAddress } = await client.abi.encode_message({
       abi: abiContract(bcAbi),
       deploy_set: {
@@ -542,7 +544,8 @@ async function deployTokenEcosystem({ name, symbol, totalSupply, ipfsHash, creat
           _tokenRootAddr: tokenRootAddress,
           _name: name,
           _symbol: symbol,
-          _creationFeeTxHash: Buffer.from(paymentTxHash || "genesis").toString("hex")
+          _creationFeeTxHash: Buffer.from(paymentTxHash || "genesis").toString("hex"),
+          _feeRecipient: feeRecipient
         }
       },
       signer: { type: "None" }
@@ -578,7 +581,8 @@ async function deployTokenEcosystem({ name, symbol, totalSupply, ipfsHash, creat
               _symbol: symbol,
               _creationFeeTxHash: Buffer.from(paymentTxHash || "genesis").toString("hex"),
               _supplyCap: maxTokenSupply,
-              _initialBalance: 10000000000 // 10 VMSHELL to inner BondingCurve
+              _initialBalance: 10000000000, // 10 VMSHELL to inner BondingCurve
+              _feeRecipient: feeRecipient
             }
           },
           signer

@@ -222,12 +222,14 @@ contract TokenRoot {
         string _symbol,
         bytes _creationFeeTxHash,
         uint256 _supplyCap,
-        uint128 _initialBalance
+        uint128 _initialBalance,
+        address _feeRecipient
     ) public {
         require(msg.pubkey() == tvm.pubkey(), 102, "Only deployer pubkey can deploy BC");
         require(bondingCurve == address(0), 108, "BondingCurve already deployed");
         require(!bondingCurveCode.toSlice().empty(), 112, "BondingCurve code not set");
         require(_supplyCap > 0, 113, "Supply cap must be greater than zero");
+        require(_feeRecipient != address(0), 121, "Fee recipient cannot be zero address");
         tvm.accept();
         _ensureExecutionGas();
 
@@ -245,7 +247,7 @@ contract TokenRoot {
             stateInit: stateInit,
             value: varuint16(_initialBalance),
             flag: 1
-        }(_owner, address(this), _name, _symbol, _creationFeeTxHash);
+        }(_owner, address(this), _name, _symbol, _creationFeeTxHash, _feeRecipient);
 
         bondingCurve = bcAddr;
         owner = bcAddr; // Transfere ownership automaticamente para o BondingCurve

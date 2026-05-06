@@ -1,6 +1,6 @@
 const DEFAULT_APP_NAME = "AckiMeme";
 const DEFAULT_NETWORK = "Acki Nacki";
-const DEFAULT_SHELL_MIN_PAYMENT = 3; // ~$3 USD equivalent in SHELL for token creation
+const DEFAULT_SHELL_MIN_PAYMENT = 300; // ~$3 USD (300 SHELL × $0.01/SHELL via Accumulator: 100 SHELL = 1 USDC)
 const DEFAULT_SHELL_DECIMALS = 9;    // SHELL uses 9 decimals (nano)
 const DEFAULT_USDC_DECIMALS = 6;
 const DEFAULT_MIN_CREATOR_SHELL_BALANCE = 1;

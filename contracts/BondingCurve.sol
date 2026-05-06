@@ -15,6 +15,14 @@ contract BondingCurve {
     uint64 private constant GAS_TOP_UP = 2_000_000_000; // 2 VMSHELL in nano
     uint128 private constant MIN_EXECUTION_GAS = 1 ton;
 
+    // ─── Trade Fee Constants (1% total) ──────────────────────────────────────
+    // Fee is charged on every buy and sell trade.
+    // 0.8% goes to feeRecipient (platform), 0.2% stays locked in contract (burn).
+    // Rate: 1 USDC = 100 SHELL (Accumulator official rate)
+    uint16 public constant TRADE_FEE_BPS     = 100;  // 1.0% total fee (100 basis points)
+    uint16 public constant PLATFORM_FEE_BPS  = 80;   // 0.8% to platform FEE_WALLET
+    uint16 public constant BURN_FEE_BPS      = 20;   // 0.2% locked in contract (burn)
+
     // ─── C-02: ECC token IDs for Acki Nacki ecosystem ─────────────────────────
     // V-AM-01: Explicit ID constants prevent confusion attacks across the
     // NACKL/SHELL/USDC token ecosystem. Only SHELL (ID=2) is valid payment.
@@ -34,6 +42,7 @@ contract BondingCurve {
     uint256 public ammKLast;             // AMM invariant
     uint32 public migratedAt;            // timestamp of migration
     address public owner;                // token creator
+    address public feeRecipient;         // platform fee wallet (receives 0.8% of each trade)
     // NOTE: tokenRoot removed — use _tokenRoot (static) everywhere for consistency.
     // _tokenRoot is set via stateInit and never changes, making it the canonical reference.
     string public name;
@@ -63,13 +72,16 @@ contract BondingCurve {
         address _tokenRootAddr,
         string _name,
         string _symbol,
-        bytes _creationFeeTxHash
+        bytes _creationFeeTxHash,
+        address _feeRecipient
     ) {
         require(msg.sender == _tokenRoot, 101, "Only TokenRoot can deploy BondingCurve");
         require(_tokenRootAddr == _tokenRoot, 104, "tokenRootAddr must match static _tokenRoot");
         require(_supplyCap > 0, 105, "Supply cap must be set");
+        require(_feeRecipient != address(0), 106, "Fee recipient cannot be zero address");
 
         owner = _owner;
+        feeRecipient = _feeRecipient;
         // _tokenRoot is the canonical reference — no separate tokenRoot variable needed
         name = _name;
         symbol = _symbol;
@@ -126,6 +138,26 @@ contract BondingCurve {
         return capBasedLimit < ABSOLUTE_MAX_BUY_PER_TX ? capBasedLimit : ABSOLUTE_MAX_BUY_PER_TX;
     }
 
+    // ─── Fee Views ────────────────────────────────────────────────────────────
+    /// @notice Returns the total trade fee (1%) for a given base amount.
+    function getTradeFee(uint256 baseAmount) public pure returns (uint256) {
+        return baseAmount * TRADE_FEE_BPS / 10000;
+    }
+
+    /// @notice Returns the buy cost INCLUDING the 1% fee for a given token amount.
+    function getBuyPriceWithFee(uint256 tokenAmount) public view returns (uint128 baseCost, uint128 fee, uint128 total) {
+        baseCost = getBuyPrice(tokenAmount);
+        fee = uint128(uint256(baseCost) * TRADE_FEE_BPS / 10000);
+        total = baseCost + fee;
+    }
+
+    /// @notice Returns the sell return AFTER deducting the 1% fee.
+    function getSellReturnAfterFee(uint256 tokenAmount) public view returns (uint128 grossReturn, uint128 fee, uint128 netReturn) {
+        grossReturn = uint128(getSellReturn(tokenAmount));
+        fee = uint128(uint256(grossReturn) * TRADE_FEE_BPS / 10000);
+        netReturn = grossReturn - fee;
+    }
+
     // ─── Configuration ───────────────────────────────────────────────────────
     // Fix: auth via msg.sender == owner (internal message from owner's wallet)
     // instead of msg.pubkey() which only works for external messages.
@@ -150,6 +182,7 @@ contract BondingCurve {
     // Users send SHELL as Extra Currency (cc[2]) in internal messages.
     // This works both intra-DappID and cross-DappID, enabling universal composability.
     // msg.value (VMSHELL) is used ONLY for gas, not as payment.
+    // Trade fee: 1% total (0.8% platform + 0.2% burn locked in contract).
     function buy(uint256 tokenAmount, uint256 maxShellIn) public {
         // V-AM-01: Reject transactions that accidentally/maliciously include NACKL or USDC
         // instead of SHELL. Without this check, a confusion attack could credit the
@@ -170,8 +203,14 @@ contract BondingCurve {
 
         uint256 cost = getBuyPrice(tokenAmount);
         require(cost > 0, 211, "Purchase amount too small, cost rounds to zero");
-        require(cost <= maxShellIn, 208, "Slippage protection triggered: cost exceeds maxShellIn");
-        require(receivedShell >= cost, 203, "Insufficient SHELL sent for purchase");
+
+        // ─── Trade Fee (1%): 0.8% platform + 0.2% burn ──────────────────────
+        uint256 platformFee = cost * PLATFORM_FEE_BPS / 10000;
+        uint256 burnFee = cost * BURN_FEE_BPS / 10000;
+        uint256 totalCostWithFee = cost + platformFee + burnFee;
+
+        require(totalCostWithFee <= maxShellIn, 208, "Slippage protection triggered: cost+fee exceeds maxShellIn");
+        require(receivedShell >= totalCostWithFee, 203, "Insufficient SHELL sent (cost + 1% fee)");
 
         // Cross-Dapp calls arrive with msg.value/VMSHELL zeroed by the protocol.
         // After validating the paid SHELL ECC amount, the Dapp pays execution gas.
@@ -179,7 +218,7 @@ contract BondingCurve {
         _ensureExecutionGas();
         require(address(this).balance >= 0.2 ton, 213, "BondingCurve VMSHELL reserve unavailable");
 
-        // Update state
+        // Update state — only base cost goes to reserve (fee is separate)
         totalSupply += tokenAmount;
         reserveBalance += cost;
 
@@ -193,8 +232,16 @@ contract BondingCurve {
         // Mint memecoins to buyer via internal message
         ITokenRoot(_tokenRoot).mint(nonce, msg.sender, tokenAmount, 0.1 ton); // sends 0.1 VMSHELL for wallet deployment
 
+        // Send platform fee (0.8%) to feeRecipient via cc[2]
+        if (platformFee > 0) {
+            mapping(uint32 => varuint32) feeCurrencies;
+            feeCurrencies[SHELL_CURRENCY_ID] = varuint32(platformFee);
+            feeRecipient.transfer({ value: 0.01 ton, flag: 1, bounce: false, currencies: feeCurrencies });
+        }
+        // Burn fee (0.2%) stays locked in this contract — effectively out of circulation
+
         // Refund excess SHELL (Extra Currency) back to buyer
-        uint256 excess = receivedShell > cost ? receivedShell - cost : 0;
+        uint256 excess = receivedShell > totalCostWithFee ? receivedShell - totalCostWithFee : 0;
         if (excess > 0) {
             // Build currency map with refund amount for cc[2]
             mapping(uint32 => varuint32) refundCurrencies;
@@ -209,28 +256,42 @@ contract BondingCurve {
     }
 
     // ─── Receiver for async burns (Sell) ─────────────────────────────────────
-    // Called by TokenRoot after TokenWallet burns tokens
+    // Called by TokenRoot after TokenWallet burns tokens.
+    // Trade fee: 1% total (0.8% platform + 0.2% burn locked in contract).
     function onTokenBurned(uint32 burnNonce, uint256 amount, address refundAddress) external {
         require(msg.sender == _tokenRoot, 103, "Only TokenRoot can notify burn");
         // Removed the "if (migrated)" block since AMM transition allows users
         // to continue trading organically on this internal contract.
         // It calculates returns via getSellReturn using x*y=k formula.
 
-        uint256 returnAmount = getSellReturn(amount);
+        uint256 grossReturn = getSellReturn(amount);
         // Audit #8: Prevent silent zero-return sells where user burns tokens and gets nothing
-        require(returnAmount > 0, 216, "Sell amount too small, return rounds to zero");
-        require(reserveBalance >= returnAmount, 204, "Insufficient reserve for sell");
+        require(grossReturn > 0, 216, "Sell amount too small, return rounds to zero");
+        require(reserveBalance >= grossReturn, 204, "Insufficient reserve for sell");
+
+        // ─── Trade Fee (1%): 0.8% platform + 0.2% burn ──────────────────────
+        uint256 platformFee = grossReturn * PLATFORM_FEE_BPS / 10000;
+        uint256 burnFee = grossReturn * BURN_FEE_BPS / 10000;
+        uint256 netReturn = grossReturn - platformFee - burnFee;
 
         totalSupply -= amount;
-        reserveBalance -= returnAmount;
+        reserveBalance -= grossReturn;
 
-        emit TokensSold(refundAddress, amount, returnAmount, currentPrice());
+        emit TokensSold(refundAddress, amount, netReturn, currentPrice());
 
-        // Send SHELL payout via Extra Currencies (cc[2]) for cross-DappID compatibility
+        // Send platform fee (0.8%) to feeRecipient via cc[2]
+        if (platformFee > 0) {
+            mapping(uint32 => varuint32) feeCurrencies;
+            feeCurrencies[SHELL_CURRENCY_ID] = varuint32(platformFee);
+            feeRecipient.transfer({ value: 0.05 ton, flag: 1, bounce: false, currencies: feeCurrencies });
+        }
+        // Burn fee (0.2%) stays locked in this contract — effectively out of circulation
+
+        // Send net SHELL payout via Extra Currencies (cc[2]) for cross-DappID compatibility
         tvm.rawReserve(0.5 ton, 0); // Keep 0.5 VMSHELL for contract survival
 
         mapping(uint32 => varuint32) payoutCurrencies;
-        payoutCurrencies[SHELL_CURRENCY_ID] = varuint32(returnAmount);
+        payoutCurrencies[SHELL_CURRENCY_ID] = varuint32(netReturn);
         refundAddress.transfer({ value: 0, flag: 128, bounce: false, currencies: payoutCurrencies });
     }
 
