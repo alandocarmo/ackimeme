@@ -12,12 +12,13 @@
     "dev:wallet:sign": "node scripts/dev-wallet.js sign"
   },
   "dependencies": {
-    "@tvmsdk/core": "2.0.2",
-    "@tvmsdk/lib-node": "2.0.2",
+    "@eversdk/core": "^1.44.3",
+    "@eversdk/lib-node": "^1.44.3",
+    "@tvmsdk/lib-web": "^2.0.1",
     "axios": "^1.6.0",
-    "cors": "^2.8.5",
     "body-parser": "^1.20.2",
     "cookie-parser": "^1.4.7",
+    "cors": "^2.8.5",
     "dotenv": "^16.0.0",
     "express": "^4.18.2",
     "express-rate-limit": "^8.3.2",

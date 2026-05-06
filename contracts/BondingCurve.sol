@@ -43,6 +43,7 @@ contract BondingCurve {
     uint32 public migratedAt;            // timestamp of migration
     address public owner;                // token creator
     address public feeRecipient;         // platform fee wallet (receives 0.8% of each trade)
+    bool public paused;                  // security pause for trading
     // NOTE: tokenRoot removed — use _tokenRoot (static) everywhere for consistency.
     // _tokenRoot is set via stateInit and never changes, making it the canonical reference.
     string public name;
@@ -58,6 +59,12 @@ contract BondingCurve {
     
     mapping(uint32 => address) public mintIdToBuyer; // mapping to resolve bounce exact buyer
     uint32 private _mintSeqno = 1;
+
+    // ─── Modifiers ────────────────────────────────────────────────────────────
+    modifier whenNotPaused() {
+        require(!paused, 110, "Trading is temporarily paused for security");
+        _;
+    }
 
     // ─── Events ───────────────────────────────────────────────────────────────
     event TokensPurchaseInitiated(address buyer, uint256 shellIn, uint256 tokensOut, uint128 newPrice);
@@ -183,7 +190,7 @@ contract BondingCurve {
     // This works both intra-DappID and cross-DappID, enabling universal composability.
     // msg.value (VMSHELL) is used ONLY for gas, not as payment.
     // Trade fee: 1% total (0.8% platform + 0.2% burn locked in contract).
-    function buy(uint256 tokenAmount, uint256 maxShellIn) public {
+    function buy(uint256 tokenAmount, uint256 maxShellIn) public whenNotPaused {
         // V-AM-01: Reject transactions that accidentally/maliciously include NACKL or USDC
         // instead of SHELL. Without this check, a confusion attack could credit the
         // buyer with tokens while the BondingCurve receives the wrong ECC currency.
@@ -258,7 +265,7 @@ contract BondingCurve {
     // ─── Receiver for async burns (Sell) ─────────────────────────────────────
     // Called by TokenRoot after TokenWallet burns tokens.
     // Trade fee: 1% total (0.8% platform + 0.2% burn locked in contract).
-    function onTokenBurned(uint32 burnNonce, uint256 amount, address refundAddress) external {
+    function onTokenBurned(uint32 burnNonce, uint256 amount, address refundAddress) external whenNotPaused {
         require(msg.sender == _tokenRoot, 103, "Only TokenRoot can notify burn");
         // Removed the "if (migrated)" block since AMM transition allows users
         // to continue trading organically on this internal contract.
@@ -377,5 +384,19 @@ contract BondingCurve {
             uint32 nonce = body.load(uint32);
             _rollbackMint(nonce);
         }
+    }
+
+    // ─── Security Admin ──────────────────────────────────────────────────────
+    // Platform-level pause for emergency security interventions
+    function pause() public {
+        require(msg.sender == feeRecipient, 111, "Only platform (feeRecipient) can pause");
+        tvm.accept();
+        paused = true;
+    }
+
+    function unpause() public {
+        require(msg.sender == feeRecipient, 111, "Only platform (feeRecipient) can unpause");
+        tvm.accept();
+        paused = false;
     }
 }
