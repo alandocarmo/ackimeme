@@ -10,7 +10,8 @@
 				{"name":"_tokenRootAddr","type":"address"},
 				{"name":"_name","type":"string"},
 				{"name":"_symbol","type":"string"},
-				{"name":"_creationFeeTxHash","type":"bytes"}
+				{"name":"_creationFeeTxHash","type":"bytes"},
+				{"name":"_feeRecipient","type":"address"}
 			],
 			"outputs": [
 			]
@@ -47,6 +48,37 @@
 			],
 			"outputs": [
 				{"name":"value0","type":"uint256"}
+			]
+		},
+		{
+			"name": "getTradeFee",
+			"inputs": [
+				{"name":"baseAmount","type":"uint256"}
+			],
+			"outputs": [
+				{"name":"value0","type":"uint256"}
+			]
+		},
+		{
+			"name": "getBuyPriceWithFee",
+			"inputs": [
+				{"name":"tokenAmount","type":"uint256"}
+			],
+			"outputs": [
+				{"name":"baseCost","type":"uint128"},
+				{"name":"fee","type":"uint128"},
+				{"name":"total","type":"uint128"}
+			]
+		},
+		{
+			"name": "getSellReturnAfterFee",
+			"inputs": [
+				{"name":"tokenAmount","type":"uint256"}
+			],
+			"outputs": [
+				{"name":"grossReturn","type":"uint128"},
+				{"name":"fee","type":"uint128"},
+				{"name":"netReturn","type":"uint128"}
 			]
 		},
 		{
@@ -87,6 +119,20 @@
 			"name": "onMintSuccess",
 			"inputs": [
 				{"name":"mintNonce","type":"uint32"}
+			],
+			"outputs": [
+			]
+		},
+		{
+			"name": "pause",
+			"inputs": [
+			],
+			"outputs": [
+			]
+		},
+		{
+			"name": "unpause",
+			"inputs": [
 			],
 			"outputs": [
 			]
@@ -153,6 +199,22 @@
 			],
 			"outputs": [
 				{"name":"owner","type":"address"}
+			]
+		},
+		{
+			"name": "feeRecipient",
+			"inputs": [
+			],
+			"outputs": [
+				{"name":"feeRecipient","type":"address"}
+			]
+		},
+		{
+			"name": "paused",
+			"inputs": [
+			],
+			"outputs": [
+				{"name":"paused","type":"bool"}
 			]
 		},
 		{
@@ -249,6 +311,8 @@
 		{"init":false,"name":"ammKLast","type":"uint256"},
 		{"init":false,"name":"migratedAt","type":"uint32"},
 		{"init":false,"name":"owner","type":"address"},
+		{"init":false,"name":"feeRecipient","type":"address"},
+		{"init":false,"name":"paused","type":"bool"},
 		{"init":false,"name":"name","type":"string"},
 		{"init":false,"name":"symbol","type":"string"},
 		{"init":false,"name":"creationFeeTxHash","type":"bytes"},

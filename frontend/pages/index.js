@@ -61,6 +61,16 @@ function hashColor(str) {
   return `hsl(${h}, 65%, 55%)`;
 }
 
+function isSafeUrl(url) {
+  if (!url) return false;
+  try {
+    const u = new URL(url);
+    return u.protocol === 'https:';
+  } catch {
+    return false;
+  }
+}
+
 function computeAggregateStats(launches) {
   let totalReserve = 0;
   let activeCount = 0;
@@ -247,7 +257,7 @@ export default function Home() {
                   <article className="token-card" style={{ animationDelay: `${i * 40}ms` }}>
                     <div className="token-card-header">
                       <div className="token-avatar" style={{ background: `linear-gradient(135deg, ${color}, ${color}44)` }}>
-                        {launch.coin?.logoUrl ? (
+                        {isSafeUrl(launch.coin?.logoUrl) ? (
                           <img src={launch.coin.logoUrl} alt="" referrerPolicy="no-referrer" />
                         ) : (
                           <span style={{ color: '#fff', fontSize: '18px', fontWeight: 700 }}>

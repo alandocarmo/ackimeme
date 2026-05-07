@@ -13,6 +13,7 @@ RUN tar -xvzf tvm-cli.tar.gz && rm tvm-cli.tar.gz
 RUN mv tvm-cli /usr/local/bin/tvm-cli && chmod +x /usr/local/bin/tvm-cli
 
 WORKDIR /contracts
+COPY . .
 
 # Compile all contracts automatically
 CMD ["sh", "-c", "\

@@ -220,8 +220,11 @@ app.use((req, res, next) => {
   const origin = req.headers.origin;
 
   if (!isProduction) {
-    // Development: permissive but specific if possible
-    res.setHeader("Access-Control-Allow-Origin", origin || "*");
+    // Development: allow specific origin if it exists, otherwise no fallback to wildcard with credentials
+    if (origin) {
+      res.setHeader("Access-Control-Allow-Origin", origin);
+      res.setHeader("Vary", "Origin");
+    }
   } else {
     // Production: STRICT whitelist
     if (origin && config.allowedOrigins.includes(origin)) {

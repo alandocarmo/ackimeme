@@ -265,7 +265,7 @@ Conclusao:
 ### Fase 2 - launch protocol
 
 - contratos de token + vault de reserva
-- regra 80/20 on-chain
+- regra 100% supply-to-curve on-chain
 - factory de deploy
 - sincronizacao backend <-> chain
 

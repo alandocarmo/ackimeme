@@ -111,7 +111,8 @@ contract BondingCurve {
     function getBuyPrice(uint256 tokenAmount) public view returns (uint128) {
         if (isAmm) {
             uint256 tokenPool = _supplyCap - totalSupply;
-            require(tokenPool > tokenAmount, 215, "Not enough AMM liquidity");
+            require(ammKLast > 0, 219, "AMM invariant is zero - pool corrupted");
+            require(tokenPool > tokenAmount + 1, 215, "Not enough AMM liquidity");
             uint256 newReserve = ammKLast / (tokenPool - tokenAmount);
             return uint128(newReserve - reserveBalance);
         }
@@ -127,6 +128,8 @@ contract BondingCurve {
         if (totalSupply == 0 || tokenAmount > totalSupply) return 0;
         if (isAmm) {
             uint256 tokenPool = _supplyCap - totalSupply;
+            require(ammKLast > 0, 219, "AMM invariant is zero - pool corrupted");
+            require(tokenPool > tokenAmount + 1, 215, "Not enough AMM liquidity"); // margem de segurança
             uint256 newReserve = ammKLast / (tokenPool + tokenAmount);
             return uint128(reserveBalance - newReserve);
         }
@@ -390,13 +393,11 @@ contract BondingCurve {
     // Platform-level pause for emergency security interventions
     function pause() public {
         require(msg.sender == feeRecipient, 111, "Only platform (feeRecipient) can pause");
-        tvm.accept();
         paused = true;
     }
 
     function unpause() public {
         require(msg.sender == feeRecipient, 111, "Only platform (feeRecipient) can unpause");
-        tvm.accept();
         paused = false;
     }
 }

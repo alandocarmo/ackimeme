@@ -619,6 +619,30 @@ async function getAccountBalance(address) {
 }
 
 /**
+ * Busca o saldo em Nano SHELL diretamente da rede via GraphQL.
+ */
+async function getAccountBalanceNano(address) {
+  const query = `
+    query GetBalance($address: String!) {
+      blockchain {
+        account(address: $address) {
+          info { balance(format: DEC) acc_type }
+        }
+      }
+    }
+  `;
+
+  const data = await gql(query, { address });
+  const info = data?.blockchain?.account?.info;
+
+  if (!info || info.acc_type !== 1) {
+    return 0n;
+  }
+
+  return BigInt(String(info.balance || "0"));
+}
+
+/**
  * Verifica se uma carteira está deployada na blockchain e extrai a public key.
  *
  * A Acki Nacki/TVM armazena a public key do contrato no campo `boc` (Bag of Cells).
@@ -749,6 +773,7 @@ module.exports = {
   isTip3DecoderAvailable,
   getTransaction,
   getAccountBalance,
+  getAccountBalanceNano,
   getAccountPublicKey,
   getAccountState,
   nanoToDecimal,

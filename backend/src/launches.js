@@ -86,14 +86,32 @@ function normalizeOptionalUrl(value, fieldName) {
 
   try {
     const parsed = new URL(url);
-    // Security: Only allow HTTP/HTTPS to prevent SSRF via file://, ftp://, etc.
-    if (!["http:", "https:"].includes(parsed.protocol)) {
-      throw new Error(`${fieldName} deve usar protocolo HTTP ou HTTPS.`);
+    // Security: Only allow HTTPS to prevent insecure content and SSRF
+    if (parsed.protocol !== "https:") {
+      throw new Error(`${fieldName} deve usar protocolo HTTPS.`);
     }
+
+    // Audit #S-6: Restricted domains for logoUrl to prevent tracking/malicious content
+    if (fieldName === "Logo URL") {
+      const allowedDomains = [
+        "gateway.pinata.cloud",
+        "ipfs.io",
+        "cloudflare-ipfs.com",
+        "nftstorage.link",
+        "aquamarine-personal-jay-172.mypinata.cloud" // User's specific pinata gateway if exists
+      ];
+      const isAllowed = allowedDomains.some(domain => 
+        parsed.hostname === domain || parsed.hostname.endsWith("." + domain)
+      );
+      
+      if (!isAllowed) {
+        throw new Error(`${fieldName} deve estar hospedado no IPFS (Pinata, Cloudflare, etc.) para segurança.`);
+      }
+    }
+
     return parsed.toString();
   } catch (error) {
-    // Re-throw our own protocol error, wrap others
-    if (error.message.includes("HTTP")) throw error;
+    if (error.message.includes("HTTPS") || error.message.includes("IPFS")) throw error;
     throw new Error(`${fieldName} precisa ser uma URL válida.`);
   }
 }

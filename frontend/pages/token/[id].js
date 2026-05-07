@@ -149,7 +149,18 @@ function hashColor(str) {
   for (let i = 0; i < (str || "").length; i++) {
     hash = str.charCodeAt(i) + ((hash << 5) - hash);
   }
-  return `hsl(${Math.abs(hash) % 360}, 65%, 55%)`;
+  const h = Math.abs(hash) % 360;
+  return `hsl(${h}, 65%, 55%)`;
+}
+
+function isSafeUrl(url) {
+  if (!url) return false;
+  try {
+    const u = new URL(url);
+    return u.protocol === 'https:';
+  } catch {
+    return false;
+  }
 }
 
 export default function TokenPage() {
@@ -429,11 +440,22 @@ export default function TokenPage() {
             <div className="detail-main">
               {/* Header */}
               <div className="token-header-section">
-                <div className="token-avatar" style={{ width: '64px', height: '64px', borderRadius: '16px', background: `linear-gradient(135deg, ${color}, ${color}44)` }}>
-                  {token.coin.logoUrl ? (
-                    <img src={token.coin.logoUrl} alt="" referrerPolicy="no-referrer" />
+                <div className="token-avatar" style={{
+                  width: '80px',
+                  height: '80px',
+                  background: `linear-gradient(135deg, ${color}, ${color}44)`,
+                  fontSize: '32px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  borderRadius: '16px'
+                }}>
+                  {isSafeUrl(token.coin?.logoUrl) ? (
+                    <img src={token.coin.logoUrl} alt="" referrerPolicy="no-referrer" style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '16px' }} />
                   ) : (
-                    <span style={{ fontSize: '28px', fontWeight: 800 }}>{(token.coin.symbol || "?")[0]}</span>
+                    <span style={{ color: '#fff', fontWeight: 700 }}>
+                      {(token.coin?.symbol || "?")[0]}
+                    </span>
                   )}
                 </div>
                 <div className="token-title-info">

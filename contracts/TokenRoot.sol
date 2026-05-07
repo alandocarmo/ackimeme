@@ -58,12 +58,14 @@ contract TokenRoot {
     ) {
         require(tvm.pubkey() != 0, 101);
         require(msg.pubkey() == tvm.pubkey(), 102);
-        tvm.accept();
 
-        // N1: Converte SHELL em VMSHELL após aceitar gas — ordem correta
+        // N1: Converte SHELL em VMSHELL ANTES de aceitar gas — ordem correta
+        // Isso garante que o contrato tenha saldo para pagar a VM quando o tvm.accept() for chamado.
         if (_shellToConvert > 0) {
             gosh.cnvrtshellq(_shellToConvert);
         }
+
+        tvm.accept();
 
         name = _name;
         symbol = _symbol;

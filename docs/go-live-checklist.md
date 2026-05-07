@@ -129,7 +129,7 @@ BOT_WELCOME_TEXT=Launch memecoins on Acki Nacki from Telegram.
 - integração real com provider da wallet Acki Nacki no frontend
 - prova forte `wallet contract -> public key`
 - factory/deploy do token on-chain
-- ~~regra 80/20 enforce on-chain~~ → BondingCurve.sol já trava 100% dos reserves (liquidez permanente via AMM interno)
+- ~~regra 100% supply-to-curve~~ → BondingCurve.sol já trava 100% dos reserves (liquidez permanente via AMM interno)
 - ~~vault de reserva travada~~ → `tvm.rawReserve` + AMM invariant (`x*y=k`) garantem liquidez travada by design
 - bonding curve ✅ (implementado)
 - ~~pool automática~~ → AMM interno auto-migra ao atingir 69K SHELL
@@ -216,7 +216,7 @@ TVM SDK atualizado para `v2.24.20.an`. Verificar compatibilidade com
 ### Fase C - protocolo
 
 1. token factory
-2. vault 80/20
+2. vault 100% liquidity
 3. bonding curve
 4. pool automática (AMM interno já implementado no BondingCurve.sol)
 
