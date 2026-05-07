@@ -273,7 +273,7 @@ function validateConfig() {
       errors.push("QR_WEBHOOK_SECRET é obrigatório em produção (mínimo 32 caracteres) para proteger o webhook de autenticação QR.");
     }
     // M-05: BACKEND_URL deve ser a URL pública real, não localhost
-    const backendUrl = process.env.BACKEND_URL || process.env.API_BASE_URL || "";
+    const backendUrl = process.env.BACKEND_URL || process.env.RENDER_EXTERNAL_URL || process.env.API_BASE_URL || "";
     if (!backendUrl || backendUrl.includes("localhost")) {
       errors.push("BACKEND_URL (ou API_BASE_URL) deve ser a URL pública do backend em produção (não localhost).");
     }
