@@ -261,7 +261,21 @@ function validateConfig() {
     if (!config.graphqlUrl) {
       errors.push("GRAPHQL_URL é obrigatória em produção. Sem ela, GraphQL/Deployer/Sync caem para shellnet (testnet).");
     } else if (config.graphqlUrl.includes("shellnet") && !config.graphqlUrl.includes("mainnet")) {
-      errors.push("GRAPHQL_URL aponta para testnet (shellnet) em ambiente de produção. Use o endpoint mainnet.");
+      // Allow shellnet for production-mode testing when explicitly opted in
+      if (process.env.ALLOW_SHELLNET_GRAPHQL !== "true") {
+        errors.push("GRAPHQL_URL aponta para testnet (shellnet) em ambiente de produção. Use o endpoint mainnet ou defina ALLOW_SHELLNET_GRAPHQL=true para testes.");
+      } else {
+        console.warn("⚠️  ALLOW_SHELLNET_GRAPHQL=true — usando shellnet em modo produção. NÃO usar em mainnet real!");
+      }
+    }
+    // C-05: QR_WEBHOOK_SECRET é obrigatório para proteger o endpoint de callback QR
+    if (!process.env.QR_WEBHOOK_SECRET || process.env.QR_WEBHOOK_SECRET.length < 32) {
+      errors.push("QR_WEBHOOK_SECRET é obrigatório em produção (mínimo 32 caracteres) para proteger o webhook de autenticação QR.");
+    }
+    // M-05: BACKEND_URL deve ser a URL pública real, não localhost
+    const backendUrl = process.env.BACKEND_URL || process.env.API_BASE_URL || "";
+    if (!backendUrl || backendUrl.includes("localhost")) {
+      errors.push("BACKEND_URL (ou API_BASE_URL) deve ser a URL pública do backend em produção (não localhost).");
     }
     if (config.shellBuy.enabled && !config.shellBuy.usdcRecipientConfigured) {
       errors.push(

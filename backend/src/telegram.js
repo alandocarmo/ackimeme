@@ -9,10 +9,20 @@ function parseTelegramInitData(initData) {
   const params = new URLSearchParams(initData);
   const userRaw = params.get("user");
 
+  // M-08: Wrap JSON.parse in try/catch for malformed Telegram user data
+  let user = null;
+  if (userRaw) {
+    try {
+      user = JSON.parse(userRaw);
+    } catch {
+      user = null;
+    }
+  }
+
   return {
     authDate: Number(params.get("auth_date") || 0),
     hash: params.get("hash") || "",
-    user: userRaw ? JSON.parse(userRaw) : null,
+    user,
     params,
   };
 }

@@ -16,8 +16,9 @@ contract TokenWallet is ITokenWallet {
     // ─── Segurança: Track de operações pendentes ─────────────────────────────
     // Previne perda de tokens quando mensagens de burn/transfer bounceiam.
     // Padrão TVM: debitar do saldo, guardar em pending, restaurar se bounced.
-    uint32 private _burnSeqno;
-    uint32 private _transferSeqno;
+    // C-06: Initialize to 1 to avoid seqno=0 collision with default mapping lookups
+    uint32 private _burnSeqno = 1;
+    uint32 private _transferSeqno = 1;
     mapping(uint32 => uint256) public pendingBurns;
     mapping(uint32 => uint256) public pendingTransfers;
 

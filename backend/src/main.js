@@ -533,7 +533,7 @@ app.get("/auth/session", async (req, res) => {
 
   return res.json({
     success: true,
-    session,
+    session: buildPublicSession(session),
   });
 });
 

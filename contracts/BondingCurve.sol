@@ -6,7 +6,9 @@ import "./Interfaces.sol";
 
 contract BondingCurve {
     // ─── Constants ────────────────────────────────────────────────────────────
-    uint128 public constant MIGRATION_THRESHOLD = 69_000 ton; // 69,000 SHELL in nano
+    // H-05: In TVM-Solidity, `ton` = 10^9 nanotons. So 69_000 ton = 69_000 * 10^9 = 69T nano.
+    // This represents 69,000 SHELL in nano-units (SHELL uses 9 decimals like VMSHELL).
+    uint128 public constant MIGRATION_THRESHOLD = 69_000 ton;
     uint32 public constant LOCK_PERIOD = 30 days;
     // R-03: Removed `bytes public constant DAPP_ID` — dynamic bytes cannot be constant
     // in TVM-Solidity (only value types: int, bool, address, bytesN). Not used in any function.
@@ -18,7 +20,8 @@ contract BondingCurve {
     // ─── Trade Fee Constants (1% total) ──────────────────────────────────────
     // Fee is charged on every buy and sell trade.
     // 0.8% goes to feeRecipient (platform), 0.2% stays locked in contract (burn).
-    // Rate: 1 USDC = 100 SHELL (Accumulator official rate)
+    // L-01: Note — this contract only accepts SHELL (ECC ID=2). USDC is not accepted here.
+    // The Accumulator rate (100 SHELL = 1 USDC) is referenced only for off-chain pricing context.
     uint16 public constant TRADE_FEE_BPS     = 100;  // 1.0% total fee (100 basis points)
     uint16 public constant PLATFORM_FEE_BPS  = 80;   // 0.8% to platform FEE_WALLET
     uint16 public constant BURN_FEE_BPS      = 20;   // 0.2% locked in contract (burn)
@@ -129,8 +132,10 @@ contract BondingCurve {
         if (isAmm) {
             uint256 tokenPool = _supplyCap - totalSupply;
             require(ammKLast > 0, 219, "AMM invariant is zero - pool corrupted");
-            require(tokenPool > tokenAmount + 1, 215, "Not enough AMM liquidity"); // margem de segurança
+            require(tokenPool > tokenAmount + 1, 215, "Not enough AMM liquidity");
             uint256 newReserve = ammKLast / (tokenPool + tokenAmount);
+            // C-02: Prevent underflow when sell amount is too large for current reserve
+            require(reserveBalance >= newReserve, 220, "Sell too large for current reserve");
             return uint128(reserveBalance - newReserve);
         }
         uint256 base = 1_000;
@@ -172,11 +177,12 @@ contract BondingCurve {
     // Fix: auth via msg.sender == owner (internal message from owner's wallet)
     // instead of msg.pubkey() which only works for external messages.
     // Browser wallets (EVER Wallet, etc.) send internal messages where msg.pubkey() == 0.
-    function forceAmmMigration() public {
+    // C-01: Removed tvm.accept() — this is an internal message function (msg.sender check).
+    // H-02: Added whenNotPaused — platform can halt migration during emergencies.
+    function forceAmmMigration() public whenNotPaused {
         require(msg.sender == owner, 102, "Only owner can force AMM");
         require(reserveBalance >= MIGRATION_THRESHOLD, 108, "Threshold not reached");
         require(!isAmm, 109, "Already migrated to AMM");
-        tvm.accept();
         _ensureExecutionGas();
         _migrateToAmm();
     }
@@ -270,6 +276,8 @@ contract BondingCurve {
     // Trade fee: 1% total (0.8% platform + 0.2% burn locked in contract).
     function onTokenBurned(uint32 burnNonce, uint256 amount, address refundAddress) external whenNotPaused {
         require(msg.sender == _tokenRoot, 103, "Only TokenRoot can notify burn");
+        // C-03: Ensure sufficient gas for fee transfer + payout execution
+        require(msg.value >= 0.3 ton, 221, "Insufficient gas for sell execution");
         // Removed the "if (migrated)" block since AMM transition allows users
         // to continue trading organically on this internal contract.
         // It calculates returns via getSellReturn using x*y=k formula.
@@ -377,6 +385,7 @@ contract BondingCurve {
     onBounce(TvmSlice body) external {
         // SEC-2: Ensure the bounce actually came from our TokenRoot
         require(msg.sender == _tokenRoot, 150, "Bounce not from TokenRoot");
+        // H-08: We need exactly 64 bits minimum: 32 for funcId + 32 for nonce
         if (body.bits() < 64) {
             return;
         }

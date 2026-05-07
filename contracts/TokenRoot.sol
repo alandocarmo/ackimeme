@@ -265,6 +265,9 @@ contract TokenRoot {
         // H-03: Validate callbackTarget prevents arbitrary contract execution draining
         require(callbackTarget == bondingCurve || callbackTarget == address(0), 107, "callbackTarget must be registered BondingCurve");
         
+        // C-04: Ensure the contract has enough gas before reserving, preventing
+        // silent failures when TokenRoot balance is low.
+        _ensureExecutionGas();
         tvm.rawReserve(0, 4); // Mantem apenas o saldo original do contrato e repassa restante do attach pro callback
 
         totalSupply -= amount;

@@ -37,7 +37,9 @@ function createInitialRiskProfile({ launchRequest, session }) {
     signals.push("description_minimal");
   }
 
-  const supply = Number(String(launchRequest.coin?.totalSupply || "0").replace(/\D/g, ""));
+  // L-06: Use BigInt for supply comparison to avoid precision loss above 2^53
+  const supplyStr = String(launchRequest.coin?.totalSupply || "0").replace(/\D/g, "") || "0";
+  const supply = supplyStr.length > 15 ? Number(BigInt(supplyStr)) : Number(supplyStr);
   if (supply > 900_000_000_000) {
     score += 20;
     signals.push("supply_suspiciously_high");

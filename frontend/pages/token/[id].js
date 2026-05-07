@@ -317,8 +317,10 @@ export default function TokenPage() {
         const bcContract = new ever.Contract(BondingCurveAbi, new Address(token.onchainData.bondingCurveAddress));
 
         const rawAmountNano = toNano(tradeAmount);
-        // currentPrice is a float of SHELL, convert it safely to nano
-        const currentPriceNano = BigInt(Math.floor(currentPrice * 1e9));
+        // H-07: Use toNano for price conversion to avoid float precision loss
+        // Math.floor(float * 1e9) fails for prices like 0.0000000005 (rounds to 0)
+        const currentPriceNano = toNano(String(currentPrice));
+        if (currentPriceNano === 0n) throw new Error("Preço atual é zero — impossível calcular quantidade de tokens.");
         
         // Use BigInt math: (rawAmountNano * 1e9) / currentPriceNano
         // This avoids float64 limit overflow for very small currentPrice
@@ -345,7 +347,7 @@ export default function TokenPage() {
           // SHELL payment via Extra Currency cc[2] (Acki Nacki Standard)
           currencies: { 2: maxShellNano.toString() }
         });
-        setTradeSuccess(`Compra realizada com sucesso! Tx: ${tx.transaction.id.hash}`);
+        setTradeSuccess(`Compra realizada com sucesso! Tx: ${tx?.transaction?.id?.hash || 'confirmada'}`);
       } else {
         // SELL: Burn tokens via TokenWallet → TokenRoot.notifyBurn → BondingCurve.onTokenBurned
         if (!token?.onchainData?.tokenRootAddress) {

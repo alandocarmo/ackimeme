@@ -98,8 +98,12 @@ function normalizeOptionalUrl(value, fieldName) {
         "ipfs.io",
         "cloudflare-ipfs.com",
         "nftstorage.link",
-        "aquamarine-personal-jay-172.mypinata.cloud" // User's specific pinata gateway if exists
       ];
+      // M-09: Allow custom Pinata gateway via env var instead of hardcoding
+      const customGateway = process.env.PINATA_GATEWAY_DOMAIN;
+      if (customGateway) {
+        allowedDomains.push(customGateway);
+      }
       const isAllowed = allowedDomains.some(domain => 
         parsed.hostname === domain || parsed.hostname.endsWith("." + domain)
       );

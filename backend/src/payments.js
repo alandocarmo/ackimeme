@@ -94,8 +94,12 @@ async function verifyPayment({ walletAddress, txHash, tokenSymbol }) {
     );
   }
 
-  // Valida valor mínimo via BigInt para evitar perdas de precisão flutuante.
-  const receivedNano = BigInt(String(tx.shellNanoAmount || "0").replace(/\D/g, "") || "0");
+  // M-04: Validate that shell amount is not negative before sanitizing with regex
+  const rawShellAmount = String(tx.shellNanoAmount || "0");
+  if (rawShellAmount.startsWith("-")) {
+    throw new Error("Valor de pagamento inválido (negativo). Transação potencialmente malformada.");
+  }
+  const receivedNano = BigInt(rawShellAmount.replace(/\D/g, "") || "0");
   const requiredNano = BigInt(requirement.minimumAmount) * 1_000_000_000n;
 
   if (receivedNano < requiredNano) {
