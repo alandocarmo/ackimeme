@@ -22,13 +22,7 @@ const {
   createLaunchBundle,
   getLaunchById,
   getWalletLastLaunch,
-  getShellBuyOrderById,
-  getShellBuyOrderByTxHash,
-  listShellBuyOrdersByWallet,
-  reserveTxHash,
-  releaseTxHashReservation,
   updateWalletLastLaunch,
-  createShellBuyOrder,
   listLaunchesByWallet,
   listPublicLaunches,
   cleanupExpiredAuthData,
@@ -36,9 +30,7 @@ const {
   addComment,
 } = require("./storage");
 const { createTreasuryPaymentRecord } = require("./treasury");
-const {
   getAccountBalance,
-  getTip3TransferPayment,
   isTip3DecoderAvailable,
 } = require("./services/graphql.service");
 const { uploadToIPFS, createTokenMetadata } = require("./services/ipfs.service");
@@ -130,30 +122,12 @@ async function ensureCreatorHasShellBalance(walletAddress) {
   }
 }
 
-function isShellBuyAvailable() {
-  return (
-    config.shellBuy.enabled &&
-    config.shellBuy.usdcRecipientConfigured &&
-    isTip3DecoderAvailable()
-  );
-}
-
-function calcShellAmountFromUsdc(usdcAmount) {
-  const parsedAmount = Number(usdcAmount || 0);
-  if (!Number.isFinite(parsedAmount) || parsedAmount <= 0) {
-    return 0;
-  }
-  return Number((parsedAmount * config.shellBuy.shellPerUsdc).toFixed(9));
-}
-
 function buildReadinessChecks(databaseReachable) {
   return {
     databaseConfigured: Boolean(config.databaseUrl),
     databaseReachable,
     graphqlConfigured: Boolean(config.graphqlUrl),
     tip3DecoderAvailable: isTip3DecoderAvailable(),
-    shellBuyEnabled: config.shellBuy.enabled,
-    shellBuyReady: !config.shellBuy.enabled || isShellBuyAvailable(),
     feeWalletConfigured: config.feeWalletConfigured,
     adminTokenConfigured: config.adminTokenStrong,
     allowedOriginsConfigured:
@@ -393,7 +367,6 @@ app.get("/readyz", (_, res) => {
         !config.isProduction ||
         (checks.graphqlConfigured &&
           checks.tip3DecoderAvailable &&
-          checks.shellBuyReady &&
           checks.feeWalletConfigured &&
           checks.adminTokenConfigured &&
           checks.allowedOriginsConfigured);
@@ -739,6 +712,7 @@ app.post("/launch-request", requireSession, async (req, res) => {
       ipfsHash: ipfsHash,
       creatorWallet: launchRequest.creator.wallet,
       paymentTxHash: launchRequest.payment.txHash,
+      pumpForever: launchRequest.protocol.pumpForever,
     });
     chainDeployAttempted = Boolean(deployResult.chainAttempted);
 
@@ -886,6 +860,8 @@ app.get("/launches/public", (_, res) => {
 // ── GET single token by ID (direct query — no full table scan) ───────────────
 app.get("/launches/:id", async (req, res) => {
   try {
+    // Adiciona um micro-cache de 4s para coalescer requests simultâneos no painel de trading
+    res.set("Cache-Control", "public, max-age=4");
     const found = await getLaunchById(req.params.id);
     if (!found) return res.status(404).json({ error: "Token não encontrado." });
     res.json({
@@ -904,6 +880,7 @@ app.get("/launches/:id", async (req, res) => {
           logoUrl: found.launchRequest.coin.logoUrl,
         },
         links: found.launchRequest.links || {},
+        protocol: found.launchRequest.protocol || {},
         treasuryPayment: {
           tokenSymbol: found.treasuryPayment.tokenSymbol,
           amount: found.treasuryPayment.amount,
@@ -1029,11 +1006,6 @@ async function start() {
 
   if (!isTip3DecoderAvailable()) {
     console.warn("[Config] Decoder TIP-3 indisponível. Validação de pagamento USDC ficará bloqueada.");
-  }
-  if (config.shellBuy.enabled && !config.shellBuy.usdcRecipientConfigured) {
-    console.warn(
-      "[Config] ENABLE_SHELL_BUY está ativo, mas SHELL_BUY_USDC_RECIPIENT é inválido.",
-    );
   }
 
   const server = app.listen(config.port, () => {

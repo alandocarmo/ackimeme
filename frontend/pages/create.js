@@ -28,7 +28,7 @@ export default function CreatePage() {
     name: "", symbol: "", tagline: "", description: "",
     totalSupply: "1000000000", logoUrl: "",
     website: "", xUrl: "", telegramUrl: "",
-    txHash: "",
+    txHash: "", pumpForever: false,
   });
   const [paymentStatus, setPaymentStatus] = useState({ ok: false, msg: "" });
   const [launchStatus, setLaunchStatus] = useState({ loading: false, error: "", success: false, ticket: null });
@@ -183,6 +183,26 @@ export default function CreatePage() {
                         onChange={(e) => updateField("description", e.target.value)} placeholder="What's your coin about?" rows={3} />
                       <span className="input-hint" style={{ textAlign: 'right' }}>{form.description.length}/280</span>
                     </label>
+                  </div>
+
+                  <div className="card" style={{ background: 'var(--bg-deep)', padding: '16px', marginBottom: '24px', borderRadius: '12px', border: '1px solid var(--accent)' }}>
+                    <h3 className="input-label" style={{ marginTop: 0, marginBottom: '12px', color: 'var(--accent)' }}>Economic Model</h3>
+                    <div style={{ display: 'flex', gap: '16px', flexDirection: 'column' }}>
+                      <label style={{ display: 'flex', alignItems: 'flex-start', gap: '12px', cursor: 'pointer' }}>
+                        <input type="radio" name="pumpForever" checked={!form.pumpForever} onChange={() => updateField("pumpForever", false)} style={{ marginTop: '4px' }} />
+                        <div>
+                          <div style={{ fontWeight: '600', color: 'var(--ink)' }}>⚖️ Automatic Graduation (Classic)</div>
+                          <div style={{ fontSize: '13px', color: 'var(--ink-soft)', marginTop: '4px' }}>Migrates to an internal AMM (x*y=k) automatically when it reaches 15K SHELL, stabilizing the price for community growth.</div>
+                        </div>
+                      </label>
+                      <label style={{ display: 'flex', alignItems: 'flex-start', gap: '12px', cursor: 'pointer' }}>
+                        <input type="radio" name="pumpForever" checked={form.pumpForever} onChange={() => updateField("pumpForever", true)} style={{ marginTop: '4px' }} />
+                        <div>
+                          <div style={{ fontWeight: '600', color: 'var(--ink)' }}>🚀 Pump Forever (Infinite Curve)</div>
+                          <div style={{ fontSize: '13px', color: 'var(--ink-soft)', marginTop: '4px' }}>Never graduates. The price continues to climb exponentially on the bonding curve forever. High risk, high volatility.</div>
+                        </div>
+                      </label>
+                    </div>
                   </div>
 
                   <div className="field-grid">

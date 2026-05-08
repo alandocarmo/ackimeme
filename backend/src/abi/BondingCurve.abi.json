@@ -11,7 +11,8 @@
 				{"name":"_name","type":"string"},
 				{"name":"_symbol","type":"string"},
 				{"name":"_creationFeeTxHash","type":"bytes"},
-				{"name":"_feeRecipient","type":"address"}
+				{"name":"_feeRecipient","type":"address"},
+				{"name":"_pumpForever","type":"bool"}
 			],
 			"outputs": [
 			]
@@ -290,6 +291,14 @@
 			]
 		},
 		{
+			"name": "pumpForever",
+			"inputs": [
+			],
+			"outputs": [
+				{"name":"pumpForever","type":"bool"}
+			]
+		},
+		{
 			"name": "mintIdToBuyer",
 			"inputs": [
 			],
@@ -358,6 +367,7 @@
 		{"init":false,"name":"creationFeeTxHash","type":"bytes"},
 		{"init":false,"name":"pendingReserveByNonce","type":"map(uint32,uint256)"},
 		{"init":false,"name":"pendingTokensByNonce","type":"map(uint32,uint256)"},
+		{"init":false,"name":"pumpForever","type":"bool"},
 		{"init":false,"name":"mintIdToBuyer","type":"map(uint32,address)"},
 		{"init":false,"name":"_mintSeqno","type":"uint32"}
 	]

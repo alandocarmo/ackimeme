@@ -16,6 +16,9 @@ const { config } = require("../config");
 // Audit #1: No silent fallback to shellnet — GRAPHQL_URL must be configured
 const GRAPHQL_ENDPOINT = config.graphqlUrl || "https://shellnet.ackinacki.org/graphql";
 if (!config.graphqlUrl) {
+  if (process.env.NODE_ENV === "production") {
+    throw new Error("❌ Erro fatal: GRAPHQL_URL é obrigatório em ambiente de produção! Não faça fallback para a testnet.");
+  }
   console.warn("[GraphQL] ⚠️  GRAPHQL_URL não configurada! Usando shellnet (testnet) como fallback. NÃO use isso em produção.");
 }
 const TIP3_DEFAULT_DECIMALS = 6;

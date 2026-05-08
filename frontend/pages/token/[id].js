@@ -326,7 +326,7 @@ export default function TokenPage() {
         // This avoids float64 limit overflow for very small currentPrice
         const expectedNanoTokens = (rawAmountNano * 1000000000n) / currentPriceNano;
         
-        // BUG-1 FIX: Get the actual cost from the on-chain getter, not from user input
+        // Get the actual cost from the on-chain getter, not from user input
         const costResult = await bcContract.methods.getBuyPrice({ tokenAmount: expectedNanoTokens.toString() }).call();
         const baseCostNano = BigInt(costResult.value0);
         
@@ -471,42 +471,60 @@ export default function TokenPage() {
               <PriceChart currentPrice={onchainPrice} progressPct={stats.progressPct} />
 
               {/* Bonding Curve Card */}
-              <div className="card" style={{ border: '1px solid var(--accent-glow)', background: 'rgba(0, 255, 136, 0.02)' }}>
-                <div className="progress-header" style={{ marginBottom: '12px' }}>
-                  <span style={{ color: 'var(--accent)', fontWeight: 700 }}>⬡ Bonding Curve Progress</span>
-                  <span className="token-time">Acki Nacki · Fair Launch</span>
-                </div>
-                
-                <div className="progress-track" style={{ height: '12px', marginBottom: '20px' }}>
-                  <div className="progress-fill" style={{
-                    width: stats.progressPct === null ? "0%" : `${stats.progressPct}%`,
-                    background: parseFloat(stats.progressPct || "0") > 80
-                      ? "linear-gradient(90deg, #f97316, #ef4444)"
-                      : "linear-gradient(90deg, #00ff88, #00cc6d)",
-                  }} />
-                </div>
+              {!token.protocol?.pumpForever ? (
+                <div className="card" style={{ border: '1px solid var(--accent-glow)', background: 'rgba(0, 255, 136, 0.02)' }}>
+                  <div className="progress-header" style={{ marginBottom: '12px' }}>
+                    <span style={{ color: 'var(--accent)', fontWeight: 700 }}>⬡ Bonding Curve Progress</span>
+                    <span className="token-time">Acki Nacki · Fair Launch</span>
+                  </div>
+                  
+                  <div className="progress-track" style={{ height: '12px', marginBottom: '20px' }}>
+                    <div className="progress-fill" style={{
+                      width: stats.progressPct === null ? "0%" : `${stats.progressPct}%`,
+                      background: parseFloat(stats.progressPct || "0") > 80
+                        ? "linear-gradient(90deg, #f97316, #ef4444)"
+                        : "linear-gradient(90deg, #00ff88, #00cc6d)",
+                    }} />
+                  </div>
 
-                <div className="token-stats" style={{ borderTop: 'none', paddingTop: 0, marginBottom: '20px' }}>
-                  <div className="stat-box">
-                    <span className="stat-label">Progress</span>
-                    <span className="stat-value" style={{ fontSize: '18px' }}>{stats.progressPct === null ? "N/A" : `${stats.progressPct}%`}</span>
+                  <div className="token-stats" style={{ borderTop: 'none', paddingTop: 0, marginBottom: '20px' }}>
+                    <div className="stat-box">
+                      <span className="stat-label">Progress</span>
+                      <span className="stat-value" style={{ fontSize: '18px' }}>{stats.progressPct === null ? "N/A" : `${stats.progressPct}%`}</span>
+                    </div>
+                    <div className="stat-box">
+                      <span className="stat-label">Reserve</span>
+                      <span className="stat-value" style={{ fontSize: '18px' }}>{stats.hasOnchainReserve ? `${stats.reserveShell.toFixed(2)} SHELL` : "awaiting"}</span>
+                    </div>
+                    <div className="stat-box">
+                      <span className="stat-label">Threshold</span>
+                      <span className="stat-value" style={{ fontSize: '18px' }}>15K SHELL</span>
+                    </div>
                   </div>
-                  <div className="stat-box">
-                    <span className="stat-label">Reserve</span>
-                    <span className="stat-value" style={{ fontSize: '18px' }}>{stats.hasOnchainReserve ? `${stats.reserveShell.toFixed(2)} SHELL` : "awaiting"}</span>
+                  
+                  <p className="token-subtitle" style={{ fontSize: '11px', margin: 0, opacity: 0.8 }}>
+                    {stats.hasOnchainReserve
+                      ? "Liquidity auto-migrates to internal AMM at 15K SHELL reserve."
+                      : "Progress requires reserveBalance indexed from blockchain. Values stay as awaiting until first trade."}
+                  </p>
+                </div>
+              ) : (
+                <div className="card" style={{ border: '1px solid #ef4444', background: 'rgba(239, 68, 68, 0.05)' }}>
+                  <div className="progress-header" style={{ marginBottom: '12px' }}>
+                    <span style={{ color: '#ef4444', fontWeight: 700 }}>🚀 PUMP FOREVER MODE</span>
+                    <span className="token-time" style={{ color: '#ef4444' }}>High Risk</span>
                   </div>
-                  <div className="stat-box">
-                    <span className="stat-label">Threshold</span>
-                    <span className="stat-value" style={{ fontSize: '18px' }}>15K SHELL</span>
+                  <p className="token-subtitle" style={{ fontSize: '13px', margin: 0, color: 'var(--ink)' }}>
+                    This token does <strong>not</strong> graduate to an AMM. Its price will continue to be discovered linearly via the bonding curve forever.
+                  </p>
+                  <div className="token-stats" style={{ borderTop: 'none', paddingTop: 0, marginTop: '20px', marginBottom: 0 }}>
+                    <div className="stat-box" style={{ width: '100%', textAlign: 'center' }}>
+                      <span className="stat-label">Current Reserve</span>
+                      <span className="stat-value" style={{ fontSize: '24px', color: '#ef4444' }}>{stats.hasOnchainReserve ? `${stats.reserveShell.toFixed(2)} SHELL` : "0.00 SHELL"}</span>
+                    </div>
                   </div>
                 </div>
-                
-                <p className="token-subtitle" style={{ fontSize: '11px', margin: 0, opacity: 0.8 }}>
-                  {stats.hasOnchainReserve
-                    ? "Liquidity auto-migrates to internal AMM at 15K SHELL reserve."
-                    : "Progress requires reserveBalance indexed from blockchain. Values stay as awaiting until first trade."}
-                </p>
-              </div>
+              )}
 
               {/* Deployment Status */}
               <div className="card" style={{ border: '1px dashed var(--ink-faint)' }}>

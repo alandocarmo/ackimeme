@@ -38,7 +38,7 @@ contract TokenRoot {
     mapping(uint32 => uint32) private _pendingTransferWalletSeqnos;
     uint32 private _transferSeqno = 1;
 
-    // BUG-2 FIX: Track pending burn amounts by seqno for safe onBounce rollback.
+    // Track pending burn amounts by seqno for safe onBounce rollback.
     // Bounce body only has 224 bits after funcId — uint256 (256 bits) causes cell underflow.
     mapping(uint32 => uint256) private _pendingBurnAmounts;
     mapping(uint32 => address) private _pendingBurnWallets;
@@ -225,7 +225,8 @@ contract TokenRoot {
         bytes _creationFeeTxHash,
         uint256 _supplyCap,
         uint128 _initialBalance,
-        address _feeRecipient
+        address _feeRecipient,
+        bool _pumpForever
     ) public {
         require(msg.pubkey() == tvm.pubkey(), 102, "Only deployer pubkey can deploy BC");
         require(bondingCurve == address(0), 108, "BondingCurve already deployed");
@@ -249,7 +250,7 @@ contract TokenRoot {
             stateInit: stateInit,
             value: varuint16(_initialBalance),
             flag: 1
-        }(_owner, address(this), _name, _symbol, _creationFeeTxHash, _feeRecipient);
+        }(_owner, address(this), _name, _symbol, _creationFeeTxHash, _feeRecipient, _pumpForever);
 
         bondingCurve = bcAddr;
         owner = bcAddr; // Transfere ownership automaticamente para o BondingCurve
@@ -274,7 +275,7 @@ contract TokenRoot {
 
         // Pass the execution context to the Bonding Curve to finalize the Trade out (Sell refund)
         if (callbackTarget != address(0)) {
-            // BUG-2 FIX: Track pending burn amount by seqno for safe onBounce rollback
+            // Track pending burn amount by seqno for safe onBounce rollback
             uint32 burnNonce = ++_burnSeqno;
             _pendingBurnAmounts[burnNonce] = amount;
             _pendingBurnWallets[burnNonce] = msg.sender;
@@ -332,7 +333,7 @@ contract TokenRoot {
             _clearTransfer(transferNonce);
         }
         
-        // BUG-2 FIX: Handle IBondingCurve.onTokenBurned bounce using nonce mapping
+        // Handle IBondingCurve.onTokenBurned bounce using nonce mapping
         // Bounce body has only 224 bits after funcId. We read uint32 burnNonce (32 bits)
         // which fits safely, then look up the amount from our mapping.
         if (funcId == abi.functionId(IBondingCurve.onTokenBurned)) {

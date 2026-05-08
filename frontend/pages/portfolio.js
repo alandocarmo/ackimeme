@@ -59,7 +59,7 @@ export default function PortfolioPage() {
 
       const deployedLaunches = launches.filter(l => l.onchainData?.tokenRootAddress);
 
-      // BUG-3 FIX: Scan in parallel batches of 5 instead of sequentially
+      // Scan in parallel batches of 5 instead of sequentially
       const BATCH_SIZE = 5;
       const foundHoldings = [];
       

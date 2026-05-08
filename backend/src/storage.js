@@ -66,28 +66,6 @@ function normalizeLaunchRow(row) {
   };
 }
 
-function normalizeShellBuyOrderRow(row) {
-  if (!row) {
-    return null;
-  }
-
-  return {
-    id: row.id,
-    walletAddress: row.wallet_address,
-    txHash: row.tx_hash,
-    usdcAmount: Number(row.usdc_amount || 0),
-    shellAmount: Number(row.shell_amount || 0),
-    usdcRecipient: row.usdc_recipient,
-    status: row.status,
-    paymentProof: row.payment_proof || {},
-    note: row.note || "",
-    createdAt: row.created_at?.toISOString?.() || row.created_at,
-    updatedAt: row.updated_at?.toISOString?.() || row.updated_at,
-    onChainVerifiedAt:
-      row.on_chain_verified_at?.toISOString?.() || row.on_chain_verified_at || "",
-  };
-}
-
 
 function normalizeLaunchpadProjectRow(row) {
   if (!row) {
@@ -785,79 +763,6 @@ async function updateWalletLastLaunch(walletAddress) {
      ON CONFLICT (wallet_address) DO UPDATE SET last_launch_at = NOW()`,
     [String(walletAddress || "").toLowerCase()],
   );
-}
-
-async function createShellBuyOrder(order) {
-  await query(
-    `
-      INSERT INTO shell_buy_orders (
-        id,
-        wallet_address,
-        tx_hash,
-        usdc_amount,
-        shell_amount,
-        usdc_recipient,
-        status,
-        payment_proof,
-        note,
-        created_at,
-        updated_at,
-        on_chain_verified_at
-      )
-      VALUES (
-        $1, $2, $3, $4, $5, $6, $7, $8::jsonb, $9, $10, $11, $12
-      )
-    `,
-    [
-      order.id,
-      String(order.walletAddress || "").toLowerCase(),
-      String(order.txHash || "").toLowerCase(),
-      order.usdcAmount,
-      order.shellAmount,
-      String(order.usdcRecipient || "").toLowerCase(),
-      String(order.status || "payment_confirmed"),
-      JSON.stringify(order.paymentProof || {}),
-      String(order.note || ""),
-      order.createdAt,
-      order.updatedAt,
-      order.onChainVerifiedAt,
-    ],
-  );
-}
-
-async function getShellBuyOrderByTxHash(txHash) {
-  const result = await query(
-    `SELECT * FROM shell_buy_orders WHERE tx_hash = $1 LIMIT 1`,
-    [String(txHash || "").toLowerCase()],
-  );
-  return result.rows.length > 0
-    ? normalizeShellBuyOrderRow(result.rows[0])
-    : null;
-}
-
-async function getShellBuyOrderById(id) {
-  const result = await query(
-    `SELECT * FROM shell_buy_orders WHERE id = $1 LIMIT 1`,
-    [id],
-  );
-  return result.rows.length > 0
-    ? normalizeShellBuyOrderRow(result.rows[0])
-    : null;
-}
-
-async function listShellBuyOrdersByWallet(walletAddress, limit = 20) {
-  const safeLimit = Math.min(Math.max(1, limit), 100);
-  const result = await query(
-    `
-      SELECT *
-      FROM shell_buy_orders
-      WHERE wallet_address = $1
-      ORDER BY created_at DESC
-      LIMIT $2
-    `,
-    [String(walletAddress || "").toLowerCase(), safeLimit],
-  );
-  return result.rows.map(normalizeShellBuyOrderRow);
 }
 
 async function createLaunchpadProject({ project, auditEvent }) {
@@ -1911,10 +1816,7 @@ module.exports = {
   listPublicLaunches,
   listLaunchesForSync,
   getLaunchById,
-  createShellBuyOrder,
-  getShellBuyOrderById,
-  getShellBuyOrderByTxHash,
-  listShellBuyOrdersByWallet,
+
   isTxHashUsed,
   markTxHashUsed,
   reserveTxHash,

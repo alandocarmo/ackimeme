@@ -371,7 +371,7 @@ async function deployContract({
  *
  * NUNCA retorna status "deployed" se a transação não foi realmente enviada à rede.
  */
-async function deployTokenEcosystem({ name, symbol, totalSupply, ipfsHash, creatorWallet, paymentTxHash }) {
+async function deployTokenEcosystem({ name, symbol, totalSupply, ipfsHash, creatorWallet, paymentTxHash, pumpForever }) {
   let chainAttempted = false;
   let tokenRootAddress = "";
   let bondingCurveAddress = "";
@@ -571,7 +571,8 @@ async function deployTokenEcosystem({ name, symbol, totalSupply, ipfsHash, creat
               _creationFeeTxHash: Buffer.from(paymentTxHash || "genesis").toString("hex"),
               _supplyCap: maxTokenSupply,
               _initialBalance: 10000000000, // 10 VMSHELL to inner BondingCurve
-              _feeRecipient: feeRecipient
+              _feeRecipient: feeRecipient,
+              _pumpForever: Boolean(pumpForever)
             }
           },
           signer
@@ -609,45 +610,6 @@ async function deployTokenEcosystem({ name, symbol, totalSupply, ipfsHash, creat
 
     console.log(`[Deployer] TokenRoot: ${tokenRootAddress}`);
     console.log(`[Deployer] TokenRoot e BondingCurve vinculados. Curva on-chain: ${bondingCurveAddress}`);
-
-    // C-2: DappConfig Deploy
-    // gosh.mintshell() requires a DappConfig deployed from DappRoot for the dapp_id.
-    if (ENABLE_ONCHAIN_DEPLOY) {
-      console.log("[Deployer] Configurando DappConfig para auto-replenishment...");
-      try {
-        const tokenRootState = await getAccountState(tokenRootAddress);
-
-        if (tokenRootState?.boc) {
-          // Extraindo o dapp_id se possível usando parse_account ou consultando a conta
-          // Alternativa simplificada: Como deployamos a config agora, podemos chamar a função do DappRoot.
-          const DAPP_ROOT = "0:9999999999999999999999999999999999999999999999999999999999999999";
-          
-          const dappRootAbi = {
-            "ABI version": 2,
-            "version": "2.2",
-            "header": ["pubkey", "time", "expire"],
-            "functions": [
-              {
-                "name": "deployNewConfigCustom",
-                "inputs": [
-                  {"name":"dapp_id","type":"uint256"}
-                ],
-                "outputs": []
-              }
-            ]
-          };
-
-          // Simulando o dapp_id (se estivesse no código do deployer).
-          // Para simplificar e não bloquear o token, enviamos a transação para o DappRoot.
-          // Se soubermos o dapp_id que foi assinado no deploy original, usamos ele.
-          // Como o TokenRoot gera o DappID baseado na chave pública e timestamp, precisamos
-          // rodar essa configuração via script de administração futuramente.
-          console.log("[Deployer] DappConfig deve ser ativado via CLI de administração.");
-        }
-      } catch (err) {
-        console.error("[Deployer] Falha ao tentar auto-configurar DappConfig:", err.message);
-      }
-    }
 
     console.log(`[Deployer] Status: ${deployStatus}`);
 

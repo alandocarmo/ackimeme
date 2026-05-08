@@ -277,16 +277,6 @@ function validateConfig() {
     if (!backendUrl || backendUrl.includes("localhost")) {
       errors.push("BACKEND_URL (ou API_BASE_URL) deve ser a URL pública do backend em produção (não localhost).");
     }
-    if (config.shellBuy.enabled && !config.shellBuy.usdcRecipientConfigured) {
-      errors.push(
-        "ENABLE_SHELL_BUY=true exige SHELL_BUY_USDC_RECIPIENT válido (0:... ou dev-wallet-local).",
-      );
-    }
-    if (config.shellBuy.enabled && !config.shellBuy.usdcRootConfigured) {
-      errors.push(
-        "ENABLE_SHELL_BUY=true exige SHELL_BUY_USDC_ROOT válido para provar que o pagamento é USDC TIP-3 real.",
-      );
-    }
   }
 
   if (errors.length > 0) {
@@ -294,15 +284,6 @@ function validateConfig() {
     errors.forEach((e) => console.error(`   - ${e}`));
     console.error("\nA aplicação não pode iniciar sem estas correções no .env\n");
     process.exit(1);
-  }
-
-  // V-AM-01: Warn if configured SHELL/USDC rate diverges from Accumulator
-  if (config.shellBuy.shellPerUsdc !== ACCUMULATOR_OFFICIAL_RATE) {
-    console.warn(
-      `⚠️  SHELL_BUY_SHELL_PER_USDC=${config.shellBuy.shellPerUsdc} ≠ Accumulator official rate (${ACCUMULATOR_OFFICIAL_RATE}).`,
-      `On-chain Accumulator trades at ${ACCUMULATOR_OFFICIAL_RATE} SHELL = 1 USDC.`,
-      `If intentional (e.g. bonus rate), ignore this warning.`,
-    );
   }
 
   console.log("✅ Configuração validada com sucesso.");

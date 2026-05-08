@@ -8,7 +8,7 @@ contract BondingCurve {
     // ─── Constants ────────────────────────────────────────────────────────────
     // H-05: In TVM-Solidity, `ton` = 10^9 nanotons. So 15_000 ton = 15_000 * 10^9 = 15T nano.
     // This represents 15,000 SHELL in nano-units (SHELL uses 9 decimals like VMSHELL).
-    uint128 public constant MIGRATION_THRESHOLD = 15_000 ton;
+    uint128 public constant MIGRATION_THRESHOLD_SHELL_NANO = 15_000 * 1e9;
     uint32 public constant LOCK_PERIOD = 30 days;
     // R-03: Removed `bytes public constant DAPP_ID` — dynamic bytes cannot be constant
     // in TVM-Solidity (only value types: int, bool, address, bytesN). Not used in any function.
@@ -61,6 +61,9 @@ contract BondingCurve {
     mapping(uint32 => uint256) public pendingReserveByNonce;  // nonce → SHELL cost
     mapping(uint32 => uint256) public pendingTokensByNonce;   // nonce → token amount
     
+    // A-13: Pump Forever mode (no AMM migration)
+    bool public pumpForever;
+
     mapping(uint32 => address) public mintIdToBuyer; // mapping to resolve bounce exact buyer
     uint32 private _mintSeqno = 1;
 
@@ -85,7 +88,8 @@ contract BondingCurve {
         string _name,
         string _symbol,
         bytes _creationFeeTxHash,
-        address _feeRecipient
+        address _feeRecipient,
+        bool _pumpForever
     ) {
         require(msg.sender == _tokenRoot, 101, "Only TokenRoot can deploy BondingCurve");
         require(_tokenRootAddr == _tokenRoot, 104, "tokenRootAddr must match static _tokenRoot");
@@ -99,6 +103,7 @@ contract BondingCurve {
         name = _name;
         symbol = _symbol;
         creationFeeTxHash = _creationFeeTxHash;
+        pumpForever = _pumpForever;
         isAmm = false;
     }
 
@@ -193,7 +198,8 @@ contract BondingCurve {
     // H-02: Added whenNotPaused — platform can halt migration during emergencies.
     function forceAmmMigration() public whenNotPaused {
         require(msg.sender == owner, 102, "Only owner can force AMM");
-        require(reserveBalance >= MIGRATION_THRESHOLD, 108, "Threshold not reached");
+        require(!pumpForever, 114, "Pump Forever mode is active");
+        require(reserveBalance >= MIGRATION_THRESHOLD_SHELL_NANO, 108, "Threshold not reached");
         require(!isAmm, 109, "Already migrated to AMM");
         _ensureExecutionGas();
         _migrateToAmm();
@@ -278,7 +284,7 @@ contract BondingCurve {
         }
 
         // Check if we reached the migration threshold and aren't AMM yet
-        if (reserveBalance >= MIGRATION_THRESHOLD && !isAmm) {
+        if (!pumpForever && reserveBalance >= MIGRATION_THRESHOLD_SHELL_NANO && !isAmm) {
             _migrateToAmm();
         }
     }
@@ -370,7 +376,7 @@ contract BondingCurve {
 
             // A-11: If reversal drops reserve below migration threshold,
             // rollback AMM state to prevent corrupted x*y=k invariant
-            if (isAmm && reserveBalance < MIGRATION_THRESHOLD) {
+            if (isAmm && reserveBalance < MIGRATION_THRESHOLD_SHELL_NANO) {
                 isAmm = false;
                 ammKLast = 0;
                 migratedAt = 0;
