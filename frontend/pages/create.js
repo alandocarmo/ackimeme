@@ -256,7 +256,9 @@ export default function CreatePage() {
                     </p>
                   </div>
 
-                  {/* BUG-5: Removed /buy-shell link — USDC→SHELL settlement not implemented */}
+                  <p className="token-time" style={{ textAlign: 'center', marginTop: '12px', fontSize: '12px' }}>
+                    Don't have SHELL yet? <Link href="/buy-shell?from=/create" style={{ color: 'var(--accent)', textDecoration: 'underline' }}>Buy with card or crypto →</Link>
+                  </p>
 
                   <label style={{ display: 'block', marginTop: '24px' }}>
                     <span className="input-label">Transaction Hash</span>

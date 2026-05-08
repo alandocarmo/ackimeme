@@ -953,7 +953,7 @@ app.post("/launches/:id/comments", requireSession, async (req, res) => {
     }
 
     // P2 FIX: Ensure launch exists to prevent 500 FK error
-    const launchExists = await require("./db").query(`SELECT id FROM launches WHERE id=$1`, [req.params.id]);
+    const launchExists = await pool.query(`SELECT id FROM launches WHERE id=$1`, [req.params.id]);
     if (launchExists.rowCount === 0) {
       return res.status(404).json({ error: "Token não encontrado." });
     }
@@ -961,7 +961,7 @@ app.post("/launches/:id/comments", requireSession, async (req, res) => {
     const wallet = req.session.walletAddress;
     
     // DESIGN-5 / Audit N3: Persistent Rate limit (1 comment per 30s per wallet)
-    const { rows } = await require("./db").query(
+    const { rows } = await pool.query(
       `SELECT last_comment_at FROM wallet_rate_limits WHERE wallet_address = $1`,
       [wallet]
     );
@@ -984,7 +984,7 @@ app.post("/launches/:id/comments", requireSession, async (req, res) => {
     }
 
     // Upsert the last comment timestamp
-    await require("./db").query(
+    await pool.query(
       `INSERT INTO wallet_rate_limits (wallet_address, last_comment_at) VALUES ($1, NOW())
        ON CONFLICT (wallet_address) DO UPDATE SET last_comment_at = NOW()`,
       [wallet]

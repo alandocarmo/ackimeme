@@ -264,7 +264,7 @@ contract BondingCurve {
         if (platformFee > 0) {
             mapping(uint32 => varuint32) feeCurrencies;
             feeCurrencies[SHELL_CURRENCY_ID] = varuint32(platformFee);
-            feeRecipient.transfer({ value: 0.01 ton, flag: 1, bounce: false, currencies: feeCurrencies });
+            feeRecipient.transfer({ value: 0.05 ton, flag: 1, bounce: false, currencies: feeCurrencies });
         }
         // Burn fee (0.2%) stays locked in this contract — effectively out of circulation
 

@@ -497,13 +497,13 @@ export default function TokenPage() {
                   </div>
                   <div className="stat-box">
                     <span className="stat-label">Threshold</span>
-                    <span className="stat-value" style={{ fontSize: '18px' }}>69K SHELL</span>
+                    <span className="stat-value" style={{ fontSize: '18px' }}>15K SHELL</span>
                   </div>
                 </div>
                 
                 <p className="token-subtitle" style={{ fontSize: '11px', margin: 0, opacity: 0.8 }}>
                   {stats.hasOnchainReserve
-                    ? "Liquidity auto-migrates to internal AMM at 69K SHELL reserve."
+                    ? "Liquidity auto-migrates to internal AMM at 15K SHELL reserve."
                     : "Progress requires reserveBalance indexed from blockchain. Values stay as awaiting until first trade."}
                 </p>
               </div>
@@ -720,7 +720,9 @@ export default function TokenPage() {
                     </p>
                   )}
 
-                  {/* BUG-5: Removed /buy-shell link — USDC→SHELL settlement not implemented */}
+                  <p className="token-time" style={{ textAlign: 'center', marginTop: '12px', fontSize: '11px' }}>
+                    Need SHELL? <Link href={`/buy-shell?from=/token/${id}`} style={{ color: 'var(--accent)', textDecoration: 'underline' }}>Buy with card or crypto →</Link>
+                  </p>
                 </div>
               </div>
 
