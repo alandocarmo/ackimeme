@@ -6,9 +6,9 @@ import "./Interfaces.sol";
 
 contract BondingCurve {
     // ─── Constants ────────────────────────────────────────────────────────────
-    // H-05: In TVM-Solidity, `ton` = 10^9 nanotons. So 69_000 ton = 69_000 * 10^9 = 69T nano.
-    // This represents 69,000 SHELL in nano-units (SHELL uses 9 decimals like VMSHELL).
-    uint128 public constant MIGRATION_THRESHOLD = 69_000 ton;
+    // H-05: In TVM-Solidity, `ton` = 10^9 nanotons. So 15_000 ton = 15_000 * 10^9 = 15T nano.
+    // This represents 15,000 SHELL in nano-units (SHELL uses 9 decimals like VMSHELL).
+    uint128 public constant MIGRATION_THRESHOLD = 15_000 ton;
     uint32 public constant LOCK_PERIOD = 30 days;
     // R-03: Removed `bytes public constant DAPP_ID` — dynamic bytes cannot be constant
     // in TVM-Solidity (only value types: int, bool, address, bytesN). Not used in any function.
@@ -17,14 +17,15 @@ contract BondingCurve {
     uint64 private constant GAS_TOP_UP = 2_000_000_000; // 2 VMSHELL in nano
     uint128 private constant MIN_EXECUTION_GAS = 1 ton;
 
-    // ─── Trade Fee Constants (1% total) ──────────────────────────────────────
+    // ─── Trade Fee Constants ──────────────────────────────────────────────────
     // Fee is charged on every buy and sell trade.
-    // 0.8% goes to feeRecipient (platform), 0.2% stays locked in contract (burn).
+    // 1% before AMM migration (0.8% platform, 0.2% burn).
+    // 0.5% after AMM migration (0.4% platform, 0.1% burn).
     // L-01: Note — this contract only accepts SHELL (ECC ID=2). USDC is not accepted here.
     // The Accumulator rate (100 SHELL = 1 USDC) is referenced only for off-chain pricing context.
-    uint16 public constant TRADE_FEE_BPS     = 100;  // 1.0% total fee (100 basis points)
-    uint16 public constant PLATFORM_FEE_BPS  = 80;   // 0.8% to platform FEE_WALLET
-    uint16 public constant BURN_FEE_BPS      = 20;   // 0.2% locked in contract (burn)
+    function getTradeFeeBps() public view returns (uint16) { return isAmm ? 50 : 100; }
+    function getPlatformFeeBps() public view returns (uint16) { return isAmm ? 40 : 80; }
+    function getBurnFeeBps() public view returns (uint16) { return isAmm ? 10 : 20; }
 
     // ─── C-02: ECC token IDs for Acki Nacki ecosystem ─────────────────────────
     // V-AM-01: Explicit ID constants prevent confusion attacks across the
@@ -90,6 +91,7 @@ contract BondingCurve {
         require(_supplyCap > 0, 105, "Supply cap must be set");
         require(_feeRecipient != address(0), 106, "Fee recipient cannot be zero address");
 
+        tvm.accept(); // Accept VMSHELL from TokenRoot's internal message deployment
         owner = _owner;
         feeRecipient = _feeRecipient;
         // _tokenRoot is the canonical reference — no separate tokenRoot variable needed
@@ -153,23 +155,27 @@ contract BondingCurve {
         return capBasedLimit < ABSOLUTE_MAX_BUY_PER_TX ? capBasedLimit : ABSOLUTE_MAX_BUY_PER_TX;
     }
 
-    // ─── Fee Views ────────────────────────────────────────────────────────────
-    /// @notice Returns the total trade fee (1%) for a given base amount.
-    function getTradeFee(uint256 baseAmount) public pure returns (uint256) {
-        return baseAmount * TRADE_FEE_BPS / 10000;
+    function maxSellPerTx() public view returns (uint256) {
+        return maxBuyPerTx();
     }
 
-    /// @notice Returns the buy cost INCLUDING the 1% fee for a given token amount.
+    // ─── Fee Views ────────────────────────────────────────────────────────────
+    /// @notice Returns the total trade fee for a given base amount.
+    function getTradeFee(uint256 baseAmount) public view returns (uint256) {
+        return baseAmount * getTradeFeeBps() / 10000;
+    }
+
+    /// @notice Returns the buy cost INCLUDING the fee for a given token amount.
     function getBuyPriceWithFee(uint256 tokenAmount) public view returns (uint128 baseCost, uint128 fee, uint128 total) {
         baseCost = getBuyPrice(tokenAmount);
-        fee = uint128(uint256(baseCost) * TRADE_FEE_BPS / 10000);
+        fee = uint128(uint256(baseCost) * getTradeFeeBps() / 10000);
         total = baseCost + fee;
     }
 
-    /// @notice Returns the sell return AFTER deducting the 1% fee.
+    /// @notice Returns the sell return AFTER deducting the fee.
     function getSellReturnAfterFee(uint256 tokenAmount) public view returns (uint128 grossReturn, uint128 fee, uint128 netReturn) {
         grossReturn = uint128(getSellReturn(tokenAmount));
-        fee = uint128(uint256(grossReturn) * TRADE_FEE_BPS / 10000);
+        fee = uint128(uint256(grossReturn) * getTradeFeeBps() / 10000);
         netReturn = grossReturn - fee;
     }
 
@@ -200,6 +206,7 @@ contract BondingCurve {
     // msg.value (VMSHELL) is used ONLY for gas, not as payment.
     // Trade fee: 1% total (0.8% platform + 0.2% burn locked in contract).
     function buy(uint256 tokenAmount, uint256 maxShellIn) public whenNotPaused {
+        _ensureExecutionGas();
         // V-AM-01: Reject transactions that accidentally/maliciously include NACKL or USDC
         // instead of SHELL. Without this check, a confusion attack could credit the
         // buyer with tokens while the BondingCurve receives the wrong ECC currency.
@@ -220,9 +227,9 @@ contract BondingCurve {
         uint256 cost = getBuyPrice(tokenAmount);
         require(cost > 0, 211, "Purchase amount too small, cost rounds to zero");
 
-        // ─── Trade Fee (1%): 0.8% platform + 0.2% burn ──────────────────────
-        uint256 platformFee = cost * PLATFORM_FEE_BPS / 10000;
-        uint256 burnFee = cost * BURN_FEE_BPS / 10000;
+        // ─── Trade Fee: Platform + Burn ─────────────────────────────────────────
+        uint256 platformFee = cost * getPlatformFeeBps() / 10000;
+        uint256 burnFee = cost * getBurnFeeBps() / 10000;
         uint256 totalCostWithFee = cost + platformFee + burnFee;
 
         require(totalCostWithFee <= maxShellIn, 208, "Slippage protection triggered: cost+fee exceeds maxShellIn");
@@ -231,7 +238,6 @@ contract BondingCurve {
         // Cross-Dapp calls arrive with msg.value/VMSHELL zeroed by the protocol.
         // After validating the paid SHELL ECC amount, the Dapp pays execution gas.
         tvm.accept();
-        _ensureExecutionGas();
         require(address(this).balance >= 0.2 ton, 213, "BondingCurve VMSHELL reserve unavailable");
 
         // Update state — only base cost goes to reserve (fee is separate)
@@ -275,9 +281,11 @@ contract BondingCurve {
     // Called by TokenRoot after TokenWallet burns tokens.
     // Trade fee: 1% total (0.8% platform + 0.2% burn locked in contract).
     function onTokenBurned(uint32 burnNonce, uint256 amount, address refundAddress) external whenNotPaused {
+        _ensureExecutionGas();
         require(msg.sender == _tokenRoot, 103, "Only TokenRoot can notify burn");
         // C-03: Ensure sufficient gas for fee transfer + payout execution
         require(msg.value >= 0.3 ton, 221, "Insufficient gas for sell execution");
+        require(amount <= maxSellPerTx(), 222, "Amount exceeds max sell limit");
         // Removed the "if (migrated)" block since AMM transition allows users
         // to continue trading organically on this internal contract.
         // It calculates returns via getSellReturn using x*y=k formula.
@@ -287,9 +295,9 @@ contract BondingCurve {
         require(grossReturn > 0, 216, "Sell amount too small, return rounds to zero");
         require(reserveBalance >= grossReturn, 204, "Insufficient reserve for sell");
 
-        // ─── Trade Fee (1%): 0.8% platform + 0.2% burn ──────────────────────
-        uint256 platformFee = grossReturn * PLATFORM_FEE_BPS / 10000;
-        uint256 burnFee = grossReturn * BURN_FEE_BPS / 10000;
+        // ─── Trade Fee: Platform + Burn ─────────────────────────────────────────
+        uint256 platformFee = grossReturn * getPlatformFeeBps() / 10000;
+        uint256 burnFee = grossReturn * getBurnFeeBps() / 10000;
         uint256 netReturn = grossReturn - platformFee - burnFee;
 
         totalSupply -= amount;

@@ -17,6 +17,30 @@
 			]
 		},
 		{
+			"name": "getTradeFeeBps",
+			"inputs": [
+			],
+			"outputs": [
+				{"name":"value0","type":"uint16"}
+			]
+		},
+		{
+			"name": "getPlatformFeeBps",
+			"inputs": [
+			],
+			"outputs": [
+				{"name":"value0","type":"uint16"}
+			]
+		},
+		{
+			"name": "getBurnFeeBps",
+			"inputs": [
+			],
+			"outputs": [
+				{"name":"value0","type":"uint16"}
+			]
+		},
+		{
 			"name": "currentPrice",
 			"inputs": [
 			],
@@ -44,6 +68,14 @@
 		},
 		{
 			"name": "maxBuyPerTx",
+			"inputs": [
+			],
+			"outputs": [
+				{"name":"value0","type":"uint256"}
+			]
+		},
+		{
+			"name": "maxSellPerTx",
 			"inputs": [
 			],
 			"outputs": [

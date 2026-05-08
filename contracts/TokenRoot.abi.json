@@ -97,7 +97,8 @@
 				{"name":"_symbol","type":"string"},
 				{"name":"_creationFeeTxHash","type":"bytes"},
 				{"name":"_supplyCap","type":"uint256"},
-				{"name":"_initialBalance","type":"uint128"}
+				{"name":"_initialBalance","type":"uint128"},
+				{"name":"_feeRecipient","type":"address"}
 			],
 			"outputs": [
 			]

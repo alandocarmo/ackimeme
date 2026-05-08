@@ -122,7 +122,7 @@ function toNano(valStr) {
 }
 
 
-const MIGRATION_THRESHOLD_NANO = 69_000_000_000_000; // 69K SHELL in nano
+const MIGRATION_THRESHOLD_NANO = 15_000_000_000_000; // 15K SHELL in nano
 const TRADE_FEE_BPS = 100; // 1% total fee — matches BondingCurve.sol constant
 
 function readReserveBalance(onchainData) {

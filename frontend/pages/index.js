@@ -28,7 +28,7 @@ function formatSupply(val) {
   return String(n);
 }
 
-const MIGRATION_THRESHOLD_NANO = 69_000_000_000_000; // 69K SHELL in nano (contract uses nano)
+const MIGRATION_THRESHOLD_NANO = 15_000_000_000_000; // 15K SHELL in nano (contract uses nano)
 
 function readReserveBalance(onchainData) {
   const parsed = Number(onchainData?.reserveBalance);
