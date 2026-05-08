@@ -193,9 +193,16 @@ export default function AuthPage() {
               {error ? (
                 <p className="error-msg" style={{ marginBottom: '16px', fontSize: '12px', textAlign: 'center' }}>{error}</p>
               ) : (
-                <p className="token-time" style={{ textAlign: 'center', marginBottom: '24px' }}>
-                  Open your <b>Acki Nacki Wallet</b> app<br/>and scan this QR Code to log in.
-                </p>
+                <div style={{ textAlign: 'center', marginBottom: '24px' }}>
+                  <p className="token-time" style={{ marginBottom: '8px' }}>
+                    Open your <b>Acki Nacki Wallet</b> app<br/>and scan this QR Code to log in.
+                  </p>
+                  {qrData?.deepLink && (
+                    <p className="token-time" style={{ fontSize: '14px' }}>
+                      Or <a href={qrData.deepLink} target="_blank" rel="noopener noreferrer" style={{ color: 'var(--accent)', textDecoration: 'underline' }}>click here to open Telegram</a>
+                    </p>
+                  )}
+                </div>
               )}
               
               {/* Dev Tools removed */}

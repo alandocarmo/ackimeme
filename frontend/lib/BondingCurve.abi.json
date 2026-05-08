@@ -329,6 +329,14 @@
 			],
 			"outputs": [
 			]
+		},
+		{
+			"name": "FeeReduced",
+			"inputs": [
+				{"name":"newTradeFeeBps","type":"uint16"}
+			],
+			"outputs": [
+			]
 		}
 	],
 	"fields": [

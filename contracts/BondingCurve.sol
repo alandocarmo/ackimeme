@@ -74,6 +74,7 @@ contract BondingCurve {
     event TokensPurchaseInitiated(address buyer, uint256 shellIn, uint256 tokensOut, uint128 newPrice);
     event TokensSold(address seller, uint256 tokensIn, uint256 shellOut, uint128 newPrice);
     event MigratedToInternalAmm(uint128 liquidity, uint32 timestamp);
+    event FeeReduced(uint16 newTradeFeeBps);
 
     // ─── Constructor ──────────────────────────────────────────────────────────
     // BondingCurve is deployed via internal message from TokenRoot.
@@ -105,11 +106,16 @@ contract BondingCurve {
 
     // ─── A-04: Price & Mathematics (adjusted base for meme economy) ──────────
     // Base price: 0.000001 SHELL per token-unit (= 1_000 nanotokens)
-    // This allows ~69M tokens to be sold before migration at 69K SHELL threshold,
+    // This allows ~15M tokens to be sold before migration at 15K SHELL threshold,
     // creating a pump.fun-style economy where early buyers get massive upside.
     function currentPrice() public view returns (uint128) {
+        if (isAmm) {
+            uint256 tokenPool = _supplyCap - totalSupply;
+            if (tokenPool == 0) return 0;
+            return uint128((reserveBalance * 1e9) / tokenPool);
+        }
         uint256 base = 1_000; // 0.000001 SHELL per token unit (nano)
-        uint256 slope = totalSupply / 4_000_000_000_000;
+        uint256 slope = totalSupply / 10_000_000_000_000;
         return uint128(base + slope);
     }
 
@@ -122,8 +128,8 @@ contract BondingCurve {
             return uint128(newReserve - reserveBalance);
         }
         uint256 base = 1_000; // 0.000001 SHELL base
-        uint256 p1 = base + (totalSupply / 4_000_000_000_000);
-        uint256 p2 = base + ((totalSupply + tokenAmount) / 4_000_000_000_000);
+        uint256 p1 = base + (totalSupply / 10_000_000_000_000);
+        uint256 p2 = base + ((totalSupply + tokenAmount) / 10_000_000_000_000);
         uint256 avgPrice = (p1 + p2) / 2;
         require(tokenAmount == 0 || avgPrice <= MAX_UINT128 / tokenAmount, 209, "Overflow detectado");
         return uint128((avgPrice * tokenAmount) / 1e9);
@@ -141,8 +147,8 @@ contract BondingCurve {
             return uint128(reserveBalance - newReserve);
         }
         uint256 base = 1_000;
-        uint256 p1 = base + ((totalSupply - tokenAmount) / 4_000_000_000_000);
-        uint256 p2 = base + (totalSupply / 4_000_000_000_000);
+        uint256 p1 = base + ((totalSupply - tokenAmount) / 10_000_000_000_000);
+        uint256 p2 = base + (totalSupply / 10_000_000_000_000);
         uint256 avgPrice = (p1 + p2) / 2;
         return uint128((avgPrice * tokenAmount) / 1e9);
     }
@@ -348,6 +354,7 @@ contract BondingCurve {
         ammKLast = reserveBalance * (_supplyCap - totalSupply);
         
         emit MigratedToInternalAmm(liquidityToMove, migratedAt);
+        emit FeeReduced(getTradeFeeBps());
     }
 
     function _rollbackMint(uint32 nonce) private {
