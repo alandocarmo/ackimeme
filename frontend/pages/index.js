@@ -169,7 +169,7 @@ export default function Home() {
             <span className="hero-accent">on Acki Nacki</span>
           </h1>
           <p className="hero-subtitle">
-            fair launch · bonding curve · auto-migrate to AMM at 15K SHELL
+            fair launch · bonding curve · optional auto-migrate to AMM at 15K SHELL
           </p>
           <Link href="/create" className="btn-primary">
             🚀 Launch your coin
