@@ -28,7 +28,7 @@ export default function CreatePage() {
     name: "", symbol: "", tagline: "", description: "",
     totalSupply: "1000000000", logoUrl: "",
     website: "", xUrl: "", telegramUrl: "",
-    txHash: "", pumpForever: false,
+    txHash: "", pumpForever: false, isBoosted: false,
   });
   const [paymentStatus, setPaymentStatus] = useState({ ok: false, msg: "" });
   const [launchStatus, setLaunchStatus] = useState({ loading: false, error: "", success: false, ticket: null });
@@ -63,6 +63,8 @@ export default function CreatePage() {
   const canStep2 = form.name.trim().length >= 2 && sanitizeSymbol(form.symbol).length >= 2 &&
     form.description.trim().length >= 20 && form.totalSupply.trim();
 
+  const requiredFee = form.isBoosted ? fee.minimumAmount + 500 : fee.minimumAmount;
+
   async function handleVerifyPayment() {
     setPaymentStatus({ ok: false, msg: "Checking blockchain..." });
     try {
@@ -70,6 +72,7 @@ export default function CreatePage() {
         walletAddress: session?.walletAddress,
         txHash: form.txHash.trim(),
         tokenSymbol: "SHELL",
+        isBoosted: form.isBoosted,
       });
       setPaymentStatus({ ok: true, msg: "Payment confirmed ✓" });
     } catch (err) {
@@ -205,6 +208,18 @@ export default function CreatePage() {
                     </div>
                   </div>
 
+                  {/* Launch Boost */}
+                  <div className="card" style={{ background: form.isBoosted ? 'rgba(255, 184, 0, 0.1)' : 'var(--bg-deep)', padding: '16px', marginBottom: '24px', borderRadius: '12px', border: form.isBoosted ? '1px solid #FFB800' : '1px solid var(--line-soft)', transition: 'all 0.2s ease' }}>
+                    <h3 className="input-label" style={{ marginTop: 0, marginBottom: '12px', color: form.isBoosted ? '#FFB800' : 'var(--ink)' }}>🔥 Launch Boost</h3>
+                    <label style={{ display: 'flex', alignItems: 'flex-start', gap: '12px', cursor: 'pointer' }}>
+                      <input type="checkbox" checked={form.isBoosted} onChange={(e) => updateField("isBoosted", e.target.checked)} style={{ marginTop: '4px' }} />
+                      <div>
+                        <div style={{ fontWeight: '600', color: 'var(--ink)' }}>Fixar no Topo por 24h (+500 SHELL)</div>
+                        <div style={{ fontSize: '13px', color: 'var(--ink-soft)', marginTop: '4px' }}>Seu token aparecerá em destaque no topo do feed principal para atrair investidores mais rápido.</div>
+                      </div>
+                    </label>
+                  </div>
+
                   <div className="field-grid">
                     <label>
                       <span className="input-label">Total Supply</span>
@@ -250,10 +265,10 @@ export default function CreatePage() {
                   <h2 className="form-title">Pay Creation Fee</h2>
                   <p className="form-subtitle">Send the fee to list your coin on the board.</p>
 
-                  <div className="card" style={{ background: 'var(--accent-glow)', borderColor: 'var(--accent)', marginBottom: '24px', padding: '20px' }}>
+                  <div className="card" style={{ background: form.isBoosted ? 'rgba(255, 184, 0, 0.1)' : 'var(--accent-glow)', borderColor: form.isBoosted ? '#FFB800' : 'var(--accent)', marginBottom: '24px', padding: '20px' }}>
                     <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '12px' }}>
-                      <span className="info-label">Creation Fee</span>
-                      <span className="info-value" style={{ color: 'var(--accent)' }}>{fee.minimumAmount} {fee.tokenSymbol} (~$3 USD)</span>
+                      <span className="info-label">{form.isBoosted ? "Creation Fee + Boost" : "Creation Fee"}</span>
+                      <span className="info-value" style={{ color: form.isBoosted ? '#FFB800' : 'var(--accent)' }}>{requiredFee} {fee.tokenSymbol} {form.isBoosted ? '(Boosted)' : '(~$3 USD)'}</span>
                     </div>
                     <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '12px' }}>
                       <span className="info-label">Blockchain Gas</span>
@@ -268,7 +283,7 @@ export default function CreatePage() {
                   <div className="card" style={{ background: 'var(--bg-deep)', padding: '16px', marginBottom: '20px' }}>
                     <p className="token-time" style={{ fontSize: '11px', lineHeight: 1.6, margin: 0 }}>
                       <strong style={{ color: 'var(--ink)' }}>⚡ How it works:</strong><br/>
-                      1. Send <strong>{fee.minimumAmount} SHELL</strong> to the fee wallet above<br/>
+                      1. Send <strong>{requiredFee} SHELL</strong> to the fee wallet above<br/>
                       2. Paste the transaction hash below to verify<br/>
                       3. Your wallet also needs <strong>~{blockchainFee.minimumCreatorBalance}+ SHELL</strong> for blockchain gas fees<br/>
                       <br/>

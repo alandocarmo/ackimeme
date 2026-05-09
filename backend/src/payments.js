@@ -26,10 +26,10 @@ function normalizeTvmAddress(value) {
 /**
  * Verifica se uma transação SHELL cumpre os requisitos de fee.
  *
- * @param {{ walletAddress: string, txHash: string, tokenSymbol: string }} params
+ * @param {{ walletAddress: string, txHash: string, tokenSymbol: string, isBoosted?: boolean }} params
  * @returns {Promise<object>} Dados do pagamento verificado
  */
-async function verifyPayment({ walletAddress, txHash, tokenSymbol }) {
+async function verifyPayment({ walletAddress, txHash, tokenSymbol, isBoosted = false }) {
   const requirement = getCreationFeeRequirement(tokenSymbol || "SHELL");
 
   let tx;
@@ -100,11 +100,15 @@ async function verifyPayment({ walletAddress, txHash, tokenSymbol }) {
     throw new Error("Valor de pagamento inválido (negativo). Transação potencialmente malformada.");
   }
   const receivedNano = BigInt(rawShellAmount.replace(/\D/g, "") || "0");
-  const requiredNano = BigInt(requirement.minimumAmount) * 1_000_000_000n;
+  
+  // Launch Boost: +500 SHELL if boosted
+  const baseFee = Number(requirement.minimumAmount);
+  const totalRequired = isBoosted ? baseFee + 500 : baseFee;
+  const requiredNano = BigInt(totalRequired) * 1_000_000_000n;
 
   if (receivedNano < requiredNano) {
     throw new Error(
-      `Valor insuficiente. Mínimo exigido: ${requirement.minimumAmount} SHELL (~$3 USD). ` +
+      `Valor insuficiente. Mínimo exigido: ${totalRequired} SHELL. ` +
         `Recebido: ${tx.amount} SHELL.`,
     );
   }

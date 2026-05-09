@@ -131,16 +131,27 @@ export default function Home() {
 
   let filtered = launches.filter((l) => matchesSearch(l, deferredSearch));
 
+  const isBoostedActive = (l) => l.protocol?.isBoosted && (Date.now() - new Date(l.createdAt).getTime() < 24 * 60 * 60 * 1000);
+
   // Sort by filter
-  if (filter === "trending") {
-    filtered = [...filtered].sort((a, b) => Number(b.onchainData?.reserveBalance || 0) - Number(a.onchainData?.reserveBalance || 0));
-  } else if (filter === "finishing") {
-    filtered = [...filtered].sort((a, b) => {
+  filtered = [...filtered].sort((a, b) => {
+    const aBoost = isBoostedActive(a) ? 1 : 0;
+    const bBoost = isBoostedActive(b) ? 1 : 0;
+    
+    // Boosted tokens always at the top of their respective lists
+    if (aBoost !== bBoost) return bBoost - aBoost;
+
+    if (filter === "trending" || filter === "hall_of_fame") {
+      return Number(b.onchainData?.reserveBalance || 0) - Number(a.onchainData?.reserveBalance || 0);
+    } else if (filter === "finishing") {
       const pa = parseFloat(calcProgressFromReserve(readReserveBalance(a.onchainData)) || "0");
       const pb = parseFloat(calcProgressFromReserve(readReserveBalance(b.onchainData)) || "0");
       return pb - pa;
-    });
-  }
+    }
+    
+    // "new" (default) sorting
+    return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+  });
 
   return (
     <>
@@ -213,13 +224,13 @@ export default function Home() {
         <div className="container">
           <section className="controls-row">
             <div className="filter-group">
-              {["new", "trending", "finishing"].map((f) => (
+              {["new", "trending", "finishing", "hall_of_fame"].map((f) => (
                 <button
                   key={f}
                   className={`filter-btn ${filter === f ? "active" : ""}`}
                   onClick={() => setFilter(f)}
                 >
-                  {f === "new" ? "🕐 New" : f === "trending" ? "🔥 Trending" : "🏁 Finishing"}
+                  {f === "new" ? "🕐 New" : f === "trending" ? "🔥 Trending" : f === "finishing" ? "🏁 Finishing" : "🏆 Hall of Fame"}
                 </button>
               ))}
             </div>
@@ -254,7 +265,7 @@ export default function Home() {
               const color = hashColor(launch.coin?.symbol);
               return (
                 <Link href={`/token/${launch.id}`} key={launch.id} style={{ textDecoration: "none" }}>
-                  <article className="token-card" style={{ animationDelay: `${i * 40}ms` }}>
+                  <article className={`token-card ${isBoostedActive(launch) ? 'card-boosted' : ''}`} style={{ animationDelay: `${i * 40}ms` }}>
                     <div className="token-card-header">
                       <div className="token-avatar" style={{ background: `linear-gradient(135deg, ${color}, ${color}44)` }}>
                         {isSafeUrl(launch.coin?.logoUrl) ? (
@@ -269,6 +280,12 @@ export default function Home() {
                         <div className="token-ticker-row">
                           <span className="token-ticker">${launch.coin?.symbol}</span>
                           <span className="token-time">{formatTimeAgo(launch.createdAt)}</span>
+                          {isBoostedActive(launch) && (
+                            <span className="badge-boosted">🚀 Boosted</span>
+                          )}
+                          {launch.protocol?.pumpForever && reserveBalance >= 15000000000000 && (
+                            <span className="king-badge">👑 Eternal Pump King</span>
+                          )}
                           {launch.status === 'on_chain_deployed' && (
                             <span className="badge-live" style={{
                               marginLeft: '8px', 

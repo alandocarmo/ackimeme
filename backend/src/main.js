@@ -62,11 +62,12 @@ function normalizeCachePart(value) {
   return String(value || "").trim().toLowerCase();
 }
 
-function buildVerifiedPaymentCacheKey({ walletAddress, txHash, tokenSymbol }) {
+function buildVerifiedPaymentCacheKey({ walletAddress, txHash, tokenSymbol, isBoosted = false }) {
   return [
     normalizeCachePart(walletAddress),
     normalizeCachePart(txHash),
     normalizeCachePart(tokenSymbol || "SHELL"),
+    String(isBoosted)
   ].join(":");
 }
 
@@ -582,14 +583,17 @@ app.post("/verify-payment", paymentLimiter, requireSession, async (req, res) => 
       throw new Error("txHash e tokenSymbol são obrigatórios.");
     }
 
+    const isBoosted = Boolean(req.body?.isBoosted);
+
     const payment = await verifyPayment({
       walletAddress,
       txHash,
       tokenSymbol,
+      isBoosted,
     });
 
     verifiedPaymentsCache.set(
-      buildVerifiedPaymentCacheKey({ walletAddress, txHash, tokenSymbol }),
+      buildVerifiedPaymentCacheKey({ walletAddress, txHash, tokenSymbol, isBoosted }),
       { payment, timestamp: Date.now() },
     );
 
@@ -655,10 +659,12 @@ app.post("/launch-request", requireSession, async (req, res) => {
 
     // ── Verify payment FIRST (A-07) ──────────────────────────────────────────
     let payment;
+    const isBoosted = Boolean(launchRequest.protocol.isBoosted);
     const paymentCacheKey = buildVerifiedPaymentCacheKey({
       walletAddress: launchRequest.creator.wallet,
       txHash: launchRequest.payment.txHash,
       tokenSymbol: launchRequest.payment.tokenSymbol,
+      isBoosted,
     });
     const cached = verifiedPaymentsCache.get(paymentCacheKey);
     if (
@@ -676,6 +682,7 @@ app.post("/launch-request", requireSession, async (req, res) => {
         walletAddress: launchRequest.creator.wallet,
         txHash: launchRequest.payment.txHash,
         tokenSymbol: launchRequest.payment.tokenSymbol,
+        isBoosted,
       });
     }
 

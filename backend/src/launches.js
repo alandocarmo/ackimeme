@@ -187,6 +187,7 @@ function normalizeLaunchRequest(body = {}, session = null) {
       bondingCurveStatus: process.env.ENABLE_ONCHAIN_DEPLOY === "true" ? "deployed" : "not_implemented",
       poolAutomationStatus: "not_implemented",
       pumpForever: Boolean(body.pumpForever),
+      isBoosted: Boolean(body.isBoosted),
     },
     coin: {
       name: requireText(body.name, "Nome do token", {
