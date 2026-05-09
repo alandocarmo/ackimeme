@@ -12,7 +12,8 @@
 				{"name":"_symbol","type":"string"},
 				{"name":"_creationFeeTxHash","type":"bytes"},
 				{"name":"_feeRecipient","type":"address"},
-				{"name":"_pumpForever","type":"bool"}
+				{"name":"_pumpForever","type":"bool"},
+				{"name":"_slopeDivisor","type":"uint256"}
 			],
 			"outputs": [
 			]
@@ -34,7 +35,7 @@
 			]
 		},
 		{
-			"name": "getBurnFeeBps",
+			"name": "getCreatorFeeBps",
 			"inputs": [
 			],
 			"outputs": [
@@ -299,6 +300,14 @@
 			]
 		},
 		{
+			"name": "slopeDivisor",
+			"inputs": [
+			],
+			"outputs": [
+				{"name":"slopeDivisor","type":"uint256"}
+			]
+		},
+		{
 			"name": "mintIdToBuyer",
 			"inputs": [
 			],
@@ -368,6 +377,7 @@
 		{"init":false,"name":"pendingReserveByNonce","type":"map(uint32,uint256)"},
 		{"init":false,"name":"pendingTokensByNonce","type":"map(uint32,uint256)"},
 		{"init":false,"name":"pumpForever","type":"bool"},
+		{"init":false,"name":"slopeDivisor","type":"uint256"},
 		{"init":false,"name":"mintIdToBuyer","type":"map(uint32,address)"},
 		{"init":false,"name":"_mintSeqno","type":"uint32"}
 	]

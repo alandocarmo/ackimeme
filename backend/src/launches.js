@@ -76,6 +76,16 @@ function normalizeSupply(value) {
 
   return digits;
 }
+function parseSlopeDivisor(val) {
+  const divisors = {
+    "1": 20000000000000, // Suave
+    "2": 10000000000000, // Moderado (padrão)
+    "3": 5000000000000,  // Agressivo
+    "4": 2500000000000,  // Muito Agressivo
+    "5": 1000000000000   // Insano
+  };
+  return divisors[String(val)] || 10000000000000;
+}
 
 function normalizeOptionalUrl(value, fieldName) {
   const url = trimString(value);
@@ -188,6 +198,7 @@ function normalizeLaunchRequest(body = {}, session = null) {
       poolAutomationStatus: "not_implemented",
       pumpForever: Boolean(body.pumpForever),
       isBoosted: Boolean(body.isBoosted),
+      slopeDivisor: parseSlopeDivisor(body.slopeDivisor),
     },
     coin: {
       name: requireText(body.name, "Nome do token", {

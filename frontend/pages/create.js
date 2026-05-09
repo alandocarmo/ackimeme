@@ -28,7 +28,7 @@ export default function CreatePage() {
     name: "", symbol: "", tagline: "", description: "",
     totalSupply: "1000000000", logoUrl: "",
     website: "", xUrl: "", telegramUrl: "",
-    txHash: "", pumpForever: false, isBoosted: false,
+    txHash: "", pumpForever: false, isBoosted: false, slopeDivisor: 2,
   });
   const [paymentStatus, setPaymentStatus] = useState({ ok: false, msg: "" });
   const [launchStatus, setLaunchStatus] = useState({ loading: false, error: "", success: false, ticket: null });
@@ -205,6 +205,25 @@ export default function CreatePage() {
                           <div style={{ fontSize: '13px', color: 'var(--ink-soft)', marginTop: '4px' }}>Never graduates. The price continues to climb exponentially on the bonding curve forever. High risk, high volatility.</div>
                         </div>
                       </label>
+                    </div>
+                  <div className="card" style={{ background: 'var(--bg-deep)', padding: '16px', marginBottom: '24px', borderRadius: '12px', border: '1px solid var(--accent)' }}>
+                    <h3 className="input-label" style={{ marginTop: 0, marginBottom: '12px', color: 'var(--accent)' }}>🚀 Pump Aggressiveness</h3>
+                    <p style={{ fontSize: '13px', color: 'var(--ink-soft)', marginBottom: '16px' }}>Choose how fast the price will climb on the bonding curve. Higher aggressiveness means higher risk and faster price action.</p>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                      <input 
+                        type="range" 
+                        min="1" max="5" step="1"
+                        value={form.slopeDivisor}
+                        onChange={(e) => updateField("slopeDivisor", Number(e.target.value))}
+                        style={{ width: '100%', accentColor: form.slopeDivisor === 5 ? '#FF3B30' : 'var(--accent)' }}
+                      />
+                      <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '12px', fontWeight: '500' }}>
+                        <span style={{ color: form.slopeDivisor === 1 ? 'var(--accent)' : 'var(--ink-soft)' }}>1x Suave</span>
+                        <span style={{ color: form.slopeDivisor === 2 ? 'var(--accent)' : 'var(--ink-soft)' }}>2x Normal</span>
+                        <span style={{ color: form.slopeDivisor === 3 ? 'var(--accent)' : 'var(--ink-soft)' }}>4x Fast</span>
+                        <span style={{ color: form.slopeDivisor === 4 ? 'var(--accent)' : 'var(--ink-soft)' }}>8x Agressive</span>
+                        <span style={{ color: form.slopeDivisor === 5 ? '#FF3B30' : 'var(--ink-soft)' }}>20x INSANE</span>
+                      </div>
                     </div>
                   </div>
 

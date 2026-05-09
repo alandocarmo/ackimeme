@@ -226,7 +226,8 @@ contract TokenRoot {
         uint256 _supplyCap,
         uint128 _initialBalance,
         address _feeRecipient,
-        bool _pumpForever
+        bool _pumpForever,
+        uint256 _slopeDivisor
     ) public {
         require(msg.pubkey() == tvm.pubkey(), 102, "Only deployer pubkey can deploy BC");
         require(bondingCurve == address(0), 108, "BondingCurve already deployed");
@@ -250,7 +251,7 @@ contract TokenRoot {
             stateInit: stateInit,
             value: varuint16(_initialBalance),
             flag: 1
-        }(_owner, address(this), _name, _symbol, _creationFeeTxHash, _feeRecipient, _pumpForever);
+        }(_owner, address(this), _name, _symbol, _creationFeeTxHash, _feeRecipient, _pumpForever, _slopeDivisor);
 
         bondingCurve = bcAddr;
         owner = bcAddr; // Transfere ownership automaticamente para o BondingCurve

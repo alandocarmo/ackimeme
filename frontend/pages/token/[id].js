@@ -164,6 +164,15 @@ function isSafeUrl(url) {
   }
 }
 
+function getSlopeLabel(divisor) {
+  if (!divisor) return "2x Normal";
+  if (divisor >= 20000000000000) return "1x Suave";
+  if (divisor >= 10000000000000) return "2x Normal";
+  if (divisor >= 5000000000000) return "4x Fast";
+  if (divisor >= 2500000000000) return "8x Agressive";
+  return "20x INSANE";
+}
+
 export default function TokenPage() {
   const router = useRouter();
   const { id } = router.query;
@@ -555,9 +564,23 @@ export default function TokenPage() {
                   <p className="info-value">{formatSupply(token.onchainData?.tokenSupply || token.coin.totalSupply)}</p>
                 </div>
                 <div className="info-card">
+                  <p className="info-label">Pump Aggressiveness</p>
+                  <p className="info-value" style={{ color: token.protocol?.slopeDivisor <= 1000000000000 ? '#FF3B30' : 'var(--accent)' }}>
+                    {getSlopeLabel(token.protocol?.slopeDivisor)}
+                  </p>
+                </div>
+              </div>
+              <div className="info-card-grid" style={{ marginTop: '16px' }}>
+                <div className="info-card">
                   <p className="info-label">Risk Profile</p>
                   <p className="info-value" style={{ color: token.riskProfile?.score > 70 ? 'var(--accent)' : 'var(--accent-warm)' }}>
                     {token.riskProfile?.score} / {token.riskProfile?.status}
+                  </p>
+                </div>
+                <div className="info-card">
+                  <p className="info-label">Creator Rewards</p>
+                  <p className="info-value" style={{ fontSize: '13px', lineHeight: 1.4 }}>
+                    0.3% of trading volume goes automatically to the creator.
                   </p>
                 </div>
               </div>

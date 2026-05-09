@@ -24,8 +24,8 @@ contract BondingCurve {
     // L-01: Note — this contract only accepts SHELL (ECC ID=2). USDC is not accepted here.
     // The Accumulator rate (100 SHELL = 1 USDC) is referenced only for off-chain pricing context.
     function getTradeFeeBps() public view returns (uint16) { return isAmm ? 50 : 100; }
-    function getPlatformFeeBps() public view returns (uint16) { return isAmm ? 40 : 80; }
-    function getBurnFeeBps() public view returns (uint16) { return isAmm ? 10 : 20; }
+    function getPlatformFeeBps() public view returns (uint16) { return isAmm ? 35 : 70; }
+    function getCreatorFeeBps() public view returns (uint16) { return isAmm ? 15 : 30; }
 
     // ─── C-02: ECC token IDs for Acki Nacki ecosystem ─────────────────────────
     // V-AM-01: Explicit ID constants prevent confusion attacks across the
@@ -63,6 +63,9 @@ contract BondingCurve {
     
     // A-13: Pump Forever mode (no AMM migration)
     bool public pumpForever;
+    
+    // A-14: Dynamic Slope Divisor
+    uint256 public slopeDivisor;
 
     mapping(uint32 => address) public mintIdToBuyer; // mapping to resolve bounce exact buyer
     uint32 private _mintSeqno = 1;
@@ -89,7 +92,8 @@ contract BondingCurve {
         string _symbol,
         bytes _creationFeeTxHash,
         address _feeRecipient,
-        bool _pumpForever
+        bool _pumpForever,
+        uint256 _slopeDivisor
     ) {
         require(msg.sender == _tokenRoot, 101, "Only TokenRoot can deploy BondingCurve");
         require(_tokenRootAddr == _tokenRoot, 104, "tokenRootAddr must match static _tokenRoot");
@@ -104,6 +108,7 @@ contract BondingCurve {
         symbol = _symbol;
         creationFeeTxHash = _creationFeeTxHash;
         pumpForever = _pumpForever;
+        slopeDivisor = _slopeDivisor > 0 ? _slopeDivisor : 10_000_000_000_000;
         isAmm = false;
     }
 
@@ -120,7 +125,7 @@ contract BondingCurve {
             return uint128((reserveBalance * 1e9) / tokenPool);
         }
         uint256 base = 1_000; // 0.000001 SHELL per token unit (nano)
-        uint256 slope = totalSupply / 10_000_000_000_000;
+        uint256 slope = totalSupply / slopeDivisor;
         return uint128(base + slope);
     }
 
@@ -133,8 +138,8 @@ contract BondingCurve {
             return uint128(newReserve - reserveBalance);
         }
         uint256 base = 1_000; // 0.000001 SHELL base
-        uint256 p1 = base + (totalSupply / 10_000_000_000_000);
-        uint256 p2 = base + ((totalSupply + tokenAmount) / 10_000_000_000_000);
+        uint256 p1 = base + (totalSupply / slopeDivisor);
+        uint256 p2 = base + ((totalSupply + tokenAmount) / slopeDivisor);
         uint256 avgPrice = (p1 + p2) / 2;
         require(tokenAmount == 0 || avgPrice <= MAX_UINT128 / tokenAmount, 209, "Overflow detectado");
         return uint128((avgPrice * tokenAmount) / 1e9);
@@ -152,8 +157,8 @@ contract BondingCurve {
             return uint128(reserveBalance - newReserve);
         }
         uint256 base = 1_000;
-        uint256 p1 = base + ((totalSupply - tokenAmount) / 10_000_000_000_000);
-        uint256 p2 = base + (totalSupply / 10_000_000_000_000);
+        uint256 p1 = base + ((totalSupply - tokenAmount) / slopeDivisor);
+        uint256 p2 = base + (totalSupply / slopeDivisor);
         uint256 avgPrice = (p1 + p2) / 2;
         return uint128((avgPrice * tokenAmount) / 1e9);
     }
@@ -239,10 +244,10 @@ contract BondingCurve {
         uint256 cost = getBuyPrice(tokenAmount);
         require(cost > 0, 211, "Purchase amount too small, cost rounds to zero");
 
-        // ─── Trade Fee: Platform + Burn ─────────────────────────────────────────
+        // ─── Trade Fee: Platform + Creator ─────────────────────────────────────────
         uint256 platformFee = cost * getPlatformFeeBps() / 10000;
-        uint256 burnFee = cost * getBurnFeeBps() / 10000;
-        uint256 totalCostWithFee = cost + platformFee + burnFee;
+        uint256 creatorFee = cost * getCreatorFeeBps() / 10000;
+        uint256 totalCostWithFee = cost + platformFee + creatorFee;
 
         require(totalCostWithFee <= maxShellIn, 208, "Slippage protection triggered: cost+fee exceeds maxShellIn");
         require(receivedShell >= totalCostWithFee, 203, "Insufficient SHELL sent (cost + 1% fee)");
@@ -266,13 +271,19 @@ contract BondingCurve {
         // Mint memecoins to buyer via internal message
         ITokenRoot(_tokenRoot).mint(nonce, msg.sender, tokenAmount, 0.1 ton); // sends 0.1 VMSHELL for wallet deployment
 
-        // Send platform fee (0.8%) to feeRecipient via cc[2]
+        // Send platform fee (0.7%) to feeRecipient via cc[2]
         if (platformFee > 0) {
             mapping(uint32 => varuint32) feeCurrencies;
             feeCurrencies[SHELL_CURRENCY_ID] = varuint32(platformFee);
             feeRecipient.transfer({ value: 0.05 ton, flag: 1, bounce: false, currencies: feeCurrencies });
         }
-        // Burn fee (0.2%) stays locked in this contract — effectively out of circulation
+        
+        // Send creator fee (0.3%) to token creator wallet via cc[2]
+        if (creatorFee > 0 && owner != address(0)) {
+            mapping(uint32 => varuint32) creatorCurrencies;
+            creatorCurrencies[SHELL_CURRENCY_ID] = varuint32(creatorFee);
+            owner.transfer({ value: 0.05 ton, flag: 1, bounce: false, currencies: creatorCurrencies });
+        }
 
         // Refund excess SHELL (Extra Currency) back to buyer
         uint256 excess = receivedShell > totalCostWithFee ? receivedShell - totalCostWithFee : 0;
@@ -307,23 +318,29 @@ contract BondingCurve {
         require(grossReturn > 0, 216, "Sell amount too small, return rounds to zero");
         require(reserveBalance >= grossReturn, 204, "Insufficient reserve for sell");
 
-        // ─── Trade Fee: Platform + Burn ─────────────────────────────────────────
+        // ─── Trade Fee: Platform + Creator ─────────────────────────────────────────
         uint256 platformFee = grossReturn * getPlatformFeeBps() / 10000;
-        uint256 burnFee = grossReturn * getBurnFeeBps() / 10000;
-        uint256 netReturn = grossReturn - platformFee - burnFee;
+        uint256 creatorFee = grossReturn * getCreatorFeeBps() / 10000;
+        uint256 netReturn = grossReturn - platformFee - creatorFee;
 
         totalSupply -= amount;
         reserveBalance -= grossReturn;
 
         emit TokensSold(refundAddress, amount, netReturn, currentPrice());
 
-        // Send platform fee (0.8%) to feeRecipient via cc[2]
+        // Send platform fee (0.7%) to feeRecipient via cc[2]
         if (platformFee > 0) {
             mapping(uint32 => varuint32) feeCurrencies;
             feeCurrencies[SHELL_CURRENCY_ID] = varuint32(platformFee);
             feeRecipient.transfer({ value: 0.05 ton, flag: 1, bounce: false, currencies: feeCurrencies });
         }
-        // Burn fee (0.2%) stays locked in this contract — effectively out of circulation
+        
+        // Send creator fee (0.3%) to token creator wallet via cc[2]
+        if (creatorFee > 0 && owner != address(0)) {
+            mapping(uint32 => varuint32) creatorCurrencies;
+            creatorCurrencies[SHELL_CURRENCY_ID] = varuint32(creatorFee);
+            owner.transfer({ value: 0.05 ton, flag: 1, bounce: false, currencies: creatorCurrencies });
+        }
 
         // Send net SHELL payout via Extra Currencies (cc[2]) for cross-DappID compatibility
         tvm.rawReserve(0.5 ton, 0); // Keep 0.5 VMSHELL for contract survival

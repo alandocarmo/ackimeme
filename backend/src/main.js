@@ -723,6 +723,7 @@ app.post("/launch-request", requireSession, async (req, res) => {
       creatorWallet: launchRequest.creator.wallet,
       paymentTxHash: launchRequest.payment.txHash,
       pumpForever: launchRequest.protocol.pumpForever,
+      slopeDivisor: launchRequest.protocol.slopeDivisor,
     });
     chainDeployAttempted = Boolean(deployResult.chainAttempted);
 

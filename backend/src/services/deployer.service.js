@@ -371,7 +371,7 @@ async function deployContract({
  *
  * NUNCA retorna status "deployed" se a transação não foi realmente enviada à rede.
  */
-async function deployTokenEcosystem({ name, symbol, totalSupply, ipfsHash, creatorWallet, paymentTxHash, pumpForever }) {
+async function deployTokenEcosystem({ name, symbol, totalSupply, ipfsHash, creatorWallet, paymentTxHash, pumpForever, slopeDivisor }) {
   let chainAttempted = false;
   let tokenRootAddress = "";
   let bondingCurveAddress = "";
@@ -534,7 +534,9 @@ async function deployTokenEcosystem({ name, symbol, totalSupply, ipfsHash, creat
           _name: name,
           _symbol: symbol,
           _creationFeeTxHash: Buffer.from(paymentTxHash || "genesis").toString("hex"),
-          _feeRecipient: feeRecipient
+          _feeRecipient: feeRecipient,
+          _pumpForever: pumpForever,
+          _slopeDivisor: slopeDivisor
         }
       },
       signer: { type: "None" }
@@ -572,7 +574,8 @@ async function deployTokenEcosystem({ name, symbol, totalSupply, ipfsHash, creat
               _supplyCap: maxTokenSupply,
               _initialBalance: 10000000000, // 10 VMSHELL to inner BondingCurve
               _feeRecipient: feeRecipient,
-              _pumpForever: Boolean(pumpForever)
+              _pumpForever: Boolean(pumpForever),
+              _slopeDivisor: slopeDivisor
             }
           },
           signer
