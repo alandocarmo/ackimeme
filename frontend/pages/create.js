@@ -153,8 +153,7 @@ export default function CreatePage() {
             <div className="step-line" />
           </div>
 
-          {(
-            <div className="card">
+          <div className="card">
               {/* Step 1: Token Info */}
               {step === 1 && (
                 <div className="animate-fade-in">
@@ -206,6 +205,7 @@ export default function CreatePage() {
                         </div>
                       </label>
                     </div>
+                  </div>
                   <div className="card" style={{ background: 'var(--bg-deep)', padding: '16px', marginBottom: '24px', borderRadius: '12px', border: '1px solid var(--accent)' }}>
                     <h3 className="input-label" style={{ marginTop: 0, marginBottom: '12px', color: 'var(--accent)' }}>🚀 Pump Aggressiveness</h3>
                     <p style={{ fontSize: '13px', color: 'var(--ink-soft)', marginBottom: '16px' }}>Choose how fast the price will climb on the bonding curve. Higher aggressiveness means higher risk and faster price action.</p>
@@ -218,11 +218,18 @@ export default function CreatePage() {
                         style={{ width: '100%', accentColor: form.slopeDivisor === 5 ? '#FF3B30' : 'var(--accent)' }}
                       />
                       <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '12px', fontWeight: '500' }}>
-                        <span style={{ color: form.slopeDivisor === 1 ? 'var(--accent)' : 'var(--ink-soft)' }}>1x Suave</span>
-                        <span style={{ color: form.slopeDivisor === 2 ? 'var(--accent)' : 'var(--ink-soft)' }}>2x Normal</span>
-                        <span style={{ color: form.slopeDivisor === 3 ? 'var(--accent)' : 'var(--ink-soft)' }}>4x Fast</span>
-                        <span style={{ color: form.slopeDivisor === 4 ? 'var(--accent)' : 'var(--ink-soft)' }}>8x Agressive</span>
-                        <span style={{ color: form.slopeDivisor === 5 ? '#FF3B30' : 'var(--ink-soft)' }}>20x INSANE</span>
+                        <span style={{ color: form.slopeDivisor === 1 ? 'var(--accent)' : 'var(--ink-soft)' }}>0.5x Suave</span>
+                        <span style={{ color: form.slopeDivisor === 2 ? 'var(--accent)' : 'var(--ink-soft)' }}>1x Normal</span>
+                        <span style={{ color: form.slopeDivisor === 3 ? 'var(--accent)' : 'var(--ink-soft)' }}>2x Fast</span>
+                        <span style={{ color: form.slopeDivisor === 4 ? 'var(--accent)' : 'var(--ink-soft)' }}>4x Agressive</span>
+                        <span style={{ color: form.slopeDivisor === 5 ? '#FF3B30' : 'var(--ink-soft)' }}>10x INSANE</span>
+                      </div>
+                      <div style={{ marginTop: '12px', padding: '10px', background: 'rgba(0,0,0,0.2)', borderRadius: '8px', fontSize: '12px', color: 'var(--ink-soft)', borderLeft: `3px solid ${form.slopeDivisor === 5 ? '#FF3B30' : 'var(--accent)'}` }}>
+                        {form.slopeDivisor === 1 && "🐢 Suave: Curva tranquila. O preço sobe 2x mais devagar, ideal para projetos que buscam estabilidade."}
+                        {form.slopeDivisor === 2 && "⚖️ Normal: O padrão clássico. Equilíbrio perfeito entre risco e recompensa, igual ao pump.fun."}
+                        {form.slopeDivisor === 3 && "⚡ Fast: Crescimento acelerado. O preço sobe 2x mais rápido, gerando FOMO imediato."}
+                        {form.slopeDivisor === 4 && "🔥 Agressive: Alta voltagem. Movimentos rápidos que recompensam os primeiros compradores."}
+                        {form.slopeDivisor === 5 && "💀 INSANE: Modo DeGen! O preço explode 10x mais rápido que o normal. Volatilidade extrema!"}
                       </div>
                     </div>
                   </div>
@@ -374,7 +381,6 @@ export default function CreatePage() {
                 </div>
               )}
             </div>
-          )}
         </div>
       </main>
 
