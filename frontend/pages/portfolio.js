@@ -5,6 +5,16 @@ import { useEffect, useState, useCallback } from "react";
 import { getSession, getPublicLaunches } from "../lib/api";
 import { TokenRootAbi, TokenWalletAbi } from "../lib/abi";
 
+function isSafeUrl(url) {
+  if (!url) return false;
+  try {
+    const u = new URL(url);
+    return u.protocol === 'https:';
+  } catch {
+    return false;
+  }
+}
+
 function compactWallet(w) {
   const s = String(w || "");
   return s.length <= 14 ? s : `${s.slice(0, 8)}…${s.slice(-6)}`;
@@ -173,7 +183,7 @@ export default function PortfolioPage() {
               <Link href={`/token/${token.id}`} key={token.id} className="card portfolio-item-card" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', textDecoration: 'none', transition: 'transform 0.2s' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
                   <div className="token-avatar" style={{ width: '48px', height: '48px', borderRadius: '12px', background: 'var(--bg-deep)', display: 'flex', justifyContent: 'center', alignItems: 'center', fontSize: '20px' }}>
-                    {token.coin.logoUrl ? <img src={token.coin.logoUrl} alt="" style={{ width: '100%', height: '100%', borderRadius: '12px' }} /> : token.coin.symbol[0]}
+                    {isSafeUrl(token.coin.logoUrl) ? <img src={token.coin.logoUrl} alt="" referrerPolicy="no-referrer" style={{ width: '100%', height: '100%', borderRadius: '12px' }} /> : token.coin.symbol[0]}
                   </div>
                   <div>
                     <h3 style={{ margin: 0, fontSize: '16px', color: 'var(--ink)' }}>{token.coin.name}</h3>

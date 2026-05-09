@@ -291,20 +291,36 @@ export default function Home() {
                       {(launch.coin?.tagline || launch.coin?.description || "").length > 80 ? "…" : ""}
                     </p>
 
-                    <div className="progress-bar">
-                      <div className="progress-header">
-                        <span>Progress</span>
-                        <span>{progress === null ? "N/A" : `${progress}%`}</span>
+                    {launch.protocol?.pumpForever ? (
+                      <div className="progress-bar">
+                        <div className="progress-header">
+                          <span>Mode</span>
+                          <span style={{ color: '#ef4444', fontWeight: 700 }}>♾️ Pump Forever</span>
+                        </div>
+                        <div className="progress-track">
+                          <div className="progress-fill" style={{
+                            width: '100%',
+                            background: 'linear-gradient(90deg, #ef4444, #f97316)',
+                            opacity: 0.4,
+                          }} />
+                        </div>
                       </div>
-                      <div className="progress-track">
-                        <div className={`progress-fill${parseFloat(progress || "0") > 80 ? " near-complete" : ""}`} style={{
-                          width: progress === null ? "0%" : `${progress}%`,
-                          background: parseFloat(progress || "0") > 80
-                            ? "linear-gradient(90deg, #f97316, #ef4444)"
-                            : "linear-gradient(90deg, #00ff88, #00cc6d)",
-                        }} />
+                    ) : (
+                      <div className="progress-bar">
+                        <div className="progress-header">
+                          <span>Progress</span>
+                          <span>{progress === null ? "N/A" : `${progress}%`}</span>
+                        </div>
+                        <div className="progress-track">
+                          <div className={`progress-fill${parseFloat(progress || "0") > 80 ? " near-complete" : ""}`} style={{
+                            width: progress === null ? "0%" : `${progress}%`,
+                            background: parseFloat(progress || "0") > 80
+                              ? "linear-gradient(90deg, #f97316, #ef4444)"
+                              : "linear-gradient(90deg, #00ff88, #00cc6d)",
+                          }} />
+                        </div>
                       </div>
-                    </div>
+                    )}
 
                     <div className="token-stats">
                       <div className="stat-box">
@@ -348,7 +364,7 @@ export default function Home() {
       
       <style jsx>{`
         .empty-state { text-align: center; padding: 80px 24px; }
-        .empty-icon { fontSize: 48px; color: var(--line); margin-bottom: 12px; }
+        .empty-icon { font-size: 48px; color: var(--line); margin-bottom: 12px; }
         .empty-text { color: var(--ink-muted); margin-bottom: 24px; }
         .error-msg { color: var(--red); text-align: center; padding: 40px; }
       `}</style>

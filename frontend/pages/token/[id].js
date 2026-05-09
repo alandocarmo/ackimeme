@@ -197,31 +197,20 @@ export default function TokenPage() {
       })
       .catch((err) => {
         if (String(err.message || "").toLowerCase().includes("404")) {
+          setToken(null);
           setError("Token não encontrado.");
         } else {
           setError(err.message || "Falha ao carregar token.");
         }
-      });
+      })
+      .finally(() => setLoading(false));
   }, [id]);
 
   useEffect(() => {
     if (!id) return;
     setLoading(true);
-    getLaunchById(id)
-      .then((data) => {
-        setToken(data.launch);
-        setError("");
-      })
-      .catch((err) => {
-        setToken(null);
-        if (String(err.message || "").toLowerCase().includes("404")) {
-          setError("Token não encontrado.");
-          return;
-        }
-        setError(err.message || "Falha ao carregar token.");
-      })
-      .finally(() => setLoading(false));
-  }, [id]);
+    fetchToken();
+  }, [id, fetchToken]);
 
   // FE-05: Polling every 15 seconds to keep data fresh
   useEffect(() => {
@@ -692,20 +681,27 @@ export default function TokenPage() {
                     </div>
                   </div>
 
-                  <div className="estimate-box">
-                    <span className="estimate-label">Receive ≈</span>
-                    <span className="estimate-val">
-                      {typeof getEstimate().value === 'string' ? getEstimate().value : getEstimate().value} {tradeMode === "buy" ? token.coin.symbol : "SHELL"}
-                    </span>
-                  </div>
+                  {(() => {
+                    const estimate = getEstimate();
+                    return (
+                      <>
+                        <div className="estimate-box">
+                          <span className="estimate-label">Receive ≈</span>
+                          <span className="estimate-val">
+                            {estimate.value} {tradeMode === "buy" ? token.coin.symbol : "SHELL"}
+                          </span>
+                        </div>
 
-                  {getEstimate().fee && (
-                    <div style={{ textAlign: 'center', marginBottom: '8px' }}>
-                      <span className="token-time" style={{ fontSize: '10px', color: 'var(--accent-warm)' }}>
-                        Fee: {getEstimate().fee} SHELL (1% — 0.8% platform + 0.2% burn)
-                      </span>
-                    </div>
-                  )}
+                        {estimate.fee && (
+                          <div style={{ textAlign: 'center', marginBottom: '8px' }}>
+                            <span className="token-time" style={{ fontSize: '10px', color: 'var(--accent-warm)' }}>
+                              Fee: {estimate.fee} SHELL (1% — 0.8% platform + 0.2% burn)
+                            </span>
+                          </div>
+                        )}
+                      </>
+                    );
+                  })()}
 
                   {onchainPrice && (
                     <p className="token-time" style={{ textAlign: 'center', fontSize: '10px', marginBottom: '8px' }}>

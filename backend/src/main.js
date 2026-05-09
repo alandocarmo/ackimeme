@@ -28,8 +28,11 @@ const {
   cleanupExpiredAuthData,
   getCommentsByLaunchId,
   addComment,
+  reserveTxHash,
+  releaseTxHashReservation,
 } = require("./storage");
 const { createTreasuryPaymentRecord } = require("./treasury");
+const {
   getAccountBalance,
   isTip3DecoderAvailable,
 } = require("./services/graphql.service");

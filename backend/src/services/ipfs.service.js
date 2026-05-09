@@ -63,6 +63,15 @@ async function uploadToIPFS(metadata) {
  * Estrutura os metadados no padrão TEP-74 / TIP-3 compatibility
  */
 function createTokenMetadata(launchRequest) {
+  const attributes = [
+    { trait_type: "Platform", value: "AckiMeme" },
+    { trait_type: "LaunchMode", value: "Bonding Curve" },
+  ];
+
+  if (launchRequest.protocol?.pumpForever) {
+    attributes.push({ trait_type: "PumpForever", value: "Yes" });
+  }
+
   return {
     name: launchRequest.coin.name,
     symbol: launchRequest.coin.symbol,
@@ -71,10 +80,7 @@ function createTokenMetadata(launchRequest) {
     external_url: launchRequest.links.website || "",
     decimals: 9,
     version: "0.4.0",
-    attributes: [
-      { trait_type: "Platform", value: "AckiMeme" },
-      { trait_type: "LaunchMode", value: "Bonding Curve" }
-    ]
+    attributes,
   };
 }
 

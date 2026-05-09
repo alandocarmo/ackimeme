@@ -747,6 +747,7 @@ async function getAccountState(address) {
       blockchain {
         account(address: $address) {
           info {
+            acc_type
             boc
           }
         }
@@ -758,7 +759,7 @@ async function getAccountState(address) {
     const data = await gql(accountQuery, { address });
     const info = data?.blockchain?.account?.info;
 
-    if (!info) {
+    if (!info || info.acc_type !== 1) {
       return { isDeployed: false, boc: "" };
     }
 
