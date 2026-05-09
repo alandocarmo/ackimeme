@@ -4,6 +4,7 @@ import { useRouter } from "next/router";
 import { useEffect, useState, useCallback } from "react";
 import { getLaunchById, getSession, getComments, postComment } from "../../lib/api";
 import { BondingCurveAbi, TokenWalletAbi, TokenRootAbi } from "../../lib/abi";
+import { useToast } from "../../lib/useToast";
 
 function compactWallet(w) {
   const s = String(w || "");
@@ -170,6 +171,7 @@ export default function TokenPage() {
   const [session, setSession] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const { toast, ToastContainer } = useToast();
 
   const [tradeMode, setTradeMode] = useState("buy");
   const [tradeAmount, setTradeAmount] = useState("");
@@ -238,8 +240,9 @@ export default function TokenPage() {
       const res = await postComment(id, newComment);
       setComments((prev) => [res.comment, ...prev]);
       setNewComment("");
+      toast.success("Success", "Comentário postado com sucesso!");
     } catch (err) {
-      alert(err.message || "Erro ao postar comentário.");
+      toast.error("Erro", err.message || "Erro ao postar comentário.");
     } finally {
       setIsPosting(false);
     }
@@ -337,6 +340,7 @@ export default function TokenPage() {
           currencies: { 2: maxShellNano.toString() }
         });
         setTradeSuccess(`Compra realizada com sucesso! Tx: ${tx?.transaction?.id?.hash || 'confirmada'}`);
+        toast.success("Compra Realizada", `Sucesso! Tx: ${tx?.transaction?.id?.hash?.slice(0,8) || 'confirmada'}`);
       } else {
         // SELL: Burn tokens via TokenWallet → TokenRoot.notifyBurn → BondingCurve.onTokenBurned
         if (!token?.onchainData?.tokenRootAddress) {
@@ -375,11 +379,13 @@ export default function TokenPage() {
           bounce: true
         });
         setTradeSuccess(`Venda realizada com sucesso!`);
+        toast.success("Venda Realizada", "Tokens queimados e SHELL enviado!");
       }
       
     } catch(err) {
       setTradeSuccess("");
       setError(err.message || "Erro durante o trade.");
+      toast.error("Falha no Trade", err.message || "Ocorreu um erro na transação.");
     } finally {
       setIsTrading(false);
     }
@@ -408,6 +414,7 @@ export default function TokenPage() {
 
   return (
     <>
+      <ToastContainer />
       <Head>
         <title>{token ? `$${token.coin.symbol} — ${token.coin.name}` : "Token"} | AckiMeme</title>
         <meta name="description" content={token?.coin?.tagline || "Memecoin on Acki Nacki"} />

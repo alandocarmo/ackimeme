@@ -281,6 +281,9 @@ export default function Home() {
                               {launch.onchainData?.updatedAt && (Date.now() - new Date(launch.onchainData.updatedAt).getTime() < 120000) ? '● Live' : '↻ Syncing...'}
                             </span>
                           )}
+                          {!launch.protocol?.pumpForever && parseFloat(progress || "0") > 80 && (
+                            <span className="badge-finishing">🔥 Almost there!</span>
+                          )}
                         </div>
                         <p className="token-name">{launch.coin?.name}</p>
                       </div>

@@ -1341,3 +1341,143 @@ body {
   }
 }
 
+/* ─── Toast Notification System ───────────────────────────────────────────── */
+@keyframes toastSlideIn {
+  from { transform: translateX(120%); opacity: 0; }
+  to { transform: translateX(0); opacity: 1; }
+}
+
+@keyframes toastSlideOut {
+  from { transform: translateX(0); opacity: 1; }
+  to { transform: translateX(120%); opacity: 0; }
+}
+
+.toast-container {
+  position: fixed;
+  top: 80px;
+  right: 24px;
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  pointer-events: none;
+}
+
+.toast {
+  pointer-events: auto;
+  min-width: 300px;
+  max-width: 420px;
+  padding: 16px 20px;
+  border-radius: var(--radius-lg);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  animation: toastSlideIn 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+  cursor: pointer;
+  transition: transform 0.2s, opacity 0.2s;
+}
+
+.toast:hover {
+  transform: translateY(-2px);
+}
+
+.toast.toast-exit {
+  animation: toastSlideOut 0.3s ease forwards;
+}
+
+.toast-success {
+  background: rgba(0, 255, 136, 0.12);
+  border: 1px solid rgba(0, 255, 136, 0.3);
+  color: var(--accent);
+}
+
+.toast-error {
+  background: rgba(255, 71, 87, 0.12);
+  border: 1px solid rgba(255, 71, 87, 0.3);
+  color: var(--red);
+}
+
+.toast-info {
+  background: rgba(0, 242, 255, 0.12);
+  border: 1px solid rgba(0, 242, 255, 0.3);
+  color: var(--accent-cyan);
+}
+
+.toast-icon {
+  font-size: 20px;
+  flex-shrink: 0;
+  line-height: 1;
+}
+
+.toast-body {
+  flex: 1;
+  min-width: 0;
+}
+
+.toast-title {
+  font-size: 13px;
+  font-weight: 700;
+  margin-bottom: 2px;
+}
+
+.toast-msg {
+  font-size: 12px;
+  opacity: 0.85;
+  word-break: break-word;
+  line-height: 1.4;
+}
+
+.toast-progress {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  height: 3px;
+  border-radius: 0 0 var(--radius-lg) var(--radius-lg);
+  animation: toastCountdown linear forwards;
+}
+
+.toast-success .toast-progress { background: var(--accent); }
+.toast-error .toast-progress { background: var(--red); }
+.toast-info .toast-progress { background: var(--accent-cyan); }
+
+@keyframes toastCountdown {
+  from { width: 100%; }
+  to { width: 0%; }
+}
+
+@media (max-width: 640px) {
+  .toast-container {
+    left: 16px;
+    right: 16px;
+    top: 72px;
+  }
+  .toast {
+    min-width: auto;
+    max-width: none;
+  }
+}
+
+/* ─── Badge: Almost There (>80% progress) ─────────────────────────────────── */
+@keyframes badgePulse {
+  0%, 100% { box-shadow: 0 0 6px rgba(249, 115, 22, 0.3); }
+  50% { box-shadow: 0 0 14px rgba(249, 115, 22, 0.5), 0 0 24px rgba(249, 115, 22, 0.15); }
+}
+
+.badge-finishing {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 10px;
+  font-weight: 700;
+  padding: 3px 8px;
+  border-radius: 12px;
+  background: rgba(249, 115, 22, 0.15);
+  color: #f97316;
+  border: 1px solid rgba(249, 115, 22, 0.3);
+  animation: badgePulse 2s ease-in-out infinite;
+  white-space: nowrap;
+}
+
