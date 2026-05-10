@@ -2,9 +2,10 @@ import Head from "next/head";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useEffect, useState, useCallback } from "react";
-import { getLaunchById, getSession, getComments, postComment } from "../../lib/api";
+import { getLaunchById, getSession, getComments, postComment, socket } from "../../lib/api";
 import { BondingCurveAbi, TokenWalletAbi, TokenRootAbi } from "../../lib/abi";
 import { useToast } from "../../lib/useToast";
+import { formatNum, getSlopeLabel } from "../../lib/utils";
 
 function compactWallet(w) {
   const s = String(w || "");
@@ -18,13 +19,11 @@ function formatDate(d) {
   });
 }
 
-function formatNum(n) {
-  const v = Number(String(n || "0").replace(/[.,]/g, ""));
-  return isNaN(v) ? n : v.toLocaleString("pt-BR");
-}
+// Redefined using the shared utility
 
-function formatSupply(val) {
-  const n = Number(String(val || "0").replace(/[.,]/g, ""));
+function formatSupply(val, isNano = false) {
+  let n = Number(String(val || "0").replace(/[.,]/g, ""));
+  if (isNano) n = n / 1e9;
   if (n >= 1e9) return `${(n / 1e9).toFixed(1)}B`;
   if (n >= 1e6) return `${(n / 1e6).toFixed(1)}M`;
   if (n >= 1e3) return `${(n / 1e3).toFixed(0)}K`;
@@ -164,14 +163,7 @@ function isSafeUrl(url) {
   }
 }
 
-function getSlopeLabel(divisor) {
-  if (!divisor) return "2x Normal";
-  if (divisor >= 20000000000000) return "1x Suave";
-  if (divisor >= 10000000000000) return "2x Normal";
-  if (divisor >= 5000000000000) return "4x Fast";
-  if (divisor >= 2500000000000) return "8x Agressive";
-  return "20x INSANE";
-}
+// Local getSlopeLabel removed, using shared utility
 
 export default function TokenPage() {
   const router = useRouter();
@@ -223,21 +215,51 @@ export default function TokenPage() {
     fetchToken();
   }, [id, fetchToken]);
 
-  // FE-05: Polling every 15 seconds to keep data fresh
+  // FE-05: Real-time updates via WebSockets instead of polling
   useEffect(() => {
     if (!id) return;
-    
-    function fetchAll() {
-      fetchToken();
-      getComments(id).then(r => setComments(r.comments || [])).catch(() => {});
-    }
     
     // Initial fetch for comments
     getComments(id).then(r => setComments(r.comments || [])).catch(() => {});
     
-    const interval = setInterval(fetchAll, 15000);
-    return () => clearInterval(interval);
-  }, [id, fetchToken]);
+    if (!socket) return;
+
+    socket.emit("join_token", id);
+
+    const handleTokenUpdated = (update) => {
+      setToken((prev) => {
+        if (!prev) return prev;
+        return {
+          ...prev,
+          status: update.status,
+          onchainData: {
+            ...prev.onchainData,
+            reserveBalance: update.reserveBalance,
+            tokenSupply: update.tokenSupply,
+            lockedLiquidity: update.lockedLiquidity,
+            updatedAt: update.updatedAt,
+          },
+        };
+      });
+      // Audit #8: Refresh price calculations after reserve update to prevent stale UI
+      fetchPrice();
+    };
+
+    const handleNewComment = (comment) => {
+      setComments((prev) => {
+        if (prev.find((c) => c.id === comment.id)) return prev;
+        return [comment, ...prev];
+      });
+    };
+
+    socket.on("token_updated", handleTokenUpdated);
+    socket.on("new_comment", handleNewComment);
+
+    return () => {
+      socket.off("token_updated", handleTokenUpdated);
+      socket.off("new_comment", handleNewComment);
+    };
+  }, [id]);
 
   async function handlePostComment(e) {
     e.preventDefault();
@@ -336,7 +358,13 @@ export default function TokenPage() {
         const totalCostNano = baseCostNano + feeNano;
         
         // Apply slippage to the total cost (base + fee)
-        const maxShellNano = totalCostNano * BigInt(Math.round(100 + slippagePct)) / 100n;
+        let maxShellNano = totalCostNano * BigInt(Math.round(100 + slippagePct)) / 100n;
+        
+        // Audit #13: Ensure we don't exceed the user's explicit SHELL input.
+        // If the user said "Buy 100 SHELL", we shouldn't charge 102 SHELL.
+        if (maxShellNano > rawAmountNano) {
+          maxShellNano = rawAmountNano;
+        }
 
         const tx = await bcContract.methods.buy({
           tokenAmount: expectedNanoTokens.toString(),
@@ -375,13 +403,19 @@ export default function TokenPage() {
           throw new Error(`Saldo insuficiente para gas. Precisa de pelo menos 0.5 SHELL na carteira. Saldo atual: ${Number(balanceNano) / 1e9} SHELL.`);
         }
 
-        // 3. Call burn on user's TokenWallet, passing BondingCurve as callbackTarget
+        // 3. Calculate minShellOut for slippage protection
+        const estimate = getEstimate();
+        const expectedNetShell = toNano(estimate.value);
+        const minShellOutNano = expectedNetShell * BigInt(Math.round(100 - slippagePct)) / 100n;
+
+        // 4. Call burn on user's TokenWallet, passing BondingCurve as callbackTarget
         const walletContract = new ever.Contract(TokenWalletAbi, new Address(userWalletAddress.toString()));
         
         const tokensToSellNano = toNano(tradeAmount);
         const tx = await walletContract.methods.burn({
           amount: tokensToSellNano.toString(),
-          callbackTarget: token.onchainData.bondingCurveAddress
+          callbackTarget: token.onchainData.bondingCurveAddress,
+          minShellOut: minShellOutNano.toString()
         }).send({
           from: accountInteraction.address,
           amount: "500000000", // 0.5 SHELL for processing gas
@@ -561,12 +595,12 @@ export default function TokenPage() {
               <div className="info-card-grid">
                 <div className="info-card">
                   <p className="info-label">Current Supply</p>
-                  <p className="info-value">{formatSupply(token.onchainData?.tokenSupply || token.coin.totalSupply)}</p>
+                  <p className="info-value">{formatSupply(token.onchainData?.tokenSupply || token.coin.totalSupply, !!token.onchainData?.tokenSupply)}</p>
                 </div>
                 <div className="info-card">
                   <p className="info-label">Pump Aggressiveness</p>
-                  <p className="info-value" style={{ color: token.protocol?.slopeDivisor <= 1000000000000 ? '#FF3B30' : 'var(--accent)' }}>
-                    {getSlopeLabel(token.protocol?.slopeDivisor)}
+                  <p className="info-value" style={{ color: getSlopeLabel(token.protocol?.slopeDivisor).color }}>
+                    {getSlopeLabel(token.protocol?.slopeDivisor).label}
                   </p>
                 </div>
               </div>
@@ -725,7 +759,7 @@ export default function TokenPage() {
                         {estimate.fee && (
                           <div style={{ textAlign: 'center', marginBottom: '8px' }}>
                             <span className="token-time" style={{ fontSize: '10px', color: 'var(--accent-warm)' }}>
-                              Fee: {estimate.fee} SHELL (1% — 0.8% platform + 0.2% burn)
+                              Fee: {estimate.fee} SHELL (1% — 0.7% platform + 0.3% creator)
                             </span>
                           </div>
                         )}

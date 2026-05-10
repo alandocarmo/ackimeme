@@ -16,7 +16,7 @@ const { config } = require("../config");
 // Audit #1: No silent fallback to shellnet — GRAPHQL_URL must be configured
 const GRAPHQL_ENDPOINT = config.graphqlUrl || "https://shellnet.ackinacki.org/graphql";
 if (!config.graphqlUrl) {
-  if (process.env.NODE_ENV === "production") {
+  if (config.isProduction) {
     throw new Error("❌ Erro fatal: GRAPHQL_URL é obrigatório em ambiente de produção! Não faça fallback para a testnet.");
   }
   console.warn("[GraphQL] ⚠️  GRAPHQL_URL não configurada! Usando shellnet (testnet) como fallback. NÃO use isso em produção.");
@@ -638,7 +638,9 @@ async function getAccountBalanceNano(address) {
   const data = await gql(query, { address });
   const info = data?.blockchain?.account?.info;
 
-  if (!info || info.acc_type !== 1) {
+  // Acki Nacki: 0=Uninit, 1=Active, 2=Frozen, 3=NonExist
+  const accType = info.acc_type === undefined ? 0 : Number(info.acc_type);
+  if (!info || (accType !== 1 && accType !== 0)) {
     return 0n;
   }
 

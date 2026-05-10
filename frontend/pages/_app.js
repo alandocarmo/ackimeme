@@ -7,7 +7,7 @@ import { Analytics } from "@vercel/analytics/react";
 import { useEffect, useState } from "react";
 import { getSession } from "../lib/api";
 
-function GlobalNav({ session, isAdmin }) {
+function GlobalNav({ session }) {
   const router = useRouter();
   const isAuth = router.pathname === "/auth";
 

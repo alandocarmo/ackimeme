@@ -8,7 +8,12 @@ const { config } = require("../config");
 // Wrapped in try/catch to prevent backend crash if SDK is not installed
 let tvmCore = null;
 let client = null;
+let ioInstance = null;
 const { getTvmClient, getTvmCore, sdkAvailable } = require("./tvm-client");
+
+function setSocketIo(io) {
+  ioInstance = io;
+}
 
 if (sdkAvailable) {
   tvmCore = getTvmCore();
@@ -89,7 +94,7 @@ async function syncOnchainData() {
       if (bcState.isDeployed && bcState.boc) {
         // Fallbacks
         let reserveBalance = "0"; // H-32: Fallback corrected to ZERO, not gas balance
-        let tokenSupply = launch.launchRequest?.coin?.totalSupply || "0";
+        let tokenSupply = null; // Audit #23: Do not default to cap if getter fails, use null to indicate sync gap
         let lockedLiquidity = launch.lockedLiquidity || false;
 
         // Run Local Getters with BondingCurve BOC
@@ -120,12 +125,24 @@ async function syncOnchainData() {
 
         await updateLaunchOnchainState(launch.id, {
           reserveBalance: reserveBalance.toString(),
-          tokenSupply: tokenSupply.toString(),
+          tokenSupply: tokenSupply !== null ? tokenSupply.toString() : launch.tokenSupply,
           lockedLiquidity,
           status,
           deployStatus: "deployed",
           deployReason: "",
         });
+        
+        if (ioInstance) {
+          ioInstance.to(`token_${launch.id}`).emit("token_updated", {
+            id: launch.id,
+            reserveBalance: reserveBalance.toString(),
+            tokenSupply: tokenSupply !== null ? tokenSupply.toString() : launch.tokenSupply,
+            lockedLiquidity,
+            status,
+            updatedAt: new Date().toISOString()
+          });
+        }
+        
         updatedCount++;
       }
     }
@@ -167,4 +184,4 @@ function stopSyncJob() {
   }
 }
 
-module.exports = { startSyncJob, stopSyncJob, syncOnchainData };
+module.exports = { startSyncJob, stopSyncJob, syncOnchainData, setSocketIo };

@@ -1,7 +1,7 @@
 import Head from "next/head";
 import Link from "next/link";
 import { useDeferredValue, useEffect, useState } from "react";
-import { getPublicLaunches } from "../lib/api";
+import { getPublicLaunches, socket } from "../lib/api";
 
 function formatTimeAgo(dateStr) {
   if (!dateStr) return "";
@@ -20,8 +20,9 @@ function compactWallet(w) {
   return s.length <= 14 ? s : `${s.slice(0, 6)}…${s.slice(-4)}`;
 }
 
-function formatSupply(val) {
-  const n = Number(String(val || "0").replace(/[.,]/g, ""));
+function formatSupply(val, isNano = false) {
+  let n = Number(String(val || "0").replace(/[.,]/g, ""));
+  if (isNano) n = n / 1e9;
   if (n >= 1e9) return `${(n / 1e9).toFixed(1)}B`;
   if (n >= 1e6) return `${(n / 1e6).toFixed(1)}M`;
   if (n >= 1e3) return `${(n / 1e3).toFixed(0)}K`;
@@ -100,32 +101,43 @@ export default function Home() {
       .then((r) => { setLaunches(r.launches || []); setError(""); })
       .catch((e) => setError(e.message));
 
-    let interval = null;
+    if (!socket) return;
 
-    const startPolling = () => {
-      if (interval) return;
-      interval = setInterval(() => {
-        getPublicLaunches()
-          .then((r) => { setLaunches(r.launches || []); })
-          .catch(() => {});
-      }, 12000);
+    const handleNewLaunch = (launch) => {
+      setLaunches((prev) => {
+        // Prevent duplicates
+        if (prev.find((l) => l.id === launch.id)) return prev;
+        return [launch, ...prev];
+      });
     };
 
-    const stopPolling = () => {
-      if (interval) { clearInterval(interval); interval = null; }
+    const handleTokenUpdated = (update) => {
+      setLaunches((prev) =>
+        prev.map((l) => {
+          if (l.id === update.id) {
+            return {
+              ...l,
+              status: update.status,
+              onchainData: {
+                ...l.onchainData,
+                reserveBalance: update.reserveBalance,
+                tokenSupply: update.tokenSupply,
+                lockedLiquidity: update.lockedLiquidity,
+                updatedAt: update.updatedAt,
+              },
+            };
+          }
+          return l;
+        })
+      );
     };
 
-    // Pausar polling quando a aba não está visível (economiza bateria no Telegram WebApp)
-    const handleVisibility = () => {
-      if (document.hidden) { stopPolling(); } else { startPolling(); }
-    };
-
-    startPolling();
-    document.addEventListener("visibilitychange", handleVisibility);
+    socket.on("new_launch", handleNewLaunch);
+    socket.on("token_updated", handleTokenUpdated);
 
     return () => {
-      stopPolling();
-      document.removeEventListener("visibilitychange", handleVisibility);
+      socket.off("new_launch", handleNewLaunch);
+      socket.off("token_updated", handleTokenUpdated);
     };
   }, []);
 
@@ -351,7 +363,7 @@ export default function Home() {
                       </div>
                       <div className="stat-box">
                         <span className="stat-label">supply</span>
-                        <span className="stat-value">{formatSupply(launch.onchainData?.tokenSupply || launch.coin?.totalSupply)}</span>
+                        <span className="stat-value">{formatSupply(launch.onchainData?.tokenSupply || launch.coin?.totalSupply, !!launch.onchainData?.tokenSupply)}</span>
                       </div>
                       <div className="stat-box">
                         <span className="stat-label">by</span>

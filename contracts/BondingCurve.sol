@@ -19,8 +19,8 @@ contract BondingCurve {
 
     // ─── Trade Fee Constants ──────────────────────────────────────────────────
     // Fee is charged on every buy and sell trade.
-    // 1% before AMM migration (0.8% platform, 0.2% burn).
-    // 0.5% after AMM migration (0.4% platform, 0.1% burn).
+    // 1% before AMM migration (0.7% platform, 0.3% creator).
+    // 0.5% after AMM migration (0.35% platform, 0.15% creator).
     // L-01: Note — this contract only accepts SHELL (ECC ID=2). USDC is not accepted here.
     // The Accumulator rate (100 SHELL = 1 USDC) is referenced only for off-chain pricing context.
     function getTradeFeeBps() public view returns (uint16) { return isAmm ? 50 : 100; }
@@ -60,6 +60,8 @@ contract BondingCurve {
     // We track the last buyer separately so onBounce can resolve who to refund.
     mapping(uint32 => uint256) public pendingReserveByNonce;  // nonce → SHELL cost
     mapping(uint32 => uint256) public pendingTokensByNonce;   // nonce → token amount
+    mapping(uint32 => uint256) public pendingPlatformFeeByNonce;
+    mapping(uint32 => uint256) public pendingCreatorFeeByNonce;
     
     // A-13: Pump Forever mode (no AMM migration)
     bool public pumpForever;
@@ -221,7 +223,7 @@ contract BondingCurve {
     // Users send SHELL as Extra Currency (cc[2]) in internal messages.
     // This works both intra-DappID and cross-DappID, enabling universal composability.
     // msg.value (VMSHELL) is used ONLY for gas, not as payment.
-    // Trade fee: 1% total (0.8% platform + 0.2% burn locked in contract).
+    // Trade fee: 1% total (0.7% platform + 0.3% creator).
     function buy(uint256 tokenAmount, uint256 maxShellIn) public whenNotPaused {
         _ensureExecutionGas();
         // V-AM-01: Reject transactions that accidentally/maliciously include NACKL or USDC
@@ -271,19 +273,10 @@ contract BondingCurve {
         // Mint memecoins to buyer via internal message
         ITokenRoot(_tokenRoot).mint(nonce, msg.sender, tokenAmount, 0.1 ton); // sends 0.1 VMSHELL for wallet deployment
 
-        // Send platform fee (0.7%) to feeRecipient via cc[2]
-        if (platformFee > 0) {
-            mapping(uint32 => varuint32) feeCurrencies;
-            feeCurrencies[SHELL_CURRENCY_ID] = varuint32(platformFee);
-            feeRecipient.transfer({ value: 0.05 ton, flag: 1, bounce: false, currencies: feeCurrencies });
-        }
-        
-        // Send creator fee (0.3%) to token creator wallet via cc[2]
-        if (creatorFee > 0 && owner != address(0)) {
-            mapping(uint32 => varuint32) creatorCurrencies;
-            creatorCurrencies[SHELL_CURRENCY_ID] = varuint32(creatorFee);
-            owner.transfer({ value: 0.05 ton, flag: 1, bounce: false, currencies: creatorCurrencies });
-        }
+        // H-33: Hold fees in escrow until minting is confirmed via onMintSuccess.
+        // This prevents "losing" fees if the transaction bounces or fails asynchronously.
+        pendingPlatformFeeByNonce[nonce] = platformFee;
+        pendingCreatorFeeByNonce[nonce] = creatorFee;
 
         // Refund excess SHELL (Extra Currency) back to buyer
         uint256 excess = receivedShell > totalCostWithFee ? receivedShell - totalCostWithFee : 0;
@@ -302,10 +295,18 @@ contract BondingCurve {
 
     // ─── Receiver for async burns (Sell) ─────────────────────────────────────
     // Called by TokenRoot after TokenWallet burns tokens.
-    // Trade fee: 1% total (0.8% platform + 0.2% burn locked in contract).
-    function onTokenBurned(uint32 burnNonce, uint256 amount, address refundAddress) external whenNotPaused {
+    // Trade fee: 1% total (0.7% platform + 0.3% creator).
+    function onTokenBurned(uint32 burnNonce, uint256 amount, address refundAddress, uint128 minShellOut) external whenNotPaused {
         _ensureExecutionGas();
         require(msg.sender == _tokenRoot, 103, "Only TokenRoot can notify burn");
+
+        // Audit #3: Anti-rug Creator Lock. Creator cannot sell during the 30-day lock
+        // period after AMM migration to ensure stability.
+        if (isAmm && refundAddress == owner && migratedAt > 0) {
+            require(now >= migratedAt + LOCK_PERIOD, 219, "Creator tokens are locked for 30 days after AMM migration");
+        }
+
+
         // C-03: Ensure sufficient gas for fee transfer + payout execution
         require(msg.value >= 0.3 ton, 221, "Insufficient gas for sell execution");
         require(amount <= maxSellPerTx(), 222, "Amount exceeds max sell limit");
@@ -322,6 +323,9 @@ contract BondingCurve {
         uint256 platformFee = grossReturn * getPlatformFeeBps() / 10000;
         uint256 creatorFee = grossReturn * getCreatorFeeBps() / 10000;
         uint256 netReturn = grossReturn - platformFee - creatorFee;
+
+        // Audit #12: Slippage protection on sell
+        require(netReturn >= minShellOut, 208, "Slippage protection triggered: netReturn < minShellOut");
 
         totalSupply -= amount;
         reserveBalance -= grossReturn;
@@ -362,6 +366,23 @@ contract BondingCurve {
     // permanent growth of pending mint storage on every successful buy.
     function onMintSuccess(uint32 mintNonce) external {
         require(msg.sender == _tokenRoot, 152, "Only TokenRoot can confirm mint success");
+        
+        // H-33: Release pending fees to recipients now that minting is confirmed
+        uint256 platformFee = pendingPlatformFeeByNonce[mintNonce];
+        uint256 creatorFee = pendingCreatorFeeByNonce[mintNonce];
+        
+        if (platformFee > 0) {
+            mapping(uint32 => varuint32) feeCurrencies;
+            feeCurrencies[SHELL_CURRENCY_ID] = varuint32(platformFee);
+            feeRecipient.transfer({ value: 0.05 ton, flag: 1, bounce: false, currencies: feeCurrencies });
+        }
+        
+        if (creatorFee > 0 && owner != address(0)) {
+            mapping(uint32 => varuint32) creatorCurrencies;
+            creatorCurrencies[SHELL_CURRENCY_ID] = varuint32(creatorFee);
+            owner.transfer({ value: 0.05 ton, flag: 1, bounce: false, currencies: creatorCurrencies });
+        }
+
         _clearMint(mintNonce);
     }
 
@@ -386,7 +407,12 @@ contract BondingCurve {
         uint256 refundShell = pendingReserveByNonce[nonce];
         uint256 refundTokens = pendingTokensByNonce[nonce];
 
-        if (refundShell > 0 && buyer != address(0)) {
+        // H-33: Include pending fees in the refund if minting fails
+        uint256 platformFee = pendingPlatformFeeByNonce[nonce];
+        uint256 creatorFee = pendingCreatorFeeByNonce[nonce];
+        uint256 totalRefund = refundShell + platformFee + creatorFee;
+
+        if (totalRefund > 0 && buyer != address(0)) {
             // Revert reserve and supply
             reserveBalance -= refundShell;
             totalSupply -= refundTokens;
@@ -404,7 +430,7 @@ contract BondingCurve {
 
             // Refund SHELL via cc[2] to the actual buyer
             mapping(uint32 => varuint32) refundCurrencies;
-            refundCurrencies[SHELL_CURRENCY_ID] = varuint32(refundShell);
+            refundCurrencies[SHELL_CURRENCY_ID] = varuint32(totalRefund);
             buyer.transfer({value: 0.05 ton, flag: 1, bounce: false, currencies: refundCurrencies});
         }
 
@@ -414,6 +440,8 @@ contract BondingCurve {
     function _clearMint(uint32 nonce) private {
         delete pendingReserveByNonce[nonce];
         delete pendingTokensByNonce[nonce];
+        delete pendingPlatformFeeByNonce[nonce];
+        delete pendingCreatorFeeByNonce[nonce];
         delete mintIdToBuyer[nonce];
     }
 

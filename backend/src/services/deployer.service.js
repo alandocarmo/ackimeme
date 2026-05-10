@@ -31,7 +31,7 @@ const ENABLE_ONCHAIN_DEPLOY = process.env.ENABLE_ONCHAIN_DEPLOY === "true";
 const TOKEN_DECIMALS = 9;
 const SHELL_CURRENCY_ID = 2;
 const DEFAULT_DEPLOY_PREFUND_SHELL_NANO = "10000000000"; // 10 SHELL ECC
-const DEFAULT_DEPLOY_PREFUND_MESSAGE_VALUE_NANO = "0";
+const DEFAULT_DEPLOY_PREFUND_MESSAGE_VALUE_NANO = "500000000";
 const DEFAULT_DEPLOY_FUNDING_ATTEMPTS = 40;
 const DEFAULT_BONDING_CURVE_DEPLOY_ATTEMPTS = 200;
 
@@ -205,11 +205,11 @@ async function resolveDeployerKeyPair() {
 
 // Removida: getAccountBalanceNano via query_collection foi migrada para graphql.service.js
 
-async function waitForFutureAddressFunding(address, minBalanceNano) {
+async function waitForFutureAddressFunding(address, minGasBalanceNano) {
   const attempts = Number(process.env.DEPLOY_FUNDING_CONFIRM_ATTEMPTS || DEFAULT_DEPLOY_FUNDING_ATTEMPTS);
   for (let i = 0; i < attempts; i += 1) {
-    const balanceNano = await getAccountBalanceNano(address);
-    if (balanceNano >= BigInt(minBalanceNano)) {
+    const gasBalanceNano = await getAccountBalanceNano(address);
+    if (gasBalanceNano >= BigInt(minGasBalanceNano)) {
       return true;
     }
     await new Promise((res) => setTimeout(res, 3000));
@@ -266,7 +266,9 @@ async function prefundFutureContractAddress(address, signer, onChainAttempt) {
     send_events: false,
   });
 
-  const funded = await waitForFutureAddressFunding(address, prefundShellNano);
+  // Audit #2: Wait for gas funding (VMSHELL), not ECC balance.
+  // The account must have enough gas to pay for its own deployment execution.
+  const funded = await waitForFutureAddressFunding(address, messageValueNano);
   if (!funded) {
     throw new Error(
       `Timeout aguardando pré-financiamento do endereço futuro ${address}. ` +
@@ -379,6 +381,17 @@ async function deployTokenEcosystem({ name, symbol, totalSupply, ipfsHash, creat
     chainAttempted = true;
   };
   const maxTokenSupply = parseTokenSupplyToNano(totalSupply);
+  
+  // C-01: Map frontend slope levels (1-5) to actual nano values
+  const SLOPE_MAP = {
+    1: 20_000_000_000_000n,  // 0.5x Suave
+    2: 10_000_000_000_000n,  // 1x Normal
+    3:  5_000_000_000_000n,  // 2x Fast
+    4:  2_500_000_000_000n,  // 4x Aggressive
+    5:  1_000_000_000_000n,  // 10x INSANE
+  };
+  const mappedSlope = SLOPE_MAP[Number(slopeDivisor)] ?? 10_000_000_000_000n;
+  
   const deployNonce = buildDeployNonce({ creatorWallet, symbol, paymentTxHash });
   const keyConfig = loadDeployerKeyConfig();
 
@@ -536,7 +549,7 @@ async function deployTokenEcosystem({ name, symbol, totalSupply, ipfsHash, creat
           _creationFeeTxHash: Buffer.from(paymentTxHash || "genesis").toString("hex"),
           _feeRecipient: feeRecipient,
           _pumpForever: pumpForever,
-          _slopeDivisor: slopeDivisor
+          _slopeDivisor: mappedSlope.toString()
         }
       },
       signer: { type: "None" }

@@ -258,7 +258,7 @@ contract TokenRoot {
     }
 
     // ─── Security Fix: Receive burn notification from legitimate TokenWallet ──
-    function notifyBurn(uint32 seqno, uint256 amount, address refundAddress, address callbackTarget) public {
+    function notifyBurn(uint32 seqno, uint256 amount, address refundAddress, address callbackTarget, uint128 minShellOut) public {
         // Assegura que o msg.sender é a carteira genuína do refundAddress.
         // Impedindo que carteiras maliciosas mintem queimas inexistentes.
         address expectedWallet = getWalletAddress(refundAddress);
@@ -281,7 +281,7 @@ contract TokenRoot {
             _pendingBurnAmounts[burnNonce] = amount;
             _pendingBurnWallets[burnNonce] = msg.sender;
             _pendingBurnWalletSeqnos[burnNonce] = seqno;
-            IBondingCurve(callbackTarget).onTokenBurned{value: 0, flag: 128}(burnNonce, amount, refundAddress);
+            IBondingCurve(callbackTarget).onTokenBurned{value: 0, flag: 128}(burnNonce, amount, refundAddress, minShellOut);
         } else {
             // Se nenhum callback de DEX/Curve foi fornecido, reembolso do gas pro usuário
             refundAddress.transfer({ value: 0, flag: 128, bounce: false });

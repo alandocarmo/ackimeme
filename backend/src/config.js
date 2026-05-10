@@ -141,6 +141,7 @@ const config = {
     process.env.TELEGRAM_AUTH_MAX_AGE_SECONDS,
     DEFAULT_TELEGRAM_AUTH_MAX_AGE_SECONDS,
   ),
+  telegramBotUsername: process.env.TELEGRAM_BOT_USERNAME || "ackinacki_bot",
   adminToken,
   adminTokenStrong: isStrongSecret(adminToken, 32),
   jwtSecret,
@@ -186,7 +187,7 @@ function buildPublicConfig() {
       blockchainFee: {
         tokenSymbol: "SHELL",
         minimumCreatorBalance: config.minCreatorShellBalance,
-        note: "The creation fee (~$3 in SHELL) plus blockchain gas fees are both paid in SHELL.",
+        note: "Taxa de produto em SHELL ECC (~$3). A execução on-chain (gas) é paga em VMSHELL.",
       },
     },
     shellBuy: {
@@ -276,6 +277,11 @@ function validateConfig() {
     const backendUrl = process.env.BACKEND_URL || process.env.RENDER_EXTERNAL_URL || process.env.API_BASE_URL || "";
     if (!backendUrl || backendUrl.includes("localhost")) {
       errors.push("BACKEND_URL (ou API_BASE_URL) deve ser a URL pública do backend em produção (não localhost).");
+    }
+
+    // Audit #6: TELEGRAM_BOT_USERNAME deve ser obrigatório em produção se QR estiver ativado
+    if (process.env.TELEGRAM_BOT_USERNAME === "ackinacki_bot" || !process.env.TELEGRAM_BOT_USERNAME) {
+       console.warn("⚠️ TELEGRAM_BOT_USERNAME não configurado ou usando default 'ackinacki_bot'. Recomenda-se configurar o bot oficial do seu projeto.");
     }
   }
 

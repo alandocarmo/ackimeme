@@ -41,7 +41,8 @@
 			"name": "burn",
 			"inputs": [
 				{"name":"amount","type":"uint256"},
-				{"name":"callbackTarget","type":"address"}
+				{"name":"callbackTarget","type":"address"},
+				{"name":"minShellOut","type":"uint128"}
 			],
 			"outputs": [
 			]

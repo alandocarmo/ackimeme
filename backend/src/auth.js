@@ -300,7 +300,7 @@ async function generateQrSession() {
   const expiresAt = new Date(Date.now() + 5 * 60 * 1000).toISOString();
   
   // Padrão Acki Nacki para Telegram Bot
-  const deepLink = `https://t.me/ackinacki_bot?start=${sessionId}`;
+  const deepLink = `https://t.me/${config.telegramBotUsername}?start=${sessionId}`;
 
   await query(`INSERT INTO qr_sessions (id, status, deep_link, expires_at) VALUES ($1, 'pending', $2, $3)`, [sessionId, deepLink, expiresAt]);
 
@@ -348,6 +348,11 @@ async function processQrWebhook({ sessionId, walletAddress, publicKey, signature
     }
 
     let proofLevel = "qr_dev_unverified";
+    
+    if (config.isProduction && !normalizedKey) {
+        // H-35: Block unverified sessions in production to prevent address spoofing
+        throw new Error("Login por QR sem assinatura é bloqueado em ambiente de produção.");
+    }
 
     if (normalizedKey && normalizedSignature) {
       const walletProof = await getAccountPublicKey(normalizedWallet);

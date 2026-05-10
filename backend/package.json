@@ -12,8 +12,8 @@
     "dev:wallet:sign": "node scripts/dev-wallet.js sign"
   },
   "dependencies": {
-    "@eversdk/core": "^1.44.3",
-    "@eversdk/lib-node": "^1.44.3",
+    "@tvmsdk/core": "^2.0.1",
+    "@tvmsdk/lib-node": "^2.0.1",
     "@tvmsdk/lib-web": "^2.0.1",
     "axios": "^1.6.0",
     "body-parser": "^1.20.2",
@@ -25,7 +25,10 @@
     "helmet": "^8.1.0",
     "jsonwebtoken": "^9.0.3",
     "nekoton-wasm": "^1.29.0",
-    "pg": "^8.20.0"
+    "pg": "^8.20.0",
+    "rate-limit-redis": "^5.0.0",
+    "redis": "^5.12.1",
+    "socket.io": "^4.8.3"
   },
   "devDependencies": {
     "locklift": "^2.10.2"

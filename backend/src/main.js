@@ -40,9 +40,28 @@ const { uploadToIPFS, createTokenMetadata } = require("./services/ipfs.service")
 const { deployTokenEcosystem } = require("./services/deployer.service");
 const helmet = require("helmet");
 const rateLimit = require("express-rate-limit");
+const { RedisStore } = require("rate-limit-redis");
+const { createClient } = require("redis");
+const { Server } = require("socket.io");
+const http = require("http");
 const jwt = require("jsonwebtoken");
 const cookieParser = require("cookie-parser");
-const { startSyncJob, stopSyncJob } = require("./services/sync.service");
+const { startSyncJob, stopSyncJob, setSocketIo } = require("./services/sync.service");
+
+let io; // Global Socket.io instance
+
+// ─── Redis Setup ────────────────────────────────────────────────────────────
+let redisClient = null;
+if (process.env.REDIS_URL) {
+  redisClient = createClient({
+    url: process.env.REDIS_URL,
+    socket: {
+      tls: process.env.REDIS_URL.startsWith('rediss://')
+    }
+  });
+  redisClient.connect().catch(console.error);
+  console.log("[Redis] Conectado para rate limiting distribuído");
+}
 
 // ─── Background Jobs ────────────────────────────────────────────────────────
 // Limpeza de sessões e challenges expirados roda a cada 10 minutos 
@@ -162,10 +181,21 @@ app.use(helmet({
   },
 }));
 
+// Rate Limit Store
+const getRateLimitStore = () => {
+  if (redisClient) {
+    return new RedisStore({
+      sendCommand: (...args) => redisClient.sendCommand(args),
+    });
+  }
+  return undefined; // fallback to MemoryStore
+};
+
 // Global Rate Limiting
 const globalLimiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutos
   max: 100, // limite de 100 requests por IP a cada 15 min
+  store: getRateLimitStore(),
   standardHeaders: true,
   legacyHeaders: false,
   message: { error: "Too many requests from this IP, please try again later." }
@@ -176,6 +206,7 @@ app.use(globalLimiter);
 const authLimiter = rateLimit({
   windowMs: 60 * 1000, // 1 minuto
   max: 10, // 10 requests por IP por minuto
+  store: getRateLimitStore(),
   standardHeaders: true,
   legacyHeaders: false,
   message: { error: "Too many auth requests. Please wait before trying again." }
@@ -184,6 +215,7 @@ const authLimiter = rateLimit({
 const paymentLimiter = rateLimit({
   windowMs: 60 * 1000,
   max: 5, // 5 verificações por minuto por IP
+  store: getRateLimitStore(),
   standardHeaders: true,
   legacyHeaders: false,
   message: { error: "Too many payment verification requests. Please wait." }
@@ -324,10 +356,24 @@ async function requireSecurityAdmin(req, res, next) {
 }
 
 // ── Admin unlock: verify master password, return short-lived JWT ──────────────
-app.post("/admin/unlock", authLimiter, async (req, res) => {
+app.post("/admin/unlock", authLimiter, requireSession, async (req, res) => {
   try {
-    const { password } = req.body || {};
+    const { password, walletAddress } = req.body || {};
     if (!config.adminTokenStrong) return res.status(503).json({ error: "ADMIN_TOKEN não configurado com segurança no backend." });
+    
+    // Audit #5: Prove ownership by requiring an active session and matching
+    // the provided walletAddress with the session's verified wallet.
+    if (req.session.walletAddress.toLowerCase() !== String(walletAddress || "").toLowerCase()) {
+      return res.status(403).json({ error: "Acesso negado: carteira não corresponde à sessão autenticada." });
+    }
+
+    // Audit #15: Verify walletAddress if adminWallets whitelist is configured
+    if (config.adminWallets.length > 0) {
+      if (!config.adminWallets.includes(String(walletAddress).toLowerCase())) {
+         return res.status(403).json({ error: "Acesso negado: carteira não autorizada no whitelist." });
+      }
+    }
+
     if (!password || password !== ADMIN_MASTER_PASSWORD) return res.status(401).json({ error: "Senha incorreta." });
     
     const token = signAdminJwt("admin");
@@ -787,6 +833,19 @@ app.post("/launch-request", requireSession, async (req, res) => {
     // Persist rate limit after successful creation (txHash already reserved)
     await updateWalletLastLaunch(launchRequest.creator.wallet);
 
+    if (io) {
+      io.emit("new_launch", {
+        id: launchTicket.id,
+        status: launchTicket.status,
+        createdAt: launchTicket.createdAt,
+        coin: {
+          name: launchRequest.coin.name,
+          symbol: launchRequest.coin.symbol,
+          logoUrl: launchRequest.coin.logoUrl
+        }
+      });
+    }
+
     res.json({
       success: true,
       launchRequest: launchTicket,
@@ -817,7 +876,7 @@ app.get("/launches/my", requireSession, (req, res) => {
 });
 
 app.get("/launches/public", (_, res) => {
-  res.set("Cache-Control", "public, max-age=12");
+  res.set("Cache-Control", "public, s-maxage=10, stale-while-revalidate=30");
   listPublicLaunches(30)
     .then((launches) => {
       res.json({
@@ -871,8 +930,8 @@ app.get("/launches/public", (_, res) => {
 // ── GET single token by ID (direct query — no full table scan) ───────────────
 app.get("/launches/:id", async (req, res) => {
   try {
-    // Adiciona um micro-cache de 4s para coalescer requests simultâneos no painel de trading
-    res.set("Cache-Control", "public, max-age=4");
+    // CDN cache agressivo para suportar grandes picos de acesso na página do token
+    res.set("Cache-Control", "public, s-maxage=5, stale-while-revalidate=15");
     const found = await getLaunchById(req.params.id);
     if (!found) return res.status(404).json({ error: "Token não encontrado." });
     res.json({
@@ -987,6 +1046,11 @@ app.post("/launches/:id/comments", requireSession, async (req, res) => {
     };
 
     const savedComment = await addComment(comment);
+    
+    if (io) {
+      io.to(`token_${req.params.id}`).emit("new_comment", savedComment);
+    }
+    
     res.json({ success: true, comment: savedComment });
   } catch (err) {
     res.status(500).json({ error: err.message });
@@ -1019,7 +1083,25 @@ async function start() {
     console.warn("[Config] Decoder TIP-3 indisponível. Validação de pagamento USDC ficará bloqueada.");
   }
 
-  const server = app.listen(config.port, () => {
+  const server = http.createServer(app);
+  io = new Server(server, {
+    cors: {
+      origin: config.allowedOrigins,
+      credentials: true
+    }
+  });
+
+  const UUID_REGEX = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+  io.on("connection", (socket) => {
+    socket.on("join_token", (tokenId) => {
+      if (typeof tokenId !== "string" || !UUID_REGEX.test(tokenId)) return;
+      socket.join(`token_${tokenId}`);
+    });
+  });
+
+  setSocketIo(io);
+
+  server.listen(config.port, () => {
     console.log(`Backend running on port ${config.port} (Production: ${config.isProduction})`);
     // Start background jobs
     startSyncJob();

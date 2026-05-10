@@ -8,15 +8,13 @@ import {
   getSession,
   verifyPayment,
 } from "../lib/api";
+import { formatNum, getSlopeLabel, sliderToSlopeDivisor, slopeDivisorToSlider } from "../lib/utils";
 
 function sanitizeSymbol(v) {
   return String(v || "").toUpperCase().replace(/[^A-Z0-9]/g, "").slice(0, 10);
 }
 
-function formatSupply(v) {
-  const d = String(v || "").replace(/[^\d]/g, "");
-  return d ? d.replace(/\B(?=(\d{3})+(?!\d))/g, ".") : "0";
-}
+// formatNum will be used instead
 
 export default function CreatePage() {
   const router = useRouter();
@@ -213,23 +211,23 @@ export default function CreatePage() {
                       <input 
                         type="range" 
                         min="1" max="5" step="1"
-                        value={form.slopeDivisor}
-                        onChange={(e) => updateField("slopeDivisor", Number(e.target.value))}
-                        style={{ width: '100%', accentColor: form.slopeDivisor === 5 ? '#FF3B30' : 'var(--accent)' }}
+                        value={slopeDivisorToSlider(form.slopeDivisor)}
+                        onChange={(e) => updateField("slopeDivisor", sliderToSlopeDivisor(Number(e.target.value)))}
+                        style={{ width: '100%', accentColor: getSlopeLabel(form.slopeDivisor).color }}
                       />
                       <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '12px', fontWeight: '500' }}>
-                        <span style={{ color: form.slopeDivisor === 1 ? 'var(--accent)' : 'var(--ink-soft)' }}>0.5x Suave</span>
-                        <span style={{ color: form.slopeDivisor === 2 ? 'var(--accent)' : 'var(--ink-soft)' }}>1x Normal</span>
-                        <span style={{ color: form.slopeDivisor === 3 ? 'var(--accent)' : 'var(--ink-soft)' }}>2x Fast</span>
-                        <span style={{ color: form.slopeDivisor === 4 ? 'var(--accent)' : 'var(--ink-soft)' }}>4x Agressive</span>
-                        <span style={{ color: form.slopeDivisor === 5 ? '#FF3B30' : 'var(--ink-soft)' }}>10x INSANE</span>
+                        {[1, 2, 3, 4, 5].map(idx => (
+                           <span key={idx} style={{ color: slopeDivisorToSlider(form.slopeDivisor) === idx ? getSlopeLabel(sliderToSlopeDivisor(idx)).color : 'var(--ink-soft)' }}>
+                              {getSlopeLabel(sliderToSlopeDivisor(idx)).label.split(' ')[0]}
+                           </span>
+                        ))}
                       </div>
-                      <div style={{ marginTop: '12px', padding: '10px', background: 'rgba(0,0,0,0.2)', borderRadius: '8px', fontSize: '12px', color: 'var(--ink-soft)', borderLeft: `3px solid ${form.slopeDivisor === 5 ? '#FF3B30' : 'var(--accent)'}` }}>
-                        {form.slopeDivisor === 1 && "🐢 Suave: Curva tranquila. O preço sobe 2x mais devagar, ideal para projetos que buscam estabilidade."}
-                        {form.slopeDivisor === 2 && "⚖️ Normal: O padrão clássico. Equilíbrio perfeito entre risco e recompensa, igual ao pump.fun."}
-                        {form.slopeDivisor === 3 && "⚡ Fast: Crescimento acelerado. O preço sobe 2x mais rápido, gerando FOMO imediato."}
-                        {form.slopeDivisor === 4 && "🔥 Agressive: Alta voltagem. Movimentos rápidos que recompensam os primeiros compradores."}
-                        {form.slopeDivisor === 5 && "💀 INSANE: Modo DeGen! O preço explode 10x mais rápido que o normal. Volatilidade extrema!"}
+                      <div style={{ marginTop: '12px', padding: '10px', background: 'rgba(0,0,0,0.2)', borderRadius: '8px', fontSize: '12px', color: 'var(--ink-soft)', borderLeft: `3px solid ${getSlopeLabel(form.slopeDivisor).color}` }}>
+                        {form.slopeDivisor >= 20_000_000_000_000 && "🐢 Suave: Curva tranquila. O preço sobe 2x mais devagar, ideal para projetos que buscam estabilidade."}
+                        {form.slopeDivisor >= 10_000_000_000_000 && form.slopeDivisor < 20_000_000_000_000 && "⚖️ Normal: O padrão clássico. Equilíbrio perfeito entre risco e recompensa, igual ao pump.fun."}
+                        {form.slopeDivisor >= 5_000_000_000_000 && form.slopeDivisor < 10_000_000_000_000 && "⚡ Fast: Crescimento acelerado. O preço sobe 2x mais rápido, gerando FOMO imediato."}
+                        {form.slopeDivisor >= 2_500_000_000_000 && form.slopeDivisor < 5_000_000_000_000 && "🔥 Aggressive: Alta voltagem. Movimentos rápidos que recompensam os primeiros compradores."}
+                        {form.slopeDivisor < 2_500_000_000_000 && "💀 INSANE: Modo DeGen! O preço explode 10x mais rápido que o normal. Volatilidade extrema!"}
                       </div>
                     </div>
                   </div>
@@ -251,7 +249,7 @@ export default function CreatePage() {
                       <span className="input-label">Total Supply</span>
                       <input className="text-input" inputMode="numeric" value={form.totalSupply}
                         onChange={(e) => updateField("totalSupply", e.target.value)} />
-                      <span className="input-hint">{formatSupply(form.totalSupply)} tokens</span>
+                      <span className="input-hint">{formatNum(form.totalSupply)} tokens</span>
                     </label>
                     <label>
                       <span className="input-label">Logo URL</span>
@@ -366,7 +364,7 @@ export default function CreatePage() {
                     </div>
                     <div style={{ display: 'flex', justifyContent: 'space-between', padding: '12px 0' }}>
                       <span className="info-label">Supply</span>
-                      <span className="info-value" style={{ fontSize: '14px' }}>{formatSupply(form.totalSupply)}</span>
+                      <span className="info-value" style={{ fontSize: '14px' }}>{formatNum(form.totalSupply)}</span>
                     </div>
                   </div>
 

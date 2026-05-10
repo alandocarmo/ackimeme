@@ -8,7 +8,7 @@ const migrationsDir = path.join(__dirname, "migrations");
 const pool = new Pool({
   connectionString: config.databaseUrl,
   ssl: process.env.DATABASE_SSL === "true" ? { rejectUnauthorized: false } : false,
-  max: 20, // max connection pool size
+  max: parseInt(process.env.DB_POOL_MAX || "20", 10), // max connection pool size
   idleTimeoutMillis: 30000,
   connectionTimeoutMillis: 5000, // Audit #29: 2s was too short for Render free tier cold starts
 });

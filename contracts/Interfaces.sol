@@ -9,7 +9,7 @@ interface ITokenRoot {
     function onMintDelivered(uint32 mintNonce) external;
     function transferFromWallet(uint32 walletSeqno, address fromOwner, address recipientOwner, uint256 amount) external;
     function onTransferDelivered(uint32 transferNonce) external;
-    function notifyBurn(uint32 seqno, uint256 amount, address refundAddress, address callbackTarget) external;
+    function notifyBurn(uint32 seqno, uint256 amount, address refundAddress, address callbackTarget, uint128 minShellOut) external;
 }
 
 interface ITokenWallet {
@@ -21,7 +21,7 @@ interface ITokenWallet {
 }
 
 interface IBondingCurve {
-    function onTokenBurned(uint32 burnNonce, uint256 amount, address refundAddress) external;
+    function onTokenBurned(uint32 burnNonce, uint256 amount, address refundAddress, uint128 minShellOut) external;
     function onMintSuccess(uint32 mintNonce) external;
     function onMintFailed(uint32 mintNonce) external;
 }

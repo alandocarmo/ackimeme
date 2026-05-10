@@ -61,7 +61,7 @@
 	THROW 0
 }
 
-.fragment burn_fcd3533c_internal, {
+.fragment burn_3d7fa001_internal, {
 	.loc TokenWallet.sol, 79
 	PUSHREF {
 		.blob x4f6e6c79206f776e65722063616e206275726e20746f6b656e73
@@ -75,7 +75,7 @@
 		.blob x496e73756666696369656e742062616c616e636520746f206275726e
 	}
 	GETGLOB 12
-	PUSH S3
+	PUSH S4
 	GEQ
 	THROWARGIFNOT 104
 	.loc TokenWallet.sol, 82
@@ -101,7 +101,7 @@
 	.loc TokenWallet.sol, 87
 	DUP
 	GETGLOB 15
-	PUSH S4
+	PUSH S5
 	NEWC
 	STU 256
 	ROTREV
@@ -110,29 +110,30 @@
 	SETGLOB 15
 	.loc TokenWallet.sol, 88
 	GETGLOB 12
-	PUSH S3
+	PUSH S4
 	SUB
 	UFITS 256
 	SETGLOB 12
 	.loc TokenWallet.sol, 91
-	SWAP
+	XCHG S2
 	GETGLOB 11
-	SWAP2
+	BLKSWAP 2, 3
 	GETGLOB 10
 	NEWC
 	STSLICECONST x62_
 	STSLICE
 	PUSHINT 1
 	STUR 115
-	ROLLREV 4
+	ROLLREV 5
 	NEWC
-	STSLICECONST x050a28bd
+	STSLICECONST x4339d7e6
 	STU 32
 	STU 256
 	STSLICE
-	SWAP
+	ROTREV
 	NEWC
 	STSLICE
+	STU 128
 	STBREFR
 	STBREFR
 	ENDC
@@ -188,10 +189,11 @@
 	IF
 	LDU 256
 	LDMSGADDR
+	LDU 128
 	ENDS
 	.loc TokenWallet.sol, 0
 	CALLREF {
-		.inline burn_fcd3533c_internal
+		.inline burn_3d7fa001_internal
 	}
 	CALLREF {
 		.inline c7_to_c4
@@ -741,7 +743,7 @@
 
 .fragment public_function_selector, {
 	DUP
-	PUSHINT 735240954
+	PUSHINT 727065448
 	LEQ
 	IFJMPREF {
 		DUP
@@ -761,6 +763,12 @@
 			}
 		}
 		DUP
+		PUSHINT 675913232
+		EQUAL
+		IFJMPREF {
+			.inline burn
+		}
+		DUP
 		PUSHINT 695412943
 		EQUAL
 		IFJMPREF {
@@ -772,17 +780,17 @@
 		IFJMPREF {
 			.inline pendingBurns
 		}
+	}
+	DUP
+	PUSHINT 925457952
+	LEQ
+	IFJMPREF {
 		DUP
 		PUSHINT 735240954
 		EQUAL
 		IFJMPREF {
 			.inline receiveTransfer
 		}
-	}
-	DUP
-	PUSHINT 1084683388
-	LEQ
-	IFJMPREF {
 		DUP
 		PUSHINT 873267493
 		EQUAL
@@ -801,28 +809,22 @@
 		IFJMPREF {
 			.inline root
 		}
-		DUP
-		PUSHINT 1084683388
-		EQUAL
-		IFJMPREF {
-			.inline balance
-		}
 	}
 	DUP
 	PUSHINT 1594609630
 	LEQ
 	IFJMPREF {
 		DUP
+		PUSHINT 1084683388
+		EQUAL
+		IFJMPREF {
+			.inline balance
+		}
+		DUP
 		PUSHINT 1408519387
 		EQUAL
 		IFJMPREF {
 			.inline receiveTokens
-		}
-		DUP
-		PUSHINT 1550657269
-		EQUAL
-		IFJMPREF {
-			.inline burn
 		}
 		DUP
 		PUSHINT 1594609630
@@ -922,7 +924,7 @@
 		.loc TokenWallet.sol, 129
 		FALSE ; decl return flag
 		OVER
-		PUSHINT 84551869
+		PUSHINT 1127864294
 		EQUAL
 		PUSHCONT {
 			.loc TokenWallet.sol, 130

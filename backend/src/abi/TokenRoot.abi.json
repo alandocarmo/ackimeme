@@ -99,7 +99,8 @@
 				{"name":"_supplyCap","type":"uint256"},
 				{"name":"_initialBalance","type":"uint128"},
 				{"name":"_feeRecipient","type":"address"},
-				{"name":"_pumpForever","type":"bool"}
+				{"name":"_pumpForever","type":"bool"},
+				{"name":"_slopeDivisor","type":"uint256"}
 			],
 			"outputs": [
 			]
@@ -110,7 +111,8 @@
 				{"name":"seqno","type":"uint32"},
 				{"name":"amount","type":"uint256"},
 				{"name":"refundAddress","type":"address"},
-				{"name":"callbackTarget","type":"address"}
+				{"name":"callbackTarget","type":"address"},
+				{"name":"minShellOut","type":"uint128"}
 			],
 			"outputs": [
 			]

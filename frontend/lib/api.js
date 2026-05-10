@@ -1,3 +1,5 @@
+import { io } from "socket.io-client";
+
 function resolveApiBaseUrl() {
   if (process.env.NEXT_PUBLIC_API_BASE_URL) {
     return process.env.NEXT_PUBLIC_API_BASE_URL;
@@ -10,7 +12,12 @@ function resolveApiBaseUrl() {
   return "http://localhost:3000";
 }
 
-const API_BASE_URL = resolveApiBaseUrl();
+export const API_BASE_URL = resolveApiBaseUrl();
+
+// Socket.io initialization
+export const socket = typeof window !== "undefined" 
+  ? io(API_BASE_URL, { withCredentials: true })
+  : null;
 
 async function request(path, options = {}) {
   const headers = {

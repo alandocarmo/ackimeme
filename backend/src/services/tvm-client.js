@@ -15,14 +15,13 @@ function loadLibNode() {
     return () => require(configuredBinary);
   }
 
-  const { libNode } = require("@eversdk/lib-node");
-  const packageDir = path.dirname(require.resolve("@eversdk/lib-node"));
+  const { libNode } = require("@tvmsdk/lib-node");
+  const packageDir = path.dirname(require.resolve("@tvmsdk/lib-node"));
   const packageBinaryTvm = path.join(packageDir, "tvmsdk.node");
-  const packageBinaryEver = path.join(packageDir, "eversdk.node");
   
-  if (!fs.existsSync(packageBinaryTvm) && !fs.existsSync(packageBinaryEver)) {
+  if (!fs.existsSync(packageBinaryTvm)) {
     throw new Error(
-      "tvmsdk.node/eversdk.node não encontrado em @eversdk/lib-node. " +
+      "tvmsdk.node não encontrado em @tvmsdk/lib-node. " +
         "Compile o binding Acki Nacki conforme o Quick Start oficial e defina TVM_SDK_NODE_BINARY.",
     );
   }
@@ -33,14 +32,12 @@ function loadLibNode() {
 // lib-node é o binding correto para Node.js (C++ addon).
 // Fallback chain: lib-node (sync) — lib-web não é suportado em CJS.
 try {
-  const eversdkCore = require("@eversdk/core");
-  tvmCore = eversdkCore;
+  const tvmsdkCore = require("@tvmsdk/core");
+  tvmCore = tvmsdkCore;
   // Shim for backward compatibility with the rest of the app expecting TvmClient
-  tvmCore.TvmClient = eversdkCore.TonClient;
+  tvmCore.TvmClient = tvmsdkCore.TvmClient;
 
-  // lib-node é o binding C++ nativo para Node.js. A distribuição oficial da
-  // Acki Nacki pode exigir um tvmsdk.node compilado e exposto por
-  // TVM_SDK_NODE_BINARY, conforme o Quick Start oficial do SDK.
+  // lib-node é o binding C++ nativo para Node.js.
   const libNode = loadLibNode();
   tvmCore.TvmClient.useBinaryLibrary(libNode);
   sdkAvailable = true;
@@ -49,7 +46,7 @@ try {
   console.warn("[TvmClient] SDK TVM não carregou:", e.message);
   console.error(
     "[TvmClient] ⚠️ Deploy on-chain e sync ficarão indisponíveis. " +
-    "Verifique se @eversdk/core e @eversdk/lib-node estão instalados e compatíveis com esta versão do Node."
+    "Verifique se @tvmsdk/core e @tvmsdk/lib-node estão instalados e compatíveis com esta versão do Node."
   );
 }
 

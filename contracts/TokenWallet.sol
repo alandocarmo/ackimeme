@@ -75,7 +75,7 @@ contract TokenWallet is ITokenWallet {
     }
 
     // ─── Security Fix: Burn functionality (Async Callback Pattern) ───────────
-    function burn(uint256 amount, address callbackTarget) public {
+    function burn(uint256 amount, address callbackTarget, uint128 minShellOut) public {
         require(msg.sender == owner, 105, "Only owner can burn tokens");
         require(balance >= amount, 104, "Insufficient balance to burn");
         // M-08: Ensure the internal message carries gas instead of spending the wallet's own balance.
@@ -88,7 +88,7 @@ contract TokenWallet is ITokenWallet {
         balance -= amount;
         
         // Repassa a execução para o TokenRoot informando a quantia deletada e quem deve ser reembolsado
-        ITokenRoot(root).notifyBurn{value: 0, flag: 64}(seqno, amount, owner, callbackTarget);
+        ITokenRoot(root).notifyBurn{value: 0, flag: 64}(seqno, amount, owner, callbackTarget, minShellOut);
     }
 
     function onTransferDelivered(uint32 seqno) external override {

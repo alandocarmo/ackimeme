@@ -136,7 +136,8 @@
 			"inputs": [
 				{"name":"burnNonce","type":"uint32"},
 				{"name":"amount","type":"uint256"},
-				{"name":"refundAddress","type":"address"}
+				{"name":"refundAddress","type":"address"},
+				{"name":"minShellOut","type":"uint128"}
 			],
 			"outputs": [
 			]
@@ -292,6 +293,22 @@
 			]
 		},
 		{
+			"name": "pendingPlatformFeeByNonce",
+			"inputs": [
+			],
+			"outputs": [
+				{"name":"pendingPlatformFeeByNonce","type":"map(uint32,uint256)"}
+			]
+		},
+		{
+			"name": "pendingCreatorFeeByNonce",
+			"inputs": [
+			],
+			"outputs": [
+				{"name":"pendingCreatorFeeByNonce","type":"map(uint32,uint256)"}
+			]
+		},
+		{
 			"name": "pumpForever",
 			"inputs": [
 			],
@@ -376,6 +393,8 @@
 		{"init":false,"name":"creationFeeTxHash","type":"bytes"},
 		{"init":false,"name":"pendingReserveByNonce","type":"map(uint32,uint256)"},
 		{"init":false,"name":"pendingTokensByNonce","type":"map(uint32,uint256)"},
+		{"init":false,"name":"pendingPlatformFeeByNonce","type":"map(uint32,uint256)"},
+		{"init":false,"name":"pendingCreatorFeeByNonce","type":"map(uint32,uint256)"},
 		{"init":false,"name":"pumpForever","type":"bool"},
 		{"init":false,"name":"slopeDivisor","type":"uint256"},
 		{"init":false,"name":"mintIdToBuyer","type":"map(uint32,address)"},

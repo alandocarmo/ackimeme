@@ -398,7 +398,7 @@
 	PUSHINT 0
 	DUP
 	NULL
-	DUP
+	BLKPUSH 3, 0
 	PUSHREF {
 	}
 	BLKPUSH 2, 0
@@ -407,40 +407,45 @@
 	DUP
 	PUSHINT 0
 	BLKPUSH 4, 0
-	PUSHINT 21
+	PUSHINT 23
 	ROLLX
 	MYADDR
 	NEWC
 	PUSHINT 321
 	STZEROES
 	STSLICE
-	PUSHINT 18
+	PUSHINT 20
 	ROLLREVX
 	NEWC
 	STU 256
 	STU 256
 	STU 256
 	STI 1
-	ROLLREV 14
+	ROLLREV 16
 	NEWC
 	STU 256
 	STU 32
 	STSLICE
-	ROLLREV 11
+	ROLLREV 13
 	NEWC
 	STSLICE
 	STI 1
 	STREF
 	STREF
 	STREF
-	ROLLREV 6
+	ROLLREV 8
 	NEWC
 	STDICT
+	STDICT
+	STDICT
+	ROLLREV 5
+	NEWC
 	STDICT
 	STI 1
 	STU 256
 	STDICT
 	STU 32
+	STBREFR
 	STBREFR
 	STBREFR
 	STBREFR
@@ -1006,9 +1011,9 @@
 	THROW 0
 }
 
-.fragment notifyBurn_132d0448_internal, {
+.fragment notifyBurn_bd7aeb5c_internal, {
 	.loc TokenRoot.sol, 264
-	OVER
+	PUSH S2
 	CALLREF {
 		.inline getWalletAddress_1fd9afa5_internal
 	}
@@ -1024,10 +1029,10 @@
 	PUSHREF {
 		.blob x63616c6c6261636b546172676574206d757374206265207265676973746572656420426f6e64696e674375727665
 	}
-	OVER
+	PUSH S2
 	GETGLOB 18
 	SDEQ
-	PUSH S2
+	PUSH S3
 	PUSHREFSLICE {
 		.blob x8000000000000000000000000000000000000000000000000000000000000000001_
 	}
@@ -1044,19 +1049,19 @@
 	RAWRESERVE
 	.loc TokenRoot.sol, 275
 	GETGLOB 14
-	PUSH S3
+	PUSH S4
 	SUB
 	UFITS 256
 	SETGLOB 14
 	.loc TokenRoot.sol, 278
-	DUP
+	OVER
 	PUSHREFSLICE {
 		.blob x8000000000000000000000000000000000000000000000000000000000000000001_
 	}
 	SDEQ
 	PUSHCONT {
 		.loc TokenRoot.sol, 287
-		OVER
+		PUSH S2
 		NEWC
 		STSLICECONST x42_
 		STSLICE
@@ -1073,7 +1078,7 @@
 		.loc TokenRoot.sol, 281
 		DUP
 		GETGLOB 26
-		PUSH S5
+		PUSH S6
 		NEWC
 		STU 256
 		ROTREV
@@ -1090,7 +1095,7 @@
 		.loc TokenRoot.sol, 283
 		DUP
 		GETGLOB 28
-		PUSH S6
+		PUSH S7
 		NEWC
 		STU 32
 		ROTREV
@@ -1098,19 +1103,24 @@
 		DICTUSETB
 		SETGLOB 28
 		.loc TokenRoot.sol, 284
-		OVER2
-		XCPU S2, S3
+		OVER
+		PU2XC S4, S5, S1
+		PUSH S5
 		NEWC
 		STSLICECONST x62_
 		STSLICE
 		PUSHINT 1
 		STUR 115
-		ROLLREV 3
+		ROLLREV 4
 		NEWC
-		STSLICECONST x6053be2b
+		STSLICECONST x032282b5
 		STU 32
 		STU 256
 		STSLICE
+		SWAP
+		NEWC
+		STU 128
+		STBREFR
 		STBREFR
 	}
 	IFELSE
@@ -1118,7 +1128,7 @@
 	PUSHPOW2 7
 	SENDRAWMSG
 	.loc TokenRoot.sol, 0
-	BLKDROP 4
+	BLKDROP 5
 }
 
 .fragment notifyBurn, {
@@ -1148,10 +1158,11 @@
 	ENDS
 	CTOS
 	LDMSGADDR
+	LDU 128
 	ENDS
 	.loc TokenRoot.sol, 0
 	CALLREF {
-		.inline notifyBurn_132d0448_internal
+		.inline notifyBurn_bd7aeb5c_internal
 	}
 	CALLREF {
 		.inline c7_to_c4
@@ -1741,23 +1752,17 @@
 
 .fragment public_function_selector, {
 	DUP
-	PUSHINT 463441793
+	PUSHINT 729759332
 	LEQ
 	IFJMPREF {
 		DUP
-		PUSHINT 235197086
+		PUSHINT 264760161
 		LEQ
 		IFJMPREF {
 			DUP
 			EQINT 1
 			IFJMPREF {
 				.inline constructor
-			}
-			DUP
-			PUSHINT 84551869
-			EQUAL
-			IFJMPREF {
-				.inline notifyBurn
 			}
 			DUP
 			PUSHINT 161966340
@@ -1771,17 +1776,17 @@
 			IFJMPREF {
 				.inline transferOwnership
 			}
-		}
-		DUP
-		PUSHINT 352344839
-		LEQ
-		IFJMPREF {
 			DUP
 			PUSHINT 264760161
 			EQUAL
 			IFJMPREF {
 				.inline totalSupply
 			}
+		}
+		DUP
+		PUSHINT 445023521
+		LEQ
+		IFJMPREF {
 			DUP
 			PUSHINT 343614912
 			EQUAL
@@ -1794,12 +1799,12 @@
 			IFJMPREF {
 				.inline decimals
 			}
-		}
-		DUP
-		PUSHINT 445023521
-		EQUAL
-		IFJMPREF {
-			.inline transferFromWallet
+			DUP
+			PUSHINT 445023521
+			EQUAL
+			IFJMPREF {
+				.inline transferFromWallet
+			}
 		}
 		DUP
 		PUSHINT 463441793
@@ -1807,39 +1812,45 @@
 		IFJMPREF {
 			.inline symbol
 		}
+		DUP
+		PUSHINT 729759332
+		EQUAL
+		IFJMPREF {
+			.inline deployNonce
+		}
 	}
 	DUP
 	PUSHINT 1131000478
 	LEQ
 	IFJMPREF {
 		DUP
-		PUSHINT 790306731
+		PUSHINT 873267493
 		LEQ
 		IFJMPREF {
-			DUP
-			PUSHINT 729759332
-			EQUAL
-			IFJMPREF {
-				.inline deployNonce
-			}
 			DUP
 			PUSHINT 790306731
 			EQUAL
 			IFJMPREF {
 				.inline pendingMintsByNonce
 			}
-		}
-		DUP
-		PUSHINT 873267493
-		EQUAL
-		IFJMPREF {
-			.inline onTransferDelivered
+			DUP
+			PUSHINT 873267493
+			EQUAL
+			IFJMPREF {
+				.inline onTransferDelivered
+			}
 		}
 		DUP
 		PUSHINT 914333902
 		EQUAL
 		IFJMPREF {
 			.inline onMintDelivered
+		}
+		DUP
+		PUSHINT 1127864294
+		EQUAL
+		IFJMPREF {
+			.inline notifyBurn
 		}
 		DUP
 		PUSHINT 1131000478
@@ -2155,7 +2166,7 @@
 		.loc TokenRoot.sol, 340
 		FALSE ; decl return flag
 		SWAP
-		PUSHINT 1616100907
+		PUSHINT 52593333
 		EQUAL
 		PUSHCONT {
 			.loc TokenRoot.sol, 341
