@@ -136,7 +136,50 @@ export default function AuthPage() {
     }, 2500); // Poll every 2.5 seconds
   };
 
-  // Dev simulation removed for production.
+  async function handleExtensionLogin() {
+    try {
+      setLoading(true);
+      setError("");
+      const { ProviderRpcClient } = await import('everscale-inpage-provider');
+      const ever = new ProviderRpcClient();
+      if (!(await ever.hasProvider())) throw new Error("Instale a extensão Acki Nacki / EVER Wallet.");
+      
+      await ever.ensureInitialized();
+      const { accountInteraction } = await ever.requestPermissions({ permissions: ['basic', 'accountInteraction'] });
+      if (!accountInteraction) throw new Error("Acesso à carteira negado.");
+      
+      const walletAddress = accountInteraction.address.toString();
+      
+      // 1. Get Challenge
+      const { createAuthChallenge, verifyAuthChallenge } = await import('../lib/api');
+      const challengeRes = await createAuthChallenge(walletAddress);
+      
+      // 2. Sign Challenge
+      const signature = await ever.signData({
+        data: Buffer.from(challengeRes.challenge.message).toString('base64'),
+        publicKey: accountInteraction.publicKey
+      });
+
+      // 3. Verify
+      const verifyRes = await verifyAuthChallenge({
+        challengeId: challengeRes.challenge.id,
+        walletAddress,
+        publicKey: accountInteraction.publicKey,
+        signature: signature.signatureHex || signature.signature
+      });
+
+      if (verifyRes.success) {
+        setSession(verifyRes.session);
+        window.dispatchEvent(new Event('session-changed'));
+        setStep("done");
+        setTimeout(() => router.push(String(returnTo)), 1200);
+      }
+    } catch (err) {
+      setError(err.message || "Erro ao conectar com a extensão.");
+    } finally {
+      setLoading(false);
+    }
+  }
 
   async function handleLogout() {
     await logout().catch(() => {});
@@ -208,6 +251,19 @@ export default function AuthPage() {
               {/* Dev Tools removed */}
 
               <div style={{ borderTop: '1px solid var(--line)', margin: '24px 0' }} />
+              
+              <div style={{ textAlign: 'center', marginBottom: '16px' }}>
+                <p className="token-time" style={{ fontSize: '13px', marginBottom: '12px' }}>Using a Desktop Wallet?</p>
+                <button 
+                  className="btn-primary" 
+                  style={{ width: '100%', background: 'var(--bg)', border: '1px solid var(--accent)', color: 'var(--accent)' }} 
+                  onClick={handleExtensionLogin}
+                  disabled={loading}
+                >
+                  {loading ? "Connecting..." : "Sign with Extension"}
+                </button>
+              </div>
+
               <button className="filter-btn" style={{ width: '100%', borderColor: 'transparent', background: 'transparent' }} onClick={() => router.push("/")}>← Back to Board</button>
             </div>
           )}

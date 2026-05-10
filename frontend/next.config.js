@@ -48,7 +48,7 @@ const nextConfig = {
               "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
               "font-src 'self' https://fonts.gstatic.com",
               "img-src 'self' data: https://gateway.pinata.cloud https://ipfs.io https://cloudflare-ipfs.com https://arweave.net",
-              `connect-src 'self' https://shellnet.ackinacki.org https://mainnet.ackinacki.org https://api.pinata.cloud https://api.ackimeme.fun ${process.env.NEXT_PUBLIC_API_BASE_URL || ''} https://va.vercel-scripts.com${process.env.NODE_ENV === 'development' ? ' http://localhost:*' : ''}`,
+              `connect-src 'self' https://shellnet.ackinacki.org https://mainnet.ackinacki.org https://api.pinata.cloud https://api.ackimeme.fun wss://api.ackimeme.fun ${process.env.NEXT_PUBLIC_API_BASE_URL || ''} ${(process.env.NEXT_PUBLIC_API_BASE_URL || '').replace('https://', 'wss://')} https://va.vercel-scripts.com${process.env.NODE_ENV === 'development' ? ' http://localhost:* ws://localhost:*' : ''}`,
               "frame-ancestors 'self' https://web.telegram.org https://*.telegram.org",
             ].join("; "),
           },

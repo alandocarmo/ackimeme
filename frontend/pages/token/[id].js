@@ -30,17 +30,24 @@ function formatSupply(val, isNano = false) {
   return String(n);
 }
 
-function PriceChart({ currentPrice, progressPct }) {
+function PriceChart({ currentPrice, progressPct, slopeDivisor }) {
   const points = [];
   const pct = parseFloat(progressPct || "0");
+  
+  // M-10: Reflect actual slope in the theoretical chart curve
+  const baseSlope = 10_000_000_000_000;
+  const currentSlope = Number(slopeDivisor || baseSlope);
+  const intensity = baseSlope / currentSlope; // Suave=0.5x, Normal=1x, Insane=10x
+  const exponent = 1.4 + (intensity * 0.2); // Dynamic exponent for visual steepness
+
   for (let i = 0; i <= 40; i++) {
      const x = (i / 40) * 100;
-     const y = 70 - (Math.pow(i / 40, 1.8) * 50); 
+     const y = 70 - (Math.pow(i / 40, exponent) * 50); 
      points.push(`${x},${y}`);
   }
   
   const currentX = pct;
-  const currentY = 70 - (Math.pow(pct / 100, 1.8) * 50);
+  const currentY = 70 - (Math.pow(pct / 100, exponent) * 50);
 
   return (
     <div className="card chart-card" style={{ height: '240px', padding: '0', position: 'relative', overflow: 'hidden', border: '1px solid var(--ink-faint)', background: 'linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(0,255,136,0.02) 100%)' }}>
@@ -180,6 +187,7 @@ export default function TokenPage() {
   const [isTrading, setIsTrading] = useState(false);
   const [tradeSuccess, setTradeSuccess] = useState("");
   const [onchainPrice, setOnchainPrice] = useState(null); // from getter
+  const [sellReturn, setSellReturn] = useState(null); // specific for tradeAmount
 
   // Chat/Comments state
   const [comments, setComments] = useState([]);
@@ -259,7 +267,41 @@ export default function TokenPage() {
       socket.off("token_updated", handleTokenUpdated);
       socket.off("new_comment", handleNewComment);
     };
-  }, [id]);
+  }, [id, fetchPrice]);
+
+  const fetchPrice = useCallback(async () => {
+    if (!token?.onchainData?.bondingCurveAddress || token.onchainData.deployStatus !== "deployed") return;
+    
+    try {
+      const { ProviderRpcClient, Address } = await import('everscale-inpage-provider');
+      const ever = new ProviderRpcClient();
+      if (!(await ever.hasProvider())) return;
+      await ever.ensureInitialized();
+
+      const bc = new ever.Contract(BondingCurveAbi, new Address(token.onchainData.bondingCurveAddress));
+      
+      // Fetch both buy price (for 1 token) and sell return (for current tradeAmount)
+      const buyPriceRes = await bc.methods.getBuyPrice({ tokenAmount: "1000000000" }).call();
+      if (buyPriceRes?.value0) {
+        setOnchainPrice(nanoToDecimal(buyPriceRes.value0));
+      }
+      
+      // If we have a trade amount, fetch the specific sell return for it
+      if (tradeMode === "sell" && tradeAmount && parseFloat(tradeAmount) > 0) {
+        const tokensToSellNano = toNano(tradeAmount);
+        const sellReturnRes = await bc.methods.getSellReturn({ amount: tokensToSellNano.toString() }).call();
+        if (sellReturnRes?.value0) {
+           setSellReturn(nanoToDecimal(sellReturnRes.value0));
+        }
+      }
+    } catch {
+      // Provider not available — use fallback
+    }
+  }, [token?.onchainData?.bondingCurveAddress, token?.onchainData?.deployStatus, tradeMode, tradeAmount]);
+
+  useEffect(() => {
+    fetchPrice();
+  }, [fetchPrice]);
 
   async function handlePostComment(e) {
     e.preventDefault();
@@ -279,28 +321,7 @@ export default function TokenPage() {
     }
   }
 
-  // Try reading current price from on-chain getter via provider
-  useEffect(() => {
-    if (!token?.onchainData?.bondingCurveAddress || token.onchainData.deployStatus !== "deployed") return;
-    
-    async function fetchPrice() {
-      try {
-        const { ProviderRpcClient, Address } = await import('everscale-inpage-provider');
-        const ever = new ProviderRpcClient();
-        if (!(await ever.hasProvider())) return;
-        await ever.ensureInitialized();
-
-        const bc = new ever.Contract(BondingCurveAbi, new Address(token.onchainData.bondingCurveAddress));
-        const result = await bc.methods.getBuyPrice({ tokenAmount: "1000000000" }).call();
-        if (result?.value0) {
-          setOnchainPrice(nanoToDecimal(result.value0));
-        }
-      } catch {
-        // Provider not available — use fallback
-      }
-    }
-    fetchPrice();
-  }, [token?.onchainData?.bondingCurveAddress, token?.onchainData?.deployStatus]);
+  // fetchPrice moved to useCallback above
 
   // M-06: Don't use misleading fallback price. If on-chain price isn't available,
   // show "awaiting" instead of a 33-million-times-wrong estimate.
@@ -444,12 +465,15 @@ export default function TokenPage() {
     const amt = parseFloat(tradeAmount) || 0;
     if (amt <= 0) return { value: "0", fee: null };
     if (!currentPrice) return { value: "aguardando preço...", fee: null };
+    
     if (tradeMode === "buy") {
       const expectedFullTokens = amt / currentPrice;
       const feeShell = amt * TRADE_FEE_BPS / 10000;
       return { value: formatNum(expectedFullTokens.toFixed(2)), fee: feeShell.toFixed(4) };
     }
-    const grossReturn = amt * currentPrice;
+    
+    // M-11: Use real sell return from contract if available, otherwise fallback to linear estimate
+    const grossReturn = sellReturn !== null ? sellReturn : (amt * currentPrice);
     const fee = grossReturn * TRADE_FEE_BPS / 10000;
     const netReturn = grossReturn - fee;
     return { value: netReturn.toFixed(9), fee: fee.toFixed(4) };
@@ -507,7 +531,11 @@ export default function TokenPage() {
               </div>
 
               {/* GAP-1: Price Chart */}
-              <PriceChart currentPrice={onchainPrice} progressPct={stats.progressPct} />
+              <PriceChart 
+                currentPrice={onchainPrice} 
+                progressPct={stats.progressPct} 
+                slopeDivisor={token.protocol?.slopeDivisor} 
+              />
 
               {/* Bonding Curve Card */}
               {!token.protocol?.pumpForever ? (

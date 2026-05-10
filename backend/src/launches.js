@@ -78,13 +78,26 @@ function normalizeSupply(value) {
 }
 function parseSlopeDivisor(val) {
   const divisors = {
-    "1": 20000000000000, // Suave
-    "2": 10000000000000, // Moderado (padrão)
-    "3": 5000000000000,  // Agressivo
-    "4": 2500000000000,  // Muito Agressivo
-    "5": 1000000000000   // Insano
+    "1": 20000000000000, // Suave (0.5x)
+    "2": 10000000000000, // Normal (1x)
+    "3": 5000000000000,  // Fast (2x)
+    "4": 2500000000000,  // Aggressive (4x)
+    "5": 1000000000000   // INSANE (10x)
   };
-  return divisors[String(val)] || 10000000000000;
+  
+  // 1. If it's a valid index, return mapped value
+  if (divisors[String(val)]) {
+    return divisors[String(val)];
+  }
+  
+  // 2. If it's already a valid nano value (>= 1T), return as is
+  const num = Number(val);
+  if (!isNaN(num) && num >= 1000000000000) {
+    return num;
+  }
+  
+  // Default to Normal (1x)
+  return 10000000000000;
 }
 
 function normalizeOptionalUrl(value, fieldName) {

@@ -26,7 +26,7 @@ export default function CreatePage() {
     name: "", symbol: "", tagline: "", description: "",
     totalSupply: "1000000000", logoUrl: "",
     website: "", xUrl: "", telegramUrl: "",
-    txHash: "", pumpForever: false, isBoosted: false, slopeDivisor: 2,
+    txHash: "", pumpForever: false, isBoosted: false, slopeDivisor: 10_000_000_000_000,
   });
   const [paymentStatus, setPaymentStatus] = useState({ ok: false, msg: "" });
   const [launchStatus, setLaunchStatus] = useState({ loading: false, error: "", success: false, ticket: null });

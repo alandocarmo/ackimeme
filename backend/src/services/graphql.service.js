@@ -637,10 +637,13 @@ async function getAccountBalanceNano(address) {
 
   const data = await gql(query, { address });
   const info = data?.blockchain?.account?.info;
+  if (!info) {
+    return 0n;
+  }
 
   // Acki Nacki: 0=Uninit, 1=Active, 2=Frozen, 3=NonExist
   const accType = info.acc_type === undefined ? 0 : Number(info.acc_type);
-  if (!info || (accType !== 1 && accType !== 0)) {
+  if (accType !== 1 && accType !== 0) {
     return 0n;
   }
 

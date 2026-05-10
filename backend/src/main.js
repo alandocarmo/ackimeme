@@ -47,6 +47,8 @@ const http = require("http");
 const jwt = require("jsonwebtoken");
 const cookieParser = require("cookie-parser");
 const { startSyncJob, stopSyncJob, setSocketIo } = require("./services/sync.service");
+const securityEngine = require("./security");
+
 
 let io; // Global Socket.io instance
 
@@ -578,7 +580,7 @@ app.post("/auth/logout", async (req, res) => {
 
 
 // Security Engine — anomalies and viral ranking from real database data
-app.use("/admin/security", requireSecurityAdmin, require("./security"));
+app.use("/admin/security", requireSecurityAdmin, securityEngine);
 
 app.get("/tokens/viral", async (req, res) => {
   try {

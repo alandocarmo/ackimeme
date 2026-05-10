@@ -449,6 +449,7 @@ contract BondingCurve {
     // Direct bounce from ITokenRoot.mint means TokenRoot did not accept the mint.
     // Later wallet-level failures are reported through onMintFailed().
     onBounce(TvmSlice body) external {
+        _ensureExecutionGas();
         // SEC-2: Ensure the bounce actually came from our TokenRoot
         require(msg.sender == _tokenRoot, 150, "Bounce not from TokenRoot");
         // H-08: We need exactly 64 bits minimum: 32 for funcId + 32 for nonce

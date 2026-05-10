@@ -382,7 +382,8 @@ async function deployTokenEcosystem({ name, symbol, totalSupply, ipfsHash, creat
   };
   const maxTokenSupply = parseTokenSupplyToNano(totalSupply);
   
-  // C-01: Map frontend slope levels (1-5) to actual nano values
+  // C-02: Map frontend slope levels (1-5) to actual nano values.
+  // If slopeDivisor is already a nano value (sent by new frontend), use it.
   const SLOPE_MAP = {
     1: 20_000_000_000_000n,  // 0.5x Suave
     2: 10_000_000_000_000n,  // 1x Normal
@@ -390,7 +391,16 @@ async function deployTokenEcosystem({ name, symbol, totalSupply, ipfsHash, creat
     4:  2_500_000_000_000n,  // 4x Aggressive
     5:  1_000_000_000_000n,  // 10x INSANE
   };
-  const mappedSlope = SLOPE_MAP[Number(slopeDivisor)] ?? 10_000_000_000_000n;
+  
+  let mappedSlope = BigInt(10_000_000_000_000);
+  if (SLOPE_MAP[Number(slopeDivisor)]) {
+    mappedSlope = SLOPE_MAP[Number(slopeDivisor)];
+  } else if (!isNaN(Number(slopeDivisor)) && Number(slopeDivisor) >= 1_000_000_000_000) {
+    mappedSlope = BigInt(slopeDivisor);
+  }
+  
+  // Use finalNanoDivisor for BOTH prediction and deployment to prevent address divergence
+  const finalNanoDivisor = mappedSlope.toString();
   
   const deployNonce = buildDeployNonce({ creatorWallet, symbol, paymentTxHash });
   const keyConfig = loadDeployerKeyConfig();
@@ -549,7 +559,7 @@ async function deployTokenEcosystem({ name, symbol, totalSupply, ipfsHash, creat
           _creationFeeTxHash: Buffer.from(paymentTxHash || "genesis").toString("hex"),
           _feeRecipient: feeRecipient,
           _pumpForever: pumpForever,
-          _slopeDivisor: mappedSlope.toString()
+          _slopeDivisor: finalNanoDivisor
         }
       },
       signer: { type: "None" }
@@ -588,7 +598,7 @@ async function deployTokenEcosystem({ name, symbol, totalSupply, ipfsHash, creat
               _initialBalance: 10000000000, // 10 VMSHELL to inner BondingCurve
               _feeRecipient: feeRecipient,
               _pumpForever: Boolean(pumpForever),
-              _slopeDivisor: slopeDivisor
+              _slopeDivisor: finalNanoDivisor
             }
           },
           signer
