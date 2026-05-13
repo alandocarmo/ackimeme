@@ -1090,7 +1090,10 @@ app.get("/launches/:id/holders", async (req, res) => {
     let holders = await getTopHoldersByLaunchId(req.params.id, 20);
     
     // Calcula o saldo da Bonding Curve (Total Supply - Circulating)
-    const totalSupply = Number(launch.onchainData?.tokenSupply || 1000000000);
+    const rawSupply = launch.onchainData?.tokenSupply || launch.tokenSupply || "1000000000";
+    // Se o supply vier cru do formulário (ex: 1000000000), converte para nano (x 1e9)
+    const totalSupply = String(rawSupply).length < 15 ? Number(rawSupply) * 1e9 : Number(rawSupply);
+    
     const circulating = holders.reduce((acc, h) => acc + h.balance, 0);
     const bcBalance = Math.max(0, totalSupply - circulating);
     

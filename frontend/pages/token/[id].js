@@ -1018,8 +1018,8 @@ export default function TokenPage() {
                           <span style={{ fontSize: '12px', color: hashColor(t.walletAddress) }}>{compactWallet(t.walletAddress)}</span>
                         </div>
                         <div style={{ textAlign: 'right' }}>
-                          <span style={{ display: 'block', fontSize: '13px', fontWeight: 'bold' }}>{formatNum(Number(t.tokenAmount).toFixed(2))} {token.coin?.symbol}</span>
-                          <span style={{ display: 'block', fontSize: '11px', color: 'var(--ink-soft)' }}>{Number(t.shellAmount).toFixed(4)} SHELL</span>
+                          <span style={{ display: 'block', fontSize: '13px', fontWeight: 'bold' }}>{formatNum(nanoToDecimal(t.tokenAmount).toFixed(2))} {token.coin?.symbol}</span>
+                          <span style={{ display: 'block', fontSize: '11px', color: 'var(--ink-soft)' }}>{nanoToDecimal(t.shellAmount).toFixed(4)} SHELL</span>
                         </div>
                       </div>
                     ))
@@ -1054,7 +1054,7 @@ export default function TokenPage() {
                             </div>
                             <div style={{ textAlign: 'right' }}>
                               <span style={{ display: 'block', fontSize: '13px', fontWeight: 'bold' }}>{pct.toFixed(2)}%</span>
-                              <span style={{ display: 'block', fontSize: '10px', color: 'var(--ink-soft)' }}>{formatNum(h.balance.toFixed(0))}</span>
+                              <span style={{ display: 'block', fontSize: '10px', color: 'var(--ink-soft)' }}>{formatNum((h.balance / 1e9).toFixed(0))}</span>
                             </div>
                           </div>
                         </div>
