@@ -189,6 +189,10 @@ export default function TokenPage() {
   const [onchainPrice, setOnchainPrice] = useState(null); // from getter
   const [sellReturn, setSellReturn] = useState(null); // specific for tradeAmount
 
+  // Balances for quick trade %
+  const [userShellEccBalance, setUserShellEccBalance] = useState(null);
+  const [userTokenBalance, setUserTokenBalance] = useState(null);
+
   // Chat/Comments state
   const [comments, setComments] = useState([]);
   const [newComment, setNewComment] = useState("");
@@ -222,6 +226,94 @@ export default function TokenPage() {
     setLoading(true);
     fetchToken();
   }, [id, fetchToken]);
+
+  // Fetch on-chain price — defined BEFORE socket effect to avoid temporal dead zone
+  const fetchPrice = useCallback(async () => {
+    if (!token?.onchainData?.bondingCurveAddress || token.onchainData.deployStatus !== "deployed") return;
+    
+    try {
+      const { ProviderRpcClient, Address } = await import('everscale-inpage-provider');
+      const ever = new ProviderRpcClient();
+      if (!(await ever.hasProvider())) return;
+      await ever.ensureInitialized();
+
+      const bc = new ever.Contract(BondingCurveAbi, new Address(token.onchainData.bondingCurveAddress));
+      
+      const buyPriceRes = await bc.methods.getBuyPrice({ tokenAmount: "1000000000" }).call();
+      if (buyPriceRes?.value0) {
+        setOnchainPrice(nanoToDecimal(buyPriceRes.value0));
+      }
+    } catch {
+      // Provider not available — use fallback
+    }
+  }, [token?.onchainData?.bondingCurveAddress, token?.onchainData?.deployStatus]);
+
+  const fetchUserBalances = useCallback(async () => {
+    if (!session?.walletAddress) return;
+    try {
+      // 1. Fetch SHELL ECC balance from backend
+      const { getWalletBalance } = await import('../../lib/api');
+      const res = await getWalletBalance(session.walletAddress);
+      if (res?.success) {
+        setUserShellEccBalance(res.shellEccBalance || 0);
+      }
+      
+      // 2. Fetch Token balance directly from contract
+      if (token?.onchainData?.tokenRootAddress && token.onchainData.deployStatus === "deployed") {
+        const { ProviderRpcClient, Address } = await import('everscale-inpage-provider');
+        const ever = new ProviderRpcClient();
+        if (await ever.hasProvider()) {
+          await ever.ensureInitialized();
+          const rootContract = new ever.Contract(TokenRootAbi, new Address(token.onchainData.tokenRootAddress));
+          const walletResult = await rootContract.methods.getWalletAddress({ ownerAddress: session.walletAddress, answerId: 0 }).call();
+          const tokenWallet = new ever.Contract(TokenWalletAbi, walletResult.value0);
+          const balRes = await tokenWallet.methods.balance({ answerId: 0 }).call();
+          const nanoBal = BigInt(balRes.value0);
+          const whole = nanoBal / 1_000_000_000n;
+          const frac = nanoBal % 1_000_000_000n;
+          setUserTokenBalance(Number(`${whole}.${String(frac).padStart(9, "0")}`));
+        }
+      }
+    } catch (err) {
+      console.warn("Could not fetch user balances", err);
+    }
+  }, [session?.walletAddress, token?.onchainData?.tokenRootAddress, token?.onchainData?.deployStatus]);
+
+  useEffect(() => {
+    fetchUserBalances();
+  }, [fetchUserBalances, tradeSuccess]);
+
+  // Separate effect for sell return — avoids re-registering socket listeners on every keystroke
+  useEffect(() => {
+    if (tradeMode !== "sell" || !tradeAmount || parseFloat(tradeAmount) <= 0) {
+      setSellReturn(null);
+      return;
+    }
+    if (!token?.onchainData?.bondingCurveAddress || token.onchainData.deployStatus !== "deployed") return;
+
+    let cancelled = false;
+    (async () => {
+      try {
+        const { ProviderRpcClient, Address } = await import('everscale-inpage-provider');
+        const ever = new ProviderRpcClient();
+        if (!(await ever.hasProvider())) return;
+        await ever.ensureInitialized();
+        const bc = new ever.Contract(BondingCurveAbi, new Address(token.onchainData.bondingCurveAddress));
+        const tokensToSellNano = toNano(tradeAmount);
+        const sellReturnRes = await bc.methods.getSellReturn({ tokenAmount: tokensToSellNano.toString() }).call();
+        if (!cancelled && sellReturnRes?.value0) {
+          setSellReturn(nanoToDecimal(sellReturnRes.value0));
+        }
+      } catch {
+        // Provider not available
+      }
+    })();
+    return () => { cancelled = true; };
+  }, [token?.onchainData?.bondingCurveAddress, token?.onchainData?.deployStatus, tradeMode, tradeAmount]);
+
+  useEffect(() => {
+    fetchPrice();
+  }, [fetchPrice]);
 
   // FE-05: Real-time updates via WebSockets instead of polling
   useEffect(() => {
@@ -268,40 +360,6 @@ export default function TokenPage() {
       socket.off("new_comment", handleNewComment);
     };
   }, [id, fetchPrice]);
-
-  const fetchPrice = useCallback(async () => {
-    if (!token?.onchainData?.bondingCurveAddress || token.onchainData.deployStatus !== "deployed") return;
-    
-    try {
-      const { ProviderRpcClient, Address } = await import('everscale-inpage-provider');
-      const ever = new ProviderRpcClient();
-      if (!(await ever.hasProvider())) return;
-      await ever.ensureInitialized();
-
-      const bc = new ever.Contract(BondingCurveAbi, new Address(token.onchainData.bondingCurveAddress));
-      
-      // Fetch both buy price (for 1 token) and sell return (for current tradeAmount)
-      const buyPriceRes = await bc.methods.getBuyPrice({ tokenAmount: "1000000000" }).call();
-      if (buyPriceRes?.value0) {
-        setOnchainPrice(nanoToDecimal(buyPriceRes.value0));
-      }
-      
-      // If we have a trade amount, fetch the specific sell return for it
-      if (tradeMode === "sell" && tradeAmount && parseFloat(tradeAmount) > 0) {
-        const tokensToSellNano = toNano(tradeAmount);
-        const sellReturnRes = await bc.methods.getSellReturn({ amount: tokensToSellNano.toString() }).call();
-        if (sellReturnRes?.value0) {
-           setSellReturn(nanoToDecimal(sellReturnRes.value0));
-        }
-      }
-    } catch {
-      // Provider not available — use fallback
-    }
-  }, [token?.onchainData?.bondingCurveAddress, token?.onchainData?.deployStatus, tradeMode, tradeAmount]);
-
-  useEffect(() => {
-    fetchPrice();
-  }, [fetchPrice]);
 
   async function handlePostComment(e) {
     e.preventDefault();
@@ -360,32 +418,60 @@ export default function TokenPage() {
 
         const bcContract = new ever.Contract(BondingCurveAbi, new Address(token.onchainData.bondingCurveAddress));
 
-        const rawAmountNano = toNano(tradeAmount);
-        // H-07: Use toNano for price conversion to avoid float precision loss
-        // Math.floor(float * 1e9) fails for prices like 0.0000000005 (rounds to 0)
+        // C-08: Binary search to find the exact max tokenAmount we can buy for rawAmountNano (including 1% fee).
+        // Since getBuyPrice in TVM requires tokenAmount as input, we can't just pass maxShellIn.
+        // We know: maxShellIn = cost + (cost * 1 / 100) = cost * 101 / 100.
+        // So base_cost_max = rawAmountNano * 100 / 101.
+        const maxBaseCostNano = (rawAmountNano * 100n) / 101n;
+        
+        let low = 0n;
+        let high = rawAmountNano * 100000000n; // arbitrary high upper bound (assumes price > 0.00001)
+        let expectedNanoTokens = 0n;
+        let baseCostNano = 0n;
+
+        // Fast estimation to narrow the bounds using spot price
         const currentPriceNano = toNano(String(currentPrice));
-        if (currentPriceNano === 0n) throw new Error("Preço atual é zero — impossível calcular quantidade de tokens.");
-        
-        // Use BigInt math: (rawAmountNano * 1e9) / currentPriceNano
-        // This avoids float64 limit overflow for very small currentPrice
-        const expectedNanoTokens = (rawAmountNano * 1000000000n) / currentPriceNano;
-        
-        // Get the actual cost from the on-chain getter, not from user input
-        const costResult = await bcContract.methods.getBuyPrice({ tokenAmount: expectedNanoTokens.toString() }).call();
-        const baseCostNano = BigInt(costResult.value0);
-        
-        // Add 1% trade fee on top of base cost (matches BondingCurve.sol TRADE_FEE_BPS)
-        const feeNano = baseCostNano * BigInt(TRADE_FEE_BPS) / 10000n;
-        const totalCostNano = baseCostNano + feeNano;
-        
-        // Apply slippage to the total cost (base + fee)
-        let maxShellNano = totalCostNano * BigInt(Math.round(100 + slippagePct)) / 100n;
-        
-        // Audit #13: Ensure we don't exceed the user's explicit SHELL input.
-        // If the user said "Buy 100 SHELL", we shouldn't charge 102 SHELL.
-        if (maxShellNano > rawAmountNano) {
-          maxShellNano = rawAmountNano;
+        if (currentPriceNano > 0n) {
+           const spotEst = (maxBaseCostNano * 1000000000n) / currentPriceNano;
+           // The real cost on a bonding curve is higher than spot, so spotEst is an upper bound
+           high = spotEst;
+           low = spotEst / 2n; // start with half
         }
+
+        // Binary search for exact token amount (up to 25 iterations for precision)
+        for (let i = 0; i < 25; i++) {
+            const mid = (low + high) / 2n;
+            if (mid === 0n) break;
+            
+            try {
+                const costResult = await bcContract.methods.getBuyPrice({ tokenAmount: mid.toString() }).call();
+                const cost = BigInt(costResult.value0);
+                
+                if (cost <= maxBaseCostNano) {
+                    expectedNanoTokens = mid;
+                    baseCostNano = cost;
+                    low = mid + 1n;
+                } else {
+                    high = mid - 1n;
+                }
+            } catch (err) {
+                // If the curve calculation fails (e.g. overflow), we must lower our guess
+                high = mid - 1n;
+            }
+        }
+
+        if (expectedNanoTokens === 0n) throw new Error("Valor muito baixo para comprar ao menos uma fração do token.");
+
+        // Apply slippage downwards (we already guarantee we won't exceed user's SHELL input)
+        // If slippage is 5%, we accept receiving 5% FEWER tokens than the optimal expected.
+        expectedNanoTokens = expectedNanoTokens * BigInt(Math.round(100 - slippagePct)) / 100n;
+
+        // Re-calculate the exact cost for this final discounted token amount to send the right payment
+        const finalCostResult = await bcContract.methods.getBuyPrice({ tokenAmount: expectedNanoTokens.toString() }).call();
+        const finalBaseCostNano = BigInt(finalCostResult.value0);
+        const finalFeeNano = (finalBaseCostNano * BigInt(TRADE_FEE_BPS)) / 10000n;
+        const maxShellNano = finalBaseCostNano + finalFeeNano;
+
 
         const tx = await bcContract.methods.buy({
           tokenAmount: expectedNanoTokens.toString(),
@@ -527,7 +613,32 @@ export default function TokenPage() {
                   <h1 className="token-main-title">{token.coin.name}</h1>
                   <span className="token-ticker">${token.coin.symbol}</span>
                 </div>
-                <div className="status-badge">{token.status.replace(/_/g, " ")}</div>
+                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: '8px' }}>
+                  <div className="status-badge">{token.status.replace(/_/g, " ")}</div>
+                  <button 
+                    onClick={() => {
+                      const shareText = `Check out $${token.coin.symbol} on AckiMeme! 🚀`;
+                      const shareUrl = typeof window !== 'undefined' ? window.location.href : '';
+                      window.open(`https://t.me/share/url?url=${encodeURIComponent(shareUrl)}&text=${encodeURIComponent(shareText)}`, '_blank');
+                    }}
+                    style={{
+                      background: 'rgba(0, 136, 204, 0.1)',
+                      color: '#0088cc',
+                      border: '1px solid rgba(0, 136, 204, 0.2)',
+                      padding: '4px 12px',
+                      borderRadius: '12px',
+                      fontSize: '12px',
+                      fontWeight: 600,
+                      cursor: 'pointer',
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '4px'
+                    }}
+                  >
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
+                    Share
+                  </button>
+                </div>
               </div>
 
               {/* GAP-1: Price Chart */}
@@ -757,10 +868,44 @@ export default function TokenPage() {
 
                 <div className="trade-panel">
                   <div className="trade-field-wrap">
-                    <p className="info-label">Amount to {tradeMode}</p>
+                    <p className="info-label" style={{ display: 'flex', justifyContent: 'space-between' }}>
+                      <span>Amount to {tradeMode}</span>
+                      <span style={{ fontSize: '10px', color: 'var(--ink-soft)' }}>
+                        {tradeMode === "buy" && userShellEccBalance !== null && `Bal: ${userShellEccBalance.toFixed(2)} SHELL`}
+                        {tradeMode === "sell" && userTokenBalance !== null && `Bal: ${userTokenBalance.toFixed(2)} ${token?.coin?.symbol || ''}`}
+                      </span>
+                    </p>
                     <div className="input-container">
                       <input type="number" placeholder="0.0" value={tradeAmount} onChange={(e) => setTradeAmount(e.target.value)} />
                       <span className="input-unit">{tradeMode === "buy" ? "SHELL" : token.coin.symbol}</span>
+                    </div>
+
+                    {/* Quick Trade Percentages */}
+                    <div style={{ display: 'flex', gap: '4px', marginTop: '8px' }}>
+                      {[0.25, 0.50, 0.75, 1.0].map((pct) => (
+                        <button 
+                          key={pct}
+                          type="button"
+                          className="slip-btn"
+                          style={{ flex: 1, padding: '4px 0' }}
+                          onClick={() => {
+                            if (tradeMode === "buy") {
+                              if (userShellEccBalance !== null) {
+                                // Reserve 0.2 SHELL for VMSHELL gas if MAX
+                                const amount = userShellEccBalance * pct;
+                                const maxSafe = Math.max(0, amount - (pct === 1.0 ? 0.2 : 0));
+                                setTradeAmount(maxSafe > 0 ? maxSafe.toFixed(2) : "");
+                              }
+                            } else {
+                              if (userTokenBalance !== null) {
+                                setTradeAmount((userTokenBalance * pct).toFixed(2));
+                              }
+                            }
+                          }}
+                        >
+                          {pct === 1.0 ? "MAX" : `${pct * 100}%`}
+                        </button>
+                      ))}
                     </div>
                   </div>
 

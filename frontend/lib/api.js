@@ -165,3 +165,10 @@ export function postComment(launchId, content) {
     body: { content },
   });
 }
+
+// ─── Wallet API ──────────────────────────────────────────────────────────────
+
+export function getWalletBalance(address) {
+  return request(`/wallet/${encodeURIComponent(address)}/balance`);
+}
+

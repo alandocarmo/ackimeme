@@ -46,7 +46,7 @@ contract BondingCurve {
     uint256 public ammKLast;             // AMM invariant
     uint32 public migratedAt;            // timestamp of migration
     address public owner;                // token creator
-    address public feeRecipient;         // platform fee wallet (receives 0.8% of each trade)
+    address public feeRecipient;         // platform fee wallet (receives 0.7% of each trade)
     bool public paused;                  // security pause for trading
     // NOTE: tokenRoot removed — use _tokenRoot (static) everywhere for consistency.
     // _tokenRoot is set via stateInit and never changes, making it the canonical reference.
@@ -303,7 +303,7 @@ contract BondingCurve {
         // Audit #3: Anti-rug Creator Lock. Creator cannot sell during the 30-day lock
         // period after AMM migration to ensure stability.
         if (isAmm && refundAddress == owner && migratedAt > 0) {
-            require(now >= migratedAt + LOCK_PERIOD, 219, "Creator tokens are locked for 30 days after AMM migration");
+            require(block.timestamp >= migratedAt + LOCK_PERIOD, 219, "Creator tokens are locked for 30 days after AMM migration");
         }
 
 

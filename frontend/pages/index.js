@@ -169,7 +169,7 @@ export default function Home() {
     <>
       <Head>
         <title>AckiMeme — Memecoin Launchpad on Acki Nacki</title>
-        <meta name="description" content="Create and trade memecoins with bonding curves on Acki Nacki blockchain. Fair launch, no rugs." />
+        <meta name="description" content="Create and trade memecoins with bonding curves on Acki Nacki blockchain. Fair launch, creator sell lock, transparent fees." />
       </Head>
 
       <main className="page-wrapper">

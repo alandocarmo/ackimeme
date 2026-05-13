@@ -597,6 +597,7 @@ async function getAccountBalance(address) {
         account(address: $address) {
           info {
             balance(format: DEC)
+            currencies
             address
             acc_type
             acc_type_name
@@ -612,10 +613,13 @@ async function getAccountBalance(address) {
   if (!info) {
     return null;
   }
+  
+  const shellEccNano = extractCurrencyNano(info.currencies, SHELL_CURRENCY_ID);
 
   return {
     address: info.address,
     balance: nanoToDecimal(info.balance || "0"),
+    shellEccBalance: nanoToDecimal(shellEccNano),
     // Audit #2: prefer numeric acc_type (1=Active) with _name fallback
     status: info.acc_type_name || (info.acc_type === 1 ? "Active" : "Inactive"),
   };

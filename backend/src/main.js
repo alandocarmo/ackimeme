@@ -1094,6 +1094,34 @@ async function start() {
   });
 
   const UUID_REGEX = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+  
+  // Anti-spam middleware for Socket.IO
+  const socketRateLimit = new Map();
+  io.use((socket, next) => {
+    const ip = socket.handshake.address;
+    const now = Date.now();
+    const limit = socketRateLimit.get(ip);
+    
+    // Max 30 connections per IP per minute
+    if (limit && now - limit.startTime < 60000) {
+      if (limit.count > 30) {
+        return next(new Error("Rate limit exceeded for websockets"));
+      }
+      limit.count++;
+    } else {
+      socketRateLimit.set(ip, { count: 1, startTime: now });
+    }
+    
+    // Periodic memory cleanup (5% chance per connection)
+    if (Math.random() < 0.05) {
+      for (const [key, val] of socketRateLimit.entries()) {
+        if (now - val.startTime > 60000) socketRateLimit.delete(key);
+      }
+    }
+    
+    next();
+  });
+
   io.on("connection", (socket) => {
     socket.on("join_token", (tokenId) => {
       if (typeof tokenId !== "string" || !UUID_REGEX.test(tokenId)) return;

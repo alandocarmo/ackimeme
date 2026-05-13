@@ -1,17 +1,27 @@
 import React, { useEffect, useState } from "react";
 import Head from "next/head";
-import { getSecurityAnomalies, unlockAdmin } from "../../lib/api";
+import { getSecurityAnomalies, unlockAdmin, getSession } from "../../lib/api";
 
 export default function SecurityAdmin() {
   const [anomalies, setAnomalies] = useState([]);
   const [password, setPassword] = useState("");
   const [loggedIn, setLoggedIn] = useState(false);
   const [error, setError] = useState("");
+  const [session, setSession] = useState(null);
+
+  // Load user session on mount
+  useEffect(() => {
+    getSession().then(r => setSession(r.session)).catch(() => {});
+  }, []);
 
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
-      await unlockAdmin(password);
+      if (!session?.walletAddress) {
+        setError("Você precisa estar logado com uma carteira para acessar o painel admin. Faça login primeiro.");
+        return;
+      }
+      await unlockAdmin(password, session.walletAddress);
       setLoggedIn(true);
       fetchAnomalies();
     } catch(err) {
@@ -150,8 +160,8 @@ export default function SecurityAdmin() {
                     <span className="hero-accent" style={{ fontSize: '10px' }}>ACTIVE (Linear)</span>
                   </div>
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid var(--line-soft)', paddingBottom: '12px' }}>
-                    <span className="info-label" style={{ color: 'var(--ink)' }}>Liquidity Lock (Anti-rug)</span>
-                    <span className="hero-accent" style={{ fontSize: '10px' }}>ON-CHAIN (30 Days)</span>
+                    <span className="info-label" style={{ color: 'var(--ink)' }}>Creator Sell Lock (Anti-rug)</span>
+                    <span className="hero-accent" style={{ fontSize: '10px' }}>ON-CHAIN (30 Days post-AMM)</span>
                   </div>
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid var(--line-soft)', paddingBottom: '12px' }}>
                     <span className="info-label" style={{ color: 'var(--ink)' }}>Rate Limiter</span>
