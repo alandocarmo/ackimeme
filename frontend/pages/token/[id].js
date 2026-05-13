@@ -108,6 +108,77 @@ function PriceChart({ currentPrice, progressPct, slopeDivisor }) {
   );
 }
 
+// BubbleMap: SVG-based Sunflower Spiral packing for top holders
+function BubbleMap({ holders, totalSupply, token }) {
+  if (!holders || holders.length === 0) return null;
+
+  const SVG_SIZE = 320;
+  const CENTER = SVG_SIZE / 2;
+
+  const placedNodes = [];
+  // Sort by balance DESC to place largest first in the center
+  const sortedNodes = [...holders].map((h, i) => {
+    const pct = (h.balance / totalSupply) * 100;
+    // Scale radius logarithmically or by square root for better visualization
+    const r = Math.max(8, Math.sqrt(pct) * 12);
+    return { ...h, pct, r, id: i };
+  }).sort((a, b) => b.balance - a.balance);
+
+  for (let i = 0; i < sortedNodes.length; i++) {
+    const node = sortedNodes[i];
+    let angle = 0;
+    let dist = 0;
+    let cx = CENTER, cy = CENTER;
+    let overlapping = true;
+    let attempts = 0;
+
+    // Sunflower spiral search for the closest non-overlapping position
+    while (overlapping && attempts < 400) {
+      cx = CENTER + Math.cos(angle) * dist;
+      cy = CENTER + Math.sin(angle) * dist;
+
+      overlapping = placedNodes.some(p => {
+        const dx = p.cx - cx;
+        const dy = p.cy - cy;
+        const d = Math.sqrt(dx * dx + dy * dy);
+        return d < (p.r + node.r + 3); // 3px padding
+      });
+
+      if (overlapping) {
+        dist += 1.5;
+        angle += 2.39996; // Golden angle for optimal spiral packing
+        attempts++;
+      }
+    }
+    node.cx = cx;
+    node.cy = cy;
+    placedNodes.push(node);
+  }
+
+  return (
+    <div style={{ background: 'var(--bg-deep)', borderRadius: '8px', padding: '16px', display: 'flex', justifyContent: 'center', overflow: 'hidden', position: 'relative' }}>
+      <svg width={SVG_SIZE} height={SVG_SIZE} viewBox={`0 0 ${SVG_SIZE} ${SVG_SIZE}`}>
+        {placedNodes.map(n => (
+          <g key={n.id} transform={`translate(${n.cx}, ${n.cy})`} style={{ transition: 'transform 0.3s ease' }}>
+            <circle 
+              r={n.r} 
+              fill={n.isBondingCurve ? 'rgba(59, 130, 246, 0.2)' : 'rgba(16, 185, 129, 0.2)'}
+              stroke={n.isBondingCurve ? '#3b82f6' : hashColor(n.walletAddress)}
+              strokeWidth="2"
+            />
+            {n.r > 15 && (
+               <text textAnchor="middle" dy=".3em" fill="#fff" fontSize={n.r > 25 ? "10px" : "8px"} fontWeight="bold" style={{ pointerEvents: 'none' }}>
+                 {n.pct.toFixed(1)}%
+               </text>
+            )}
+            <title>{n.isBondingCurve ? "Bonding Curve" : compactWallet(n.walletAddress)}: {n.pct.toFixed(2)}%</title>
+          </g>
+        ))}
+      </svg>
+    </div>
+  );
+}
+
 /** Nano to decimal (9 decimals standard in TVM/SHELL) */
 function nanoToDecimal(nano) {
   const val = BigInt(String(nano || "0").replace(/\D/g, "") || "0");
@@ -188,6 +259,7 @@ export default function TokenPage() {
   const [tradeSuccess, setTradeSuccess] = useState("");
   const [onchainPrice, setOnchainPrice] = useState(null); // from getter
   const [sellReturn, setSellReturn] = useState(null); // specific for tradeAmount
+  const [buyReturn, setBuyReturn] = useState(null); // specific for tradeAmount
 
   // Balances for quick trade %
   const [userShellEccBalance, setUserShellEccBalance] = useState(null);
@@ -197,6 +269,9 @@ export default function TokenPage() {
   const [comments, setComments] = useState([]);
   const [newComment, setNewComment] = useState("");
   const [isPosting, setIsPosting] = useState(false);
+  const [trades, setTrades] = useState([]);
+  const [holders, setHolders] = useState([]);
+  const [totalSupply, setTotalSupply] = useState(1000000000);
 
   useEffect(() => {
     if (typeof window === "undefined") return;
@@ -283,6 +358,76 @@ export default function TokenPage() {
     fetchUserBalances();
   }, [fetchUserBalances, tradeSuccess]);
 
+  useEffect(() => {
+    fetchUserBalances();
+  }, [fetchUserBalances, tradeSuccess]);
+
+  // Separate effect for buy return (binary search) to provide exact amounts and calculate impact
+  useEffect(() => {
+    if (tradeMode !== "buy" || !tradeAmount || parseFloat(tradeAmount) <= 0) {
+      setBuyReturn(null);
+      return;
+    }
+    if (!token?.onchainData?.bondingCurveAddress || token.onchainData.deployStatus !== "deployed") return;
+    
+    if (!onchainPrice) return;
+
+    let cancelled = false;
+    (async () => {
+      try {
+        const { ProviderRpcClient, Address } = await import('everscale-inpage-provider');
+        const ever = new ProviderRpcClient();
+        if (!(await ever.hasProvider())) return;
+        await ever.ensureInitialized();
+        const bcContract = new ever.Contract(BondingCurveAbi, new Address(token.onchainData.bondingCurveAddress));
+        
+        const rawAmountNano = BigInt(Math.floor(parseFloat(tradeAmount) * 1e9));
+        // maxBaseCostNano = rawAmountNano * 100 / 101
+        const maxBaseCostNano = (rawAmountNano * 100n) / 101n;
+        
+        let low = 0n;
+        let high = rawAmountNano * 100000000n;
+        const currentPriceNano = BigInt(Math.floor(onchainPrice * 1e9));
+        
+        if (currentPriceNano > 0n) {
+           const spotEst = (maxBaseCostNano * 1000000000n) / currentPriceNano;
+           high = spotEst;
+           low = spotEst / 2n;
+        }
+
+        let bestMid = 0n;
+        for (let i = 0; i < 25; i++) {
+            const mid = (low + high) / 2n;
+            if (mid === 0n) break;
+            
+            try {
+                const costResult = await bcContract.methods.getBuyPrice({ tokenAmount: mid.toString() }).call();
+                const cost = BigInt(costResult.value0);
+                
+                if (cost <= maxBaseCostNano) {
+                    bestMid = mid;
+                    low = mid + 1n;
+                } else {
+                    high = mid - 1n;
+                }
+            } catch (err) {
+                high = mid - 1n;
+            }
+        }
+        
+        if (!cancelled && bestMid > 0n) {
+            setBuyReturn(Number(bestMid) / 1e9);
+        } else if (!cancelled) {
+            setBuyReturn(0);
+        }
+      } catch (err) {
+        console.warn("Buy estimate failed", err);
+      }
+    })();
+
+    return () => { cancelled = true; };
+  }, [tradeAmount, tradeMode, token?.onchainData?.bondingCurveAddress, token?.onchainData?.deployStatus, onchainPrice]);
+
   // Separate effect for sell return — avoids re-registering socket listeners on every keystroke
   useEffect(() => {
     if (tradeMode !== "sell" || !tradeAmount || parseFloat(tradeAmount) <= 0) {
@@ -319,8 +464,19 @@ export default function TokenPage() {
   useEffect(() => {
     if (!id) return;
     
-    // Initial fetch for comments
+    // Initial fetch for comments, trades, and holders
     getComments(id).then(r => setComments(r.comments || [])).catch(() => {});
+    import("../../lib/api").then(api => {
+      if (api.getTrades) {
+        api.getTrades(id).then(r => setTrades(r.trades || [])).catch(() => {});
+      }
+      if (api.getHolders) {
+        api.getHolders(id).then(r => {
+          setHolders(r.holders || []);
+          if (r.totalSupply) setTotalSupply(r.totalSupply);
+        }).catch(() => {});
+      }
+    });
     
     if (!socket) return;
 
@@ -352,12 +508,30 @@ export default function TokenPage() {
       });
     };
 
+    const handleNewTrade = (trade) => {
+      setTrades((prev) => {
+        if (prev.find((t) => t.id === trade.id)) return prev;
+        return [trade, ...prev];
+      });
+      // Refresh holders when a trade happens to keep the leaderboard somewhat live
+      import("../../lib/api").then(api => {
+        if (api.getHolders) {
+          api.getHolders(id).then(r => {
+            setHolders(r.holders || []);
+            if (r.totalSupply) setTotalSupply(r.totalSupply);
+          }).catch(() => {});
+        }
+      });
+    };
+
     socket.on("token_updated", handleTokenUpdated);
     socket.on("new_comment", handleNewComment);
+    socket.on("new_trade", handleNewTrade);
 
     return () => {
       socket.off("token_updated", handleTokenUpdated);
       socket.off("new_comment", handleNewComment);
+      socket.off("new_trade", handleNewTrade);
     };
   }, [id, fetchPrice]);
 
@@ -549,20 +723,44 @@ export default function TokenPage() {
   // M-06: When price isn't available, show clear indication instead of wrong values
   function getEstimate() {
     const amt = parseFloat(tradeAmount) || 0;
-    if (amt <= 0) return { value: "0", fee: null };
-    if (!currentPrice) return { value: "aguardando preço...", fee: null };
+    if (amt <= 0) return { value: "0", fee: null, impact: null };
+    if (!currentPrice) return { value: "aguardando preço...", fee: null, impact: null };
+    
+    let impactPct = 0;
     
     if (tradeMode === "buy") {
-      const expectedFullTokens = amt / currentPrice;
       const feeShell = amt * TRADE_FEE_BPS / 10000;
-      return { value: formatNum(expectedFullTokens.toFixed(2)), fee: feeShell.toFixed(4) };
+      const expectedFullTokens = buyReturn !== null ? buyReturn : (amt / currentPrice);
+      
+      // Calculate Price Impact
+      if (expectedFullTokens > 0) {
+          const executionPrice = (amt - feeShell) / expectedFullTokens;
+          impactPct = ((executionPrice - currentPrice) / currentPrice) * 100;
+      }
+      
+      return { 
+          value: formatNum(expectedFullTokens.toFixed(2)), 
+          fee: feeShell.toFixed(4),
+          impact: impactPct
+      };
     }
     
     // M-11: Use real sell return from contract if available, otherwise fallback to linear estimate
     const grossReturn = sellReturn !== null ? sellReturn : (amt * currentPrice);
     const fee = grossReturn * TRADE_FEE_BPS / 10000;
     const netReturn = grossReturn - fee;
-    return { value: netReturn.toFixed(9), fee: fee.toFixed(4) };
+    
+    // Calculate Price Impact
+    if (amt > 0) {
+        const executionPrice = grossReturn / amt;
+        impactPct = ((currentPrice - executionPrice) / currentPrice) * 100;
+    }
+    
+    return { 
+        value: netReturn.toFixed(9), 
+        fee: fee.toFixed(4),
+        impact: impactPct
+    };
   }
 
   return (
@@ -798,7 +996,6 @@ export default function TokenPage() {
               </div>
 
               {/* Links */}
-              {/* Links */}
               {(token.links?.website || token.links?.xUrl || token.links?.telegramUrl) && (
                 <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap' }}>
                   {token.links.website && <a href={token.links.website} target="_blank" rel="noreferrer" className="filter-btn">🌐 Website</a>}
@@ -806,6 +1003,66 @@ export default function TokenPage() {
                   {token.links.telegramUrl && <a href={token.links.telegramUrl} target="_blank" rel="noreferrer" className="filter-btn">✈ Telegram</a>}
                 </div>
               )}
+
+              {/* Trade History Tape */}
+              <div className="card" style={{ marginTop: '24px' }}>
+                <p className="info-label" style={{ marginBottom: '16px' }}>📊 Recent Trades</p>
+                <div className="trade-tape" style={{ maxHeight: '300px', overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                  {trades.length === 0 ? (
+                    <p className="token-time" style={{ textAlign: 'center', padding: '20px' }}>No trades yet. Be the first!</p>
+                  ) : (
+                    trades.map(t => (
+                      <div key={t.id} style={{ display: 'flex', justifyContent: 'space-between', padding: '8px', background: 'var(--bg-deep)', borderRadius: '6px', borderLeft: `4px solid ${t.type === 'buy' ? '#10b981' : '#ef4444'}` }}>
+                        <div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
+                          <span style={{ color: t.type === 'buy' ? '#10b981' : '#ef4444', fontWeight: 'bold', fontSize: '12px', textTransform: 'uppercase', width: '40px' }}>{t.type}</span>
+                          <span style={{ fontSize: '12px', color: hashColor(t.walletAddress) }}>{compactWallet(t.walletAddress)}</span>
+                        </div>
+                        <div style={{ textAlign: 'right' }}>
+                          <span style={{ display: 'block', fontSize: '13px', fontWeight: 'bold' }}>{formatNum(Number(t.tokenAmount).toFixed(2))} {token.coin?.symbol}</span>
+                          <span style={{ display: 'block', fontSize: '11px', color: 'var(--ink-soft)' }}>{Number(t.shellAmount).toFixed(4)} SHELL</span>
+                        </div>
+                      </div>
+                    ))
+                  )}
+                </div>
+              </div>
+
+              {/* Top Holders Leaderboard */}
+              <div className="card" style={{ marginTop: '24px' }}>
+                <p className="info-label" style={{ marginBottom: '16px' }}>👑 Top Holders</p>
+                <BubbleMap holders={holders} totalSupply={totalSupply} token={token} />
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', marginTop: '16px' }}>
+                  {holders.length === 0 ? (
+                    <p className="token-time" style={{ textAlign: 'center', padding: '20px' }}>No holders yet.</p>
+                  ) : (
+                    holders.map((h, idx) => {
+                      const pct = (h.balance / totalSupply) * 100;
+                      return (
+                        <div key={idx} style={{ position: 'relative', background: 'var(--bg-deep)', borderRadius: '6px', padding: '8px', overflow: 'hidden' }}>
+                          {/* Barra de Progresso no fundo */}
+                          <div style={{ position: 'absolute', top: 0, left: 0, bottom: 0, width: `${pct}%`, background: h.isBondingCurve ? 'rgba(59, 130, 246, 0.15)' : 'rgba(16, 185, 129, 0.15)', zIndex: 0 }}></div>
+                          
+                          <div style={{ position: 'relative', zIndex: 1, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                            <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+                              <span style={{ fontSize: '12px', fontWeight: 'bold', color: 'var(--ink-soft)', width: '20px' }}>#{idx + 1}</span>
+                              <span style={{ fontSize: '13px', color: h.isBondingCurve ? '#3b82f6' : hashColor(h.walletAddress), fontWeight: h.isBondingCurve ? 'bold' : 'normal' }}>
+                                {h.isBondingCurve ? "🏦 Bonding Curve" : compactWallet(h.walletAddress)}
+                              </span>
+                              {h.walletAddress === token.walletAddress && !h.isBondingCurve && (
+                                <span style={{ fontSize: '10px', background: 'var(--accent-warm)', color: '#000', padding: '2px 6px', borderRadius: '4px', fontWeight: 'bold' }}>Creator</span>
+                              )}
+                            </div>
+                            <div style={{ textAlign: 'right' }}>
+                              <span style={{ display: 'block', fontSize: '13px', fontWeight: 'bold' }}>{pct.toFixed(2)}%</span>
+                              <span style={{ display: 'block', fontSize: '10px', color: 'var(--ink-soft)' }}>{formatNum(h.balance.toFixed(0))}</span>
+                            </div>
+                          </div>
+                        </div>
+                      )
+                    })
+                  )}
+                </div>
+              </div>
 
               {/* Chat / Comments Section */}
               <div className="card" style={{ marginTop: '24px' }}>
@@ -933,6 +1190,18 @@ export default function TokenPage() {
                           <div style={{ textAlign: 'center', marginBottom: '8px' }}>
                             <span className="token-time" style={{ fontSize: '10px', color: 'var(--accent-warm)' }}>
                               Fee: {estimate.fee} SHELL (1% — 0.7% platform + 0.3% creator)
+                            </span>
+                          </div>
+                        )}
+                        
+                        {estimate.impact !== null && estimate.impact > 0.01 && (
+                          <div style={{ textAlign: 'center', marginBottom: '8px' }}>
+                            <span style={{ 
+                               fontSize: '11px', 
+                               fontWeight: 600,
+                               color: estimate.impact > 5 ? '#ef4444' : (estimate.impact > 2 ? '#f97316' : '#10b981')
+                            }}>
+                              Price Impact: {estimate.impact.toFixed(2)}%
                             </span>
                           </div>
                         )}

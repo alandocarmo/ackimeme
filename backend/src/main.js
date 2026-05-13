@@ -1060,6 +1060,58 @@ app.post("/launches/:id/comments", requireSession, async (req, res) => {
 });
 
 
+// ── GET /launches/:id/trades (Trade History) ──────────────────────────────────
+app.get("/launches/:id/trades", async (req, res) => {
+  if (!UUID_REGEX.test(req.params.id)) {
+    return res.status(400).json({ error: "Token ID inválido." });
+  }
+  
+  try {
+    const limit = parseInt(req.query.limit) || 50;
+    const { getTradesByLaunchId } = require("./storage");
+    const trades = await getTradesByLaunchId(req.params.id, Math.min(100, limit));
+    res.json({ success: true, trades });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// ── GET /launches/:id/holders (Top Holders) ──────────────────────────────────
+app.get("/launches/:id/holders", async (req, res) => {
+  if (!UUID_REGEX.test(req.params.id)) {
+    return res.status(400).json({ error: "Token ID inválido." });
+  }
+  
+  try {
+    const { getTopHoldersByLaunchId, getLaunchById } = require("./storage");
+    const launch = await getLaunchById(req.params.id);
+    if (!launch) return res.status(404).json({ error: "Launch não encontrado." });
+
+    let holders = await getTopHoldersByLaunchId(req.params.id, 20);
+    
+    // Calcula o saldo da Bonding Curve (Total Supply - Circulating)
+    const totalSupply = Number(launch.onchainData?.tokenSupply || 1000000000);
+    const circulating = holders.reduce((acc, h) => acc + h.balance, 0);
+    const bcBalance = Math.max(0, totalSupply - circulating);
+    
+    // Adiciona o Bonding Curve como um holder virtual se tiver saldo
+    if (bcBalance > 0 && launch.onchainData?.bondingCurveAddress) {
+      holders.push({
+        walletAddress: launch.onchainData.bondingCurveAddress,
+        balance: bcBalance,
+        isBondingCurve: true
+      });
+    }
+
+    // Re-ordena após adicionar o BC
+    holders.sort((a, b) => b.balance - a.balance);
+
+    res.json({ success: true, holders, totalSupply });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
 // ── GET wallet SHELL balance (for UI pre-flight check) ───────────────────────
 app.get("/wallet/:address/balance", async (req, res) => {
   try {

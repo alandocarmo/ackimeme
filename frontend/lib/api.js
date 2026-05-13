@@ -172,3 +172,10 @@ export function getWalletBalance(address) {
   return request(`/wallet/${encodeURIComponent(address)}/balance`);
 }
 
+export function getTrades(launchId, limit = 50) {
+  return request(`/launches/${encodeURIComponent(launchId)}/trades?limit=${limit}`);
+}
+
+export function getHolders(launchId) {
+  return request(`/launches/${encodeURIComponent(launchId)}/holders`);
+}

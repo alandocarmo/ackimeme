@@ -1,7 +1,7 @@
 const fs = require("fs");
 const path = require("path");
-const { listPublicLaunches, listLaunchesForSync, updateLaunchOnchainState } = require("../storage");
-const { getAccountState } = require("./graphql.service");
+const { listPublicLaunches, listLaunchesForSync, updateLaunchOnchainState, insertTrade } = require("../storage");
+const { getAccountState, getRecentBondingCurveTrades } = require("./graphql.service");
 const { config } = require("../config");
 
 // TVM SDK Initialization for local BOC decoding
@@ -141,6 +141,22 @@ async function syncOnchainData() {
             status,
             updatedAt: new Date().toISOString()
           });
+        }
+        
+        // [New] Index Recent Trades
+        try {
+          const trades = await getRecentBondingCurveTrades(launch.bondingCurveAddress);
+          // Insert trades, process oldest first
+          for (let i = trades.length - 1; i >= 0; i--) {
+            const trade = trades[i];
+            trade.launchId = launch.id;
+            const newTrade = await insertTrade(trade);
+            if (newTrade && ioInstance) {
+              ioInstance.to(`token_${launch.id}`).emit("new_trade", newTrade);
+            }
+          }
+        } catch (err) {
+          console.error(`[SyncJob] Error syncing trades for launch ${launch.id}:`, err.message);
         }
         
         updatedCount++;

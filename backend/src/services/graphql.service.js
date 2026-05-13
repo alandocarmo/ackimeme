@@ -11,7 +11,11 @@
  */
 
 const axios = require("axios");
+const fs = require("fs");
+const path = require("path");
 const { config } = require("../config");
+
+const BONDING_CURVE_ABI = JSON.parse(fs.readFileSync(path.join(__dirname, "../abi/BondingCurve.abi.json"), "utf8"));
 
 // Audit #1: No silent fallback to shellnet — GRAPHQL_URL must be configured
 const GRAPHQL_ENDPOINT = config.graphqlUrl || "https://shellnet.ackinacki.org/graphql";
@@ -781,6 +785,85 @@ async function getAccountState(address) {
   }
 }
 
+/**
+ * Busca transações recentes na BondingCurve para indexar Trades (Buy/Sell)
+ */
+async function getRecentBondingCurveTrades(address) {
+  const query = `
+    query getTrades($address: String!) {
+      blockchain {
+        account(address: $address) {
+          transactions(first: 20) {
+            edges {
+              node {
+                id
+                now
+                out_messages {
+                  id
+                  body
+                  msg_type_name
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  `;
+  try {
+    const data = await gql(query, { address });
+    const edges = data?.blockchain?.account?.transactions?.edges || [];
+    const trades = [];
+    
+    for (const edge of edges) {
+      const tx = edge.node;
+      const outMsgs = tx.out_messages || [];
+      for (const msg of outMsgs) {
+        if (msg.msg_type_name === "extOut" && msg.body && isTip3DecoderAvailable()) {
+          try {
+            const decodedBuy = tvmClient.decodeEvent(msg.body, JSON.stringify(BONDING_CURVE_ABI), "TokensPurchaseInitiated");
+            if (decodedBuy) {
+              trades.push({
+                txHash: tx.id,
+                walletAddress: normalizeAddress(decodedBuy.buyer),
+                type: "buy",
+                tokenAmount: String(decodedBuy.tokensOut),
+                shellAmount: String(decodedBuy.shellIn),
+                price: Number(decodedBuy.shellIn) / Number(decodedBuy.tokensOut),
+                createdAt: new Date(tx.now * 1000).toISOString()
+              });
+              continue;
+            }
+          } catch (e) {
+            // not a buy event
+          }
+          
+          try {
+            const decodedSell = tvmClient.decodeEvent(msg.body, JSON.stringify(BONDING_CURVE_ABI), "TokensSold");
+            if (decodedSell) {
+              trades.push({
+                txHash: tx.id,
+                walletAddress: normalizeAddress(decodedSell.seller),
+                type: "sell",
+                tokenAmount: String(decodedSell.tokensIn),
+                shellAmount: String(decodedSell.shellOut),
+                price: Number(decodedSell.shellOut) / Number(decodedSell.tokensIn),
+                createdAt: new Date(tx.now * 1000).toISOString()
+              });
+            }
+          } catch (e) {
+             // not a sell event
+          }
+        }
+      }
+    }
+    return trades;
+  } catch (err) {
+    console.error(`[GraphQL] Error fetching trades for ${address}:`, err.message);
+    return [];
+  }
+}
+
 module.exports = {
   getTip3TransferPayment,
   isTip3DecoderAvailable,
@@ -790,4 +873,5 @@ module.exports = {
   getAccountPublicKey,
   getAccountState,
   nanoToDecimal,
+  getRecentBondingCurveTrades,
 };

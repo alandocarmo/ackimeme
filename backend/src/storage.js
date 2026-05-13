@@ -1835,3 +1835,86 @@ module.exports = {
   addComment,
   getCommentsByLaunchId,
 };
+
+// ─── Trade History (Fita de Negociações) ─────────────────────────────────────
+
+async function insertTrade(trade) {
+  const sql = `
+    INSERT INTO trades (id, launch_id, tx_hash, wallet_address, type, token_amount, shell_amount, price, created_at)
+    VALUES ($1, $2, $3, $4, $5, $6, $7, $8, COALESCE($9, NOW()))
+    ON CONFLICT (tx_hash) DO NOTHING
+    RETURNING *;
+  `;
+  const values = [
+    trade.id,
+    trade.launchId,
+    trade.txHash,
+    trade.walletAddress,
+    trade.type,
+    trade.tokenAmount,
+    trade.shellAmount,
+    trade.price,
+    trade.createdAt || null
+  ];
+  
+  const result = await query(sql, values);
+  if (result.rows.length === 0) return null; // Já existia
+  
+  const row = result.rows[0];
+  return {
+    id: row.id,
+    launchId: row.launch_id,
+    txHash: row.tx_hash,
+    walletAddress: row.wallet_address,
+    type: row.type,
+    tokenAmount: row.token_amount,
+    shellAmount: row.shell_amount,
+    price: row.price,
+    createdAt: row.created_at?.toISOString?.() || row.created_at,
+  };
+}
+
+async function getTradesByLaunchId(launchId, limit = 50) {
+  const sql = `
+    SELECT *
+    FROM trades
+    WHERE launch_id = $1
+    ORDER BY created_at DESC
+    LIMIT $2;
+  `;
+  const result = await query(sql, [launchId, limit]);
+  return result.rows.map(row => ({
+    id: row.id,
+    launchId: row.launch_id,
+    txHash: row.tx_hash,
+    walletAddress: row.wallet_address,
+    type: row.type,
+    tokenAmount: row.token_amount,
+    shellAmount: row.shell_amount,
+    price: row.price,
+    createdAt: row.created_at?.toISOString?.() || row.created_at,
+  }));
+}
+
+async function getTopHoldersByLaunchId(launchId, limit = 20) {
+  const sql = `
+    SELECT 
+      wallet_address,
+      SUM(CASE WHEN type = 'buy' THEN token_amount ELSE 0 END) - SUM(CASE WHEN type = 'sell' THEN token_amount ELSE 0 END) as balance
+    FROM trades
+    WHERE launch_id = $1
+    GROUP BY wallet_address
+    HAVING SUM(CASE WHEN type = 'buy' THEN token_amount ELSE 0 END) - SUM(CASE WHEN type = 'sell' THEN token_amount ELSE 0 END) > 0
+    ORDER BY balance DESC
+    LIMIT $2;
+  `;
+  const result = await query(sql, [launchId, limit]);
+  return result.rows.map(row => ({
+    walletAddress: row.wallet_address,
+    balance: Number(row.balance),
+  }));
+}
+
+module.exports.insertTrade = insertTrade;
+module.exports.getTradesByLaunchId = getTradesByLaunchId;
+module.exports.getTopHoldersByLaunchId = getTopHoldersByLaunchId;
