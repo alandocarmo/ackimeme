@@ -3,8 +3,10 @@ import { useRouter } from "next/router";
 import { useEffect, useState, useRef } from "react";
 import { QRCodeSVG } from "qrcode.react";
 import { generateQrChallenge, getQrStatus, getSession, logout } from "../lib/api";
+import { useI18n } from "../lib/i18n";
 
 export default function AuthPage() {
+  const { t } = useI18n();
   const router = useRouter();
   
   const sanitizeReturnTo = (url) => {
@@ -192,25 +194,25 @@ export default function AuthPage() {
   return (
     <>
       <Head>
-        <title>Connect Wallet | AckiMeme</title>
-        <meta name="description" content="Authenticate your wallet using Acki Nacki App" />
+        <title>{t("auth_title")} | AckiMeme</title>
+        <meta name="description" content={t("auth_subtitle")} />
       </Head>
       <main className="auth-layout">
         <div className="hero-glow" style={{ position: 'fixed', top: '50%', transform: 'translate(-50%, -50%)' }} />
         <div className="auth-card">
           <div className="auth-logo">⬡</div>
-          <h1 className="auth-title">Connect Wallet</h1>
+          <h1 className="auth-title">{t("auth_title")}</h1>
           <p className="auth-subtitle">Acki Nacki Blockchain</p>
 
           {step === "done" && session ? (
             <div className="animate-fade-in" style={{ textAlign: 'center' }}>
-              <div className="hero-accent" style={{ fontSize: '20px', fontWeight: 800, marginBottom: '16px' }}>✓ Connected</div>
+              <div className="hero-accent" style={{ fontSize: '20px', fontWeight: 800, marginBottom: '16px' }}>✓ {t("auth_connected")}</div>
               <p className="token-ticker" style={{ fontSize: '14px', marginBottom: '8px' }}>
                 {session.walletAddress.slice(0, 10)}…{session.walletAddress.slice(-6)}
               </p>
               <p className="token-time" style={{ marginBottom: '24px' }}>Session active. You can close this page.</p>
-              <button className="btn-primary" style={{ width: '100%' }} onClick={() => router.push("/")}>Go to Board →</button>
-              <button className="filter-btn" style={{ width: '100%', marginTop: '12px' }} onClick={handleLogout}>Disconnect</button>
+              <button className="btn-primary" style={{ width: '100%' }} onClick={() => router.push("/")}>{t("detail_back")} Board</button>
+              <button className="filter-btn" style={{ width: '100%', marginTop: '12px' }} onClick={handleLogout}>{t("auth_disconnect")}</button>
             </div>
           ) : (
             <div className="animate-fade-in">

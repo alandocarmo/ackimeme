@@ -2,17 +2,18 @@ import Head from "next/head";
 import Link from "next/link";
 import { useDeferredValue, useEffect, useState } from "react";
 import { getPublicLaunches, socket } from "../lib/api";
+import { useI18n } from "../lib/i18n";
 
-function formatTimeAgo(dateStr) {
+function formatTimeAgo(dateStr, t) {
   if (!dateStr) return "";
   const diff = Date.now() - new Date(dateStr).getTime();
   const mins = Math.floor(diff / 60000);
-  if (mins < 1) return "just now";
-  if (mins < 60) return `${mins}m ago`;
+  if (mins < 1) return t("time_just_now");
+  if (mins < 60) return `${mins}${t("time_m_ago")}`;
   const hrs = Math.floor(mins / 60);
-  if (hrs < 24) return `${hrs}h ago`;
+  if (hrs < 24) return `${hrs}${t("time_h_ago")}`;
   const days = Math.floor(hrs / 24);
-  return `${days}d ago`;
+  return `${days}${t("time_d_ago")}`;
 }
 
 function compactWallet(w) {
@@ -90,6 +91,7 @@ function computeAggregateStats(launches) {
 }
 
 export default function Home() {
+  const { t } = useI18n();
   const [launches, setLaunches] = useState([]);
   const [error, setError] = useState("");
   const [search, setSearch] = useState("");
@@ -177,14 +179,14 @@ export default function Home() {
         <section className="hero">
           <div className="hero-glow" />
           <h1 className="hero-title">
-            the memecoin launchpad<br />
-            <span className="hero-accent">on Acki Nacki</span>
+            {t("hero_title_1")}<br />
+            <span className="hero-accent">{t("hero_title_2")}</span>
           </h1>
           <p className="hero-subtitle">
-            fair launch · bonding curve · optional auto-migrate to AMM at 15K SHELL
+            {t("hero_subtitle")}
           </p>
           <Link href="/create" className="btn-primary">
-            🚀 Launch your coin
+            {t("hero_cta")}
           </Link>
         </section>
 
@@ -196,19 +198,19 @@ export default function Home() {
               <div className="stats-banner">
                 <div className="stats-banner-item">
                   <span className="stats-banner-value"><span className="accent">{agg.totalTokens}</span></span>
-                  <span className="stats-banner-label">Tokens Launched</span>
+                  <span className="stats-banner-label">{t("stats_tokens_launched")}</span>
                 </div>
                 <div className="stats-banner-item">
                   <span className="stats-banner-value"><span className="cyan">{agg.totalReserveShell}</span></span>
-                  <span className="stats-banner-label">SHELL Locked</span>
+                  <span className="stats-banner-label">{t("stats_shell_locked")}</span>
                 </div>
                 <div className="stats-banner-item">
                   <span className="stats-banner-value"><span className="warm">{agg.activeTrading}</span></span>
-                  <span className="stats-banner-label">Active Trading</span>
+                  <span className="stats-banner-label">{t("stats_active_trading")}</span>
                 </div>
                 <div className="stats-banner-item">
                   <span className="stats-banner-value"><span className="purple">●</span></span>
-                  <span className="stats-banner-label">Acki Nacki Live</span>
+                  <span className="stats-banner-label">{t("stats_live")}</span>
                 </div>
               </div>
             </div>
@@ -225,7 +227,7 @@ export default function Home() {
                   <span className="ticker-dot" />
                   <span className="ticker-action ticker-launch">LAUNCHED</span>
                   <span>${l.coin?.symbol}</span>
-                  <span style={{ color: 'var(--ink-muted)' }}>{formatTimeAgo(l.createdAt)}</span>
+                  <span style={{ color: 'var(--ink-muted)' }}>{formatTimeAgo(l.createdAt, t)}</span>
                 </span>
               ))}
             </div>
@@ -242,7 +244,7 @@ export default function Home() {
                   className={`filter-btn ${filter === f ? "active" : ""}`}
                   onClick={() => setFilter(f)}
                 >
-                  {f === "new" ? "🕐 New" : f === "trending" ? "🔥 Trending" : f === "finishing" ? "🏁 Finishing" : "🏆 Hall of Fame"}
+                  {f === "new" ? t("filter_new") : f === "trending" ? t("filter_trending") : f === "finishing" ? t("filter_finishing") : t("filter_hall_of_fame")}
                 </button>
               ))}
             </div>
@@ -251,7 +253,7 @@ export default function Home() {
               <span className="search-icon">🔍</span>
               <input
                 className="search-input"
-                placeholder="Search by name, ticker, or wallet…"
+                placeholder={t("search_placeholder")}
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
               />
@@ -265,8 +267,8 @@ export default function Home() {
           {!error && filtered.length === 0 && (
             <div className="empty-state">
               <p className="empty-icon">⬡</p>
-              <p className="empty-text">No tokens found. Be the first to launch!</p>
-              <Link href="/create" className="btn-primary" style={{ padding: '10px 24px', fontSize: '13px' }}>Create a coin</Link>
+              <p className="empty-text">{t("card_no_tokens")}</p>
+              <Link href="/create" className="btn-primary" style={{ padding: '10px 24px', fontSize: '13px' }}>{t("nav_create")}</Link>
             </div>
           )}
 
@@ -291,12 +293,12 @@ export default function Home() {
                       <div className="token-meta">
                         <div className="token-ticker-row">
                           <span className="token-ticker">${launch.coin?.symbol}</span>
-                          <span className="token-time">{formatTimeAgo(launch.createdAt)}</span>
+                          <span className="token-time">{formatTimeAgo(launch.createdAt, t)}</span>
                           {isBoostedActive(launch) && (
-                            <span className="badge-boosted">🚀 Boosted</span>
+                            <span className="badge-boosted">🚀 {t("card_boosted")}</span>
                           )}
                           {launch.protocol?.pumpForever && reserveBalance >= 15000000000000 && (
-                            <span className="king-badge">👑 Eternal Pump King</span>
+                            <span className="king-badge">👑 {t("card_pump_forever")}</span>
                           )}
                           {launch.status === 'on_chain_deployed' && (
                             <span className="badge-live" style={{
@@ -327,7 +329,7 @@ export default function Home() {
                       <div className="progress-bar">
                         <div className="progress-header">
                           <span>Mode</span>
-                          <span style={{ color: '#ef4444', fontWeight: 700 }}>♾️ Pump Forever</span>
+                          <span style={{ color: '#ef4444', fontWeight: 700 }}>{t("card_pump_forever")}</span>
                         </div>
                         <div className="progress-track">
                           <div className="progress-fill" style={{
@@ -340,7 +342,7 @@ export default function Home() {
                     ) : (
                       <div className="progress-bar">
                         <div className="progress-header">
-                          <span>Progress</span>
+                          <span>{t("card_progress")}</span>
                           <span>{progress === null ? "N/A" : `${progress}%`}</span>
                         </div>
                         <div className="progress-track">
@@ -356,17 +358,17 @@ export default function Home() {
 
                     <div className="token-stats">
                       <div className="stat-box">
-                        <span className="stat-label">reserve</span>
+                        <span className="stat-label">{t("card_reserve")}</span>
                         <span className="stat-value">
-                          {reserveBalance === null ? "on-chain pending" : `${(reserveBalance / 1e9).toFixed(2)} SHELL`}
+                          {reserveBalance === null ? "on-chain pending" : `${(reserveBalance / 1e9).toFixed(2)} ${t("common_shell")}`}
                         </span>
                       </div>
                       <div className="stat-box">
-                        <span className="stat-label">supply</span>
+                        <span className="stat-label">{t("card_supply")}</span>
                         <span className="stat-value">{formatSupply(launch.onchainData?.tokenSupply || launch.coin?.totalSupply, !!launch.onchainData?.tokenSupply)}</span>
                       </div>
                       <div className="stat-box">
-                        <span className="stat-label">by</span>
+                        <span className="stat-label">{t("card_by")}</span>
                         <span className="stat-value" style={{ fontFamily: 'var(--font-mono)', fontSize: '10px' }}>
                           {compactWallet(launch.creatorWallet)}
                         </span>

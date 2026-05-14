@@ -7,10 +7,41 @@ import { Analytics } from "@vercel/analytics/react";
 import { useEffect, useState } from "react";
 import { getSession } from "../lib/api";
 import ErrorBoundary from "../lib/ErrorBoundary";
+import { I18nProvider, useI18n, SUPPORTED_LANGS } from "../lib/i18n";
+
+function LanguageSwitcher() {
+  const { lang, setLang } = useI18n();
+
+  return (
+    <div style={{ display: 'flex', gap: '2px', background: 'var(--bg-deep)', borderRadius: '6px', padding: '2px' }}>
+      {SUPPORTED_LANGS.map((l) => (
+        <button
+          key={l.code}
+          onClick={() => setLang(l.code)}
+          style={{
+            padding: '4px 8px',
+            fontSize: '11px',
+            fontWeight: lang === l.code ? 700 : 400,
+            background: lang === l.code ? 'var(--accent)' : 'transparent',
+            color: lang === l.code ? '#000' : 'var(--ink-soft)',
+            border: 'none',
+            borderRadius: '4px',
+            cursor: 'pointer',
+            transition: 'all 0.2s',
+          }}
+          title={l.label}
+        >
+          {l.flag}
+        </button>
+      ))}
+    </div>
+  );
+}
 
 function GlobalNav({ session }) {
   const router = useRouter();
   const isAuth = router.pathname === "/auth";
+  const { t } = useI18n();
 
   return (
     <nav className="navbar">
@@ -23,14 +54,15 @@ function GlobalNav({ session }) {
       </div>
       <div className="nav-right">
         <Link href="/" className="nav-link">
-          ◈ Board
+          {t("nav_board")}
         </Link>
         <Link href="/portfolio" className="nav-link">
-          👜 Portfolio
+          {t("nav_portfolio")}
         </Link>
         <Link href="/create" className="btn-primary" style={{ fontSize: '12px', padding: '8px 16px' }}>
-          🚀 Create
+          {t("nav_create")}
         </Link>
+        <LanguageSwitcher />
         {session ? (
           <Link href="/auth" className="wallet-badge">
             <span className="wallet-dot" />
@@ -38,7 +70,7 @@ function GlobalNav({ session }) {
           </Link>
         ) : !isAuth ? (
           <Link href="/auth" className="btn-primary" style={{ fontSize: '12px', padding: '8px 16px', background: 'transparent', color: 'var(--accent)', border: '1px solid var(--accent-glow)' }}>
-            Connect
+            {t("nav_connect")}
           </Link>
         ) : null}
       </div>
@@ -78,7 +110,7 @@ export default function App({ Component, pageProps }) {
   }, []);
 
   return (
-    <>
+    <I18nProvider>
       <Head>
         {/* Removed standard script tag from Head */}
       </Head>
@@ -89,6 +121,6 @@ export default function App({ Component, pageProps }) {
         <Component {...pageProps} />
       </ErrorBoundary>
       <Analytics />
-    </>
+    </I18nProvider>
   );
 }

@@ -4,6 +4,7 @@ import { useRouter } from "next/router";
 import { useEffect, useState, useCallback } from "react";
 import { getSession, getPublicLaunches } from "../lib/api";
 import { TokenRootAbi, TokenWalletAbi } from "../lib/abi";
+import { useI18n } from "../lib/i18n";
 
 function isSafeUrl(url) {
   if (!url) return false;
@@ -34,6 +35,7 @@ function nanoToDecimal(nano) {
 }
 
 export default function PortfolioPage() {
+  const { t } = useI18n();
   const router = useRouter();
   const [session, setSession] = useState(null);
   const [launches, setLaunches] = useState([]);
@@ -120,15 +122,15 @@ export default function PortfolioPage() {
   }, [session, launches, scanBalances]);
 
   if (loading) {
-    return <div className="page-wrapper container" style={{ textAlign: 'center', padding: '100px' }}>Loading portfolio...</div>;
+    return <div className="page-wrapper container" style={{ textAlign: 'center', padding: '100px' }}>{t("common_loading")}</div>;
   }
 
   if (!session) {
     return (
       <div className="page-wrapper container" style={{ textAlign: 'center', padding: '100px' }}>
-        <h2 className="form-title">Your Portfolio</h2>
-        <p className="form-subtitle">Connect your wallet to see your holdings.</p>
-        <Link href="/auth?from=/portfolio" className="btn-primary" style={{ display: 'inline-block', marginTop: '20px' }}>Connect Wallet</Link>
+        <h2 className="form-title">{t("portfolio_title")}</h2>
+        <p className="form-subtitle">{t("portfolio_login")}</p>
+        <Link href="/auth?from=/portfolio" className="btn-primary" style={{ display: 'inline-block', marginTop: '20px' }}>{t("nav_connect")}</Link>
       </div>
     );
   }
@@ -136,13 +138,13 @@ export default function PortfolioPage() {
   return (
     <>
       <Head>
-        <title>Portfolio | AckiMeme</title>
+        <title>{t("portfolio_title")} | AckiMeme</title>
       </Head>
 
       <main className="page-wrapper container" style={{ paddingTop: '40px' }}>
         <header style={{ marginBottom: '40px', display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end' }}>
           <div>
-            <h1 className="form-title" style={{ margin: 0 }}>My Portfolio</h1>
+            <h1 className="form-title" style={{ margin: 0 }}>{t("portfolio_title")}</h1>
             <p className="form-subtitle" style={{ margin: 0 }}>Tracking your AckiMeme assets</p>
           </div>
           <button className="filter-btn" onClick={scanBalances} disabled={scanning}>
@@ -173,9 +175,9 @@ export default function PortfolioPage() {
         {holdings.length === 0 && !noProvider ? (
           <div className="card" style={{ textAlign: 'center', padding: '60px' }}>
             <p style={{ fontSize: '48px', marginBottom: '20px' }}>📉</p>
-            <h3 style={{ color: 'var(--ink)', marginBottom: '10px' }}>No tokens found</h3>
-            <p className="form-subtitle">You don't own any AckiMeme tokens yet. Head over to the board to start trading!</p>
-            <Link href="/" className="btn-primary" style={{ display: 'inline-block', marginTop: '24px' }}>Explore Board</Link>
+            <h3 style={{ color: 'var(--ink)', marginBottom: '10px' }}>{t("portfolio_empty")}</h3>
+            <p className="form-subtitle">Head over to the board to start trading!</p>
+            <Link href="/" className="btn-primary" style={{ display: 'inline-block', marginTop: '24px' }}>{t("nav_board")}</Link>
           </div>
         ) : holdings.length > 0 ? (
           <div className="portfolio-list" style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>

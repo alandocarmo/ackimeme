@@ -6,6 +6,7 @@ import { getLaunchById, getSession, getComments, postComment, socket } from "../
 import { BondingCurveAbi, TokenWalletAbi, TokenRootAbi } from "../../lib/abi";
 import { useToast } from "../../lib/useToast";
 import { formatNum, getSlopeLabel } from "../../lib/utils";
+import { useI18n } from "../../lib/i18n";
 
 function compactWallet(w) {
   const s = String(w || "");
@@ -31,6 +32,7 @@ function formatSupply(val, isNano = false) {
 }
 
 function PriceChart({ currentPrice, progressPct, slopeDivisor }) {
+  const { t } = useI18n();
   const points = [];
   const pct = parseFloat(progressPct || "0");
   
@@ -52,9 +54,9 @@ function PriceChart({ currentPrice, progressPct, slopeDivisor }) {
   return (
     <div className="card chart-card" style={{ height: '240px', padding: '0', position: 'relative', overflow: 'hidden', border: '1px solid var(--ink-faint)', background: 'linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(0,255,136,0.02) 100%)' }}>
        <div style={{ position: 'absolute', top: '20px', left: '20px', zIndex: 10 }}>
-          <p className="info-label" style={{ margin: 0, fontSize: '10px' }}>BONDING CURVE (THEORETICAL MODEL)</p>
+          <p className="info-label" style={{ margin: 0, fontSize: '10px' }}>{t("detail_bonding_curve")}</p>
           <p style={{ margin: 0, fontSize: '22px', fontWeight: 900, color: 'var(--accent)', letterSpacing: '-0.5px' }}>
-            {currentPrice ? `${currentPrice.toFixed(9)}` : '---'} <span style={{ fontSize: '12px', fontWeight: 400 }}>SHELL</span>
+            {currentPrice ? `${currentPrice.toFixed(9)}` : '---'} <span style={{ fontSize: '12px', fontWeight: 400 }}>{t("common_shell")}</span>
           </p>
        </div>
        
@@ -102,7 +104,7 @@ function PriceChart({ currentPrice, progressPct, slopeDivisor }) {
        </svg>
        
        <div style={{ position: 'absolute', bottom: '10px', right: '15px', color: 'var(--ink-soft)', fontSize: '10px' }}>
-         Bonding Curve: {pct}%
+         {t("info_bonding_curve")}: {pct}%
        </div>
     </div>
   );
@@ -169,7 +171,7 @@ function BubbleMap({ holders, totalSupply }) {
               stroke={n.isBondingCurve ? '#3b82f6' : hashColor(n.walletAddress)}
               strokeWidth="2"
             />
-            {n.r > 15 && (
+             {n.r > 15 && (
                <text textAnchor="middle" dy=".3em" fill="#fff" fontSize={n.r > 25 ? "10px" : "8px"} fontWeight="bold" style={{ pointerEvents: 'none' }}>
                  {n.pct.toFixed(1)}%
                </text>
@@ -247,6 +249,7 @@ function isSafeUrl(url) {
 // Local getSlopeLabel removed, using shared utility
 
 export default function TokenPage() {
+  const { t } = useI18n();
   const router = useRouter();
   const { id } = router.query;
   const [token, setToken] = useState(null);
@@ -869,16 +872,16 @@ export default function TokenPage() {
 
                   <div className="token-stats" style={{ borderTop: 'none', paddingTop: 0, marginBottom: '20px' }}>
                     <div className="stat-box">
-                      <span className="stat-label">Progress</span>
+                      <span className="stat-label">{t("card_progress")}</span>
                       <span className="stat-value" style={{ fontSize: '18px' }}>{stats.progressPct === null ? "N/A" : `${stats.progressPct}%`}</span>
                     </div>
                     <div className="stat-box">
-                      <span className="stat-label">Reserve</span>
-                      <span className="stat-value" style={{ fontSize: '18px' }}>{stats.hasOnchainReserve ? `${stats.reserveShell.toFixed(2)} SHELL` : "awaiting"}</span>
+                      <span className="stat-label">{t("card_reserve")}</span>
+                      <span className="stat-value" style={{ fontSize: '18px' }}>{stats.hasOnchainReserve ? `${stats.reserveShell.toFixed(2)} ${t("common_shell")}` : t("info_pending")}</span>
                     </div>
                     <div className="stat-box">
                       <span className="stat-label">Threshold</span>
-                      <span className="stat-value" style={{ fontSize: '18px' }}>15K SHELL</span>
+                      <span className="stat-value" style={{ fontSize: '18px' }}>15K {t("common_shell")}</span>
                     </div>
                   </div>
                   
@@ -911,7 +914,7 @@ export default function TokenPage() {
                  <p className="info-label">Blockchain Deployment Status</p>
                  <div className="onchain-info-grid">
                     <div className="onchain-item">
-                       <p className="stat-label">Status</p>
+                       <p className="stat-label">{t("info_status")}</p>
                        <p className={`info-value ${token.onchainData?.deployStatus === 'deployed' ? 'hero-accent' : ''}`} style={{ fontSize: '13px' }}>
                           {token.onchainData?.deployStatus?.replace(/_/g, ' ') || 'unknown'}
                        </p>
@@ -919,7 +922,7 @@ export default function TokenPage() {
                     <div className="onchain-item">
                        <p className="stat-label">Price</p>
                        <p className="info-value" style={{ fontSize: '13px' }}>
-                          {onchainPrice ? `${onchainPrice.toFixed(9)} SHELL` : "awaiting sync"}
+                          {onchainPrice ? `${onchainPrice.toFixed(9)} ${t("common_shell")}` : t("info_pending")}
                        </p>
                     </div>
                  </div>
@@ -935,7 +938,7 @@ export default function TokenPage() {
               {/* Info Grid */}
               <div className="info-card-grid">
                 <div className="info-card">
-                  <p className="info-label">Current Supply</p>
+                  <p className="info-label">{t("info_supply")}</p>
                   <p className="info-value">{formatSupply(token.onchainData?.tokenSupply || token.coin.totalSupply, !!token.onchainData?.tokenSupply)}</p>
                 </div>
                 <div className="info-card">
@@ -953,9 +956,9 @@ export default function TokenPage() {
                   </p>
                 </div>
                 <div className="info-card">
-                  <p className="info-label">Creator Rewards</p>
+                  <p className="info-label">{t("info_creator_rewards")}</p>
                   <p className="info-value" style={{ fontSize: '13px', lineHeight: 1.4 }}>
-                    0.3% of trading volume goes automatically to the creator.
+                    {t("info_creator_rewards_desc")}
                   </p>
                 </div>
               </div>
@@ -963,38 +966,38 @@ export default function TokenPage() {
               {/* About */}
               {token.coin.description && (
                 <div className="card">
-                  <p className="info-label">About {token.coin.name}</p>
+                  <p className="info-label">{t("info_about")} {token.coin.name}</p>
                   <p style={{ color: 'var(--ink-soft)', fontSize: '14px', lineHeight: 1.6, marginTop: '12px' }}>{token.coin.description}</p>
                 </div>
               )}
 
               {/* On-chain Details */}
               <div className="card">
-                <p className="info-label">On-Chain Identifiers</p>
+                <p className="info-label">{t("info_onchain")}</p>
                 <div className="onchain-info-grid">
                   <div className="onchain-item">
-                    <span className="stat-label">IPFS Metadata</span>
+                    <span className="stat-label">{t("info_ipfs")}</span>
                     {token.onchainData?.ipfsHash ? (
                       <a href={`https://gateway.pinata.cloud/ipfs/${token.onchainData.ipfsHash}`} target="_blank" rel="noreferrer" className="onchain-link">
                         {token.onchainData.ipfsHash.slice(0, 10)}...
                       </a>
-                    ) : <span className="token-time" style={{ display: 'block' }}>Pending</span>}
+                    ) : <span className="token-time" style={{ display: 'block' }}>{t("info_pending")}</span>}
                   </div>
                   <div className="onchain-item">
-                    <span className="stat-label">Token Root</span>
+                    <span className="stat-label">{t("info_token_root")}</span>
                     {token.onchainData?.tokenRootAddress ? (
                       <a href={`https://beescan.live/accounts/${token.onchainData.tokenRootAddress}`} target="_blank" rel="noreferrer" className="onchain-link">
                         {compactWallet(token.onchainData.tokenRootAddress)}
                       </a>
-                    ) : <span className="token-time" style={{ display: 'block' }}>Pending</span>}
+                    ) : <span className="token-time" style={{ display: 'block' }}>{t("info_pending")}</span>}
                   </div>
                   <div className="onchain-item">
-                    <span className="stat-label">Bonding Curve</span>
+                    <span className="stat-label">{t("info_bonding_curve")}</span>
                     {token.onchainData?.bondingCurveAddress ? (
                       <a href={`https://beescan.live/accounts/${token.onchainData.bondingCurveAddress}`} target="_blank" rel="noreferrer" className="onchain-link">
                         {compactWallet(token.onchainData.bondingCurveAddress)}
                       </a>
-                    ) : <span className="token-time" style={{ display: 'block' }}>Pending</span>}
+                    ) : <span className="token-time" style={{ display: 'block' }}>{t("info_pending")}</span>}
                   </div>
                 </div>
               </div>
@@ -1010,10 +1013,10 @@ export default function TokenPage() {
 
               {/* Trade History Tape */}
               <div className="card" style={{ marginTop: '24px' }}>
-                <p className="info-label" style={{ marginBottom: '16px' }}>📊 Recent Trades</p>
+                <p className="info-label" style={{ marginBottom: '16px' }}>{t("trades_title")}</p>
                 <div className="trade-tape" style={{ maxHeight: '300px', overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: '8px' }}>
                   {trades.length === 0 ? (
-                    <p className="token-time" style={{ textAlign: 'center', padding: '20px' }}>No trades yet. Be the first!</p>
+                    <p className="token-time" style={{ textAlign: 'center', padding: '20px' }}>{t("trades_empty")}</p>
                   ) : (
                     trades.map(t => (
                       <div key={t.id} style={{ display: 'flex', justifyContent: 'space-between', padding: '8px', background: 'var(--bg-deep)', borderRadius: '6px', borderLeft: `4px solid ${t.type === 'buy' ? '#10b981' : '#ef4444'}` }}>
@@ -1033,11 +1036,11 @@ export default function TokenPage() {
 
               {/* Top Holders Leaderboard */}
               <div className="card" style={{ marginTop: '24px' }}>
-                <p className="info-label" style={{ marginBottom: '16px' }}>👑 Top Holders</p>
+                <p className="info-label" style={{ marginBottom: '16px' }}>{t("holders_title")}</p>
                 <BubbleMap holders={holders} totalSupply={totalSupply} />
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', marginTop: '16px' }}>
                   {holders.length === 0 ? (
-                    <p className="token-time" style={{ textAlign: 'center', padding: '20px' }}>No holders yet.</p>
+                    <p className="token-time" style={{ textAlign: 'center', padding: '20px' }}>{t("holders_empty")}</p>
                   ) : (
                     holders.map((h, idx) => {
                       const pct = (h.balance / totalSupply) * 100;
@@ -1050,10 +1053,10 @@ export default function TokenPage() {
                             <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
                               <span style={{ fontSize: '12px', fontWeight: 'bold', color: 'var(--ink-soft)', width: '20px' }}>#{idx + 1}</span>
                               <span style={{ fontSize: '13px', color: h.isBondingCurve ? '#3b82f6' : hashColor(h.walletAddress), fontWeight: h.isBondingCurve ? 'bold' : 'normal' }}>
-                                {h.isBondingCurve ? "🏦 Bonding Curve" : compactWallet(h.walletAddress)}
+                                {h.isBondingCurve ? t("holders_bonding_curve") : compactWallet(h.walletAddress)}
                               </span>
                               {h.walletAddress === token.walletAddress && !h.isBondingCurve && (
-                                <span style={{ fontSize: '10px', background: 'var(--accent-warm)', color: '#000', padding: '2px 6px', borderRadius: '4px', fontWeight: 'bold' }}>Creator</span>
+                                <span style={{ fontSize: '10px', background: 'var(--accent-warm)', color: '#000', padding: '2px 6px', borderRadius: '4px', fontWeight: 'bold' }}>{t("holders_creator_badge")}</span>
                               )}
                             </div>
                             <div style={{ textAlign: 'right' }}>
@@ -1070,12 +1073,12 @@ export default function TokenPage() {
 
               {/* Chat / Comments Section */}
               <div className="card" style={{ marginTop: '24px' }}>
-                <p className="info-label" style={{ marginBottom: '16px' }}>💬 Community Chat</p>
+                <p className="info-label" style={{ marginBottom: '16px' }}>{t("chat_title")}</p>
                 
                 {/* Chat Feed */}
                 <div className="chat-feed" style={{ maxHeight: '400px', overflowY: 'auto', marginBottom: '16px', display: 'flex', flexDirection: 'column', gap: '12px' }}>
                   {comments.length === 0 ? (
-                    <p className="token-time" style={{ textAlign: 'center', padding: '20px' }}>No comments yet. Be the first to hype it up!</p>
+                    <p className="token-time" style={{ textAlign: 'center', padding: '20px' }}>{t("chat_empty")}</p>
                   ) : (
                     comments.map(c => (
                       <div key={c.id} style={{ background: 'var(--bg-deep)', padding: '12px', borderRadius: '8px', borderLeft: `2px solid ${hashColor(c.walletAddress)}` }}>
@@ -1101,7 +1104,7 @@ export default function TokenPage() {
                     type="text"
                     className="text-input"
                     style={{ flex: 1 }}
-                    placeholder={session ? "Write a comment..." : "Sign in to comment"}
+                    placeholder={session ? t("chat_placeholder") : t("chat_signin")}
                     value={newComment}
                     onChange={e => setNewComment(e.target.value)}
                     disabled={!session || isPosting}
@@ -1113,7 +1116,7 @@ export default function TokenPage() {
                     disabled={!session || !newComment.trim() || isPosting}
                     style={{ padding: '0 20px', fontSize: '13px' }}
                   >
-                    {isPosting ? "..." : "Post"}
+                    {isPosting ? "..." : t("chat_send")}
                   </button>
                 </form>
               </div>
@@ -1123,14 +1126,14 @@ export default function TokenPage() {
             <aside className="detail-sidebar">
               <div className="trade-widget">
                 <div className="trade-tabs">
-                  <button className={`trade-tab ${tradeMode === "buy" ? "active-buy" : ""}`} onClick={() => setTradeMode("buy")}>BUY</button>
-                  <button className={`trade-tab ${tradeMode === "sell" ? "active-sell" : ""}`} onClick={() => setTradeMode("sell")}>SELL</button>
+                  <button className={`trade-tab ${tradeMode === "buy" ? "active-buy" : ""}`} onClick={() => setTradeMode("buy")}>{t("detail_buy")}</button>
+                  <button className={`trade-tab ${tradeMode === "sell" ? "active-sell" : ""}`} onClick={() => setTradeMode("sell")}>{t("detail_sell")}</button>
                 </div>
 
                 <div className="trade-panel">
                   <div className="trade-field-wrap">
                     <p className="info-label" style={{ display: 'flex', justifyContent: 'space-between' }}>
-                      <span>Amount to {tradeMode}</span>
+                      <span>{tradeMode === "buy" ? t("detail_amount_shell") : t("detail_amount_tokens")}</span>
                       <span style={{ fontSize: '10px', color: 'var(--ink-soft)' }}>
                         {tradeMode === "buy" && userShellEccBalance !== null && `Bal: ${userShellEccBalance.toFixed(2)} SHELL`}
                         {tradeMode === "sell" && userTokenBalance !== null && `Bal: ${userTokenBalance.toFixed(2)} ${token?.coin?.symbol || ''}`}
@@ -1171,7 +1174,7 @@ export default function TokenPage() {
                   </div>
 
                   <div className="slippage-row">
-                    <span className="info-label" style={{ fontSize: '9px' }}>Slippage</span>
+                    <span className="info-label" style={{ fontSize: '9px' }}>{t("detail_slippage")}</span>
                     <div className="slippage-btns">
                       {["1", "2", "5"].map(p => (
                         <button key={p} className={`slip-btn ${slippage === p ? "active" : ""}`} onClick={() => setSlippage(p)}>{p}%</button>
@@ -1184,7 +1187,7 @@ export default function TokenPage() {
                     return (
                       <>
                         <div className="estimate-box">
-                          <span className="estimate-label">Receive ≈</span>
+                          <span className="estimate-label">{t("detail_estimated_return")} ≈</span>
                           <span className="estimate-val">
                             {estimate.value} {tradeMode === "buy" ? token.coin.symbol : "SHELL"}
                           </span>
@@ -1205,7 +1208,7 @@ export default function TokenPage() {
                                fontWeight: 600,
                                color: estimate.impact > 5 ? '#ef4444' : (estimate.impact > 2 ? '#f97316' : '#10b981')
                             }}>
-                              Price Impact: {estimate.impact.toFixed(2)}%
+                              {t("detail_price_impact")}: {estimate.impact.toFixed(2)}%
                             </span>
                           </div>
                         )}
@@ -1225,10 +1228,10 @@ export default function TokenPage() {
                     disabled={isTrading || token.onchainData?.deployStatus !== 'deployed'}
                   >
                     {isTrading 
-                      ? "Processando Tx..." 
+                      ? t("detail_processing") 
                       : token.onchainData?.deployStatus !== 'deployed'
-                        ? "Aguardando deploy on-chain..."
-                        : `Finalizar ${tradeMode.toUpperCase()}`
+                        ? t("info_pending")
+                        : (tradeMode === "buy" ? t("detail_execute_buy") : t("detail_execute_sell"))
                     }
                   </button>
                   
@@ -1252,8 +1255,8 @@ export default function TokenPage() {
 
               {!session && (
                 <div className="card" style={{ marginTop: '16px', textAlign: 'center', padding: '16px' }}>
-                  <p className="token-time" style={{ marginBottom: '12px' }}>Sign in to track your trades</p>
-                  <Link href={`/auth?from=/token/${id}`} className="filter-btn" style={{ display: 'block' }}>Connect Wallet</Link>
+                  <p className="token-time" style={{ marginBottom: '12px' }}>{t("detail_connect_wallet")}</p>
+                  <Link href={`/auth?from=/token/${id}`} className="filter-btn" style={{ display: 'block' }}>{t("nav_connect")}</Link>
                 </div>
               )}
             </aside>

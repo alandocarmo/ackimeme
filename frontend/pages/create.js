@@ -9,6 +9,7 @@ import {
   verifyPayment,
 } from "../lib/api";
 import { formatNum, getSlopeLabel, sliderToSlopeDivisor, slopeDivisorToSlider } from "../lib/utils";
+import { useI18n } from "../lib/i18n";
 
 function sanitizeSymbol(v) {
   return String(v || "").toUpperCase().replace(/[^A-Z0-9]/g, "").slice(0, 10);
@@ -17,6 +18,7 @@ function sanitizeSymbol(v) {
 // formatNum will be used instead
 
 export default function CreatePage() {
+  const { t } = useI18n();
   const router = useRouter();
   const [session, setSession] = useState(null);
   const [token, setToken] = useState("");
@@ -93,13 +95,13 @@ export default function CreatePage() {
   if (!session) {
     return (
       <>
-        <Head><title>Create Coin | AckiMeme</title></Head>
+        <Head><title>{t("create_title")} | AckiMeme</title></Head>
         <main className="auth-layout">
           <div className="auth-card" style={{ textAlign: 'center' }}>
             <p style={{ fontSize: '48px', marginBottom: '20px' }}>🔒</p>
-            <h2 className="form-title">Connect your wallet first</h2>
-            <p className="form-subtitle">You need to authenticate to create a memecoin.</p>
-            <Link href="/auth?from=/create" className="btn-primary" style={{ width: '100%' }}>Connect Wallet</Link>
+            <h2 className="form-title">{t("auth_title")}</h2>
+            <p className="form-subtitle">{t("auth_subtitle")}</p>
+            <Link href="/auth?from=/create" className="btn-primary" style={{ width: '100%' }}>{t("nav_connect")}</Link>
           </div>
         </main>
       </>
@@ -121,7 +123,7 @@ export default function CreatePage() {
               <Link href={`/token/${launchStatus.ticket.id}`} className="btn-primary">
                 View Token Page →
               </Link>
-              <Link href="/" className="filter-btn" style={{ textAlign: 'center' }}>Back to Board</Link>
+              <Link href="/" className="filter-btn" style={{ textAlign: 'center' }}>{t("detail_back")}</Link>
             </div>
           </div>
         </main>
@@ -132,8 +134,8 @@ export default function CreatePage() {
   return (
     <>
       <Head>
-        <title>Create Coin | AckiMeme</title>
-        <meta name="description" content="Launch your own memecoin on Acki Nacki with bonding curve." />
+        <title>{t("create_title")} | AckiMeme</title>
+        <meta name="description" content={t("create_subtitle")} />
       </Head>
 
       <main className="page-wrapper container" style={{ paddingTop: '40px' }}>
@@ -155,17 +157,17 @@ export default function CreatePage() {
               {/* Step 1: Token Info */}
               {step === 1 && (
                 <div className="animate-fade-in">
-                  <h2 className="form-title">Token Details</h2>
-                  <p className="form-subtitle">Set up your memecoin identity.</p>
+                  <h2 className="form-title">{t("create_title")}</h2>
+                  <p className="form-subtitle">{t("create_subtitle")}</p>
 
                   <div className="field-grid">
                     <label>
-                      <span className="input-label">Token Name *</span>
+                      <span className="input-label">{t("create_name")} *</span>
                       <input className="text-input" maxLength={32} value={form.name}
                         onChange={(e) => updateField("name", e.target.value)} placeholder="e.g. AckiDoge" />
                     </label>
                     <label>
-                      <span className="input-label">Ticker *</span>
+                      <span className="input-label">{t("create_symbol")} *</span>
                       <input className="text-input" maxLength={10} value={form.symbol}
                         onChange={(e) => updateField("symbol", e.target.value)} placeholder="e.g. ADOGE" />
                     </label>
@@ -173,12 +175,12 @@ export default function CreatePage() {
 
                   <div className="field-grid full">
                     <label>
-                      <span className="input-label">Tagline</span>
+                      <span className="input-label">{t("create_tagline")}</span>
                       <input className="text-input" value={form.tagline}
                         onChange={(e) => updateField("tagline", e.target.value)} placeholder="One line about your coin" />
                     </label>
                     <label>
-                      <span className="input-label">Description * (min 20 chars)</span>
+                      <span className="input-label">{t("create_description")} * (min 20 chars)</span>
                       <textarea className="text-area" maxLength={280} value={form.description}
                         onChange={(e) => updateField("description", e.target.value)} placeholder="What's your coin about?" rows={3} />
                       <span className="input-hint" style={{ textAlign: 'right' }}>{form.description.length}/280</span>
@@ -246,13 +248,13 @@ export default function CreatePage() {
 
                   <div className="field-grid">
                     <label>
-                      <span className="input-label">Total Supply</span>
+                      <span className="input-label">{t("create_supply")}</span>
                       <input className="text-input" inputMode="numeric" value={form.totalSupply}
                         onChange={(e) => updateField("totalSupply", e.target.value)} />
                       <span className="input-hint">{formatNum(form.totalSupply)} tokens</span>
                     </label>
                     <label>
-                      <span className="input-label">Logo URL</span>
+                      <span className="input-label">{t("create_logo")}</span>
                       <input className="text-input" value={form.logoUrl}
                         onChange={(e) => updateField("logoUrl", e.target.value)} placeholder="https://..." />
                     </label>
@@ -371,9 +373,9 @@ export default function CreatePage() {
                   {launchStatus.error && <p className="error-msg" style={{ marginBottom: '20px' }}>{launchStatus.error}</p>}
 
                   <div style={{ display: 'flex', gap: '12px' }}>
-                    <button className="filter-btn" onClick={() => setStep(2)} style={{ padding: '12px 24px' }}>← Back</button>
+                    <button className="filter-btn" onClick={() => setStep(2)} style={{ padding: '12px 24px' }}>{t("detail_back")}</button>
                     <button className="btn-primary" disabled={launchStatus.loading} onClick={handleLaunch} style={{ flex: 1 }}>
-                      {launchStatus.loading ? "Deploying..." : "🚀 Launch Coin"}
+                      {launchStatus.loading ? t("create_launching") : t("create_submit")}
                     </button>
                   </div>
                 </div>
