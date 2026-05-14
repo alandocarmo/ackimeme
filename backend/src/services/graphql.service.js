@@ -824,12 +824,12 @@ async function getRecentBondingCurveTrades(address) {
             const decodedBuy = tvmClient.decodeEvent(msg.body, JSON.stringify(BONDING_CURVE_ABI), "TokensPurchaseInitiated");
             if (decodedBuy) {
               trades.push({
-                txHash: tx.id,
+                txHash: `${tx.id}_${msg.id}`,
                 walletAddress: normalizeAddress(decodedBuy.buyer),
                 type: "buy",
                 tokenAmount: String(decodedBuy.tokensOut),
                 shellAmount: String(decodedBuy.shellIn),
-                price: Number(decodedBuy.shellIn) / Number(decodedBuy.tokensOut),
+                price: Number(decodedBuy.tokensOut) > 0 ? Number(decodedBuy.shellIn) / Number(decodedBuy.tokensOut) : 0,
                 createdAt: new Date(tx.now * 1000).toISOString()
               });
               continue;
@@ -842,12 +842,12 @@ async function getRecentBondingCurveTrades(address) {
             const decodedSell = tvmClient.decodeEvent(msg.body, JSON.stringify(BONDING_CURVE_ABI), "TokensSold");
             if (decodedSell) {
               trades.push({
-                txHash: tx.id,
+                txHash: `${tx.id}_${msg.id}`,
                 walletAddress: normalizeAddress(decodedSell.seller),
                 type: "sell",
                 tokenAmount: String(decodedSell.tokensIn),
                 shellAmount: String(decodedSell.shellOut),
-                price: Number(decodedSell.shellOut) / Number(decodedSell.tokensIn),
+                price: Number(decodedSell.tokensIn) > 0 ? Number(decodedSell.shellOut) / Number(decodedSell.tokensIn) : 0,
                 createdAt: new Date(tx.now * 1000).toISOString()
               });
             }

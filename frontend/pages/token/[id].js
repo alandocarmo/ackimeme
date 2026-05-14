@@ -1,7 +1,7 @@
 import Head from "next/head";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState, useCallback, useMemo } from "react";
 import { getLaunchById, getSession, getComments, postComment, socket } from "../../lib/api";
 import { BondingCurveAbi, TokenWalletAbi, TokenRootAbi } from "../../lib/abi";
 import { useToast } from "../../lib/useToast";
@@ -109,51 +109,54 @@ function PriceChart({ currentPrice, progressPct, slopeDivisor }) {
 }
 
 // BubbleMap: SVG-based Sunflower Spiral packing for top holders
-function BubbleMap({ holders, totalSupply, token }) {
-  if (!holders || holders.length === 0) return null;
+function BubbleMap({ holders, totalSupply }) {
+  const placedNodes = useMemo(() => {
+    if (!holders || holders.length === 0) return [];
 
-  const SVG_SIZE = 320;
-  const CENTER = SVG_SIZE / 2;
+    const SVG_SIZE = 320;
+    const CENTER = SVG_SIZE / 2;
+    const placed = [];
 
-  const placedNodes = [];
-  // Sort by balance DESC to place largest first in the center
-  const sortedNodes = [...holders].map((h, i) => {
-    const pct = (h.balance / totalSupply) * 100;
-    // Scale radius logarithmically or by square root for better visualization
-    const r = Math.max(8, Math.sqrt(pct) * 12);
-    return { ...h, pct, r, id: i };
-  }).sort((a, b) => b.balance - a.balance);
+    const sortedNodes = [...holders].map((h, i) => {
+      const pct = (h.balance / totalSupply) * 100;
+      const r = Math.max(8, Math.sqrt(pct) * 12);
+      return { ...h, pct, r, id: i };
+    }).sort((a, b) => b.balance - a.balance);
 
-  for (let i = 0; i < sortedNodes.length; i++) {
-    const node = sortedNodes[i];
-    let angle = 0;
-    let dist = 0;
-    let cx = CENTER, cy = CENTER;
-    let overlapping = true;
-    let attempts = 0;
+    for (let i = 0; i < sortedNodes.length; i++) {
+      const node = sortedNodes[i];
+      let angle = 0;
+      let dist = 0;
+      let cx = CENTER, cy = CENTER;
+      let overlapping = true;
+      let attempts = 0;
 
-    // Sunflower spiral search for the closest non-overlapping position
-    while (overlapping && attempts < 400) {
-      cx = CENTER + Math.cos(angle) * dist;
-      cy = CENTER + Math.sin(angle) * dist;
+      while (overlapping && attempts < 400) {
+        cx = CENTER + Math.cos(angle) * dist;
+        cy = CENTER + Math.sin(angle) * dist;
 
-      overlapping = placedNodes.some(p => {
-        const dx = p.cx - cx;
-        const dy = p.cy - cy;
-        const d = Math.sqrt(dx * dx + dy * dy);
-        return d < (p.r + node.r + 3); // 3px padding
-      });
+        overlapping = placed.some(p => {
+          const dx = p.cx - cx;
+          const dy = p.cy - cy;
+          const d = Math.sqrt(dx * dx + dy * dy);
+          return d < (p.r + node.r + 3);
+        });
 
-      if (overlapping) {
-        dist += 1.5;
-        angle += 2.39996; // Golden angle for optimal spiral packing
-        attempts++;
+        if (overlapping) {
+          dist += 1.5;
+          angle += 2.39996;
+          attempts++;
+        }
       }
+      node.cx = cx;
+      node.cy = cy;
+      placed.push(node);
     }
-    node.cx = cx;
-    node.cy = cy;
-    placedNodes.push(node);
-  }
+    return placed;
+  }, [holders, totalSupply]);
+
+  if (placedNodes.length === 0) return null;
+  const SVG_SIZE = 320;
 
   return (
     <div style={{ background: 'var(--bg-deep)', borderRadius: '8px', padding: '16px', display: 'flex', justifyContent: 'center', overflow: 'hidden', position: 'relative' }}>
@@ -582,6 +585,7 @@ export default function TokenPage() {
       if (!tradeAmount || rawAmount <= 0) throw new Error("Valor inválido.");
 
       const isBuy = tradeMode === "buy";
+      const rawAmountNano = toNano(tradeAmount);
       const slippagePct = parseFloat(slippage);
 
       if (isBuy) {
@@ -1030,7 +1034,7 @@ export default function TokenPage() {
               {/* Top Holders Leaderboard */}
               <div className="card" style={{ marginTop: '24px' }}>
                 <p className="info-label" style={{ marginBottom: '16px' }}>👑 Top Holders</p>
-                <BubbleMap holders={holders} totalSupply={totalSupply} token={token} />
+                <BubbleMap holders={holders} totalSupply={totalSupply} />
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', marginTop: '16px' }}>
                   {holders.length === 0 ? (
                     <p className="token-time" style={{ textAlign: 'center', padding: '20px' }}>No holders yet.</p>

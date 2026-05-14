@@ -6,6 +6,7 @@ import { useRouter } from "next/router";
 import { Analytics } from "@vercel/analytics/react";
 import { useEffect, useState } from "react";
 import { getSession } from "../lib/api";
+import ErrorBoundary from "../lib/ErrorBoundary";
 
 function GlobalNav({ session }) {
   const router = useRouter();
@@ -84,7 +85,9 @@ export default function App({ Component, pageProps }) {
       {/* Telegram WebApp SDK — deve ser carregado antes de qualquer interação */}
       <Script src="https://telegram.org/js/telegram-web-app.js" strategy="beforeInteractive" />
       <GlobalNav session={session} />
-      <Component {...pageProps} />
+      <ErrorBoundary>
+        <Component {...pageProps} />
+      </ErrorBoundary>
       <Analytics />
     </>
   );
