@@ -27,6 +27,35 @@ export function formatNum(n, decimals = 2) {
   }).format(val);
 }
 
+export function formatSupply(n) {
+  if (n >= 1e9) return (n / 1e9).toFixed(2) + "B";
+  if (n >= 1e6) return (n / 1e6).toFixed(2) + "M";
+  if (n >= 1e3) return (n / 1e3).toFixed(2) + "K";
+  return n.toFixed(2);
+}
+
+export function compactWallet(w) {
+  const s = String(w || "");
+  return s.length <= 14 ? s : `${s.slice(0, 8)}…${s.slice(-6)}`;
+}
+
+export function isSafeUrl(url) {
+  if (!url) return false;
+  try {
+    const u = new URL(url);
+    return u.protocol === 'https:';
+  } catch {
+    return false;
+  }
+}
+
+export function formatDate(d) {
+  if (!d) return "";
+  return new Date(d).toLocaleDateString("pt-BR", {
+    day: "2-digit", month: "short", year: "numeric", hour: "2-digit", minute: "2-digit",
+  });
+}
+
 /**
  * Returns the label and color for a given slope divisor.
  * Ensures consistency between Creation and Token pages.

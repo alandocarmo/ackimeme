@@ -63,29 +63,29 @@ function buildEd25519PublicKey(publicKeyInput) {
 // we must hash the message first. For manual tvm-cli signatures, the raw
 // message is signed directly. We try both modes.
 function verifyDetachedSignature({ message, signature, publicKey }) {
-  const signatureBuffer = decodeBuffer(signature, "Signature");
-  const keyObject = buildEd25519PublicKey(publicKey);
+  try {
+    const signatureBuffer = decodeBuffer(signature, "Signature");
+    const keyObject = buildEd25519PublicKey(publicKey);
 
-  // Mode 1: Try raw UTF-8 verification (tvm-cli manual signing)
-  const rawValid = crypto.verify(
-    null,
-    Buffer.from(message, "utf8"),
-    keyObject,
-    signatureBuffer,
-  );
-  if (rawValid) return true;
+    const rawValid = crypto.verify(
+      null,
+      Buffer.from(message, "utf8"),
+      keyObject,
+      signatureBuffer,
+    );
+    if (rawValid) return true;
 
-  // Mode 2: Try SHA-256 hashed verification (everscale-inpage-provider signData)
-  // signData internally does: sign(sha256(base64_decode(data)))
-  // The frontend sends btoa(challengeMsg) as data, so the provider signs sha256(challengeMsg_bytes)
-  const hashedMessage = crypto.createHash("sha256").update(Buffer.from(message, "utf8")).digest();
-  const hashedValid = crypto.verify(
-    null,
-    hashedMessage,
-    keyObject,
-    signatureBuffer,
-  );
-  return hashedValid;
+    const hashedMessage = crypto.createHash("sha256").update(Buffer.from(message, "utf8")).digest();
+    const hashedValid = crypto.verify(
+      null,
+      hashedMessage,
+      keyObject,
+      signatureBuffer,
+    );
+    return hashedValid;
+  } catch (err) {
+    return false;
+  }
 }
 
 function encodeChallengeMessage({
@@ -296,7 +296,7 @@ async function verifyWalletChallenge({
 // ─── QR Code Auth (Deep Link Polling) ───────────────────────────────────────
 
 async function generateQrSession() {
-  const sessionId = "001_" + crypto.randomUUID();
+  const sessionId = crypto.randomUUID();
   const expiresAt = new Date(Date.now() + 5 * 60 * 1000).toISOString();
   
   // Padrão Acki Nacki para Telegram Bot

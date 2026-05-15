@@ -1,7 +1,8 @@
 import Head from "next/head";
 import Link from "next/link";
 import { useDeferredValue, useEffect, useState } from "react";
-import { getPublicLaunches, socket } from "../lib/api";
+import { getPublicLaunches, getSocket } from "../lib/api";
+import { formatSupply, compactWallet, isSafeUrl } from "../lib/utils";
 import { useI18n } from "../lib/i18n";
 
 function formatTimeAgo(dateStr, t) {
@@ -14,20 +15,6 @@ function formatTimeAgo(dateStr, t) {
   if (hrs < 24) return `${hrs}${t("time_h_ago")}`;
   const days = Math.floor(hrs / 24);
   return `${days}${t("time_d_ago")}`;
-}
-
-function compactWallet(w) {
-  const s = String(w || "");
-  return s.length <= 14 ? s : `${s.slice(0, 6)}…${s.slice(-4)}`;
-}
-
-function formatSupply(val, isNano = false) {
-  let n = Number(String(val || "0").replace(/[.,]/g, ""));
-  if (isNano) n = n / 1e9;
-  if (n >= 1e9) return `${(n / 1e9).toFixed(1)}B`;
-  if (n >= 1e6) return `${(n / 1e6).toFixed(1)}M`;
-  if (n >= 1e3) return `${(n / 1e3).toFixed(0)}K`;
-  return String(n);
 }
 
 const MIGRATION_THRESHOLD_NANO = 15_000_000_000_000; // 15K SHELL in nano (contract uses nano)
@@ -103,6 +90,7 @@ export default function Home() {
       .then((r) => { setLaunches(r.launches || []); setError(""); })
       .catch((e) => setError(e.message));
 
+    const socket = getSocket();
     if (!socket) return;
 
     const handleNewLaunch = (launch) => {

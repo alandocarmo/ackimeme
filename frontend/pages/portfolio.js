@@ -6,25 +6,7 @@ import { getSession, getPublicLaunches } from "../lib/api";
 import { TokenRootAbi, TokenWalletAbi } from "../lib/abi";
 import { useI18n } from "../lib/i18n";
 
-function isSafeUrl(url) {
-  if (!url) return false;
-  try {
-    const u = new URL(url);
-    return u.protocol === 'https:';
-  } catch {
-    return false;
-  }
-}
-
-function compactWallet(w) {
-  const s = String(w || "");
-  return s.length <= 14 ? s : `${s.slice(0, 8)}…${s.slice(-6)}`;
-}
-
-function formatNum(n) {
-  const v = Number(String(n || "0").replace(/[.,]/g, ""));
-  return isNaN(v) ? n : v.toLocaleString("pt-BR");
-}
+import { formatNum, compactWallet, isSafeUrl } from "../lib/utils";
 
 function nanoToDecimal(nano) {
   if (!nano) return 0;

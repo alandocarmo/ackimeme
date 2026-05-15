@@ -524,7 +524,7 @@ async function deployTokenEcosystem({ name, symbol, totalSupply, ipfsHash, creat
         _decimals: TOKEN_DECIMALS,
         _walletCode: walletCodeCell,
         _owner: creatorWallet,
-        _shellToConvert: 10000000000 // M-02: 10 SHELL for VMSHELL conversion — ensures enough gas for constructor + BC deploy
+        _vmshellGasAmount: 10000000000 // M-02: 10 VMSHELL for gas - ensures enough gas for constructor + BC deploy
       },
       initialData: { deployNonce },
       signer,

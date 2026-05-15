@@ -1802,7 +1802,6 @@ module.exports = {
   createLaunchpadTask,
   createLaunchpadTaskSubmission,
   consumeChallengeAndCreateSession,
-  getAdminOverview,
   getPublicLaunchpadProjectBySlug,
   createSessionOnly,
   getSessionByToken,
@@ -1817,8 +1816,6 @@ module.exports = {
   listLaunchesForSync,
   getLaunchById,
 
-  isTxHashUsed,
-  markTxHashUsed,
   reserveTxHash,
   releaseTxHashReservation,
   getWalletLastLaunch,
@@ -1834,6 +1831,9 @@ module.exports = {
   cleanupExpiredAuthData,
   addComment,
   getCommentsByLaunchId,
+  insertTrade,
+  getTradesByLaunchId,
+  getTopHoldersByLaunchId,
 };
 
 // ─── Trade History (Fita de Negociações) ─────────────────────────────────────
@@ -1900,11 +1900,11 @@ async function getTopHoldersByLaunchId(launchId, limit = 20) {
   const sql = `
     SELECT 
       wallet_address,
-      SUM(CASE WHEN type = 'buy' THEN token_amount ELSE 0 END) - SUM(CASE WHEN type = 'sell' THEN token_amount ELSE 0 END) as balance
+      SUM(CASE WHEN type = 'buy' THEN token_amount::NUMERIC ELSE 0 END) - SUM(CASE WHEN type = 'sell' THEN token_amount::NUMERIC ELSE 0 END) as balance
     FROM trades
     WHERE launch_id = $1
     GROUP BY wallet_address
-    HAVING SUM(CASE WHEN type = 'buy' THEN token_amount ELSE 0 END) - SUM(CASE WHEN type = 'sell' THEN token_amount ELSE 0 END) > 0
+    HAVING SUM(CASE WHEN type = 'buy' THEN token_amount::NUMERIC ELSE 0 END) - SUM(CASE WHEN type = 'sell' THEN token_amount::NUMERIC ELSE 0 END) > 0
     ORDER BY balance DESC
     LIMIT $2;
   `;
@@ -1914,7 +1914,3 @@ async function getTopHoldersByLaunchId(launchId, limit = 20) {
     balance: Number(row.balance),
   }));
 }
-
-module.exports.insertTrade = insertTrade;
-module.exports.getTradesByLaunchId = getTradesByLaunchId;
-module.exports.getTopHoldersByLaunchId = getTopHoldersByLaunchId;

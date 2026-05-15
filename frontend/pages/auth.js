@@ -28,6 +28,12 @@ export default function AuthPage() {
   const pollingRef = useRef(null);
   const stepRef = useRef("connect");
   const qrSessionIdRef = useRef("");
+  const isMountedRef = useRef(true);
+
+  useEffect(() => {
+    isMountedRef.current = true;
+    return () => { isMountedRef.current = false; };
+  }, []);
 
   useEffect(() => {
     stepRef.current = step;
@@ -125,12 +131,12 @@ export default function AuthPage() {
             setTimeout(() => router.push(String(returnTo)), 1200);
           } catch {
             setError("Login QR concluído, mas a sessão ainda não propagou. Tente novamente em alguns segundos.");
-            setTimeout(() => initQrLogin(), 2000);
+            setTimeout(() => { if (isMountedRef.current) initQrLogin(); }, 2000);
           }
         } else if (statusRes.status === 'expired') {
           stopPolling();
           setError("QR Code expirado. Geração de novo desafio...");
-          setTimeout(() => initQrLogin(), 2000);
+          setTimeout(() => { if (isMountedRef.current) initQrLogin(); }, 2000);
         }
       } catch (err) {
         console.error("Polling error", err);
@@ -154,7 +160,7 @@ export default function AuthPage() {
       
       // 1. Get Challenge
       const { createAuthChallenge, verifyAuthChallenge } = await import('../lib/api');
-      const challengeRes = await createAuthChallenge(walletAddress);
+      const challengeRes = await createAuthChallenge({ walletAddress });
       
       // 2. Sign Challenge
       const signature = await ever.signData({

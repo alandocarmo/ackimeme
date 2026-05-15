@@ -14,10 +14,14 @@ function resolveApiBaseUrl() {
 
 export const API_BASE_URL = resolveApiBaseUrl();
 
-// Socket.io initialization
-export const socket = typeof window !== "undefined" 
-  ? io(API_BASE_URL, { withCredentials: true })
-  : null;
+let _socket = null;
+export function getSocket() {
+  if (typeof window === "undefined") return null;
+  if (!_socket) {
+    _socket = io(API_BASE_URL, { withCredentials: true });
+  }
+  return _socket;
+}
 
 async function request(path, options = {}) {
   const headers = {

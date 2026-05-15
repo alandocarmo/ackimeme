@@ -30,6 +30,8 @@ const {
   addComment,
   reserveTxHash,
   releaseTxHashReservation,
+  getTradesByLaunchId,
+  getTopHoldersByLaunchId,
 } = require("./storage");
 const { createTreasuryPaymentRecord } = require("./treasury");
 const {
@@ -51,6 +53,16 @@ const securityEngine = require("./security");
 
 
 let io; // Global Socket.io instance
+
+const UUID_REGEX = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+
+function requireValidUUID(req, res, next) {
+  const id = req.params.id || req.params.sessionId;
+  if (id && !UUID_REGEX.test(id)) {
+    return res.status(400).json({ error: "ID inválido." });
+  }
+  next();
+}
 
 // ─── Redis Setup ────────────────────────────────────────────────────────────
 let redisClient = null;
@@ -158,6 +170,7 @@ function buildReadinessChecks(databaseReachable) {
     allowedOriginsConfigured:
       config.allowedOrigins.length > 0 && !hasWildcardOrigin,
     storageProvider: "postgres",
+    redisReachable: redisClient ? await redisClient.ping().then(() => true).catch(() => false) : false
   };
 }
 
@@ -169,6 +182,12 @@ const app = express();
 // 1. express-rate-limit usar o IP real do cliente (não o IP do proxy)
 // 2. req.ip retornar o IP correto nos logs e auditoria
 app.set("trust proxy", 1);
+
+app.use((req, res, next) => {
+  req.requestId = crypto.randomUUID();
+  res.setHeader("X-Request-ID", req.requestId);
+  next();
+});
 
 // Security middlewares
 // A-12: Configurar CSP apropriado em vez de desabilitar
@@ -299,7 +318,7 @@ function setSessionCookie(res, sessionToken) {
     secure: config.isProduction,
     sameSite: config.isProduction ? "none" : "lax",
     path: "/",
-    maxAge: 7 * 24 * 60 * 60 * 1000, // 7 dias
+    maxAge: config.sessionTtlHours * 60 * 60 * 1000,
   });
 }
 
@@ -993,14 +1012,9 @@ app.get("/launches/:id/comments", async (req, res) => {
 });
 
 // Audit N3: Rate limiting moved to PostgreSQL (wallet_rate_limits) for persistence across restarts
-
-app.post("/launches/:id/comments", requireSession, async (req, res) => {
+// ── POST /launches/:id/comments ──────────────────────────────────────────────
+app.post("/launches/:id/comments", requireSession, requireValidUUID, async (req, res) => {
   try {
-    const UUID_REGEX = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
-    if (!UUID_REGEX.test(req.params.id)) {
-      return res.status(400).json({ error: "Token ID inválido." });
-    }
-
     // P2 FIX: Ensure launch exists to prevent 500 FK error
     const launchExists = await pool.query(`SELECT id FROM launches WHERE id=$1`, [req.params.id]);
     if (launchExists.rowCount === 0) {
@@ -1061,14 +1075,9 @@ app.post("/launches/:id/comments", requireSession, async (req, res) => {
 
 
 // ── GET /launches/:id/trades (Trade History) ──────────────────────────────────
-app.get("/launches/:id/trades", async (req, res) => {
-  if (!UUID_REGEX.test(req.params.id)) {
-    return res.status(400).json({ error: "Token ID inválido." });
-  }
-  
+app.get("/launches/:id/trades", requireValidUUID, async (req, res) => {
   try {
     const limit = parseInt(req.query.limit) || 50;
-    const { getTradesByLaunchId } = require("./storage");
     const trades = await getTradesByLaunchId(req.params.id, Math.min(100, limit));
     res.json({ success: true, trades });
   } catch (err) {
@@ -1077,13 +1086,8 @@ app.get("/launches/:id/trades", async (req, res) => {
 });
 
 // ── GET /launches/:id/holders (Top Holders) ──────────────────────────────────
-app.get("/launches/:id/holders", async (req, res) => {
-  if (!UUID_REGEX.test(req.params.id)) {
-    return res.status(400).json({ error: "Token ID inválido." });
-  }
-  
+app.get("/launches/:id/holders", requireValidUUID, async (req, res) => {
   try {
-    const { getTopHoldersByLaunchId, getLaunchById } = require("./storage");
     const launch = await getLaunchById(req.params.id);
     if (!launch) return res.status(404).json({ error: "Launch não encontrado." });
 
@@ -1147,8 +1151,6 @@ async function start() {
       credentials: true
     }
   });
-
-  const UUID_REGEX = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
   
   // Anti-spam middleware for Socket.IO
   const socketRateLimit = new Map();

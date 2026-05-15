@@ -651,7 +651,7 @@ async function getAccountBalanceNano(address) {
 
   // Acki Nacki: 0=Uninit, 1=Active, 2=Frozen, 3=NonExist
   const accType = info.acc_type === undefined ? 0 : Number(info.acc_type);
-  if (accType !== 1 && accType !== 0) {
+  if (accType !== 1) {
     return 0n;
   }
 

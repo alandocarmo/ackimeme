@@ -2,34 +2,13 @@ import Head from "next/head";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useEffect, useState, useCallback, useMemo } from "react";
-import { getLaunchById, getSession, getComments, postComment, socket } from "../../lib/api";
+import { getLaunchById, getSession, getComments, postComment, getSocket } from "../../lib/api";
 import { BondingCurveAbi, TokenWalletAbi, TokenRootAbi } from "../../lib/abi";
 import { useToast } from "../../lib/useToast";
-import { formatNum, getSlopeLabel } from "../../lib/utils";
+import { formatNum, getSlopeLabel, formatSupply, compactWallet, isSafeUrl, formatDate } from "../../lib/utils";
 import { useI18n } from "../../lib/i18n";
 
-function compactWallet(w) {
-  const s = String(w || "");
-  return s.length <= 14 ? s : `${s.slice(0, 8)}…${s.slice(-6)}`;
-}
-
-function formatDate(d) {
-  if (!d) return "";
-  return new Date(d).toLocaleDateString("pt-BR", {
-    day: "2-digit", month: "short", year: "numeric", hour: "2-digit", minute: "2-digit",
-  });
-}
-
-// Redefined using the shared utility
-
-function formatSupply(val, isNano = false) {
-  let n = Number(String(val || "0").replace(/[.,]/g, ""));
-  if (isNano) n = n / 1e9;
-  if (n >= 1e9) return `${(n / 1e9).toFixed(1)}B`;
-  if (n >= 1e6) return `${(n / 1e6).toFixed(1)}M`;
-  if (n >= 1e3) return `${(n / 1e3).toFixed(0)}K`;
-  return String(n);
-}
+// Removed duplicated functions
 
 function PriceChart({ currentPrice, progressPct, slopeDivisor }) {
   const { t } = useI18n();
@@ -484,6 +463,7 @@ export default function TokenPage() {
       }
     });
     
+    const socket = getSocket();
     if (!socket) return;
 
     socket.emit("join_token", id);

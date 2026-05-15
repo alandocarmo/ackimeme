@@ -12,9 +12,8 @@
     "dev:wallet:sign": "node scripts/dev-wallet.js sign"
   },
   "dependencies": {
-    "@tvmsdk/core": "^2.0.1",
+    "@tvmsdk/core": "^2.2.0",
     "@tvmsdk/lib-node": "^2.0.1",
-    "@tvmsdk/lib-web": "^2.0.1",
     "axios": "^1.6.0",
     "body-parser": "^1.20.2",
     "cookie-parser": "^1.4.7",

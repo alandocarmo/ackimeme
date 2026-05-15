@@ -15,6 +15,7 @@ const nextConfig = {
       { protocol: "https", hostname: "gateway.pinata.cloud" },
       { protocol: "https", hostname: "ipfs.io" },
       { protocol: "https", hostname: "cloudflare-ipfs.com" },
+      { protocol: "https", hostname: "nftstorage.link" },
       { protocol: "https", hostname: "arweave.net" },
     ],
     unoptimized: false,
@@ -42,15 +43,19 @@ const nextConfig = {
           // bloqueia o Telegram WebApp (iframe). O CSP abaixo define a política.
           {
             key: "Content-Security-Policy",
-            value: [
-              "default-src 'self'",
-              `script-src 'self' 'wasm-unsafe-eval' ${process.env.NODE_ENV === 'development' ? "'unsafe-eval'" : ""} https://va.vercel-scripts.com https://telegram.org`,
-              "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
-              "font-src 'self' https://fonts.gstatic.com",
-              "img-src 'self' data: https://gateway.pinata.cloud https://ipfs.io https://cloudflare-ipfs.com https://arweave.net",
-              `connect-src 'self' https://shellnet.ackinacki.org https://mainnet.ackinacki.org https://api.pinata.cloud https://api.ackimeme.fun wss://api.ackimeme.fun ${process.env.NEXT_PUBLIC_API_BASE_URL || ''} ${(process.env.NEXT_PUBLIC_API_BASE_URL || '').replace('https://', 'wss://')} https://va.vercel-scripts.com${process.env.NODE_ENV === 'development' ? ' http://localhost:* ws://localhost:*' : ''}`,
-              "frame-ancestors 'self' https://web.telegram.org https://*.telegram.org",
-            ].join("; "),
+            value: (() => {
+              const apiBase = process.env.NEXT_PUBLIC_API_BASE_URL?.trim() || "";
+              const apiWs = apiBase ? apiBase.replace('https://', 'wss://') : "";
+              return [
+                "default-src 'self'",
+                `script-src 'self' 'wasm-unsafe-eval' ${process.env.NODE_ENV === 'development' ? "'unsafe-eval'" : ""} https://va.vercel-scripts.com https://telegram.org`,
+                "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
+                "font-src 'self' https://fonts.gstatic.com",
+                "img-src 'self' data: https://gateway.pinata.cloud https://ipfs.io https://cloudflare-ipfs.com https://nftstorage.link https://arweave.net",
+                `connect-src 'self' https://shellnet.ackinacki.org https://mainnet.ackinacki.org https://api.pinata.cloud https://api.ackimeme.fun wss://api.ackimeme.fun ${apiBase} ${apiWs} https://va.vercel-scripts.com${process.env.NODE_ENV === 'development' ? ' http://localhost:* ws://localhost:*' : ''}`.trim(),
+                "frame-ancestors 'self' https://web.telegram.org https://*.telegram.org",
+              ].join("; ");
+            })()
           },
         ],
       },
