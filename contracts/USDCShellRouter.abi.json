@@ -1,0 +1,124 @@
+{
+	"ABI version": 2,
+	"version": "2.4",
+	"header": ["pubkey", "time", "expire"],
+	"functions": [
+		{
+			"name": "constructor",
+			"inputs": [
+				{"name":"_routerUsdcWallet","type":"address"}
+			],
+			"outputs": [
+			]
+		},
+		{
+			"name": "onAcceptTokensTransfer",
+			"inputs": [
+				{"name":"tokenRoot","type":"address"},
+				{"name":"amount","type":"uint128"},
+				{"name":"sender","type":"address"},
+				{"name":"senderWallet","type":"address"},
+				{"name":"remainingGasTo","type":"address"},
+				{"name":"payload","type":"cell"}
+			],
+			"outputs": [
+			]
+		},
+		{
+			"name": "setFeeBps",
+			"inputs": [
+				{"name":"_feeBps","type":"uint16"}
+			],
+			"outputs": [
+			]
+		},
+		{
+			"name": "updateFeeWallet",
+			"inputs": [
+				{"name":"_feeWallet","type":"address"}
+			],
+			"outputs": [
+			]
+		},
+		{
+			"name": "owner",
+			"inputs": [
+			],
+			"outputs": [
+				{"name":"owner","type":"address"}
+			]
+		},
+		{
+			"name": "usdcRoot",
+			"inputs": [
+			],
+			"outputs": [
+				{"name":"usdcRoot","type":"address"}
+			]
+		},
+		{
+			"name": "feeWallet",
+			"inputs": [
+			],
+			"outputs": [
+				{"name":"feeWallet","type":"address"}
+			]
+		},
+		{
+			"name": "accumulatorAddress",
+			"inputs": [
+			],
+			"outputs": [
+				{"name":"accumulatorAddress","type":"address"}
+			]
+		},
+		{
+			"name": "routerUsdcWallet",
+			"inputs": [
+			],
+			"outputs": [
+				{"name":"routerUsdcWallet","type":"address"}
+			]
+		},
+		{
+			"name": "feeBps",
+			"inputs": [
+			],
+			"outputs": [
+				{"name":"feeBps","type":"uint16"}
+			]
+		}
+	],
+	"events": [
+		{
+			"name": "RouterInitialized",
+			"inputs": [
+				{"name":"usdcWallet","type":"address"}
+			],
+			"outputs": [
+			]
+		},
+		{
+			"name": "SwapRouted",
+			"inputs": [
+				{"name":"sender","type":"address"},
+				{"name":"totalAmount","type":"uint128"},
+				{"name":"feeAmount","type":"uint128"},
+				{"name":"swapAmount","type":"uint128"}
+			],
+			"outputs": [
+			]
+		}
+	],
+	"fields": [
+		{"init":true,"name":"_pubkey","type":"uint256"},
+		{"init":false,"name":"_timestamp","type":"uint64"},
+		{"init":false,"name":"_constructorFlag","type":"bool"},
+		{"init":true,"name":"owner","type":"address"},
+		{"init":true,"name":"usdcRoot","type":"address"},
+		{"init":true,"name":"feeWallet","type":"address"},
+		{"init":true,"name":"accumulatorAddress","type":"address"},
+		{"init":false,"name":"routerUsdcWallet","type":"address"},
+		{"init":false,"name":"feeBps","type":"uint16"}
+	]
+}

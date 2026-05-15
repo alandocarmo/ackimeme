@@ -1,0 +1,778 @@
+.fragment c4_to_c7, {
+	PUSHROOT
+	CTOS
+	LDU 256 ; pubkey c4
+	LDU 64 ; pubkey timestamp c4
+	LDU 1 ; ctor flag
+	LDMSGADDR
+	LDREF
+	ENDS
+	CTOS
+	LDMSGADDR
+	LDREF
+	ENDS
+	CTOS
+	LDMSGADDR
+	LDREF
+	ENDS
+	CTOS
+	LDMSGADDR
+	LDREF
+	ENDS
+	CTOS
+	LDMSGADDR
+	LDU 16
+	ENDS
+	SETGLOB 15
+	SETGLOB 14
+	SETGLOB 13
+	SETGLOB 12
+	SETGLOB 11
+	SETGLOB 10
+	SETGLOB 6
+	SETGLOB 3
+	SETGLOB 2
+}
+
+.fragment accumulatorAddress, {
+	DROP
+	ENDS
+	CALLREF {
+		.inline c4_to_c7
+	}
+	GETGLOB 13
+	OVER
+	PUSHCONT {
+		PUSHSLICE xc0000000000000000000000000a3c6b72e
+		NEWC
+		STSLICE
+		STSLICE
+		ENDC
+		PUSHINT 0
+		SENDRAWMSG
+	}
+	IF
+	THROW 0
+}
+
+.fragment c7_to_c4, {
+	GETGLOB 15
+	GETGLOB 14
+	GETGLOB 13
+	GETGLOB 12
+	GETGLOB 11
+	GETGLOB 10
+	GETGLOB 3
+	GETGLOB 2
+	NEWC
+	STU 256
+	STU 64
+	STONE
+	STSLICE
+	ROLLREV 5
+	NEWC
+	STSLICE
+	ROLLREV 4
+	NEWC
+	STSLICE
+	ROLLREV 3
+	NEWC
+	STSLICE
+	ROTREV
+	NEWC
+	STSLICE
+	STU 16
+	STBREFR
+	STBREFR
+	STBREFR
+	STBREFR
+	ENDC
+	POPROOT
+}
+
+.fragment constructor, {
+	DROP
+	GETGLOB 2
+	ISNULL
+	IFREF {
+		.inline c4_to_c7
+	}
+	PUSHINT 100
+	SETGLOB 15
+	GETGLOB 6
+	THROWIF 51
+	OVER
+	PUSHCONT {
+		LDREF
+		ENDS
+		CTOS
+	}
+	IF
+	LDMSGADDR
+	ENDS
+	.loc USDCShellRouter.sol, 42
+	GETGLOB 2
+	GETGLOB 5
+	DUP
+	ISNULL
+	PUSHCONT {
+		DROP
+		PUSHINT 0
+	}
+	IF
+	EQUAL
+	THROWIFNOT 100
+	.loc USDCShellRouter.sol, 43
+	ACCEPT
+	.loc USDCShellRouter.sol, 44
+	DUP
+	SETGLOB 14
+	.loc USDCShellRouter.sol, 45
+	PUSHSLICE xc00000000000000000000000000f98559d
+	NEWC
+	STSLICE
+	STSLICE
+	ENDC
+	PUSHINT 0
+	SENDRAWMSG
+	.loc USDCShellRouter.sol, 0
+	CALLREF {
+		.inline c7_to_c4
+	}
+	THROW 0
+}
+
+.fragment feeBps, {
+	DROP
+	ENDS
+	CALLREF {
+		.inline c4_to_c7
+	}
+	GETGLOB 15
+	OVER
+	PUSHCONT {
+		PUSHSLICE xc0000000000000000000000000cd3f55bf
+		NEWC
+		STSLICE
+		STU 16
+		ENDC
+		PUSHINT 0
+		SENDRAWMSG
+	}
+	IF
+	THROW 0
+}
+
+.fragment feeWallet, {
+	DROP
+	ENDS
+	CALLREF {
+		.inline c4_to_c7
+	}
+	GETGLOB 12
+	OVER
+	PUSHCONT {
+		PUSHSLICE xc0000000000000000000000000c01f76de
+		NEWC
+		STSLICE
+		STSLICE
+		ENDC
+		PUSHINT 0
+		SENDRAWMSG
+	}
+	IF
+	THROW 0
+}
+
+.fragment onAcceptTokensTransfer_e63f2284_internal, {
+	.loc USDCShellRouter.sol, 57
+	PUSHREF {
+		.blob x4f6e6c7920726f7574657220555344432077616c6c6574
+	}
+	GETGLOB 9
+	GETGLOB 14
+	SDEQ
+	THROWARGIFNOT 101
+	.loc USDCShellRouter.sol, 58
+	PUSHREF {
+		.blob x496e76616c696420746f6b656e20726f6f74
+	}
+	ROLL 6
+	GETGLOB 11
+	SDEQ
+	THROWARGIFNOT 102
+	.loc USDCShellRouter.sol, 61
+	GETPARAM 7
+	FIRST
+	DEPTH
+	ADDCONST -2
+	PICK
+	SUB
+	UFITS 120
+	PUSHINT 0
+	RAWRESERVE
+	.loc USDCShellRouter.sol, 63
+	PUSH S4
+	GETGLOB 15
+	MUL
+	UFITS 128
+	PUSHINT 10000
+	DIV
+	.loc USDCShellRouter.sol, 64
+	PUSH2 S5, S0
+	SUB
+	UFITS 128
+	.loc USDCShellRouter.sol, 66
+	PUSH2 S0, S1
+	BLKSWAP 2, 7
+	PUSHSLICE xc0000000000000000000000001
+	NEWC
+	STSLICE
+	ROLLREV 4
+	NEWC
+	STSLICECONST x578fe4b2
+	STSLICE
+	STU 128
+	STU 128
+	STU 128
+	STBREFR
+	ENDC
+	PUSHINT 0
+	SENDRAWMSG
+	.loc USDCShellRouter.sol, 69
+	OVER
+	GTINT 0
+	PUSHCONT {
+		.loc USDCShellRouter.sol, 70
+		PUSHREF {
+		}
+		.loc USDCShellRouter.sol, 71
+		FALSE
+		PUSH S5
+		PUSHINT 100000000
+		GETGLOB 12
+		PUSH S6
+		GETGLOB 14
+		NEWC
+		STSLICECONST x62_
+		STSLICE
+		PUSHSLICE x405f5e1000000000000000000000000000003_
+		STSLICER
+		ROLLREV 6
+		NEWC
+		STSLICECONST x73e22143
+		STU 128
+		STSLICE
+		STU 128
+		ROLLREV 3
+		NEWC
+		STSLICE
+		STI 1
+		STREF
+		STBREFR
+		STBREFR
+		ENDC
+		PUSHINT 0
+		SENDRAWMSG
+		.loc USDCShellRouter.sol, 0
+	}
+	IF
+	.loc USDCShellRouter.sol, 82
+	DUP
+	GTINT 0
+	PUSHCONT {
+		.loc USDCShellRouter.sol, 87
+		PUSH S2
+		TRUE
+		PUSH S5
+		PUSHINT 100000000
+		GETGLOB 13
+		PUSH S5
+		GETGLOB 14
+		NEWC
+		STSLICECONST x62_
+		STSLICE
+		PUSHINT 1
+		STUR 115
+		ROLLREV 6
+		NEWC
+		STSLICECONST x73e22143
+		STU 128
+		STSLICE
+		STU 128
+		ROLLREV 3
+		NEWC
+		STSLICE
+		STI 1
+		STREF
+		STBREFR
+		STBREFR
+	}
+	PUSHCONT {
+		.loc USDCShellRouter.sol, 97
+		PUSH S3
+		NEWC
+		STSLICECONST x62_
+		STSLICE
+		PUSHINT 115
+		STZEROES
+	}
+	IFELSE
+	ENDC
+	PUSHPOW2 7
+	SENDRAWMSG
+	.loc USDCShellRouter.sol, 0
+	BLKDROP 5
+}
+
+.fragment onAcceptTokensTransfer, {
+	DROP
+	GETGLOB 6
+	THROWIFNOT 76
+	GETGLOB 2
+	ISNULL
+	IFREF {
+		.inline c4_to_c7
+	}
+	.loc USDCShellRouter.sol, 48
+	OVER
+	PUSHCONT {
+		LDREF
+		ENDS
+		CTOS
+	}
+	IF
+	LDMSGADDR
+	LDU 128
+	LDREF
+	ENDS
+	CTOS
+	LDMSGADDR
+	LDREF
+	ENDS
+	CTOS
+	LDMSGADDR
+	LDREF
+	ENDS
+	CTOS
+	LDMSGADDR
+	LDREF
+	ENDS
+	.loc USDCShellRouter.sol, 0
+	CALLREF {
+		.inline onAcceptTokensTransfer_e63f2284_internal
+	}
+	CALLREF {
+		.inline c7_to_c4
+	}
+	THROW 0
+}
+
+.fragment owner, {
+	DROP
+	ENDS
+	CALLREF {
+		.inline c4_to_c7
+	}
+	GETGLOB 10
+	OVER
+	PUSHCONT {
+		PUSHSLICE xc0000000000000000000000000df0bcfde
+		NEWC
+		STSLICE
+		STSLICE
+		ENDC
+		PUSHINT 0
+		SENDRAWMSG
+	}
+	IF
+	THROW 0
+}
+
+.fragment routerUsdcWallet, {
+	DROP
+	ENDS
+	CALLREF {
+		.inline c4_to_c7
+	}
+	GETGLOB 14
+	OVER
+	PUSHCONT {
+		PUSHSLICE xc0000000000000000000000000b36a9bcc
+		NEWC
+		STSLICE
+		STSLICE
+		ENDC
+		PUSHINT 0
+		SENDRAWMSG
+	}
+	IF
+	THROW 0
+}
+
+.fragment setFeeBps_023b1fc9_internal, {
+	.loc USDCShellRouter.sol, 103
+	PUSHREF {
+		.blob x4e6f74206f776e6572
+	}
+	GETGLOB 9
+	GETGLOB 10
+	SDEQ
+	THROWARGIFNOT 103
+	.loc USDCShellRouter.sol, 104
+	ACCEPT
+	.loc USDCShellRouter.sol, 105
+	PUSHREF {
+		.blob x4d61782066656520697320313025
+	}
+	OVER
+	PUSHINT 1000
+	LEQ
+	THROWARGIFNOT 104
+	.loc USDCShellRouter.sol, 106
+	SETGLOB 15
+	.loc USDCShellRouter.sol, 0
+}
+
+.fragment setFeeBps, {
+	DROP
+	GETGLOB 6
+	THROWIFNOT 76
+	GETGLOB 2
+	ISNULL
+	IFREF {
+		.inline c4_to_c7
+	}
+	.loc USDCShellRouter.sol, 102
+	LDU 16
+	ENDS
+	.loc USDCShellRouter.sol, 0
+	CALLREF {
+		.inline setFeeBps_023b1fc9_internal
+	}
+	CALLREF {
+		.inline c7_to_c4
+	}
+	THROW 0
+}
+
+.fragment updateFeeWallet_66718524_internal, {
+	.loc USDCShellRouter.sol, 110
+	PUSHREF {
+		.blob x4e6f74206f776e6572
+	}
+	GETGLOB 9
+	GETGLOB 10
+	SDEQ
+	THROWARGIFNOT 103
+	.loc USDCShellRouter.sol, 111
+	ACCEPT
+	.loc USDCShellRouter.sol, 112
+	SETGLOB 12
+	.loc USDCShellRouter.sol, 0
+}
+
+.fragment updateFeeWallet, {
+	DROP
+	GETGLOB 6
+	THROWIFNOT 76
+	GETGLOB 2
+	ISNULL
+	IFREF {
+		.inline c4_to_c7
+	}
+	.loc USDCShellRouter.sol, 109
+	OVER
+	PUSHCONT {
+		LDREF
+		ENDS
+		CTOS
+	}
+	IF
+	LDMSGADDR
+	ENDS
+	.loc USDCShellRouter.sol, 0
+	CALLREF {
+		.inline updateFeeWallet_66718524_internal
+	}
+	CALLREF {
+		.inline c7_to_c4
+	}
+	THROW 0
+}
+
+.fragment usdcRoot, {
+	DROP
+	ENDS
+	CALLREF {
+		.inline c4_to_c7
+	}
+	GETGLOB 11
+	OVER
+	PUSHCONT {
+		PUSHSLICE xc0000000000000000000000000c18cbdcb
+		NEWC
+		STSLICE
+		STSLICE
+		ENDC
+		PUSHINT 0
+		SENDRAWMSG
+	}
+	IF
+	THROW 0
+}
+
+.fragment public_function_selector, {
+	DUP
+	PUSHINT 1075803870
+	LEQ
+	IFJMPREF {
+		DUP
+		EQINT 1
+		IFJMPREF {
+			.inline constructor
+		}
+		DUP
+		PUSHINT 600225582
+		EQUAL
+		IFJMPREF {
+			.inline accumulatorAddress
+		}
+		DUP
+		PUSHINT 862624716
+		EQUAL
+		IFJMPREF {
+			.inline routerUsdcWallet
+		}
+		DUP
+		PUSHINT 1075803870
+		EQUAL
+		IFJMPREF {
+			.inline feeWallet
+		}
+	}
+	DUP
+	PUSHINT 1594609630
+	LEQ
+	IFJMPREF {
+		DUP
+		PUSHINT 1099742667
+		EQUAL
+		IFJMPREF {
+			.inline usdcRoot
+		}
+		DUP
+		PUSHINT 1295996351
+		EQUAL
+		IFJMPREF {
+			.inline feeBps
+		}
+		DUP
+		PUSHINT 1594609630
+		EQUAL
+		IFJMPREF {
+			.inline owner
+		}
+	}
+	DUP
+	PUSHINT 1878579846
+	LEQ
+	IFJMPREF {
+		DUP
+		PUSHINT 1848897773
+		EQUAL
+		IFJMPREF {
+			.inline updateFeeWallet
+		}
+		DUP
+		PUSHINT 1878579846
+		EQUAL
+		IFJMPREF {
+			.inline setFeeBps
+		}
+	}
+	DUP
+	PUSHINT 1893244873
+	EQUAL
+	IFJMPREF {
+		.inline onAcceptTokensTransfer
+	}
+}
+
+.fragment main_external, {
+	PUSHSLICE x8000000000000000000000000000000000000000000000000000000000000000001_
+	SETGLOB 9
+	OVER
+	CALLREF {
+		.inline c4_to_c7
+	}
+	LDU 1 ; haveSign msgSlice
+	SWAP
+	PUSHCONT {
+		PUSHPOW2 9
+		LDSLICEX
+		DUP
+		MYADDR
+		NEWC
+		STSLICE
+		STSLICE
+		ENDC
+		HASHCU
+		SWAP
+		LDU 1 ; signatureSlice hashMsgSlice hasPubkey msgSlice
+		SWAP
+		PUSHCONT {
+			LDU 256 ; signatureSlice hashMsgSlice pubkey msgSlice
+			XCHG2 S3, S3
+		}
+		PUSHCONT {
+			XCHG S2
+			GETGLOB 2
+		}
+		IFELSE
+		DUP
+		SETGLOB 5
+		CHKSIGNU
+		THROWIFNOT 40
+	}
+	PUSHCONT {
+		LDU 1 ; hasPubkey msgSlice
+		SWAP
+		THROWIF 58
+	}
+	IFELSE
+	LDU 64 ; timestamp msgSlice
+	SWAP
+	.inline __replayProtection
+	LDU 32 ; expireAt msgSlice
+	SWAP
+	NOW ; msgSlice expireAt now
+	GREATER ; msgSlice expireAt>now
+	THROWIFNOT 57
+	LDU 32 ; funcId body
+	SWAP
+	CALLREF {
+		.inline public_function_selector
+	}
+	THROW 60
+}
+
+.fragment main_internal, {
+	PUSHROOT
+	CTOS
+	PUSHINT 320
+	SDSKIPFIRST
+	PLDI 1
+	SETGLOB 6
+	PUSH S2
+	CTOS
+	LDU 4 ; bounced tail
+	LDMSGADDR ; bounced src tail
+	DROP
+	SETGLOB 9
+	MODPOW2 1
+	IFRET
+	OVER
+	SEMPTY ; isEmpty
+	IFJMPREF {
+		GETGLOB 6
+		THROWIFNOT 76
+	}
+	OVER
+	LDUQ 32  ; [funcId] body' ok
+	THROWIFNOT 60
+	OVER
+	IFNOTJMPREF {
+		GETGLOB 6
+		THROWIFNOT 76
+	}
+	SWAP
+	CALLREF {
+		.inline public_function_selector
+	}
+	THROW 60
+}
+
+.fragment default_data_cell, {
+	PUSHINT 0
+	PUSHSLICE x2_
+	BLKPUSH 3, 0
+	NEWC
+	PUSHINT 323
+	STZEROES
+	ROLLREV 5
+	NEWC
+	STSLICE
+	ROLLREV 4
+	NEWC
+	STSLICE
+	ROLLREV 3
+	NEWC
+	STSLICE
+	ROTREV
+	NEWC
+	STSLICE
+	STU 16
+	STBREFR
+	STBREFR
+	STBREFR
+	STBREFR
+	ENDC
+}
+
+.fragment upd_only_time_in_c4, {
+	PUSHROOT
+	CTOS
+	LDU 256
+	LDU 64
+	NIP
+	GETGLOB 3
+	ROT
+	NEWC
+	STU 256
+	STU 64
+	STSLICE
+	ENDC
+	POPROOT
+}
+
+.fragment onTickTock, {
+}
+
+; The code below forms a value of the StateInit type.
+.blob x4_ ; split_depth = nothing
+.blob x4_ ; special = nothing
+.blob xc_ ; code = just
+.cell { ; code cell
+	PUSHREFCONT {
+		DICTPUSHCONST 32
+		DICTUGETJMPZ
+		THROW 78
+		.code-dict-cell 32, {
+		}
+		.cell { ; version
+			.blob x736f6c20302e37392e33 ; sol 0.79.3
+		}
+	}
+	POPCTR c3
+	DUP
+	IFNOTJMPREF {
+		.inline main_internal
+	}
+	DUP
+	EQINT -1
+	IFJMPREF {
+		.inline main_external
+	}
+	DUP
+	EQINT -2
+	IFJMPREF {
+		.inline onTickTock
+	}
+	THROW 11
+}
+.blob xc_ ; data = just
+.cell { 
+	.inline-computed-cell default_data_cell, 0
+}
+.blob x4_ ; library = hme_empty
