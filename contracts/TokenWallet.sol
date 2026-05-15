@@ -22,6 +22,9 @@ contract TokenWallet is ITokenWallet {
     mapping(uint32 => uint256) public pendingBurns;
     mapping(uint32 => uint256) public pendingTransfers;
 
+    event TransferInitiated(address owner, address recipient, uint256 amount);
+    event BurnInitiated(address owner, uint256 amount);
+
     constructor() {
         require(msg.sender == root, 101, "Only root can deploy wallet");
         // Fix #8: Removido tvm.accept() — não necessário em mensagem interna
@@ -69,6 +72,8 @@ contract TokenWallet is ITokenWallet {
         pendingTransfers[seqno] = amount;
         balance -= amount;
 
+        emit TransferInitiated(owner, recipientOwner, amount);
+
         // Route through TokenRoot so the recipient wallet can authenticate the
         // transfer source and so wallet deployment uses the canonical stateInit.
         ITokenRoot(root).transferFromWallet{value: 0, flag: 64}(seqno, owner, recipientOwner, amount);
@@ -87,6 +92,8 @@ contract TokenWallet is ITokenWallet {
         pendingBurns[seqno] = amount;
         balance -= amount;
         
+        emit BurnInitiated(owner, amount);
+
         // Repassa a execução para o TokenRoot informando a quantia deletada e quem deve ser reembolsado
         ITokenRoot(root).notifyBurn{value: 0, flag: 64}(seqno, amount, owner, callbackTarget, minShellOut);
     }

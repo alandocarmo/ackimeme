@@ -113,6 +113,25 @@
 		}
 	],
 	"events": [
+		{
+			"name": "TransferInitiated",
+			"inputs": [
+				{"name":"owner","type":"address"},
+				{"name":"recipient","type":"address"},
+				{"name":"amount","type":"uint256"}
+			],
+			"outputs": [
+			]
+		},
+		{
+			"name": "BurnInitiated",
+			"inputs": [
+				{"name":"owner","type":"address"},
+				{"name":"amount","type":"uint256"}
+			],
+			"outputs": [
+			]
+		}
 	],
 	"fields": [
 		{"init":true,"name":"_pubkey","type":"uint256"},

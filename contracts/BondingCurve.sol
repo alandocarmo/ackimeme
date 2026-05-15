@@ -165,6 +165,14 @@ contract BondingCurve {
         return uint128((avgPrice * tokenAmount) / 1e9);
     }
 
+    function getSellPrice(uint256 tokenAmount) public view returns (uint128) {
+        return getSellReturn(tokenAmount);
+    }
+
+    function getCurrentMarketCap() public view returns (uint256) {
+        return (uint256(currentPrice()) * totalSupply) / 1e9;
+    }
+
     function maxBuyPerTx() public view returns (uint256) {
         uint256 capBasedLimit = (_supplyCap * MAX_BUY_PER_TX_BPS) / 10_000;
         if (capBasedLimit == 0) {

@@ -1,526 +1,358 @@
 {
-  "04cdafe8d93db7553028ffb0547ce2d765e1bedb95c447a721a4dacbb7d38400": {
-    "0": {
-      "filename": "TokenWallet.sol",
-      "line": 61
-    },
-    "8": {
-      "filename": "TokenWallet.sol",
-      "line": 61
-    },
-    "24": {
-      "filename": "TokenWallet.sol",
-      "line": 61
-    },
-    "32": {
-      "filename": "TokenWallet.sol",
-      "line": 61
-    },
-    "56": {
-      "filename": "TokenWallet.sol",
-      "line": 64
-    },
-    "64": {
-      "filename": "TokenWallet.sol",
-      "line": 64
-    },
-    "72": {
-      "filename": "TokenWallet.sol",
-      "line": 64
-    },
-    "88": {
-      "filename": "TokenWallet.sol",
-      "line": 64
-    },
-    "96": {
-      "filename": "TokenWallet.sol",
-      "line": 64
-    },
-    "144": {
-      "filename": "TokenWallet.sol",
-      "line": 64
-    },
-    "152": {
-      "filename": "TokenWallet.sol",
-      "line": 64
-    },
-    "176": {
-      "filename": "TokenWallet.sol",
-      "line": 65
-    },
-    "192": {
-      "filename": "TokenWallet.sol",
-      "line": 68
-    },
-    "208": {
-      "filename": "TokenWallet.sol",
-      "line": 68
-    },
-    "216": {
-      "filename": "TokenWallet.sol",
-      "line": 68
-    },
-    "224": {
-      "filename": "TokenWallet.sol",
-      "line": 68
-    },
-    "240": {
-      "filename": "TokenWallet.sol",
-      "line": 68
-    },
-    "256": {
-      "filename": "TokenWallet.sol",
-      "line": 69
-    },
-    "264": {
-      "filename": "TokenWallet.sol",
-      "line": 69
-    },
-    "280": {
-      "filename": "TokenWallet.sol",
-      "line": 69
-    },
-    "288": {
-      "filename": "TokenWallet.sol",
-      "line": 69
-    },
-    "296": {
-      "filename": "TokenWallet.sol",
-      "line": 69
-    },
-    "312": {
-      "filename": "TokenWallet.sol",
-      "line": 69
-    },
-    "320": {
-      "filename": "TokenWallet.sol",
-      "line": 69
-    },
-    "336": {
-      "filename": "TokenWallet.sol",
-      "line": 69
-    },
-    "352": {
-      "filename": "TokenWallet.sol",
-      "line": 69
-    },
-    "368": {
-      "filename": "TokenWallet.sol",
-      "line": 70
-    },
-    "384": {
-      "filename": "TokenWallet.sol",
-      "line": 70
-    },
-    "392": {
-      "filename": "TokenWallet.sol",
-      "line": 70
-    },
-    "400": {
-      "filename": "TokenWallet.sol",
-      "line": 70
-    },
-    "416": {
-      "filename": "TokenWallet.sol",
-      "line": 70
-    },
-    "432": {
-      "filename": "TokenWallet.sol",
-      "line": 74
-    },
-    "440": {
-      "filename": "TokenWallet.sol",
-      "line": 74
-    },
-    "456": {
-      "filename": "TokenWallet.sol",
-      "line": 74
-    },
-    "472": {
-      "filename": "TokenWallet.sol",
-      "line": 74
-    },
-    "488": {
-      "filename": "TokenWallet.sol",
-      "line": 74
-    },
-    "496": {
-      "filename": "TokenWallet.sol",
-      "line": 74
-    },
-    "520": {
-      "filename": "TokenWallet.sol",
-      "line": 74
-    },
-    "528": {
-      "filename": "TokenWallet.sol",
-      "line": 74
-    },
-    "536": {
-      "filename": "TokenWallet.sol",
-      "line": 74
-    },
-    "560": {
-      "filename": "TokenWallet.sol",
-      "line": 74
-    },
-    "576": {
-      "filename": "TokenWallet.sol",
-      "line": 74
-    },
-    "584": {
-      "filename": "TokenWallet.sol",
-      "line": 74
-    },
-    "632": {
-      "filename": "TokenWallet.sol",
-      "line": 74
-    },
-    "648": {
-      "filename": "TokenWallet.sol",
-      "line": 74
-    },
-    "656": {
-      "filename": "TokenWallet.sol",
-      "line": 74
-    },
-    "664": {
-      "filename": "TokenWallet.sol",
-      "line": 74
-    },
-    "672": {
-      "filename": "TokenWallet.sol",
-      "line": 74
-    },
-    "680": {
-      "filename": "TokenWallet.sol",
-      "line": 74
-    },
-    "696": {
-      "filename": "TokenWallet.sol",
-      "line": 74
-    },
-    "704": {
-      "filename": "TokenWallet.sol",
-      "line": 74
-    },
-    "712": {
-      "filename": "TokenWallet.sol",
-      "line": 74
-    },
-    "720": {
-      "filename": "TokenWallet.sol",
-      "line": 74
-    },
-    "736": {
-      "filename": "TokenWallet.sol",
-      "line": 74
-    }
-  },
   "0a466c60d97819f4d43583a85c32c00019d8f7e834deed03cdaea04e7fb9dd4b": {
     "0": {
       "filename": "TokenWallet.sol",
-      "line": 141
+      "line": 148
     },
     "16": {
       "filename": "TokenWallet.sol",
-      "line": 142
+      "line": 149
     },
     "24": {
       "filename": "TokenWallet.sol",
-      "line": 142
+      "line": 149
     },
     "40": {
       "filename": "TokenWallet.sol",
-      "line": 142
+      "line": 149
     },
     "56": {
       "filename": "TokenWallet.sol",
-      "line": 142
+      "line": 149
     },
     "64": {
       "filename": "TokenWallet.sol",
-      "line": 143
+      "line": 150
     },
     "72": {
       "filename": "TokenWallet.sol",
-      "line": 143
+      "line": 150
     },
     "80": {
       "filename": "./TokenWallet.code",
-      "line": 955
+      "line": 985
     },
     "88": {
       "filename": "TokenWallet.sol",
-      "line": 145
+      "line": 152
     },
     "96": {
       "filename": "TokenWallet.sol",
-      "line": 145
+      "line": 152
     },
     "112": {
       "filename": "TokenWallet.sol",
-      "line": 145
+      "line": 152
     },
     "120": {
       "filename": "TokenWallet.sol",
-      "line": 146
+      "line": 153
     },
     "128": {
       "filename": "TokenWallet.sol",
-      "line": 146
+      "line": 153
     },
     "144": {
       "filename": "TokenWallet.sol",
-      "line": 146
+      "line": 153
     },
     "160": {
       "filename": "TokenWallet.sol",
-      "line": 146
+      "line": 153
     },
     "176": {
       "filename": "TokenWallet.sol",
-      "line": 146
+      "line": 153
     },
     "192": {
       "filename": "TokenWallet.sol",
-      "line": 146
+      "line": 153
     },
     "200": {
       "filename": "TokenWallet.sol",
-      "line": 146
+      "line": 153
     },
     "224": {
       "filename": "TokenWallet.sol",
-      "line": 146
+      "line": 153
     },
     "232": {
       "filename": "TokenWallet.sol",
-      "line": 147
+      "line": 154
     },
     "240": {
       "filename": "TokenWallet.sol",
-      "line": 147
+      "line": 154
     },
     "248": {
       "filename": "TokenWallet.sol",
-      "line": 147
+      "line": 154
     },
     "264": {
       "filename": "TokenWallet.sol",
-      "line": 148
+      "line": 155
     },
     "280": {
       "filename": "TokenWallet.sol",
-      "line": 148
+      "line": 155
     },
     "288": {
       "filename": "TokenWallet.sol",
-      "line": 148
+      "line": 155
     },
     "304": {
       "filename": "TokenWallet.sol",
-      "line": 148
+      "line": 155
     },
     "320": {
       "filename": "TokenWallet.sol",
-      "line": 148
+      "line": 155
     },
     "328": {
       "filename": "TokenWallet.sol",
-      "line": 148
+      "line": 155
     },
     "344": {
       "filename": "TokenWallet.sol",
-      "line": 149
+      "line": 156
     },
     "352": {
       "filename": "TokenWallet.sol",
-      "line": 149
+      "line": 156
     },
     "368": {
       "filename": "TokenWallet.sol",
-      "line": 149
+      "line": 156
     },
     "384": {
       "filename": "TokenWallet.sol",
-      "line": 149
+      "line": 156
     },
     "400": {
       "filename": "TokenWallet.sol",
-      "line": 149
+      "line": 156
     },
     "408": {
       "filename": "TokenWallet.sol",
-      "line": 149
+      "line": 156
     },
     "424": {
       "filename": "./TokenWallet.code",
-      "line": 990
+      "line": 1020
     },
     "432": {
       "filename": "./TokenWallet.code",
-      "line": 992
+      "line": 1022
     },
     "440": {
       "filename": "./TokenWallet.code",
-      "line": 994
+      "line": 1024
     },
     "448": {
       "filename": "./TokenWallet.code",
-      "line": 996
+      "line": 1026
     },
     "456": {
       "filename": "./TokenWallet.code",
-      "line": 997
+      "line": 1027
     }
   },
   "0b283e09ab7003af1ecd296c8b67a766fde7725c3ffb0c808afcc59ec08da7c7": {
     "0": {
       "filename": "./TokenWallet.code",
-      "line": 527
+      "line": 538
     },
     "8": {
       "filename": "./TokenWallet.code",
-      "line": 528
+      "line": 539
     },
     "24": {
       "filename": "./TokenWallet.code",
-      "line": 529
+      "line": 540
     },
     "48": {
       "filename": "./TokenWallet.code",
-      "line": 530
+      "line": 541
     },
     "64": {
       "filename": "./TokenWallet.code",
-      "line": 531
+      "line": 542
     },
     "72": {
       "filename": "./TokenWallet.code",
-      "line": 532
+      "line": 543
     },
     "88": {
       "filename": "TokenWallet.sol",
-      "line": 50
+      "line": 53
     },
     "96": {
       "filename": "TokenWallet.sol",
-      "line": 50
+      "line": 53
     },
     "104": {
       "filename": "TokenWallet.sol",
-      "line": 50
+      "line": 53
     },
     "120": {
       "filename": "TokenWallet.sol",
-      "line": 50
+      "line": 53
     },
     "128": {
       "filename": "TokenWallet.sol",
-      "line": 50
+      "line": 53
     },
     "136": {
       "filename": "TokenWallet.sol",
-      "line": 50
+      "line": 53
     },
     "144": {
       "filename": "TokenWallet.sol",
-      "line": 50
+      "line": 53
     },
     "152": {
       "filename": "TokenWallet.sol",
-      "line": 50
+      "line": 53
     },
     "168": {
       "filename": "TokenWallet.sol",
-      "line": 50
+      "line": 53
     },
     "176": {
       "filename": "TokenWallet.sol",
-      "line": 50
+      "line": 53
     },
     "192": {
       "filename": "TokenWallet.sol",
-      "line": 50
+      "line": 53
     },
     "200": {
       "filename": "./TokenWallet.code",
-      "line": 550
+      "line": 561
     },
     "216": {
       "filename": "./TokenWallet.code",
-      "line": 553
+      "line": 564
     },
     "232": {
       "filename": "./TokenWallet.code",
-      "line": 556
+      "line": 567
     }
   },
-  "0cb68558e94745c60830707f1a4c7c86939ac90a0e23d8e5bd6d245214fa4827": {
+  "10d6d1e3dcac9ef9a7497c2857f4d8a03a1048a225215780ba910595598d4a66": {
+    "0": {
+      "filename": "TokenWallet.sol",
+      "line": 84
+    },
+    "8": {
+      "filename": "TokenWallet.sol",
+      "line": 84
+    },
+    "24": {
+      "filename": "TokenWallet.sol",
+      "line": 84
+    },
+    "40": {
+      "filename": "TokenWallet.sol",
+      "line": 84
+    },
+    "56": {
+      "filename": "TokenWallet.sol",
+      "line": 84
+    },
+    "80": {
+      "filename": "TokenWallet.sol",
+      "line": 85
+    },
+    "88": {
+      "filename": "TokenWallet.sol",
+      "line": 85
+    },
+    "104": {
+      "filename": "TokenWallet.sol",
+      "line": 85
+    },
+    "112": {
+      "filename": "TokenWallet.sol",
+      "line": 85
+    },
+    "120": {
+      "filename": "TokenWallet.sol",
+      "line": 85
+    },
+    "144": {
+      "filename": "TokenWallet.sol",
+      "line": 87
+    },
+    "152": {
+      "filename": "TokenWallet.sol",
+      "line": 87
+    },
+    "160": {
+      "filename": "TokenWallet.sol",
+      "line": 87
+    },
+    "176": {
+      "filename": "TokenWallet.sol",
+      "line": 87
+    },
+    "184": {
+      "filename": "TokenWallet.sol",
+      "line": 87
+    },
+    "232": {
+      "filename": "TokenWallet.sol",
+      "line": 87
+    },
+    "240": {
+      "filename": "TokenWallet.sol",
+      "line": 87
+    }
+  },
+  "14288b5fae40c1295fcef0c69ffe6c295b8042bf4090f3bf7c689c94894277b8": {
     "0": {
       "filename": "./TokenWallet.code",
-      "line": 706
+      "line": 1123
     },
     "8": {
       "filename": "./TokenWallet.code",
-      "line": 707
+      "line": 1133
+    },
+    "24": {
+      "filename": "./TokenWallet.code",
+      "line": 1134
+    },
+    "32": {
+      "filename": "./TokenWallet.code",
+      "line": 1135
+    },
+    "48": {
+      "filename": "./TokenWallet.code",
+      "line": 1138
     },
     "56": {
       "filename": "./TokenWallet.code",
-      "line": 708
+      "line": 1139
     },
-    "64": {
+    "72": {
       "filename": "./TokenWallet.code",
-      "line": 709
-    },
-    "80": {
-      "filename": "./TokenWallet.code",
-      "line": 722
+      "line": 1140
     },
     "88": {
       "filename": "./TokenWallet.code",
-      "line": 723
+      "line": 1143
     },
-    "136": {
+    "96": {
       "filename": "./TokenWallet.code",
-      "line": 724
+      "line": 1144
     },
-    "144": {
+    "112": {
       "filename": "./TokenWallet.code",
-      "line": 725
+      "line": 1145
     },
-    "160": {
+    "128": {
       "filename": "./TokenWallet.code",
-      "line": 728
-    },
-    "168": {
-      "filename": "./TokenWallet.code",
-      "line": 729
-    },
-    "216": {
-      "filename": "./TokenWallet.code",
-      "line": 730
-    },
-    "224": {
-      "filename": "./TokenWallet.code",
-      "line": 731
-    },
-    "240": {
-      "filename": "./TokenWallet.code",
-      "line": 734
-    },
-    "248": {
-      "filename": "./TokenWallet.code",
-      "line": 735
-    },
-    "296": {
-      "filename": "./TokenWallet.code",
-      "line": 736
-    },
-    "304": {
-      "filename": "./TokenWallet.code",
-      "line": 737
+      "line": 1148
     }
   },
   "183a6e78a264772bbc4e6645ff52e97a155b328078d42ce731def35c9216d6c8": {
@@ -629,906 +461,1094 @@
       "line": 40
     }
   },
-  "291da268021909d29982a9816ffb659423afcdfb57bbfb2c9b592d5a8fc90606": {
+  "19663b151c06e8f6f624038851f1ed8d4d881c17f53c6cca070f7d5ca62cf8f6": {
     "0": {
       "filename": "./TokenWallet.code",
-      "line": 103
+      "line": 732
     },
-    "16": {
+    "8": {
       "filename": "./TokenWallet.code",
-      "line": 104
+      "line": 733
     },
-    "32": {
+    "56": {
       "filename": "./TokenWallet.code",
-      "line": 105
-    },
-    "48": {
-      "filename": "./TokenWallet.code",
-      "line": 106
+      "line": 734
     },
     "64": {
       "filename": "./TokenWallet.code",
-      "line": 107
+      "line": 735
     },
     "80": {
       "filename": "./TokenWallet.code",
-      "line": 108
+      "line": 771
     },
-    "96": {
+    "88": {
       "filename": "./TokenWallet.code",
-      "line": 109
+      "line": 772
     },
-    "112": {
+    "136": {
       "filename": "./TokenWallet.code",
-      "line": 110
-    },
-    "128": {
-      "filename": "./TokenWallet.code",
-      "line": 111
+      "line": 773
     },
     "144": {
       "filename": "./TokenWallet.code",
-      "line": 112
+      "line": 774
     },
-    "152": {
+    "160": {
       "filename": "./TokenWallet.code",
-      "line": 113
+      "line": 800
     },
     "168": {
       "filename": "./TokenWallet.code",
-      "line": 114
+      "line": 801
     },
-    "184": {
+    "216": {
       "filename": "./TokenWallet.code",
-      "line": 115
-    },
-    "200": {
-      "filename": "./TokenWallet.code",
-      "line": 116
-    },
-    "208": {
-      "filename": "./TokenWallet.code",
-      "line": 117
+      "line": 802
     },
     "224": {
       "filename": "./TokenWallet.code",
-      "line": 118
-    },
-    "232": {
-      "filename": "./TokenWallet.code",
-      "line": 119
+      "line": 803
     },
     "240": {
       "filename": "./TokenWallet.code",
-      "line": 120
+      "line": 823
     },
-    "256": {
+    "248": {
       "filename": "./TokenWallet.code",
-      "line": 121
+      "line": 824
     },
-    "272": {
+    "296": {
       "filename": "./TokenWallet.code",
-      "line": 122
-    },
-    "288": {
-      "filename": "./TokenWallet.code",
-      "line": 123
+      "line": 825
     },
     "304": {
       "filename": "./TokenWallet.code",
+      "line": 826
+    }
+  },
+  "1d0891cb9b065135da21ee4008a32f8559176a21203e846d014cb7de365e62ed": {
+    "0": {
+      "filename": "./TokenWallet.code",
+      "line": 702
+    },
+    "8": {
+      "filename": "./TokenWallet.code",
+      "line": 703
+    },
+    "24": {
+      "filename": "./TokenWallet.code",
+      "line": 704
+    },
+    "48": {
+      "filename": "./TokenWallet.code",
+      "line": 705
+    },
+    "64": {
+      "filename": "./TokenWallet.code",
+      "line": 706
+    },
+    "72": {
+      "filename": "./TokenWallet.code",
+      "line": 707
+    },
+    "88": {
+      "filename": "TokenWallet.sol",
+      "line": 61
+    },
+    "96": {
+      "filename": "TokenWallet.sol",
+      "line": 61
+    },
+    "104": {
+      "filename": "TokenWallet.sol",
+      "line": 61
+    },
+    "112": {
+      "filename": "TokenWallet.sol",
+      "line": 61
+    },
+    "120": {
+      "filename": "TokenWallet.sol",
+      "line": 61
+    },
+    "128": {
+      "filename": "TokenWallet.sol",
+      "line": 61
+    },
+    "136": {
+      "filename": "TokenWallet.sol",
+      "line": 61
+    },
+    "152": {
+      "filename": "TokenWallet.sol",
+      "line": 61
+    },
+    "168": {
+      "filename": "TokenWallet.sol",
+      "line": 61
+    },
+    "176": {
+      "filename": "./TokenWallet.code",
+      "line": 722
+    },
+    "192": {
+      "filename": "./TokenWallet.code",
+      "line": 725
+    },
+    "208": {
+      "filename": "./TokenWallet.code",
+      "line": 728
+    }
+  },
+  "1ffdd1ee4bd654e5abdcf75bd7f2e4697e7d3f42117629c1aafc91b177f35fb7": {
+    "0": {
+      "filename": "TokenWallet.sol",
+      "line": 62
+    },
+    "8": {
+      "filename": "TokenWallet.sol",
+      "line": 62
+    },
+    "24": {
+      "filename": "TokenWallet.sol",
+      "line": 62
+    },
+    "40": {
+      "filename": "TokenWallet.sol",
+      "line": 62
+    },
+    "56": {
+      "filename": "TokenWallet.sol",
+      "line": 62
+    },
+    "80": {
+      "filename": "TokenWallet.sol",
+      "line": 63
+    },
+    "88": {
+      "filename": "TokenWallet.sol",
+      "line": 63
+    },
+    "104": {
+      "filename": "TokenWallet.sol",
+      "line": 63
+    },
+    "112": {
+      "filename": "TokenWallet.sol",
+      "line": 63
+    },
+    "120": {
+      "filename": "TokenWallet.sol",
+      "line": 63
+    },
+    "144": {
+      "filename": "TokenWallet.sol",
+      "line": 64
+    },
+    "152": {
+      "filename": "TokenWallet.sol",
+      "line": 64
+    }
+  },
+  "291da268021909d29982a9816ffb659423afcdfb57bbfb2c9b592d5a8fc90606": {
+    "0": {
+      "filename": "./TokenWallet.code",
+      "line": 114
+    },
+    "16": {
+      "filename": "./TokenWallet.code",
+      "line": 115
+    },
+    "32": {
+      "filename": "./TokenWallet.code",
+      "line": 116
+    },
+    "48": {
+      "filename": "./TokenWallet.code",
+      "line": 117
+    },
+    "64": {
+      "filename": "./TokenWallet.code",
+      "line": 118
+    },
+    "80": {
+      "filename": "./TokenWallet.code",
+      "line": 119
+    },
+    "96": {
+      "filename": "./TokenWallet.code",
+      "line": 120
+    },
+    "112": {
+      "filename": "./TokenWallet.code",
+      "line": 121
+    },
+    "128": {
+      "filename": "./TokenWallet.code",
+      "line": 122
+    },
+    "144": {
+      "filename": "./TokenWallet.code",
+      "line": 123
+    },
+    "152": {
+      "filename": "./TokenWallet.code",
       "line": 124
     },
-    "320": {
+    "168": {
       "filename": "./TokenWallet.code",
       "line": 125
     },
-    "328": {
+    "184": {
       "filename": "./TokenWallet.code",
       "line": 126
     },
-    "336": {
+    "200": {
       "filename": "./TokenWallet.code",
       "line": 127
+    },
+    "208": {
+      "filename": "./TokenWallet.code",
+      "line": 128
+    },
+    "224": {
+      "filename": "./TokenWallet.code",
+      "line": 129
+    },
+    "232": {
+      "filename": "./TokenWallet.code",
+      "line": 130
+    },
+    "240": {
+      "filename": "./TokenWallet.code",
+      "line": 131
+    },
+    "256": {
+      "filename": "./TokenWallet.code",
+      "line": 132
+    },
+    "272": {
+      "filename": "./TokenWallet.code",
+      "line": 133
+    },
+    "288": {
+      "filename": "./TokenWallet.code",
+      "line": 134
+    },
+    "304": {
+      "filename": "./TokenWallet.code",
+      "line": 135
+    },
+    "320": {
+      "filename": "./TokenWallet.code",
+      "line": 136
+    },
+    "328": {
+      "filename": "./TokenWallet.code",
+      "line": 137
+    },
+    "336": {
+      "filename": "./TokenWallet.code",
+      "line": 138
     }
   },
   "2b1fb6a7cd59fa515bda29beedcde5001636dafad005b720db50e50e9eed1c3d": {
     "0": {
       "filename": "TokenWallet.sol",
-      "line": 59
+      "line": 62
     }
   },
   "2d0b2f7126c0ad8de4862368bd4330ad46f691eaa2a0c943c93b6f9449afa786": {
     "0": {
       "filename": "./TokenWallet.code",
-      "line": 235
+      "line": 246
     },
     "8": {
-      "filename": "./TokenWallet.code",
-      "line": 236
-    },
-    "24": {
-      "filename": "./TokenWallet.code",
-      "line": 237
-    },
-    "48": {
-      "filename": "./TokenWallet.code",
-      "line": 238
-    },
-    "64": {
-      "filename": "./TokenWallet.code",
-      "line": 239
-    },
-    "72": {
-      "filename": "./TokenWallet.code",
-      "line": 240
-    },
-    "88": {
-      "filename": "TokenWallet.sol",
-      "line": 108
-    },
-    "104": {
-      "filename": "TokenWallet.sol",
-      "line": 108
-    },
-    "112": {
       "filename": "./TokenWallet.code",
       "line": 247
     },
-    "128": {
-      "filename": "./TokenWallet.code",
-      "line": 250
-    },
-    "144": {
-      "filename": "./TokenWallet.code",
-      "line": 253
-    }
-  },
-  "2da9c8a3d7bfcab8602c1ed731c3e1abe4b8a2b4193afad11d35d4b450d5056c": {
-    "0": {
-      "filename": "./TokenWallet.code",
-      "line": 131
-    },
-    "8": {
-      "filename": "./TokenWallet.code",
-      "line": 132
-    },
     "24": {
       "filename": "./TokenWallet.code",
-      "line": 133
+      "line": 248
     },
     "48": {
       "filename": "./TokenWallet.code",
-      "line": 134
+      "line": 249
     },
     "64": {
       "filename": "./TokenWallet.code",
-      "line": 135
+      "line": 250
     },
     "72": {
       "filename": "./TokenWallet.code",
-      "line": 136
+      "line": 251
     },
     "88": {
       "filename": "TokenWallet.sol",
-      "line": 78
-    },
-    "96": {
-      "filename": "TokenWallet.sol",
-      "line": 78
+      "line": 115
     },
     "104": {
       "filename": "TokenWallet.sol",
-      "line": 78
+      "line": 115
     },
     "112": {
-      "filename": "TokenWallet.sol",
-      "line": 78
-    },
-    "120": {
-      "filename": "TokenWallet.sol",
-      "line": 78
+      "filename": "./TokenWallet.code",
+      "line": 258
     },
     "128": {
-      "filename": "TokenWallet.sol",
-      "line": 78
-    },
-    "136": {
-      "filename": "TokenWallet.sol",
-      "line": 78
-    },
-    "152": {
-      "filename": "TokenWallet.sol",
-      "line": 78
-    },
-    "168": {
-      "filename": "TokenWallet.sol",
-      "line": 78
-    },
-    "184": {
-      "filename": "TokenWallet.sol",
-      "line": 78
-    },
-    "192": {
       "filename": "./TokenWallet.code",
-      "line": 152
+      "line": 261
     },
-    "208": {
+    "144": {
       "filename": "./TokenWallet.code",
-      "line": 155
-    },
-    "224": {
-      "filename": "./TokenWallet.code",
-      "line": 158
+      "line": 264
     }
   },
   "2df3d4c4552bc626cf153a95bb4223de4575cd3a52d73b7aa8fcc89566e66f3a": {
     "0": {
       "filename": "./TokenWallet.code",
-      "line": 341
+      "line": 352
     },
     "8": {
       "filename": "./TokenWallet.code",
-      "line": 342
+      "line": 353
     },
     "24": {
       "filename": "./TokenWallet.code",
-      "line": 343
+      "line": 354
     },
     "48": {
       "filename": "./TokenWallet.code",
-      "line": 344
+      "line": 355
     },
     "64": {
-      "filename": "./TokenWallet.code",
-      "line": 345
-    },
-    "72": {
-      "filename": "./TokenWallet.code",
-      "line": 346
-    },
-    "88": {
-      "filename": "TokenWallet.sol",
-      "line": 99
-    },
-    "104": {
-      "filename": "TokenWallet.sol",
-      "line": 99
-    },
-    "112": {
-      "filename": "./TokenWallet.code",
-      "line": 353
-    },
-    "128": {
       "filename": "./TokenWallet.code",
       "line": 356
     },
-    "144": {
+    "72": {
       "filename": "./TokenWallet.code",
-      "line": 359
-    }
-  },
-  "2f6d164edb89163a6c24814975f700e35054f85f0ada90348f50999872bb988d": {
-    "0": {
-      "filename": "./TokenWallet.code",
-      "line": 1008
-    },
-    "16": {
-      "filename": "./TokenWallet.code",
-      "line": 1009
-    },
-    "24": {
-      "filename": "./TokenWallet.code",
-      "line": 1010
-    },
-    "48": {
-      "filename": "./TokenWallet.code",
-      "line": 1011
-    },
-    "64": {
-      "filename": "./TokenWallet.code",
-      "line": 1012
+      "line": 357
     },
     "88": {
-      "filename": "./TokenWallet.code",
-      "line": 1013
+      "filename": "TokenWallet.sol",
+      "line": 106
     },
     "104": {
-      "filename": "./TokenWallet.code",
-      "line": 1014
+      "filename": "TokenWallet.sol",
+      "line": 106
     },
     "112": {
       "filename": "./TokenWallet.code",
-      "line": 1015
+      "line": 364
     },
-    "120": {
+    "128": {
       "filename": "./TokenWallet.code",
-      "line": 1016
+      "line": 367
     },
-    "136": {
+    "144": {
       "filename": "./TokenWallet.code",
-      "line": 1017
-    },
-    "152": {
-      "filename": "./TokenWallet.code",
-      "line": 1018
-    },
-    "160": {
-      "filename": "./TokenWallet.code",
-      "line": 1019
-    },
-    "176": {
-      "filename": "./TokenWallet.code",
-      "line": 1020
-    },
-    "200": {
-      "filename": "./TokenWallet.code",
-      "line": 1021
-    },
-    "216": {
-      "filename": "./TokenWallet.code",
-      "line": 1027
-    },
-    "224": {
-      "filename": "./TokenWallet.code",
-      "line": 1028
-    },
-    "240": {
-      "filename": "./TokenWallet.code",
-      "line": 1029
-    },
-    "256": {
-      "filename": "./TokenWallet.code",
-      "line": 1033
-    },
-    "264": {
-      "filename": "./TokenWallet.code",
-      "line": 1034
-    },
-    "288": {
-      "filename": "./TokenWallet.code",
-      "line": 1035
-    },
-    "304": {
-      "filename": "./TokenWallet.code",
-      "line": 1036
-    },
-    "312": {
-      "filename": "./TokenWallet.code",
-      "line": 1037
-    },
-    "328": {
-      "filename": "./TokenWallet.code",
-      "line": 1041
-    },
-    "336": {
-      "filename": "./TokenWallet.code",
-      "line": 1042
-    },
-    "352": {
-      "filename": "./TokenWallet.code",
-      "line": 1045
+      "line": 370
     }
   },
   "31fc5e27f99509e36e24cad90c042e2256b8d0f74b978cb814e6db2109cf1a36": {
     "0": {
       "filename": "TokenWallet.sol",
-      "line": 80
+      "line": 85
     }
   },
   "39458100b05100538ee00629764535e4a000e65fc7f194adcb82554c7cc11f79": {
     "0": {
       "filename": "./TokenWallet.code",
-      "line": 275
+      "line": 286
     },
     "8": {
       "filename": "./TokenWallet.code",
-      "line": 276
+      "line": 287
     },
     "24": {
       "filename": "./TokenWallet.code",
-      "line": 277
+      "line": 288
     },
     "48": {
       "filename": "./TokenWallet.code",
-      "line": 278
+      "line": 289
     },
     "64": {
       "filename": "./TokenWallet.code",
-      "line": 279
+      "line": 290
     },
     "72": {
       "filename": "./TokenWallet.code",
-      "line": 280
+      "line": 291
     },
     "88": {
       "filename": "TokenWallet.sol",
-      "line": 94
+      "line": 101
     },
     "104": {
       "filename": "TokenWallet.sol",
-      "line": 94
+      "line": 101
     },
     "112": {
       "filename": "./TokenWallet.code",
-      "line": 287
+      "line": 298
     },
     "128": {
       "filename": "./TokenWallet.code",
-      "line": 290
+      "line": 301
     },
     "144": {
       "filename": "./TokenWallet.code",
-      "line": 293
+      "line": 304
     }
   },
   "406352cd0c1baaa7e3562f38741fcf2d2e8d9c8d2fe212c319d30ab3a4fc5134": {
     "0": {
       "filename": "./TokenWallet.code",
-      "line": 774
+      "line": 804
     },
     "8": {
       "filename": "./TokenWallet.code",
-      "line": 775
+      "line": 805
     },
     "56": {
       "filename": "./TokenWallet.code",
-      "line": 776
+      "line": 806
     },
     "64": {
       "filename": "./TokenWallet.code",
-      "line": 777
+      "line": 807
     },
     "80": {
       "filename": "./TokenWallet.code",
-      "line": 780
+      "line": 810
     },
     "88": {
       "filename": "./TokenWallet.code",
-      "line": 781
+      "line": 811
     },
     "136": {
       "filename": "./TokenWallet.code",
-      "line": 782
+      "line": 812
     },
     "144": {
       "filename": "./TokenWallet.code",
-      "line": 783
+      "line": 813
     },
     "160": {
       "filename": "./TokenWallet.code",
-      "line": 786
+      "line": 816
     },
     "168": {
       "filename": "./TokenWallet.code",
-      "line": 787
+      "line": 817
     },
     "216": {
       "filename": "./TokenWallet.code",
-      "line": 788
+      "line": 818
     },
     "224": {
       "filename": "./TokenWallet.code",
-      "line": 789
+      "line": 819
+    }
+  },
+  "44b77fbb937db87545a4371bfcc23ab8b728a7795ce5fd8d494b1659def73d67": {
+    "0": {
+      "filename": "./TokenWallet.code",
+      "line": 736
+    },
+    "8": {
+      "filename": "./TokenWallet.code",
+      "line": 737
+    },
+    "56": {
+      "filename": "./TokenWallet.code",
+      "line": 738
+    },
+    "64": {
+      "filename": "./TokenWallet.code",
+      "line": 739
+    },
+    "80": {
+      "filename": "./TokenWallet.code",
+      "line": 752
+    },
+    "88": {
+      "filename": "./TokenWallet.code",
+      "line": 753
+    },
+    "136": {
+      "filename": "./TokenWallet.code",
+      "line": 754
+    },
+    "144": {
+      "filename": "./TokenWallet.code",
+      "line": 755
+    },
+    "160": {
+      "filename": "./TokenWallet.code",
+      "line": 758
+    },
+    "168": {
+      "filename": "./TokenWallet.code",
+      "line": 759
+    },
+    "216": {
+      "filename": "./TokenWallet.code",
+      "line": 760
+    },
+    "224": {
+      "filename": "./TokenWallet.code",
+      "line": 761
+    },
+    "240": {
+      "filename": "./TokenWallet.code",
+      "line": 764
+    },
+    "248": {
+      "filename": "./TokenWallet.code",
+      "line": 765
+    },
+    "296": {
+      "filename": "./TokenWallet.code",
+      "line": 766
+    },
+    "304": {
+      "filename": "./TokenWallet.code",
+      "line": 767
     }
   },
   "48b15bff05583e1a3460233dfde29a814c8ba320a36aba296604650b55e119fb": {
     "0": {
       "filename": "./TokenWallet.code",
-      "line": 162
+      "line": 173
     },
     "8": {
       "filename": "./TokenWallet.code",
-      "line": 163
+      "line": 174
     },
     "24": {
       "filename": "./TokenWallet.code",
-      "line": 164
+      "line": 175
     },
     "32": {
       "filename": "./TokenWallet.code",
-      "line": 165
+      "line": 176
     },
     "48": {
       "filename": "./TokenWallet.code",
-      "line": 168
+      "line": 179
     },
     "56": {
       "filename": "./TokenWallet.code",
-      "line": 169
+      "line": 180
     },
     "72": {
       "filename": "./TokenWallet.code",
-      "line": 170
+      "line": 181
     },
     "80": {
       "filename": "./TokenWallet.code",
-      "line": 171
+      "line": 182
     },
     "96": {
       "filename": "./TokenWallet.code",
-      "line": 172
+      "line": 183
     },
     "112": {
       "filename": "./TokenWallet.code",
-      "line": 173
+      "line": 184
     },
     "128": {
       "filename": "./TokenWallet.code",
-      "line": 174
+      "line": 185
     },
     "136": {
       "filename": "TokenWallet.sol",
-      "line": 26
+      "line": 29
     },
     "144": {
       "filename": "TokenWallet.sol",
-      "line": 26
+      "line": 29
     },
     "160": {
       "filename": "TokenWallet.sol",
-      "line": 26
+      "line": 29
     },
     "176": {
       "filename": "TokenWallet.sol",
-      "line": 26
+      "line": 29
     },
     "192": {
       "filename": "TokenWallet.sol",
-      "line": 26
+      "line": 29
     },
     "216": {
       "filename": "./TokenWallet.code",
-      "line": 184
+      "line": 195
     },
     "232": {
       "filename": "./TokenWallet.code",
-      "line": 187
+      "line": 198
     }
   },
   "48d908e10010a8136fc1fcf7f12483f41fcd28dc81ecf6b670ba15cd7c153b62": {
     "0": {
       "filename": "TokenWallet.sol",
-      "line": 33
+      "line": 36
     },
     "16": {
       "filename": "TokenWallet.sol",
-      "line": 33
+      "line": 36
     },
     "32": {
       "filename": "TokenWallet.sol",
-      "line": 33
+      "line": 36
     },
     "80": {
       "filename": "TokenWallet.sol",
-      "line": 33
+      "line": 36
     },
     "88": {
       "filename": "TokenWallet.sol",
-      "line": 33
+      "line": 36
     },
     "96": {
       "filename": "TokenWallet.sol",
-      "line": 36
+      "line": 39
     },
     "144": {
       "filename": "TokenWallet.sol",
-      "line": 36
+      "line": 39
     }
   },
-  "4a23377f91e200f26087d46e9f03fc9d40a6ba3a68380d166d33b54abfd5c2ef": {
+  "50b92bebd3cc1b4e81fe85b897e0210e7b8e9e8f6cf810879ad370f0b8d7dad0": {
     "0": {
-      "filename": "./TokenWallet.code",
-      "line": 672
+      "filename": "TokenWallet.sol",
+      "line": 88
     },
-    "8": {
-      "filename": "./TokenWallet.code",
-      "line": 673
+    "16": {
+      "filename": "TokenWallet.sol",
+      "line": 91
     },
-    "24": {
-      "filename": "./TokenWallet.code",
-      "line": 674
+    "32": {
+      "filename": "TokenWallet.sol",
+      "line": 91
+    },
+    "40": {
+      "filename": "TokenWallet.sol",
+      "line": 91
     },
     "48": {
-      "filename": "./TokenWallet.code",
-      "line": 675
+      "filename": "TokenWallet.sol",
+      "line": 91
     },
     "64": {
-      "filename": "./TokenWallet.code",
-      "line": 676
+      "filename": "TokenWallet.sol",
+      "line": 91
     },
-    "72": {
-      "filename": "./TokenWallet.code",
-      "line": 677
+    "80": {
+      "filename": "TokenWallet.sol",
+      "line": 92
     },
     "88": {
       "filename": "TokenWallet.sol",
-      "line": 58
-    },
-    "96": {
-      "filename": "TokenWallet.sol",
-      "line": 58
+      "line": 92
     },
     "104": {
       "filename": "TokenWallet.sol",
-      "line": 58
+      "line": 92
     },
     "112": {
       "filename": "TokenWallet.sol",
-      "line": 58
+      "line": 92
     },
     "120": {
       "filename": "TokenWallet.sol",
-      "line": 58
-    },
-    "128": {
-      "filename": "TokenWallet.sol",
-      "line": 58
+      "line": 92
     },
     "136": {
       "filename": "TokenWallet.sol",
-      "line": 58
+      "line": 92
     },
-    "152": {
+    "144": {
       "filename": "TokenWallet.sol",
-      "line": 58
+      "line": 92
     },
-    "168": {
+    "160": {
       "filename": "TokenWallet.sol",
-      "line": 58
+      "line": 92
     },
     "176": {
-      "filename": "./TokenWallet.code",
-      "line": 692
+      "filename": "TokenWallet.sol",
+      "line": 92
     },
     "192": {
-      "filename": "./TokenWallet.code",
-      "line": 695
+      "filename": "TokenWallet.sol",
+      "line": 93
     },
     "208": {
-      "filename": "./TokenWallet.code",
-      "line": 698
+      "filename": "TokenWallet.sol",
+      "line": 93
+    },
+    "216": {
+      "filename": "TokenWallet.sol",
+      "line": 93
+    },
+    "224": {
+      "filename": "TokenWallet.sol",
+      "line": 93
+    },
+    "240": {
+      "filename": "TokenWallet.sol",
+      "line": 93
+    },
+    "256": {
+      "filename": "TokenWallet.sol",
+      "line": 95
+    },
+    "264": {
+      "filename": "TokenWallet.sol",
+      "line": 95
+    },
+    "280": {
+      "filename": "TokenWallet.sol",
+      "line": 95
+    },
+    "440": {
+      "filename": "TokenWallet.sol",
+      "line": 95
+    },
+    "448": {
+      "filename": "TokenWallet.sol",
+      "line": 95
+    },
+    "456": {
+      "filename": "TokenWallet.sol",
+      "line": 95
+    },
+    "464": {
+      "filename": "TokenWallet.sol",
+      "line": 95
+    },
+    "480": {
+      "filename": "TokenWallet.sol",
+      "line": 95
+    },
+    "488": {
+      "filename": "TokenWallet.sol",
+      "line": 95
+    },
+    "496": {
+      "filename": "TokenWallet.sol",
+      "line": 95
+    },
+    "512": {
+      "filename": "TokenWallet.sol",
+      "line": 98
+    },
+    "520": {
+      "filename": "TokenWallet.sol",
+      "line": 98
+    },
+    "536": {
+      "filename": "TokenWallet.sol",
+      "line": 98
+    },
+    "552": {
+      "filename": "TokenWallet.sol",
+      "line": 98
+    },
+    "568": {
+      "filename": "TokenWallet.sol",
+      "line": 98
+    },
+    "576": {
+      "filename": "TokenWallet.sol",
+      "line": 98
+    },
+    "600": {
+      "filename": "TokenWallet.sol",
+      "line": 98
+    },
+    "608": {
+      "filename": "TokenWallet.sol",
+      "line": 98
+    },
+    "616": {
+      "filename": "TokenWallet.sol",
+      "line": 98
+    },
+    "640": {
+      "filename": "TokenWallet.sol",
+      "line": 98
+    },
+    "656": {
+      "filename": "TokenWallet.sol",
+      "line": 98
+    },
+    "664": {
+      "filename": "TokenWallet.sol",
+      "line": 98
+    },
+    "712": {
+      "filename": "TokenWallet.sol",
+      "line": 98
+    },
+    "728": {
+      "filename": "TokenWallet.sol",
+      "line": 98
+    },
+    "744": {
+      "filename": "TokenWallet.sol",
+      "line": 98
+    },
+    "752": {
+      "filename": "TokenWallet.sol",
+      "line": 98
+    },
+    "760": {
+      "filename": "TokenWallet.sol",
+      "line": 98
+    },
+    "768": {
+      "filename": "TokenWallet.sol",
+      "line": 98
+    },
+    "776": {
+      "filename": "TokenWallet.sol",
+      "line": 98
+    },
+    "792": {
+      "filename": "TokenWallet.sol",
+      "line": 98
+    },
+    "800": {
+      "filename": "TokenWallet.sol",
+      "line": 98
+    },
+    "808": {
+      "filename": "TokenWallet.sol",
+      "line": 98
+    },
+    "816": {
+      "filename": "TokenWallet.sol",
+      "line": 98
+    },
+    "832": {
+      "filename": "TokenWallet.sol",
+      "line": 98
     }
   },
   "5500d845b4f8e9329edd6f1cbd55a91e43fb6c20cc5ae81ed3b764d3c43900b0": {
     "0": {
       "filename": "TokenWallet.sol",
-      "line": 42
+      "line": 45
     }
   },
-  "5afc7063446db972b8c553859ea46cb01ed72f52603ca527ee95512357506e04": {
+  "5af5bebaec59ffe512d80e236f8fcaa7a1eda8d43b02817364389a26e385fa8b": {
     "0": {
       "filename": "./TokenWallet.code",
-      "line": 1089
+      "line": 1038
     },
-    "1": {
+    "16": {
       "filename": "./TokenWallet.code",
-      "line": 1090
+      "line": 1039
     },
-    "2": {
+    "24": {
       "filename": "./TokenWallet.code",
-      "line": 1091
+      "line": 1040
     },
-    "3": {
+    "48": {
       "filename": "./TokenWallet.code",
-      "line": 1120
+      "line": 1041
     },
-    "4": {
+    "64": {
       "filename": "./TokenWallet.code",
-      "line": 1124
+      "line": 1042
+    },
+    "88": {
+      "filename": "./TokenWallet.code",
+      "line": 1043
+    },
+    "104": {
+      "filename": "./TokenWallet.code",
+      "line": 1044
+    },
+    "112": {
+      "filename": "./TokenWallet.code",
+      "line": 1045
+    },
+    "120": {
+      "filename": "./TokenWallet.code",
+      "line": 1046
+    },
+    "136": {
+      "filename": "./TokenWallet.code",
+      "line": 1047
+    },
+    "152": {
+      "filename": "./TokenWallet.code",
+      "line": 1048
+    },
+    "160": {
+      "filename": "./TokenWallet.code",
+      "line": 1049
+    },
+    "176": {
+      "filename": "./TokenWallet.code",
+      "line": 1050
+    },
+    "200": {
+      "filename": "./TokenWallet.code",
+      "line": 1051
+    },
+    "216": {
+      "filename": "./TokenWallet.code",
+      "line": 1057
+    },
+    "224": {
+      "filename": "./TokenWallet.code",
+      "line": 1058
+    },
+    "240": {
+      "filename": "./TokenWallet.code",
+      "line": 1059
+    },
+    "256": {
+      "filename": "./TokenWallet.code",
+      "line": 1063
+    },
+    "264": {
+      "filename": "./TokenWallet.code",
+      "line": 1064
+    },
+    "288": {
+      "filename": "./TokenWallet.code",
+      "line": 1065
+    },
+    "304": {
+      "filename": "./TokenWallet.code",
+      "line": 1066
+    },
+    "312": {
+      "filename": "./TokenWallet.code",
+      "line": 1067
+    },
+    "328": {
+      "filename": "./TokenWallet.code",
+      "line": 1071
+    },
+    "336": {
+      "filename": "./TokenWallet.code",
+      "line": 1072
+    },
+    "352": {
+      "filename": "./TokenWallet.code",
+      "line": 1075
     }
   },
   "5b48549dcb288f51bd085ea6e4ed7943cbade75cd5e54da61b0e7cced9ecc81c": {
     "0": {
       "filename": "TokenWallet.sol",
-      "line": 51
+      "line": 54
     },
     "8": {
       "filename": "TokenWallet.sol",
-      "line": 51
+      "line": 54
     },
     "24": {
       "filename": "TokenWallet.sol",
-      "line": 51
+      "line": 54
     },
     "40": {
       "filename": "TokenWallet.sol",
-      "line": 51
+      "line": 54
     },
     "56": {
       "filename": "TokenWallet.sol",
-      "line": 51
+      "line": 54
     },
     "80": {
       "filename": "TokenWallet.sol",
-      "line": 52
+      "line": 55
     },
     "96": {
       "filename": "TokenWallet.sol",
-      "line": 54
+      "line": 57
     },
     "112": {
       "filename": "TokenWallet.sol",
-      "line": 54
+      "line": 57
     },
     "120": {
       "filename": "TokenWallet.sol",
-      "line": 54
+      "line": 57
     },
     "136": {
       "filename": "TokenWallet.sol",
-      "line": 55
+      "line": 58
     },
     "152": {
       "filename": "TokenWallet.sol",
-      "line": 55
+      "line": 58
     },
     "160": {
       "filename": "TokenWallet.sol",
-      "line": 55
+      "line": 58
     },
     "168": {
       "filename": "TokenWallet.sol",
-      "line": 55
+      "line": 58
     },
     "192": {
       "filename": "TokenWallet.sol",
-      "line": 55
+      "line": 58
     },
     "208": {
       "filename": "TokenWallet.sol",
-      "line": 55
+      "line": 58
     },
     "232": {
       "filename": "TokenWallet.sol",
-      "line": 55
+      "line": 58
     },
     "240": {
       "filename": "TokenWallet.sol",
-      "line": 55
+      "line": 58
     },
     "288": {
       "filename": "TokenWallet.sol",
-      "line": 55
+      "line": 58
     },
     "312": {
       "filename": "TokenWallet.sol",
-      "line": 55
+      "line": 58
     },
     "328": {
       "filename": "TokenWallet.sol",
-      "line": 55
+      "line": 58
     },
     "336": {
       "filename": "TokenWallet.sol",
-      "line": 55
+      "line": 58
     },
     "352": {
       "filename": "TokenWallet.sol",
-      "line": 55
-    }
-  },
-  "5c0d219f0a29c29e2bcdf55eeb6ba4025c8faabc8c1a42bcd15f3739b21367f6": {
-    "0": {
-      "filename": "./TokenWallet.code",
-      "line": 745
-    },
-    "8": {
-      "filename": "./TokenWallet.code",
-      "line": 746
-    },
-    "56": {
-      "filename": "./TokenWallet.code",
-      "line": 747
-    },
-    "64": {
-      "filename": "./TokenWallet.code",
-      "line": 748
-    },
-    "80": {
-      "filename": "./TokenWallet.code",
-      "line": 751
-    },
-    "88": {
-      "filename": "./TokenWallet.code",
-      "line": 752
-    },
-    "136": {
-      "filename": "./TokenWallet.code",
-      "line": 753
-    },
-    "144": {
-      "filename": "./TokenWallet.code",
-      "line": 754
-    },
-    "160": {
-      "filename": "./TokenWallet.code",
-      "line": 757
-    },
-    "168": {
-      "filename": "./TokenWallet.code",
-      "line": 758
-    },
-    "216": {
-      "filename": "./TokenWallet.code",
-      "line": 759
-    },
-    "224": {
-      "filename": "./TokenWallet.code",
-      "line": 760
-    },
-    "240": {
-      "filename": "./TokenWallet.code",
-      "line": 763
-    },
-    "248": {
-      "filename": "./TokenWallet.code",
-      "line": 764
-    },
-    "296": {
-      "filename": "./TokenWallet.code",
-      "line": 765
-    },
-    "304": {
-      "filename": "./TokenWallet.code",
-      "line": 766
+      "line": 58
     }
   },
   "5c811680c8385d7274a0758dce3eafbb602129d598ef2b7bbf3c96ab1454629c": {
     "0": {
       "filename": "TokenWallet.sol",
-      "line": 109
+      "line": 116
     }
   },
   "61ab4641fa30d9310391025086eec65d200d79268e1b7cd402565e01ba64be3c": {
     "0": {
       "filename": "./TokenWallet.code",
-      "line": 803
-    }
-  },
-  "662bb5c9571ed34bff14d1bf57c70da64e488c289025b9d1dffefb6daa621e9c": {
-    "0": {
-      "filename": "./TokenWallet.code",
-      "line": 1093
-    },
-    "8": {
-      "filename": "./TokenWallet.code",
-      "line": 1103
-    },
-    "24": {
-      "filename": "./TokenWallet.code",
-      "line": 1104
-    },
-    "32": {
-      "filename": "./TokenWallet.code",
-      "line": 1105
-    },
-    "48": {
-      "filename": "./TokenWallet.code",
-      "line": 1108
-    },
-    "56": {
-      "filename": "./TokenWallet.code",
-      "line": 1109
-    },
-    "72": {
-      "filename": "./TokenWallet.code",
-      "line": 1110
-    },
-    "88": {
-      "filename": "./TokenWallet.code",
-      "line": 1113
-    },
-    "96": {
-      "filename": "./TokenWallet.code",
-      "line": 1114
-    },
-    "112": {
-      "filename": "./TokenWallet.code",
-      "line": 1115
-    },
-    "128": {
-      "filename": "./TokenWallet.code",
-      "line": 1118
+      "line": 833
     }
   },
   "6639ec9863911b44d385b60de8e38c74ccc7356c1e9f227785b70dad8a128b53": {
@@ -1597,1573 +1617,1525 @@
   "7e4c5f8e5b232c268f5878d6f684b0ebcb1ed7e14100d8c3ebd4f2485f48a97a": {
     "0": {
       "filename": "TokenWallet.sol",
-      "line": 100
+      "line": 107
     },
     "8": {
       "filename": "TokenWallet.sol",
-      "line": 100
+      "line": 107
     },
     "24": {
       "filename": "TokenWallet.sol",
-      "line": 100
+      "line": 107
     },
     "40": {
       "filename": "TokenWallet.sol",
-      "line": 100
+      "line": 107
     },
     "56": {
       "filename": "TokenWallet.sol",
-      "line": 100
+      "line": 107
     },
     "80": {
       "filename": "TokenWallet.sol",
-      "line": 101
+      "line": 108
     },
     "88": {
       "filename": "TokenWallet.sol",
-      "line": 101
+      "line": 108
     },
     "104": {
       "filename": "TokenWallet.sol",
-      "line": 101
+      "line": 108
     },
     "120": {
       "filename": "TokenWallet.sol",
-      "line": 101
+      "line": 108
     },
     "136": {
       "filename": "TokenWallet.sol",
-      "line": 101
+      "line": 108
     },
     "152": {
       "filename": "TokenWallet.sol",
-      "line": 101
+      "line": 108
     },
     "160": {
       "filename": "TokenWallet.sol",
-      "line": 101
+      "line": 108
     },
     "184": {
       "filename": "TokenWallet.sol",
-      "line": 101
+      "line": 108
     },
     "192": {
       "filename": "TokenWallet.sol",
-      "line": 102
+      "line": 109
     },
     "200": {
       "filename": "TokenWallet.sol",
-      "line": 102
+      "line": 109
     },
     "208": {
       "filename": "TokenWallet.sol",
-      "line": 102
+      "line": 109
     },
     "224": {
       "filename": "TokenWallet.sol",
-      "line": 103
+      "line": 110
     },
     "240": {
       "filename": "TokenWallet.sol",
-      "line": 103
+      "line": 110
     },
     "248": {
       "filename": "TokenWallet.sol",
-      "line": 103
+      "line": 110
     },
     "264": {
       "filename": "TokenWallet.sol",
-      "line": 103
+      "line": 110
     },
     "280": {
       "filename": "TokenWallet.sol",
-      "line": 103
+      "line": 110
     },
     "288": {
       "filename": "TokenWallet.sol",
-      "line": 103
+      "line": 110
     },
     "304": {
       "filename": "TokenWallet.sol",
-      "line": 104
+      "line": 111
     },
     "312": {
       "filename": "TokenWallet.sol",
-      "line": 104
+      "line": 111
     },
     "328": {
       "filename": "TokenWallet.sol",
-      "line": 104
+      "line": 111
     },
     "344": {
       "filename": "TokenWallet.sol",
-      "line": 104
+      "line": 111
     },
     "360": {
       "filename": "TokenWallet.sol",
-      "line": 104
+      "line": 111
     },
     "368": {
       "filename": "TokenWallet.sol",
-      "line": 104
+      "line": 111
     },
     "384": {
       "filename": "./TokenWallet.code",
-      "line": 335
+      "line": 346
     },
     "392": {
       "filename": "./TokenWallet.code",
-      "line": 337
+      "line": 348
+    }
+  },
+  "7f463a6017a5020dd74a5ceaf89be15906a366a77fa9dc15d9d64d8dc4388337": {
+    "0": {
+      "filename": "TokenWallet.sol",
+      "line": 79
+    },
+    "16": {
+      "filename": "TokenWallet.sol",
+      "line": 79
+    },
+    "24": {
+      "filename": "TokenWallet.sol",
+      "line": 79
+    },
+    "32": {
+      "filename": "TokenWallet.sol",
+      "line": 79
+    },
+    "40": {
+      "filename": "TokenWallet.sol",
+      "line": 79
+    },
+    "56": {
+      "filename": "TokenWallet.sol",
+      "line": 79
     }
   },
   "80c6e1024125e8ec10a2161b7fc648fe82efe268323fc252e53551954072c826": {
     "0": {
       "filename": "./TokenWallet.code",
-      "line": 363
+      "line": 374
     },
     "8": {
       "filename": "./TokenWallet.code",
-      "line": 364
+      "line": 375
     },
     "16": {
       "filename": "./TokenWallet.code",
-      "line": 365
+      "line": 376
     },
     "32": {
       "filename": "./TokenWallet.code",
-      "line": 368
+      "line": 379
     },
     "48": {
       "filename": "./TokenWallet.code",
-      "line": 369
+      "line": 380
     },
     "56": {
       "filename": "./TokenWallet.code",
-      "line": 370
+      "line": 381
     },
     "72": {
       "filename": "./TokenWallet.code",
-      "line": 371
+      "line": 382
     },
     "232": {
       "filename": "./TokenWallet.code",
-      "line": 372
+      "line": 383
     },
     "240": {
       "filename": "./TokenWallet.code",
-      "line": 373
+      "line": 384
     },
     "248": {
       "filename": "./TokenWallet.code",
-      "line": 374
+      "line": 385
     },
     "256": {
       "filename": "./TokenWallet.code",
-      "line": 375
+      "line": 386
     },
     "264": {
       "filename": "./TokenWallet.code",
-      "line": 376
+      "line": 387
     },
     "272": {
       "filename": "./TokenWallet.code",
-      "line": 377
+      "line": 388
     },
     "288": {
       "filename": "./TokenWallet.code",
-      "line": 379
+      "line": 390
     },
     "296": {
       "filename": "./TokenWallet.code",
-      "line": 380
+      "line": 391
     }
   },
   "8290731371f096a0de38a7bb8062cc685fea7fd697db266e07667ea0947dd9df": {
     "0": {
       "filename": "TokenWallet.sol",
-      "line": 61
+      "line": 64
     }
   },
   "84d36647d7c627545673e98d6732f6fe98e9d1b34c08013ec8aa173daea7cb91": {
     "0": {
       "filename": "./TokenWallet.code",
-      "line": 384
+      "line": 395
     },
     "8": {
       "filename": "./TokenWallet.code",
-      "line": 385
+      "line": 396
     },
     "16": {
       "filename": "./TokenWallet.code",
-      "line": 386
+      "line": 397
     },
     "32": {
       "filename": "./TokenWallet.code",
-      "line": 389
+      "line": 400
     },
     "48": {
       "filename": "./TokenWallet.code",
-      "line": 390
+      "line": 401
     },
     "56": {
       "filename": "./TokenWallet.code",
-      "line": 391
+      "line": 402
     },
     "72": {
       "filename": "./TokenWallet.code",
-      "line": 392
+      "line": 403
     },
     "232": {
       "filename": "./TokenWallet.code",
-      "line": 393
+      "line": 404
     },
     "240": {
       "filename": "./TokenWallet.code",
-      "line": 394
+      "line": 405
     },
     "248": {
       "filename": "./TokenWallet.code",
-      "line": 395
+      "line": 406
     },
     "264": {
       "filename": "./TokenWallet.code",
-      "line": 396
+      "line": 407
     },
     "272": {
       "filename": "./TokenWallet.code",
-      "line": 397
+      "line": 408
     },
     "280": {
       "filename": "./TokenWallet.code",
-      "line": 398
+      "line": 409
     },
     "296": {
       "filename": "./TokenWallet.code",
-      "line": 400
+      "line": 411
     },
     "304": {
       "filename": "./TokenWallet.code",
-      "line": 401
+      "line": 412
+    }
+  },
+  "86b00574697e4265fe4f67f5f775c230d269ee7e540bcf2492202e47ca8cda75": {
+    "0": {
+      "filename": "./TokenWallet.code",
+      "line": 1119
+    },
+    "1": {
+      "filename": "./TokenWallet.code",
+      "line": 1120
+    },
+    "2": {
+      "filename": "./TokenWallet.code",
+      "line": 1121
+    },
+    "3": {
+      "filename": "./TokenWallet.code",
+      "line": 1150
+    },
+    "4": {
+      "filename": "./TokenWallet.code",
+      "line": 1154
     }
   },
   "8ac2d13d4ab1a862ce6d523f7e739f59df1b71002b5a20830842bb6769e000c4": {},
   "8b6013e9bd27c15556c078642774c610ef500f0563f11cba18ae885fc75f4ec8": {
     "0": {
       "filename": "TokenWallet.sol",
-      "line": 95
+      "line": 102
     },
     "8": {
       "filename": "TokenWallet.sol",
-      "line": 95
+      "line": 102
     },
     "24": {
       "filename": "TokenWallet.sol",
-      "line": 95
+      "line": 102
     },
     "40": {
       "filename": "TokenWallet.sol",
-      "line": 95
+      "line": 102
     },
     "56": {
       "filename": "TokenWallet.sol",
-      "line": 95
+      "line": 102
     },
     "80": {
       "filename": "TokenWallet.sol",
-      "line": 96
+      "line": 103
     },
     "96": {
       "filename": "TokenWallet.sol",
-      "line": 96
+      "line": 103
     },
     "112": {
       "filename": "TokenWallet.sol",
-      "line": 96
+      "line": 103
     },
     "128": {
       "filename": "TokenWallet.sol",
-      "line": 96
+      "line": 103
     },
     "136": {
       "filename": "TokenWallet.sol",
-      "line": 96
-    }
-  },
-  "91aa1010de3aeab8c28cc071cdb8e56f5a3ac41ce2e967ecd6130ada79039f2f": {
-    "0": {
-      "filename": "TokenWallet.sol",
-      "line": 79
-    },
-    "8": {
-      "filename": "TokenWallet.sol",
-      "line": 79
-    },
-    "24": {
-      "filename": "TokenWallet.sol",
-      "line": 79
-    },
-    "40": {
-      "filename": "TokenWallet.sol",
-      "line": 79
-    },
-    "56": {
-      "filename": "TokenWallet.sol",
-      "line": 79
-    },
-    "80": {
-      "filename": "TokenWallet.sol",
-      "line": 80
-    },
-    "88": {
-      "filename": "TokenWallet.sol",
-      "line": 80
-    },
-    "104": {
-      "filename": "TokenWallet.sol",
-      "line": 80
-    },
-    "112": {
-      "filename": "TokenWallet.sol",
-      "line": 80
-    },
-    "120": {
-      "filename": "TokenWallet.sol",
-      "line": 80
-    },
-    "144": {
-      "filename": "TokenWallet.sol",
-      "line": 82
-    },
-    "152": {
-      "filename": "TokenWallet.sol",
-      "line": 82
-    },
-    "160": {
-      "filename": "TokenWallet.sol",
-      "line": 82
-    },
-    "176": {
-      "filename": "TokenWallet.sol",
-      "line": 82
-    },
-    "184": {
-      "filename": "TokenWallet.sol",
-      "line": 82
-    },
-    "232": {
-      "filename": "TokenWallet.sol",
-      "line": 82
-    },
-    "240": {
-      "filename": "TokenWallet.sol",
-      "line": 82
-    },
-    "264": {
-      "filename": "TokenWallet.sol",
-      "line": 83
-    },
-    "280": {
-      "filename": "TokenWallet.sol",
-      "line": 86
-    },
-    "296": {
-      "filename": "TokenWallet.sol",
-      "line": 86
-    },
-    "304": {
-      "filename": "TokenWallet.sol",
-      "line": 86
-    },
-    "312": {
-      "filename": "TokenWallet.sol",
-      "line": 86
-    },
-    "328": {
-      "filename": "TokenWallet.sol",
-      "line": 86
-    },
-    "344": {
-      "filename": "TokenWallet.sol",
-      "line": 87
-    },
-    "352": {
-      "filename": "TokenWallet.sol",
-      "line": 87
-    },
-    "368": {
-      "filename": "TokenWallet.sol",
-      "line": 87
-    },
-    "376": {
-      "filename": "TokenWallet.sol",
-      "line": 87
-    },
-    "384": {
-      "filename": "TokenWallet.sol",
-      "line": 87
-    },
-    "400": {
-      "filename": "TokenWallet.sol",
-      "line": 87
-    },
-    "408": {
-      "filename": "TokenWallet.sol",
-      "line": 87
-    },
-    "424": {
-      "filename": "TokenWallet.sol",
-      "line": 87
-    },
-    "440": {
-      "filename": "TokenWallet.sol",
-      "line": 87
-    },
-    "456": {
-      "filename": "TokenWallet.sol",
-      "line": 88
-    },
-    "472": {
-      "filename": "TokenWallet.sol",
-      "line": 88
-    },
-    "480": {
-      "filename": "TokenWallet.sol",
-      "line": 88
-    },
-    "488": {
-      "filename": "TokenWallet.sol",
-      "line": 88
-    },
-    "504": {
-      "filename": "TokenWallet.sol",
-      "line": 88
-    },
-    "520": {
-      "filename": "TokenWallet.sol",
-      "line": 91
-    },
-    "528": {
-      "filename": "TokenWallet.sol",
-      "line": 91
-    },
-    "544": {
-      "filename": "TokenWallet.sol",
-      "line": 91
-    },
-    "560": {
-      "filename": "TokenWallet.sol",
-      "line": 91
-    },
-    "576": {
-      "filename": "TokenWallet.sol",
-      "line": 91
-    },
-    "584": {
-      "filename": "TokenWallet.sol",
-      "line": 91
-    },
-    "608": {
-      "filename": "TokenWallet.sol",
-      "line": 91
-    },
-    "616": {
-      "filename": "TokenWallet.sol",
-      "line": 91
-    },
-    "624": {
-      "filename": "TokenWallet.sol",
-      "line": 91
-    },
-    "648": {
-      "filename": "TokenWallet.sol",
-      "line": 91
-    },
-    "664": {
-      "filename": "TokenWallet.sol",
-      "line": 91
-    },
-    "672": {
-      "filename": "TokenWallet.sol",
-      "line": 91
-    },
-    "720": {
-      "filename": "TokenWallet.sol",
-      "line": 91
-    },
-    "736": {
-      "filename": "TokenWallet.sol",
-      "line": 91
-    },
-    "752": {
-      "filename": "TokenWallet.sol",
-      "line": 91
-    },
-    "760": {
-      "filename": "TokenWallet.sol",
-      "line": 91
-    },
-    "768": {
-      "filename": "TokenWallet.sol",
-      "line": 91
-    },
-    "776": {
-      "filename": "TokenWallet.sol",
-      "line": 91
-    },
-    "784": {
-      "filename": "TokenWallet.sol",
-      "line": 91
-    },
-    "800": {
-      "filename": "TokenWallet.sol",
-      "line": 91
-    },
-    "808": {
-      "filename": "TokenWallet.sol",
-      "line": 91
-    },
-    "816": {
-      "filename": "TokenWallet.sol",
-      "line": 91
-    },
-    "824": {
-      "filename": "TokenWallet.sol",
-      "line": 91
-    },
-    "840": {
-      "filename": "TokenWallet.sol",
-      "line": 91
+      "line": 103
     }
   },
   "926ae6627d6b5b9f49f41c8a4f95e485e270cd3950734b0a89cfb1f02c6a0855": {
     "0": {
       "filename": "TokenWallet.sol",
-      "line": 51
+      "line": 54
     }
   },
   "9318cd90d49713ea135ebb7c07a59e9f770d213fd2dae317a726d9f315591b32": {
     "0": {
       "filename": "TokenWallet.sol",
-      "line": 26
+      "line": 29
     }
   },
   "94c0b9d53cfb53afcd6ac4617db0cb8a3011ffb6641e536da4afd5d25d513fad": {
     "0": {
       "filename": "./TokenWallet.code",
-      "line": 460
+      "line": 471
     },
     "8": {
       "filename": "./TokenWallet.code",
-      "line": 461
+      "line": 472
     },
     "24": {
       "filename": "./TokenWallet.code",
-      "line": 462
+      "line": 473
     },
     "48": {
       "filename": "./TokenWallet.code",
-      "line": 463
+      "line": 474
     },
     "64": {
       "filename": "./TokenWallet.code",
-      "line": 464
+      "line": 475
     },
     "72": {
       "filename": "./TokenWallet.code",
-      "line": 465
+      "line": 476
     },
     "88": {
       "filename": "TokenWallet.sol",
-      "line": 40
+      "line": 43
     },
     "96": {
       "filename": "TokenWallet.sol",
-      "line": 40
+      "line": 43
     },
     "104": {
       "filename": "TokenWallet.sol",
-      "line": 40
+      "line": 43
     },
     "120": {
       "filename": "TokenWallet.sol",
-      "line": 40
+      "line": 43
     },
     "128": {
       "filename": "TokenWallet.sol",
-      "line": 40
+      "line": 43
     },
     "136": {
       "filename": "TokenWallet.sol",
-      "line": 40
+      "line": 43
     },
     "144": {
       "filename": "TokenWallet.sol",
-      "line": 40
+      "line": 43
     },
     "152": {
       "filename": "TokenWallet.sol",
-      "line": 40
+      "line": 43
     },
     "168": {
       "filename": "TokenWallet.sol",
-      "line": 40
+      "line": 43
     },
     "176": {
       "filename": "TokenWallet.sol",
-      "line": 40
+      "line": 43
     },
     "192": {
       "filename": "TokenWallet.sol",
-      "line": 40
+      "line": 43
     },
     "200": {
       "filename": "./TokenWallet.code",
-      "line": 483
+      "line": 494
     },
     "216": {
       "filename": "./TokenWallet.code",
-      "line": 486
+      "line": 497
     },
     "232": {
       "filename": "./TokenWallet.code",
-      "line": 489
+      "line": 500
     }
   },
   "96a296d224f285c67bee93c30f8a309157f0daa35dc5b87e410b78630a09cfc7": {},
   "9921909f823600632f600e857806f01214f61f8bb549dc0e58ba9f9a1c80c38a": {
     "0": {
       "filename": "TokenWallet.sol",
-      "line": 60
+      "line": 63
     }
   },
   "9af1e63a95bee9bb2cd1b4108846db6e2e1729a92033035d92d983e9786eb2da": {
     "0": {
       "filename": "TokenWallet.sol",
-      "line": 109
+      "line": 116
     },
     "8": {
       "filename": "TokenWallet.sol",
-      "line": 109
+      "line": 116
     },
     "24": {
       "filename": "TokenWallet.sol",
-      "line": 109
+      "line": 116
     },
     "40": {
       "filename": "TokenWallet.sol",
-      "line": 109
+      "line": 116
     },
     "56": {
       "filename": "TokenWallet.sol",
-      "line": 109
+      "line": 116
     },
     "80": {
       "filename": "TokenWallet.sol",
-      "line": 110
+      "line": 117
     },
     "88": {
       "filename": "TokenWallet.sol",
-      "line": 110
+      "line": 117
     },
     "104": {
       "filename": "TokenWallet.sol",
-      "line": 110
+      "line": 117
     },
     "120": {
       "filename": "TokenWallet.sol",
-      "line": 110
+      "line": 117
     },
     "136": {
       "filename": "TokenWallet.sol",
-      "line": 110
+      "line": 117
     },
     "152": {
       "filename": "TokenWallet.sol",
-      "line": 110
+      "line": 117
     },
     "160": {
       "filename": "TokenWallet.sol",
-      "line": 110
+      "line": 117
     },
     "184": {
       "filename": "TokenWallet.sol",
-      "line": 110
+      "line": 117
     },
     "192": {
       "filename": "TokenWallet.sol",
-      "line": 111
+      "line": 118
     },
     "200": {
       "filename": "TokenWallet.sol",
-      "line": 111
+      "line": 118
     },
     "208": {
       "filename": "TokenWallet.sol",
-      "line": 111
+      "line": 118
     },
     "224": {
       "filename": "TokenWallet.sol",
-      "line": 112
+      "line": 119
     },
     "240": {
       "filename": "TokenWallet.sol",
-      "line": 112
+      "line": 119
     },
     "248": {
       "filename": "TokenWallet.sol",
-      "line": 112
+      "line": 119
     },
     "264": {
       "filename": "TokenWallet.sol",
-      "line": 112
+      "line": 119
     },
     "280": {
       "filename": "TokenWallet.sol",
-      "line": 112
+      "line": 119
     },
     "288": {
       "filename": "TokenWallet.sol",
-      "line": 112
+      "line": 119
     },
     "304": {
       "filename": "TokenWallet.sol",
-      "line": 113
+      "line": 120
     },
     "312": {
       "filename": "TokenWallet.sol",
-      "line": 113
+      "line": 120
     },
     "328": {
       "filename": "TokenWallet.sol",
-      "line": 113
+      "line": 120
     },
     "344": {
       "filename": "TokenWallet.sol",
-      "line": 113
+      "line": 120
     },
     "360": {
       "filename": "TokenWallet.sol",
-      "line": 113
+      "line": 120
     },
     "368": {
       "filename": "TokenWallet.sol",
-      "line": 113
+      "line": 120
     },
     "384": {
       "filename": "./TokenWallet.code",
-      "line": 229
+      "line": 240
     },
     "392": {
       "filename": "./TokenWallet.code",
-      "line": 231
+      "line": 242
     }
   },
   "a7616ef6cfefa3a9587287b43cae5e7c4bafe93defbcece8c6093d9e0b3daebd": {
     "0": {
       "filename": "TokenWallet.sol",
-      "line": 79
+      "line": 84
     }
   },
   "a8706c6358fecfba3c31d885dcf337fed67609c22ebf972396a9aca8faf7a108": {
     "0": {
       "filename": "./TokenWallet.code",
-      "line": 1100
+      "line": 1130
     }
   },
   "b52744ecc180489f0e6813c7afa7c3554716b3824bddb425aca61f7ea7fe9853": {
     "0": {
       "filename": "./TokenWallet.code",
-      "line": 405
+      "line": 416
     },
     "8": {
       "filename": "./TokenWallet.code",
-      "line": 406
+      "line": 417
     },
     "16": {
       "filename": "./TokenWallet.code",
-      "line": 407
+      "line": 418
     },
     "32": {
       "filename": "./TokenWallet.code",
-      "line": 410
+      "line": 421
     },
     "48": {
       "filename": "./TokenWallet.code",
-      "line": 411
+      "line": 422
     },
     "56": {
       "filename": "./TokenWallet.code",
-      "line": 412
+      "line": 423
     },
     "72": {
       "filename": "./TokenWallet.code",
-      "line": 413
+      "line": 424
     },
     "232": {
       "filename": "./TokenWallet.code",
-      "line": 414
+      "line": 425
     },
     "240": {
       "filename": "./TokenWallet.code",
-      "line": 415
+      "line": 426
     },
     "248": {
       "filename": "./TokenWallet.code",
-      "line": 416
+      "line": 427
     },
     "264": {
       "filename": "./TokenWallet.code",
-      "line": 417
+      "line": 428
     },
     "272": {
       "filename": "./TokenWallet.code",
-      "line": 418
+      "line": 429
     },
     "280": {
       "filename": "./TokenWallet.code",
-      "line": 419
+      "line": 430
     },
     "296": {
       "filename": "./TokenWallet.code",
-      "line": 421
+      "line": 432
     },
     "304": {
       "filename": "./TokenWallet.code",
-      "line": 422
+      "line": 433
+    }
+  },
+  "bb03579f12245614e44d32eda788457da81793d1622d8a55fb80605c6976e9e8": {
+    "0": {
+      "filename": "TokenWallet.sol",
+      "line": 64
+    },
+    "8": {
+      "filename": "TokenWallet.sol",
+      "line": 64
+    },
+    "24": {
+      "filename": "TokenWallet.sol",
+      "line": 64
+    },
+    "32": {
+      "filename": "TokenWallet.sol",
+      "line": 64
+    },
+    "56": {
+      "filename": "TokenWallet.sol",
+      "line": 67
+    },
+    "64": {
+      "filename": "TokenWallet.sol",
+      "line": 67
+    },
+    "72": {
+      "filename": "TokenWallet.sol",
+      "line": 67
+    },
+    "88": {
+      "filename": "TokenWallet.sol",
+      "line": 67
+    },
+    "96": {
+      "filename": "TokenWallet.sol",
+      "line": 67
+    },
+    "144": {
+      "filename": "TokenWallet.sol",
+      "line": 67
+    },
+    "152": {
+      "filename": "TokenWallet.sol",
+      "line": 67
+    },
+    "176": {
+      "filename": "TokenWallet.sol",
+      "line": 68
+    },
+    "192": {
+      "filename": "TokenWallet.sol",
+      "line": 71
+    },
+    "208": {
+      "filename": "TokenWallet.sol",
+      "line": 71
+    },
+    "216": {
+      "filename": "TokenWallet.sol",
+      "line": 71
+    },
+    "224": {
+      "filename": "TokenWallet.sol",
+      "line": 71
+    },
+    "240": {
+      "filename": "TokenWallet.sol",
+      "line": 71
+    },
+    "256": {
+      "filename": "TokenWallet.sol",
+      "line": 72
+    },
+    "264": {
+      "filename": "TokenWallet.sol",
+      "line": 72
+    },
+    "280": {
+      "filename": "TokenWallet.sol",
+      "line": 72
+    },
+    "288": {
+      "filename": "TokenWallet.sol",
+      "line": 72
+    },
+    "296": {
+      "filename": "TokenWallet.sol",
+      "line": 72
+    },
+    "312": {
+      "filename": "TokenWallet.sol",
+      "line": 72
+    },
+    "320": {
+      "filename": "TokenWallet.sol",
+      "line": 72
+    },
+    "336": {
+      "filename": "TokenWallet.sol",
+      "line": 72
+    },
+    "352": {
+      "filename": "TokenWallet.sol",
+      "line": 72
+    },
+    "368": {
+      "filename": "TokenWallet.sol",
+      "line": 73
+    },
+    "384": {
+      "filename": "TokenWallet.sol",
+      "line": 73
+    },
+    "392": {
+      "filename": "TokenWallet.sol",
+      "line": 73
+    },
+    "400": {
+      "filename": "TokenWallet.sol",
+      "line": 73
+    },
+    "416": {
+      "filename": "TokenWallet.sol",
+      "line": 73
+    },
+    "432": {
+      "filename": "TokenWallet.sol",
+      "line": 75
+    },
+    "448": {
+      "filename": "TokenWallet.sol",
+      "line": 75
+    },
+    "464": {
+      "filename": "TokenWallet.sol",
+      "line": 75
+    },
+    "584": {
+      "filename": "TokenWallet.sol",
+      "line": 75
+    },
+    "592": {
+      "filename": "TokenWallet.sol",
+      "line": 75
+    },
+    "600": {
+      "filename": "TokenWallet.sol",
+      "line": 75
+    },
+    "616": {
+      "filename": "TokenWallet.sol",
+      "line": 75
+    },
+    "624": {
+      "filename": "TokenWallet.sol",
+      "line": 75
+    },
+    "672": {
+      "filename": "TokenWallet.sol",
+      "line": 75
+    },
+    "680": {
+      "filename": "TokenWallet.sol",
+      "line": 75
+    },
+    "688": {
+      "filename": "TokenWallet.sol",
+      "line": 75
+    },
+    "696": {
+      "filename": "TokenWallet.sol",
+      "line": 75
+    },
+    "704": {
+      "filename": "TokenWallet.sol",
+      "line": 75
+    },
+    "720": {
+      "filename": "TokenWallet.sol",
+      "line": 75
+    },
+    "728": {
+      "filename": "TokenWallet.sol",
+      "line": 75
+    },
+    "736": {
+      "filename": "TokenWallet.sol",
+      "line": 75
+    },
+    "744": {
+      "filename": "TokenWallet.sol",
+      "line": 75
+    },
+    "752": {
+      "filename": "TokenWallet.sol",
+      "line": 75
+    },
+    "768": {
+      "filename": "TokenWallet.sol",
+      "line": 79
+    },
+    "776": {
+      "filename": "TokenWallet.sol",
+      "line": 79
+    },
+    "792": {
+      "filename": "TokenWallet.sol",
+      "line": 79
+    },
+    "808": {
+      "filename": "TokenWallet.sol",
+      "line": 79
+    },
+    "824": {
+      "filename": "TokenWallet.sol",
+      "line": 79
+    },
+    "832": {
+      "filename": "TokenWallet.sol",
+      "line": 79
+    },
+    "856": {
+      "filename": "TokenWallet.sol",
+      "line": 79
+    },
+    "864": {
+      "filename": "TokenWallet.sol",
+      "line": 79
+    },
+    "872": {
+      "filename": "TokenWallet.sol",
+      "line": 79
+    },
+    "896": {
+      "filename": "TokenWallet.sol",
+      "line": 79
+    },
+    "912": {
+      "filename": "TokenWallet.sol",
+      "line": 79
+    },
+    "920": {
+      "filename": "TokenWallet.sol",
+      "line": 79
+    },
+    "968": {
+      "filename": "TokenWallet.sol",
+      "line": 79
+    },
+    "984": {
+      "filename": "TokenWallet.sol",
+      "line": 79
+    },
+    "992": {
+      "filename": "TokenWallet.sol",
+      "line": 79
+    },
+    "1000": {
+      "filename": "TokenWallet.sol",
+      "line": 79
+    },
+    "1008": {
+      "filename": "TokenWallet.sol",
+      "line": 79
     }
   },
   "c9f2b80d8d7697beb83fbc68b3bdaf96f9dc75023f37ea7f7ae4e1874c6c1838": {
     "0": {
       "filename": "TokenWallet.sol",
-      "line": 42
+      "line": 45
     },
     "8": {
       "filename": "TokenWallet.sol",
-      "line": 42
+      "line": 45
     },
     "24": {
       "filename": "TokenWallet.sol",
-      "line": 42
+      "line": 45
     },
     "40": {
       "filename": "TokenWallet.sol",
-      "line": 42
+      "line": 45
     },
     "56": {
       "filename": "TokenWallet.sol",
-      "line": 42
+      "line": 45
     },
     "80": {
       "filename": "TokenWallet.sol",
-      "line": 44
+      "line": 47
     },
     "96": {
       "filename": "TokenWallet.sol",
-      "line": 46
+      "line": 49
     },
     "112": {
       "filename": "TokenWallet.sol",
-      "line": 46
+      "line": 49
     },
     "120": {
       "filename": "TokenWallet.sol",
-      "line": 46
+      "line": 49
     },
     "136": {
       "filename": "TokenWallet.sol",
-      "line": 47
+      "line": 50
     },
     "152": {
       "filename": "TokenWallet.sol",
-      "line": 47
+      "line": 50
     },
     "160": {
       "filename": "TokenWallet.sol",
-      "line": 47
+      "line": 50
     },
     "168": {
       "filename": "TokenWallet.sol",
-      "line": 47
+      "line": 50
     },
     "192": {
       "filename": "TokenWallet.sol",
-      "line": 47
+      "line": 50
     },
     "208": {
       "filename": "TokenWallet.sol",
-      "line": 47
+      "line": 50
     },
     "232": {
       "filename": "TokenWallet.sol",
-      "line": 47
+      "line": 50
     },
     "240": {
       "filename": "TokenWallet.sol",
-      "line": 47
+      "line": 50
     },
     "288": {
       "filename": "TokenWallet.sol",
-      "line": 47
+      "line": 50
     },
     "312": {
       "filename": "TokenWallet.sol",
-      "line": 47
+      "line": 50
     },
     "328": {
       "filename": "TokenWallet.sol",
-      "line": 47
+      "line": 50
     },
     "336": {
       "filename": "TokenWallet.sol",
-      "line": 47
+      "line": 50
     },
     "352": {
       "filename": "TokenWallet.sol",
-      "line": 47
+      "line": 50
     }
   },
   "ca1668642b563e3e1089cf629b48899283dc335ddf868f52e6524e132bda60e6": {
     "0": {
       "filename": "./TokenWallet.code",
-      "line": 1022
+      "line": 1052
     },
     "8": {
       "filename": "./TokenWallet.code",
-      "line": 1023
+      "line": 1053
     },
     "24": {
       "filename": "./TokenWallet.code",
-      "line": 1024
+      "line": 1054
     },
     "32": {
       "filename": "./TokenWallet.code",
-      "line": 860
+      "line": 890
     },
     "48": {
       "filename": "./TokenWallet.code",
-      "line": 861
+      "line": 891
     },
     "72": {
       "filename": "./TokenWallet.code",
-      "line": 862
+      "line": 892
     },
     "88": {
       "filename": "./TokenWallet.code",
-      "line": 863
+      "line": 893
     },
     "96": {
       "filename": "./TokenWallet.code",
-      "line": 864
+      "line": 894
     },
     "112": {
       "filename": "./TokenWallet.code",
-      "line": 867
+      "line": 897
     },
     "128": {
       "filename": "TokenWallet.sol",
-      "line": 122
+      "line": 129
     },
     "136": {
       "filename": "TokenWallet.sol",
-      "line": 122
+      "line": 129
     },
     "152": {
       "filename": "TokenWallet.sol",
-      "line": 122
+      "line": 129
     },
     "168": {
       "filename": "TokenWallet.sol",
-      "line": 122
+      "line": 129
     },
     "176": {
       "filename": "TokenWallet.sol",
-      "line": 123
+      "line": 130
     },
     "184": {
       "filename": "./TokenWallet.code",
-      "line": 877
+      "line": 907
     },
     "192": {
       "filename": "TokenWallet.sol",
-      "line": 125
+      "line": 132
     },
     "208": {
       "filename": "TokenWallet.sol",
-      "line": 125
+      "line": 132
     },
     "216": {
       "filename": "TokenWallet.sol",
-      "line": 129
+      "line": 136
     },
     "224": {
       "filename": "TokenWallet.sol",
-      "line": 129
+      "line": 136
     },
     "232": {
       "filename": "TokenWallet.sol",
-      "line": 129
+      "line": 136
     },
     "280": {
       "filename": "TokenWallet.sol",
-      "line": 129
+      "line": 136
     },
     "288": {
       "filename": "TokenWallet.sol",
-      "line": 129
+      "line": 136
     },
     "304": {
       "filename": "TokenWallet.sol",
-      "line": 130
+      "line": 137
     },
     "312": {
       "filename": "TokenWallet.sol",
-      "line": 130
+      "line": 137
     },
     "328": {
       "filename": "TokenWallet.sol",
-      "line": 130
+      "line": 137
     },
     "344": {
       "filename": "TokenWallet.sol",
-      "line": 130
+      "line": 137
     },
     "352": {
       "filename": "TokenWallet.sol",
-      "line": 131
+      "line": 138
     },
     "368": {
       "filename": "TokenWallet.sol",
-      "line": 131
+      "line": 138
     },
     "376": {
       "filename": "./TokenWallet.code",
-      "line": 897
+      "line": 927
     },
     "384": {
       "filename": "TokenWallet.sol",
-      "line": 133
+      "line": 140
     },
     "392": {
       "filename": "TokenWallet.sol",
-      "line": 133
+      "line": 140
     },
     "408": {
       "filename": "TokenWallet.sol",
-      "line": 133
+      "line": 140
     },
     "416": {
       "filename": "TokenWallet.sol",
-      "line": 134
+      "line": 141
     },
     "424": {
       "filename": "TokenWallet.sol",
-      "line": 134
+      "line": 141
     },
     "440": {
       "filename": "TokenWallet.sol",
-      "line": 134
+      "line": 141
     },
     "456": {
       "filename": "TokenWallet.sol",
-      "line": 134
+      "line": 141
     },
     "472": {
       "filename": "TokenWallet.sol",
-      "line": 134
+      "line": 141
     },
     "488": {
       "filename": "TokenWallet.sol",
-      "line": 134
+      "line": 141
     },
     "496": {
       "filename": "TokenWallet.sol",
-      "line": 134
+      "line": 141
     },
     "520": {
       "filename": "TokenWallet.sol",
-      "line": 134
+      "line": 141
     },
     "528": {
       "filename": "TokenWallet.sol",
-      "line": 135
+      "line": 142
     },
     "536": {
       "filename": "TokenWallet.sol",
-      "line": 135
+      "line": 142
     },
     "544": {
       "filename": "TokenWallet.sol",
-      "line": 135
+      "line": 142
     },
     "560": {
       "filename": "TokenWallet.sol",
-      "line": 136
+      "line": 143
     },
     "576": {
       "filename": "TokenWallet.sol",
-      "line": 136
+      "line": 143
     },
     "584": {
       "filename": "TokenWallet.sol",
-      "line": 136
+      "line": 143
     },
     "600": {
       "filename": "TokenWallet.sol",
-      "line": 136
+      "line": 143
     },
     "616": {
       "filename": "TokenWallet.sol",
-      "line": 136
+      "line": 143
     },
     "624": {
       "filename": "TokenWallet.sol",
-      "line": 136
+      "line": 143
     },
     "640": {
       "filename": "TokenWallet.sol",
-      "line": 137
+      "line": 144
     },
     "648": {
       "filename": "TokenWallet.sol",
-      "line": 137
+      "line": 144
     },
     "664": {
       "filename": "TokenWallet.sol",
-      "line": 137
+      "line": 144
     },
     "680": {
       "filename": "TokenWallet.sol",
-      "line": 137
+      "line": 144
     },
     "696": {
       "filename": "TokenWallet.sol",
-      "line": 137
+      "line": 144
     },
     "704": {
       "filename": "TokenWallet.sol",
-      "line": 137
+      "line": 144
     },
     "720": {
       "filename": "./TokenWallet.code",
-      "line": 932
+      "line": 962
     },
     "728": {
       "filename": "./TokenWallet.code",
-      "line": 934
+      "line": 964
     },
     "736": {
       "filename": "./TokenWallet.code",
-      "line": 936
+      "line": 966
     },
     "744": {
       "filename": "./TokenWallet.code",
-      "line": 938
+      "line": 968
     },
     "752": {
       "filename": "TokenWallet.sol",
-      "line": 141
+      "line": 148
     },
     "760": {
       "filename": "TokenWallet.sol",
-      "line": 141
+      "line": 148
     },
     "768": {
       "filename": "TokenWallet.sol",
-      "line": 141
+      "line": 148
     },
     "816": {
       "filename": "TokenWallet.sol",
-      "line": 141
+      "line": 148
     },
     "824": {
       "filename": "TokenWallet.sol",
-      "line": 121
+      "line": 128
     },
     "832": {
       "filename": "./TokenWallet.code",
-      "line": 1002
+      "line": 1032
     }
   },
   "cb841fb0eff54e776780ffb2afa8c4fb75d7e3c051bbc29bf78e430b0a04f0ca": {
     "0": {
       "filename": "./TokenWallet.code",
-      "line": 710
+      "line": 740
     },
     "8": {
       "filename": "./TokenWallet.code",
-      "line": 711
+      "line": 741
     },
     "24": {
       "filename": "./TokenWallet.code",
-      "line": 712
+      "line": 742
     },
     "40": {
       "filename": "./TokenWallet.code",
-      "line": 715
+      "line": 745
     },
     "48": {
       "filename": "./TokenWallet.code",
-      "line": 716
+      "line": 746
     },
     "96": {
       "filename": "./TokenWallet.code",
-      "line": 717
+      "line": 747
     },
     "104": {
       "filename": "./TokenWallet.code",
-      "line": 718
+      "line": 748
     }
   },
   "cd9e29a952340255d74b4fd46420ee4337b5ca66414c212aa127ce0ab2e43d64": {
     "0": {
       "filename": "TokenWallet.sol",
-      "line": 64
-    }
-  },
-  "df7a51565ba71313798fc5f325430843c99bf3816e6cd11e017433942fee4664": {
-    "0": {
-      "filename": "./TokenWallet.code",
-      "line": 702
-    },
-    "8": {
-      "filename": "./TokenWallet.code",
-      "line": 703
-    },
-    "56": {
-      "filename": "./TokenWallet.code",
-      "line": 704
-    },
-    "64": {
-      "filename": "./TokenWallet.code",
-      "line": 705
-    },
-    "80": {
-      "filename": "./TokenWallet.code",
-      "line": 741
-    },
-    "88": {
-      "filename": "./TokenWallet.code",
-      "line": 742
-    },
-    "136": {
-      "filename": "./TokenWallet.code",
-      "line": 743
-    },
-    "144": {
-      "filename": "./TokenWallet.code",
-      "line": 744
-    },
-    "160": {
-      "filename": "./TokenWallet.code",
-      "line": 770
-    },
-    "168": {
-      "filename": "./TokenWallet.code",
-      "line": 771
-    },
-    "216": {
-      "filename": "./TokenWallet.code",
-      "line": 772
-    },
-    "224": {
-      "filename": "./TokenWallet.code",
-      "line": 773
-    },
-    "240": {
-      "filename": "./TokenWallet.code",
-      "line": 793
-    },
-    "248": {
-      "filename": "./TokenWallet.code",
-      "line": 794
-    },
-    "296": {
-      "filename": "./TokenWallet.code",
-      "line": 795
-    },
-    "304": {
-      "filename": "./TokenWallet.code",
-      "line": 796
+      "line": 67
     }
   },
   "e1892f93eeee4df5b9cc26c625ec46083625e42fc2bac29fae54bcda68fae797": {
     "0": {
       "filename": "./TokenWallet.code",
-      "line": 560
+      "line": 571
     },
     "8": {
       "filename": "./TokenWallet.code",
-      "line": 561
+      "line": 572
     },
     "16": {
       "filename": "./TokenWallet.code",
-      "line": 562
+      "line": 573
     },
     "32": {
       "filename": "./TokenWallet.code",
-      "line": 565
+      "line": 576
     },
     "48": {
       "filename": "./TokenWallet.code",
-      "line": 566
+      "line": 577
     },
     "56": {
       "filename": "./TokenWallet.code",
-      "line": 567
+      "line": 578
     },
     "72": {
       "filename": "./TokenWallet.code",
-      "line": 568
+      "line": 579
     },
     "232": {
       "filename": "./TokenWallet.code",
-      "line": 569
+      "line": 580
     },
     "240": {
       "filename": "./TokenWallet.code",
-      "line": 570
+      "line": 581
     },
     "248": {
       "filename": "./TokenWallet.code",
-      "line": 571
+      "line": 582
     },
     "256": {
       "filename": "./TokenWallet.code",
-      "line": 572
+      "line": 583
     },
     "264": {
       "filename": "./TokenWallet.code",
-      "line": 573
+      "line": 584
     },
     "272": {
       "filename": "./TokenWallet.code",
-      "line": 574
+      "line": 585
     },
     "288": {
       "filename": "./TokenWallet.code",
-      "line": 576
+      "line": 587
     },
     "296": {
       "filename": "./TokenWallet.code",
-      "line": 577
+      "line": 588
     }
   },
   "e25aefc5f9fcdadd0702f5b479454b43d69fbb6498124b496e4c6a0b70ba787d": {
     "0": {
       "filename": "TokenWallet.sol",
-      "line": 95
+      "line": 102
     }
   },
   "e9e5b08e673e611d8c08a9e26ee041127b0214182769f41d2f307b6369752fb3": {
     "0": {
       "filename": "./TokenWallet.code",
-      "line": 1094
+      "line": 1124
     },
     "24": {
       "filename": "./TokenWallet.code",
-      "line": 1095
+      "line": 1125
     },
     "40": {
       "filename": "./TokenWallet.code",
-      "line": 1096
-    }
-  },
-  "ea9c8fd008d34f36535966b67703631cd9914504a0c0f2ee5381927c71de39e5": {
-    "0": {
-      "filename": "TokenWallet.sol",
-      "line": 59
-    },
-    "8": {
-      "filename": "TokenWallet.sol",
-      "line": 59
-    },
-    "24": {
-      "filename": "TokenWallet.sol",
-      "line": 59
-    },
-    "40": {
-      "filename": "TokenWallet.sol",
-      "line": 59
-    },
-    "56": {
-      "filename": "TokenWallet.sol",
-      "line": 59
-    },
-    "80": {
-      "filename": "TokenWallet.sol",
-      "line": 60
-    },
-    "88": {
-      "filename": "TokenWallet.sol",
-      "line": 60
-    },
-    "104": {
-      "filename": "TokenWallet.sol",
-      "line": 60
-    },
-    "112": {
-      "filename": "TokenWallet.sol",
-      "line": 60
-    },
-    "120": {
-      "filename": "TokenWallet.sol",
-      "line": 60
-    },
-    "144": {
-      "filename": "TokenWallet.sol",
-      "line": 61
-    },
-    "152": {
-      "filename": "TokenWallet.sol",
-      "line": 61
+      "line": 1126
     }
   },
   "eacf81de81168675d85b3806731f12518c3a7ae51e342efd988e965c0b3003b8": {
     "0": {
       "filename": "TokenWallet.sol",
-      "line": 100
+      "line": 107
     }
   },
-  "ef42f4a51b7e073222ef999c1afe949a1f47853d73306341c4380cc2baf7fbfe": {
+  "eb8e30e42f29847e33d96c4896c58ea510ddf768d6eb53f3fe87409c29098ce1": {
     "0": {
       "filename": "./TokenWallet.code",
-      "line": 802
+      "line": 832
     },
     "8": {
       "filename": "./TokenWallet.code",
-      "line": 805
+      "line": 835
     },
     "24": {
       "filename": "./TokenWallet.code",
-      "line": 806
+      "line": 836
     },
     "32": {
       "filename": "./TokenWallet.code",
-      "line": 807
+      "line": 837
     },
     "48": {
       "filename": "./TokenWallet.code",
-      "line": 810
+      "line": 840
     },
     "64": {
       "filename": "./TokenWallet.code",
-      "line": 811
+      "line": 841
     },
     "72": {
       "filename": "./TokenWallet.code",
-      "line": 812
+      "line": 842
     },
     "88": {
       "filename": "./TokenWallet.code",
-      "line": 813
+      "line": 843
     },
     "104": {
       "filename": "./TokenWallet.code",
-      "line": 814
+      "line": 844
     },
     "120": {
       "filename": "./TokenWallet.code",
-      "line": 815
+      "line": 845
     },
     "128": {
       "filename": "./TokenWallet.code",
-      "line": 816
+      "line": 846
     },
     "144": {
       "filename": "./TokenWallet.code",
-      "line": 817
+      "line": 847
     },
     "152": {
       "filename": "./TokenWallet.code",
-      "line": 818
+      "line": 848
     },
     "160": {
       "filename": "./TokenWallet.code",
-      "line": 819
+      "line": 849
     },
     "168": {
       "filename": "./TokenWallet.code",
-      "line": 820
+      "line": 850
     },
     "176": {
       "filename": "./TokenWallet.code",
-      "line": 821
+      "line": 851
     },
     "192": {
       "filename": "./TokenWallet.code",
-      "line": 822
+      "line": 852
     },
     "200": {
       "filename": "./TokenWallet.code",
-      "line": 823
+      "line": 853
     },
     "216": {
       "filename": "./TokenWallet.code",
-      "line": 824
+      "line": 854
     },
     "224": {
       "filename": "./TokenWallet.code",
-      "line": 825
+      "line": 855
     },
     "232": {
       "filename": "./TokenWallet.code",
-      "line": 826
+      "line": 856
     },
     "248": {
       "filename": "./TokenWallet.code",
-      "line": 827
+      "line": 857
     },
     "264": {
       "filename": "./TokenWallet.code",
-      "line": 829
+      "line": 859
     },
     "272": {
       "filename": "./TokenWallet.code",
-      "line": 830
+      "line": 860
     },
     "280": {
       "filename": "./TokenWallet.code",
-      "line": 831
+      "line": 861
     },
     "296": {
       "filename": "./TokenWallet.code",
-      "line": 833
+      "line": 863
     },
     "304": {
       "filename": "./TokenWallet.code",
-      "line": 834
+      "line": 864
     },
     "320": {
       "filename": "./TokenWallet.code",
-      "line": 835
+      "line": 865
     },
     "336": {
       "filename": "./TokenWallet.code",
-      "line": 837
+      "line": 867
     },
     "344": {
       "filename": "./TokenWallet.code",
-      "line": 838
+      "line": 868
     },
     "360": {
       "filename": "./TokenWallet.code",
-      "line": 839
+      "line": 869
     },
     "368": {
       "filename": "./TokenWallet.code",
-      "line": 840
+      "line": 870
     },
     "384": {
       "filename": "./TokenWallet.code",
-      "line": 842
+      "line": 872
     },
     "392": {
       "filename": "./TokenWallet.code",
-      "line": 843
+      "line": 873
     },
     "408": {
       "filename": "./TokenWallet.code",
-      "line": 844
+      "line": 874
     },
     "416": {
       "filename": "stdlib.sol",
@@ -3219,49 +3191,193 @@
     },
     "608": {
       "filename": "./TokenWallet.code",
-      "line": 846
+      "line": 876
     },
     "624": {
       "filename": "./TokenWallet.code",
-      "line": 847
+      "line": 877
     },
     "632": {
       "filename": "./TokenWallet.code",
-      "line": 848
+      "line": 878
     },
     "648": {
       "filename": "./TokenWallet.code",
-      "line": 849
+      "line": 879
     },
     "656": {
       "filename": "./TokenWallet.code",
-      "line": 850
+      "line": 880
     },
     "672": {
       "filename": "./TokenWallet.code",
-      "line": 851
+      "line": 881
     },
     "688": {
       "filename": "./TokenWallet.code",
-      "line": 852
+      "line": 882
     },
     "696": {
       "filename": "./TokenWallet.code",
-      "line": 853
+      "line": 883
     },
     "712": {
       "filename": "./TokenWallet.code",
-      "line": 856
+      "line": 886
     }
   },
   "f24e1e7aa04d89aad2945816b6e9b921f2b3892da9ba53e2383c148351b96d0c": {
     "0": {
       "filename": "./TokenWallet.code",
-      "line": 1030
+      "line": 1060
     },
     "16": {
       "filename": "./TokenWallet.code",
-      "line": 1031
+      "line": 1061
+    }
+  },
+  "f7f596df1c7c339e7fdff7db133eeaad132eb8476364ed1895084439218771d1": {
+    "0": {
+      "filename": "./TokenWallet.code",
+      "line": 142
+    },
+    "8": {
+      "filename": "./TokenWallet.code",
+      "line": 143
+    },
+    "24": {
+      "filename": "./TokenWallet.code",
+      "line": 144
+    },
+    "48": {
+      "filename": "./TokenWallet.code",
+      "line": 145
+    },
+    "64": {
+      "filename": "./TokenWallet.code",
+      "line": 146
+    },
+    "72": {
+      "filename": "./TokenWallet.code",
+      "line": 147
+    },
+    "88": {
+      "filename": "TokenWallet.sol",
+      "line": 83
+    },
+    "96": {
+      "filename": "TokenWallet.sol",
+      "line": 83
+    },
+    "104": {
+      "filename": "TokenWallet.sol",
+      "line": 83
+    },
+    "112": {
+      "filename": "TokenWallet.sol",
+      "line": 83
+    },
+    "120": {
+      "filename": "TokenWallet.sol",
+      "line": 83
+    },
+    "128": {
+      "filename": "TokenWallet.sol",
+      "line": 83
+    },
+    "136": {
+      "filename": "TokenWallet.sol",
+      "line": 83
+    },
+    "152": {
+      "filename": "TokenWallet.sol",
+      "line": 83
+    },
+    "168": {
+      "filename": "TokenWallet.sol",
+      "line": 83
+    },
+    "184": {
+      "filename": "TokenWallet.sol",
+      "line": 83
+    },
+    "192": {
+      "filename": "./TokenWallet.code",
+      "line": 163
+    },
+    "208": {
+      "filename": "./TokenWallet.code",
+      "line": 166
+    },
+    "224": {
+      "filename": "./TokenWallet.code",
+      "line": 169
+    }
+  },
+  "ff7c9a1e33b2a8503f602a41c7f520a54e360ea22298991c5f57e2cabcac1264": {
+    "0": {
+      "filename": "./TokenWallet.code",
+      "line": 775
+    },
+    "8": {
+      "filename": "./TokenWallet.code",
+      "line": 776
+    },
+    "56": {
+      "filename": "./TokenWallet.code",
+      "line": 777
+    },
+    "64": {
+      "filename": "./TokenWallet.code",
+      "line": 778
+    },
+    "80": {
+      "filename": "./TokenWallet.code",
+      "line": 781
+    },
+    "88": {
+      "filename": "./TokenWallet.code",
+      "line": 782
+    },
+    "136": {
+      "filename": "./TokenWallet.code",
+      "line": 783
+    },
+    "144": {
+      "filename": "./TokenWallet.code",
+      "line": 784
+    },
+    "160": {
+      "filename": "./TokenWallet.code",
+      "line": 787
+    },
+    "168": {
+      "filename": "./TokenWallet.code",
+      "line": 788
+    },
+    "216": {
+      "filename": "./TokenWallet.code",
+      "line": 789
+    },
+    "224": {
+      "filename": "./TokenWallet.code",
+      "line": 790
+    },
+    "240": {
+      "filename": "./TokenWallet.code",
+      "line": 793
+    },
+    "248": {
+      "filename": "./TokenWallet.code",
+      "line": 794
+    },
+    "296": {
+      "filename": "./TokenWallet.code",
+      "line": 795
+    },
+    "304": {
+      "filename": "./TokenWallet.code",
+      "line": 796
     }
   }
 }

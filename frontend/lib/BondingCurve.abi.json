@@ -69,6 +69,23 @@
 			]
 		},
 		{
+			"name": "getSellPrice",
+			"inputs": [
+				{"name":"tokenAmount","type":"uint256"}
+			],
+			"outputs": [
+				{"name":"value0","type":"uint128"}
+			]
+		},
+		{
+			"name": "getCurrentMarketCap",
+			"inputs": [
+			],
+			"outputs": [
+				{"name":"value0","type":"uint256"}
+			]
+		},
+		{
 			"name": "maxBuyPerTx",
 			"inputs": [
 			],
