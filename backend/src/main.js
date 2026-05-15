@@ -159,7 +159,7 @@ async function ensureCreatorHasShellBalance(walletAddress) {
   }
 }
 
-function buildReadinessChecks(databaseReachable) {
+async function buildReadinessChecks(databaseReachable) {
   return {
     databaseConfigured: Boolean(config.databaseUrl),
     databaseReachable,
@@ -430,44 +430,43 @@ app.get("/healthz", (_, res) => {
   });
 });
 
-app.get("/readyz", (_, res) => {
-  pingDatabase()
-    .then(() => {
-      const checks = buildReadinessChecks(true);
-      const readyForProduction =
-        !config.isProduction ||
-        (checks.graphqlConfigured &&
-          checks.tip3DecoderAvailable &&
-          checks.feeWalletConfigured &&
-          checks.adminTokenConfigured &&
-          checks.allowedOriginsConfigured);
+app.get("/readyz", async (_, res) => {
+  try {
+    await pingDatabase();
+    const checks = await buildReadinessChecks(true);
+    const readyForProduction =
+      !config.isProduction ||
+      (checks.graphqlConfigured &&
+        checks.tip3DecoderAvailable &&
+        checks.feeWalletConfigured &&
+        checks.adminTokenConfigured &&
+        checks.allowedOriginsConfigured);
 
-      if (config.isProduction) {
-        return res.status(readyForProduction ? 200 : 503).json({ ok: readyForProduction });
-      }
+    if (config.isProduction) {
+      return res.status(readyForProduction ? 200 : 503).json({ ok: readyForProduction });
+    }
 
-      if (!readyForProduction) {
-        return res.status(503).json({
-          ok: false,
-          checks,
-        });
-      }
-
-      return res.json({
-        ok: true,
-        checks,
-      });
-    })
-    .catch(() => {
-      if (config.isProduction) {
-        return res.status(503).json({ ok: false });
-      }
-      const checks = buildReadinessChecks(false);
-      res.status(503).json({
+    if (!readyForProduction) {
+      return res.status(503).json({
         ok: false,
         checks,
       });
+    }
+
+    return res.json({
+      ok: true,
+      checks,
     });
+  } catch {
+    if (config.isProduction) {
+      return res.status(503).json({ ok: false });
+    }
+    const checks = await buildReadinessChecks(false);
+    res.status(503).json({
+      ok: false,
+      checks,
+    });
+  }
 });
 
 app.get("/config", (_, res) => {

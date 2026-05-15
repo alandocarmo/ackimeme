@@ -50,15 +50,7 @@ function hashColor(str) {
   return `hsl(${h}, 65%, 55%)`;
 }
 
-function isSafeUrl(url) {
-  if (!url) return false;
-  try {
-    const u = new URL(url);
-    return u.protocol === 'https:';
-  } catch {
-    return false;
-  }
-}
+
 
 function computeAggregateStats(launches) {
   let totalReserve = 0;
