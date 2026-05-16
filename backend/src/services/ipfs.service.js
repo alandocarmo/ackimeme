@@ -66,6 +66,7 @@ async function uploadToIPFS(metadata) {
       await new Promise(resolve => setTimeout(resolve, 1000 * attempt)); // exp backoff: 1s, 2s
     }
   }
+}
 
 /**
  * Estrutura os metadados no padrão TEP-74 / TIP-3 compatibility
