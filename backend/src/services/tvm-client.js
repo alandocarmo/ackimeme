@@ -57,11 +57,17 @@ function getTvmClient() {
     if (!config.graphqlUrl) {
       console.warn("[TvmClient] ⚠️ GRAPHQL_URL não configurada! SDK conectado a shellnet (testnet).");
     }
-    _clientInstance = new tvmCore.TvmClient({
-      network: {
-        endpoints: [config.graphqlUrl || "https://shellnet.ackinacki.org/graphql"],
-      },
-    });
+    try {
+      _clientInstance = new tvmCore.TvmClient({
+        network: {
+          endpoints: [config.graphqlUrl || "https://shellnet.ackinacki.org/graphql"],
+        },
+      });
+    } catch (e) {
+      console.warn("[TvmClient] Falha ao inicializar TvmClient:", e.message);
+      sdkAvailable = false;
+      return null;
+    }
   }
   return _clientInstance;
 }

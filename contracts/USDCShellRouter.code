@@ -34,11 +34,77 @@
 	SETGLOB 2
 }
 
+.fragment c4_to_c7_with_init_storage, {
+	PUSHROOT
+	CTOS
+	SBITS
+	GTINT 1
+	PUSHCONT {
+		PUSHINT 0
+		PUSHROOT
+		CTOS
+		PLDDICT ; D
+		PUSHINT 1
+		OVER
+		PUSHINT 64
+		DICTUGET
+		PUSHCONT {
+			PUSHREFSLICE {
+				.blob x8000000000000000000000000000000000000000000000000000000000000000001_
+			}
+		}
+		IFNOT
+		PUSHINT 2
+		PUSH S2
+		PUSHINT 64
+		DICTUGET
+		PUSHCONT {
+			PUSHREFSLICE {
+				.blob x8000000000000000000000000000000000000000000000000000000000000000001_
+			}
+		}
+		IFNOT
+		PUSHINT 3
+		PUSH S3
+		PUSHINT 64
+		DICTUGET
+		PUSHCONT {
+			PUSHREFSLICE {
+				.blob x8000000000000000000000000000000000000000000000000000000000000000001_
+			}
+		}
+		IFNOT
+		PUSHREFSLICE {
+			.blob x8000000000000000000000000000000000000000000000000000000000000000001_
+		}
+		DUP
+		PUSHINT 0
+		SETGLOB 15
+		SETGLOB 14
+		SETGLOB 13
+		SETGLOB 12
+		SETGLOB 11
+		SETGLOB 10
+		PUSHINT 64
+		DICTUGET
+		THROWIFNOT 61
+		PLDU 256
+		SETGLOB 2
+		PUSHINT 0 ; timestamp
+		SETGLOB 3
+		PUSHINT 100
+		SETGLOB 15
+	}
+	IFREFELSE {
+		.inline c4_to_c7
+	}
+}
+
 .fragment accumulatorAddress, {
 	DROP
 	ENDS
 	CALLREF {
-		.inline c4_to_c7
+		.inline c4_to_c7_with_init_storage
 	}
 	GETGLOB 12
 	OVER
@@ -95,10 +161,8 @@
 	GETGLOB 2
 	ISNULL
 	IFREF {
-		.inline c4_to_c7
+		.inline c4_to_c7_with_init_storage
 	}
-	PUSHINT 100
-	SETGLOB 15
 	GETGLOB 6
 	THROWIF 51
 	OVER
@@ -114,7 +178,7 @@
 	CTOS
 	LDMSGADDR
 	ENDS
-	.loc USDCShellRouter.sol, 49
+	.loc USDCShellRouter.sol, 51
 	PUSHREF {
 		.blob x4f6e6c79206465706c6f796572207075626b6579
 	}
@@ -129,7 +193,7 @@
 	IF
 	EQUAL
 	THROWARGIFNOT 100
-	.loc USDCShellRouter.sol, 50
+	.loc USDCShellRouter.sol, 52
 	PUSHREF {
 		.blob x4665652077616c6c65742063616e6e6f74206265207a65726f
 	}
@@ -140,15 +204,15 @@
 	SDEQ
 	NOT
 	THROWARGIFNOT 105
-	.loc USDCShellRouter.sol, 51
+	.loc USDCShellRouter.sol, 53
 	ACCEPT
-	.loc USDCShellRouter.sol, 52
+	.loc USDCShellRouter.sol, 54
 	OVER
 	SETGLOB 14
-	.loc USDCShellRouter.sol, 53
+	.loc USDCShellRouter.sol, 55
 	DUP
 	SETGLOB 13
-	.loc USDCShellRouter.sol, 54
+	.loc USDCShellRouter.sol, 56
 	SWAP
 	PUSHSLICE xc0000000000000000000000001
 	NEWC
@@ -176,7 +240,7 @@
 	DROP
 	ENDS
 	CALLREF {
-		.inline c4_to_c7
+		.inline c4_to_c7_with_init_storage
 	}
 	GETGLOB 15
 	OVER
@@ -197,7 +261,7 @@
 	DROP
 	ENDS
 	CALLREF {
-		.inline c4_to_c7
+		.inline c4_to_c7_with_init_storage
 	}
 	GETGLOB 13
 	OVER
@@ -215,7 +279,7 @@
 }
 
 .fragment onAcceptTokensTransfer_e63f2284_internal, {
-	.loc USDCShellRouter.sol, 66
+	.loc USDCShellRouter.sol, 68
 	PUSHREF {
 		.blob x4f6e6c7920726f7574657220555344432077616c6c6574
 	}
@@ -223,7 +287,7 @@
 	GETGLOB 14
 	SDEQ
 	THROWARGIFNOT 101
-	.loc USDCShellRouter.sol, 67
+	.loc USDCShellRouter.sol, 69
 	PUSHREF {
 		.blob x496e76616c696420746f6b656e20726f6f74
 	}
@@ -231,7 +295,7 @@
 	GETGLOB 11
 	SDEQ
 	THROWARGIFNOT 102
-	.loc USDCShellRouter.sol, 70
+	.loc USDCShellRouter.sol, 72
 	PUSHREF {
 		.blob x416d6f756e742062656c6f77206d696e696d756d202831205553444329
 	}
@@ -239,22 +303,22 @@
 	PUSHINT 1000000
 	GEQ
 	THROWARGIFNOT 106
-	.loc USDCShellRouter.sol, 73
+	.loc USDCShellRouter.sol, 75
 	PUSHINT 0
 	PUSHINT 4
 	RAWRESERVE
-	.loc USDCShellRouter.sol, 75
+	.loc USDCShellRouter.sol, 77
 	PUSH S4
 	GETGLOB 15
 	MUL
 	UFITS 128
 	PUSHINT 10000
 	DIV
-	.loc USDCShellRouter.sol, 76
+	.loc USDCShellRouter.sol, 78
 	PUSH2 S5, S0
 	SUB
 	UFITS 128
-	.loc USDCShellRouter.sol, 78
+	.loc USDCShellRouter.sol, 80
 	PUSH2 S0, S1
 	BLKSWAP 2, 7
 	PUSHSLICE xc0000000000000000000000001
@@ -271,14 +335,14 @@
 	ENDC
 	PUSHINT 0
 	SENDRAWMSG
-	.loc USDCShellRouter.sol, 81
+	.loc USDCShellRouter.sol, 83
 	OVER
 	GTINT 0
 	PUSHCONT {
-		.loc USDCShellRouter.sol, 82
+		.loc USDCShellRouter.sol, 84
 		PUSHREF {
 		}
-		.loc USDCShellRouter.sol, 83
+		.loc USDCShellRouter.sol, 85
 		FALSE
 		PUSH S5
 		PUSHINT 100000000
@@ -288,7 +352,7 @@
 		NEWC
 		STSLICECONST x62_
 		STSLICE
-		PUSHSLICE x405f5e1000000000000000000000000000003_
+		PUSHSLICE x405f5e100000000000000000000000000003_
 		STSLICER
 		ROLLREV 6
 		NEWC
@@ -309,11 +373,11 @@
 		.loc USDCShellRouter.sol, 0
 	}
 	IF
-	.loc USDCShellRouter.sol, 94
+	.loc USDCShellRouter.sol, 96
 	DUP
 	GTINT 0
 	PUSHCONT {
-		.loc USDCShellRouter.sol, 95
+		.loc USDCShellRouter.sol, 97
 		PUSH S2
 		TRUE
 		PUSH S5
@@ -325,7 +389,7 @@
 		STSLICECONST x62_
 		STSLICE
 		PUSHINT 1
-		STUR 115
+		STUR 111
 		ROLLREV 6
 		NEWC
 		STSLICECONST x73e22143
@@ -341,12 +405,12 @@
 		STBREFR
 	}
 	PUSHCONT {
-		.loc USDCShellRouter.sol, 104
+		.loc USDCShellRouter.sol, 106
 		PUSH S3
 		NEWC
 		STSLICECONST x62_
 		STSLICE
-		PUSHINT 115
+		PUSHINT 111
 		STZEROES
 	}
 	IFELSE
@@ -366,7 +430,7 @@
 	IFREF {
 		.inline c4_to_c7
 	}
-	.loc USDCShellRouter.sol, 57
+	.loc USDCShellRouter.sol, 59
 	OVER
 	PUSHCONT {
 		LDREF
@@ -404,7 +468,7 @@
 	DROP
 	ENDS
 	CALLREF {
-		.inline c4_to_c7
+		.inline c4_to_c7_with_init_storage
 	}
 	GETGLOB 10
 	OVER
@@ -422,7 +486,7 @@
 }
 
 .fragment rescueTokens_a98a0f9b_internal, {
-	.loc USDCShellRouter.sol, 138
+	.loc USDCShellRouter.sol, 142
 	PUSHREF {
 		.blob x4e6f7420617574686f72697a6564
 	}
@@ -437,7 +501,7 @@
 	GETGLOB 2
 	EQUAL
 	THROWARGIFNOT 103
-	.loc USDCShellRouter.sol, 139
+	.loc USDCShellRouter.sol, 143
 	PUSHREF {
 		.blob x526563697069656e742063616e6e6f74206265207a65726f
 	}
@@ -448,12 +512,12 @@
 	SDEQ
 	NOT
 	THROWARGIFNOT 107
-	.loc USDCShellRouter.sol, 140
+	.loc USDCShellRouter.sol, 144
 	ACCEPT
-	.loc USDCShellRouter.sol, 141
+	.loc USDCShellRouter.sol, 145
 	PUSHREF {
 	}
-	.loc USDCShellRouter.sol, 142
+	.loc USDCShellRouter.sol, 146
 	FALSE
 	PUSH S2
 	PUSHINT 100000000
@@ -463,7 +527,7 @@
 	NEWC
 	STSLICECONST x62_
 	STSLICE
-	PUSHSLICE x405f5e1000000000000000000000000000003_
+	PUSHSLICE x405f5e100000000000000000000000000003_
 	STSLICER
 	ROLLREV 6
 	NEWC
@@ -493,7 +557,7 @@
 	IFREF {
 		.inline c4_to_c7
 	}
-	.loc USDCShellRouter.sol, 137
+	.loc USDCShellRouter.sol, 141
 	OVER
 	PUSHCONT {
 		LDREF
@@ -508,7 +572,7 @@
 	CALLREF {
 		.inline rescueTokens_a98a0f9b_internal
 	}
-	CALLREF {
+	IFREF {
 		.inline c7_to_c4
 	}
 	THROW 0
@@ -518,7 +582,7 @@
 	DROP
 	ENDS
 	CALLREF {
-		.inline c4_to_c7
+		.inline c4_to_c7_with_init_storage
 	}
 	GETGLOB 14
 	OVER
@@ -536,7 +600,7 @@
 }
 
 .fragment setFeeBps_023b1fc9_internal, {
-	.loc USDCShellRouter.sol, 122
+	.loc USDCShellRouter.sol, 124
 	PUSHREF {
 		.blob x4e6f7420617574686f72697a6564
 	}
@@ -551,9 +615,9 @@
 	GETGLOB 2
 	EQUAL
 	THROWARGIFNOT 103
-	.loc USDCShellRouter.sol, 123
+	.loc USDCShellRouter.sol, 125
 	ACCEPT
-	.loc USDCShellRouter.sol, 124
+	.loc USDCShellRouter.sol, 126
 	PUSHREF {
 		.blob x4d61782066656520697320313025
 	}
@@ -561,8 +625,17 @@
 	PUSHINT 1000
 	LEQ
 	THROWARGIFNOT 104
-	.loc USDCShellRouter.sol, 125
+	.loc USDCShellRouter.sol, 127
+	DUP
 	SETGLOB 15
+	.loc USDCShellRouter.sol, 128
+	PUSHSLICE xc000000000000000000000000013423345
+	NEWC
+	STSLICE
+	STU 16
+	ENDC
+	PUSHINT 0
+	SENDRAWMSG
 	.loc USDCShellRouter.sol, 0
 }
 
@@ -575,7 +648,7 @@
 	IFREF {
 		.inline c4_to_c7
 	}
-	.loc USDCShellRouter.sol, 121
+	.loc USDCShellRouter.sol, 123
 	LDU 16
 	ENDS
 	.loc USDCShellRouter.sol, 0
@@ -589,7 +662,7 @@
 }
 
 .fragment updateFeeWallet_66718524_internal, {
-	.loc USDCShellRouter.sol, 130
+	.loc USDCShellRouter.sol, 133
 	PUSHREF {
 		.blob x4e6f7420617574686f72697a6564
 	}
@@ -604,7 +677,7 @@
 	GETGLOB 2
 	EQUAL
 	THROWARGIFNOT 103
-	.loc USDCShellRouter.sol, 131
+	.loc USDCShellRouter.sol, 134
 	PUSHREF {
 		.blob x4665652077616c6c65742063616e6e6f74206265207a65726f
 	}
@@ -615,10 +688,19 @@
 	SDEQ
 	NOT
 	THROWARGIFNOT 105
-	.loc USDCShellRouter.sol, 132
+	.loc USDCShellRouter.sol, 135
 	ACCEPT
-	.loc USDCShellRouter.sol, 133
+	.loc USDCShellRouter.sol, 136
+	DUP
 	SETGLOB 13
+	.loc USDCShellRouter.sol, 137
+	PUSHSLICE xc0000000000000000000000000022aa9e2
+	NEWC
+	STSLICE
+	STSLICE
+	ENDC
+	PUSHINT 0
+	SENDRAWMSG
 	.loc USDCShellRouter.sol, 0
 }
 
@@ -631,7 +713,7 @@
 	IFREF {
 		.inline c4_to_c7
 	}
-	.loc USDCShellRouter.sol, 129
+	.loc USDCShellRouter.sol, 132
 	OVER
 	PUSHCONT {
 		LDREF
@@ -655,7 +737,7 @@
 	DROP
 	ENDS
 	CALLREF {
-		.inline c4_to_c7
+		.inline c4_to_c7_with_init_storage
 	}
 	GETGLOB 11
 	OVER
@@ -674,30 +756,25 @@
 
 .fragment public_function_selector, {
 	DUP
-	PUSHINT 1099742667
+	PUSHINT 1241152735
 	LEQ
 	IFJMPREF {
 		DUP
-		PUSHINT 600225582
+		PUSHINT 862624716
 		LEQ
 		IFJMPREF {
-			DUP
-			EQINT 1
-			IFJMPREF {
-				.inline constructor
-			}
 			DUP
 			PUSHINT 600225582
 			EQUAL
 			IFJMPREF {
 				.inline accumulatorAddress
 			}
-		}
-		DUP
-		PUSHINT 862624716
-		EQUAL
-		IFJMPREF {
-			.inline routerUsdcWallet
+			DUP
+			PUSHINT 862624716
+			EQUAL
+			IFJMPREF {
+				.inline routerUsdcWallet
+			}
 		}
 		DUP
 		PUSHINT 1075803870
@@ -710,6 +787,12 @@
 		EQUAL
 		IFJMPREF {
 			.inline usdcRoot
+		}
+		DUP
+		PUSHINT 1241152735
+		EQUAL
+		IFJMPREF {
+			.inline constructor
 		}
 	}
 	DUP
@@ -761,13 +844,19 @@
 }
 
 .fragment main_external, {
+	PUSHINT -1
+	PUSHROOT
+	CTOS
+	SBITS
+	NEQINT 1
+	SETGLOB 6
 	PUSHREFSLICE {
 		.blob x8000000000000000000000000000000000000000000000000000000000000000001_
 	}
 	SETGLOB 9
 	OVER
 	CALLREF {
-		.inline c4_to_c7
+		.inline c4_to_c7_with_init_storage
 	}
 	LDU 1 ; haveSign msgSlice
 	SWAP
@@ -823,31 +912,27 @@
 .fragment on_bounce, {
 	GETGLOB 6
 	THROWIFNOT 76
-	GETGLOB 2
-	ISNULL
-	IFREF {
-		.inline c4_to_c7
-	}
 	PUSHCONT {
-		.loc USDCShellRouter.sol, 112
+		.loc USDCShellRouter.sol, 114
 		SBITS
 		LESSINT 32
 		IFRET
-		.loc USDCShellRouter.sol, 109
+		.loc USDCShellRouter.sol, 111
 	}
 	CALLX
 	.loc USDCShellRouter.sol, 0
-	CALLREF {
+	DUP
+	IFREF {
 		.inline c7_to_c4
 	}
 }
 
 .fragment main_internal, {
+	PUSHINT 0
 	PUSHROOT
 	CTOS
-	PUSHINT 320
-	SDSKIPFIRST
-	PLDI 1
+	SBITS
+	NEQINT 1
 	SETGLOB 6
 	PUSH S2
 	CTOS
@@ -883,33 +968,6 @@
 	THROW 60
 }
 
-.fragment default_data_cell, {
-	PUSHINT 0
-	PUSHSLICE x2_
-	BLKPUSH 3, 0
-	NEWC
-	PUSHINT 323
-	STZEROES
-	ROLLREV 5
-	NEWC
-	STSLICE
-	ROLLREV 4
-	NEWC
-	STSLICE
-	ROLLREV 3
-	NEWC
-	STSLICE
-	ROTREV
-	NEWC
-	STSLICE
-	STU 16
-	STBREFR
-	STBREFR
-	STBREFR
-	STBREFR
-	ENDC
-}
-
 .fragment upd_only_time_in_c4, {
 	PUSHROOT
 	CTOS
@@ -926,7 +984,14 @@
 	POPROOT
 }
 
-.fragment onTickTock, {
+.fragment default_data_dict_cell, {
+	PUSHINT 0
+	NEWC
+	STU 256
+	PUSHINT 0
+	NEWDICT
+	PUSHINT 64
+	DICTUSETB
 }
 
 ; The code below forms a value of the StateInit type.
@@ -934,35 +999,20 @@
 .blob x4_ ; special = nothing
 .blob xc_ ; code = just
 .cell { ; code cell
-	PUSHREFCONT {
-		DICTPUSHCONST 32
-		DICTUGETJMPZ
-		THROW 78
-		.code-dict-cell 32, {
-		}
-		.cell { ; version
-			.blob x736f6c20302e37392e33 ; sol 0.79.3
-		}
-	}
-	POPCTR c3
-	DUP
-	IFNOTJMPREF {
-		.inline main_internal
-	}
-	DUP
-	EQINT -1
-	IFJMPREF {
-		.inline main_external
-	}
-	DUP
-	EQINT -2
-	IFJMPREF {
-		.inline onTickTock
-	}
+	SETCP0
+	DICTPUSHCONST 19
+	DICTIGETJMPZ
 	THROW 11
+	.code-dict-cell 19, {
+		x00001_ = main_internal,
+		xfffff_ = main_external,
+	}
 }
 .blob xc_ ; data = just
 .cell { 
-	.inline-computed-cell default_data_cell, 0
+	.blob xc_
+	.cell { 
+		.inline-computed-cell default_data_dict_cell, 0
+	}
 }
 .blob x4_ ; library = hme_empty

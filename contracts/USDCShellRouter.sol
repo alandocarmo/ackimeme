@@ -43,6 +43,8 @@ contract USDCShellRouter is IAcceptTokensTransferCallback {
     event RouterInitialized(address usdcWallet, address feeWallet);
     event SwapRouted(address sender, uint128 totalAmount, uint128 feeAmount, uint128 swapAmount);
     event BounceRefund(address sender, uint128 amount);
+    event FeeUpdated(uint16 newFeeBps);
+    event FeeWalletUpdated(address newFeeWallet);
 
     // P1-1 FIX: feeWallet is now a constructor param instead of static
     constructor(address _routerUsdcWallet, address _feeWallet) {
@@ -106,7 +108,7 @@ contract USDCShellRouter is IAcceptTokensTransferCallback {
     }
 
     // P1-3 FIX: onBounce handler to refund users if Accumulator rejects
-    onBounce(TvmSlice body) external {
+    onBounce(TvmSlice body) external pure {
         // If a transfer bounces back, we should attempt to return funds
         // The bounce will come from routerUsdcWallet if transfer failed
         if (body.bits() < 32) {
@@ -123,6 +125,7 @@ contract USDCShellRouter is IAcceptTokensTransferCallback {
         tvm.accept();
         require(_feeBps <= 1000, 104, "Max fee is 10%");
         feeBps = _feeBps;
+        emit FeeUpdated(_feeBps);
     }
 
     // P1-1 FIX: This now actually works because feeWallet is a state var
@@ -131,10 +134,11 @@ contract USDCShellRouter is IAcceptTokensTransferCallback {
         require(_feeWallet != address(0), 105, "Fee wallet cannot be zero");
         tvm.accept();
         feeWallet = _feeWallet;
+        emit FeeWalletUpdated(_feeWallet);
     }
 
     // Emergency: allow admin to recover stuck tokens by transferring them out
-    function rescueTokens(uint128 amount, address recipient) external {
+    function rescueTokens(uint128 amount, address recipient) external view {
         require(msg.pubkey() == tvm.pubkey(), 103, "Not authorized");
         require(recipient != address(0), 107, "Recipient cannot be zero");
         tvm.accept();

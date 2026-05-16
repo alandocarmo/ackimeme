@@ -35,30 +35,37 @@ async function uploadToIPFS(metadata) {
     return `DEV_MOCK_NOT_REAL_IPFS_${Date.now()}`;
   }
 
-  try {
-    const response = await axios.post(
-      "https://api.pinata.cloud/pinning/pinJSONToIPFS",
-      {
-        pinataContent: metadata,
-        pinataMetadata: {
-          name: `metadata_${metadata.symbol || "unknown"}.json`,
+  let attempt = 0;
+  const maxAttempts = 3;
+  while (attempt < maxAttempts) {
+    try {
+      const response = await axios.post(
+        "https://api.pinata.cloud/pinning/pinJSONToIPFS",
+        {
+          pinataContent: metadata,
+          pinataMetadata: {
+            name: `metadata_${metadata.symbol || "unknown"}.json`,
+          },
         },
-      },
-      {
-        headers: {
-          pinata_api_key: PINATA_API_KEY,
-          pinata_secret_api_key: PINATA_SECRET_KEY,
-        },
-        timeout: 20000,
-      }
-    );
+        {
+          headers: {
+            pinata_api_key: PINATA_API_KEY,
+            pinata_secret_api_key: PINATA_SECRET_KEY,
+          },
+          timeout: 20000,
+        }
+      );
 
-    return response.data.IpfsHash;
-  } catch (error) {
-    console.error("[IPFS] Erro ao subir para o Pinata:", error.response?.data || error.message);
-    throw new Error("Falha ao descentralizar metadados no IPFS.");
+      return response.data.IpfsHash;
+    } catch (error) {
+      attempt++;
+      console.error(`[IPFS] Erro ao subir para o Pinata (Tentativa ${attempt}/${maxAttempts}):`, error.response?.data || error.message);
+      if (attempt >= maxAttempts) {
+        throw new Error("Falha ao descentralizar metadados no IPFS após múltiplas tentativas.");
+      }
+      await new Promise(resolve => setTimeout(resolve, 1000 * attempt)); // exp backoff: 1s, 2s
+    }
   }
-}
 
 /**
  * Estrutura os metadados no padrão TEP-74 / TIP-3 compatibility

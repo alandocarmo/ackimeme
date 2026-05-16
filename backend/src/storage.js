@@ -719,21 +719,6 @@ async function listAllLaunches(limit = 500) {
 
 // ── Persistent rate limit & txHash dedup ─────────────────────────────────────
 
-async function isTxHashUsed(txHash) {
-  const result = await query(
-    `SELECT 1 FROM used_tx_hashes WHERE tx_hash = $1 LIMIT 1`,
-    [String(txHash || "").toLowerCase()],
-  );
-  return result.rows.length > 0;
-}
-
-async function markTxHashUsed(txHash, walletAddress) {
-  await query(
-    `INSERT INTO used_tx_hashes (tx_hash, wallet_address) VALUES ($1, $2) ON CONFLICT (tx_hash) DO NOTHING`,
-    [String(txHash || "").toLowerCase(), String(walletAddress || "").toLowerCase()],
-  );
-}
-
 async function reserveTxHash(txHash, walletAddress) {
   const result = await query(
     `INSERT INTO used_tx_hashes (tx_hash, wallet_address) VALUES ($1, $2) ON CONFLICT (tx_hash) DO NOTHING RETURNING tx_hash`,
@@ -1911,6 +1896,6 @@ async function getTopHoldersByLaunchId(launchId, limit = 20) {
   const result = await query(sql, [launchId, limit]);
   return result.rows.map(row => ({
     walletAddress: row.wallet_address,
-    balance: Number(row.balance),
+    balance: String(row.balance),
   }));
 }

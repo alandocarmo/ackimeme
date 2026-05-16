@@ -277,7 +277,7 @@ export default function Home() {
                           {isBoostedActive(launch) && (
                             <span className="badge-boosted">🚀 {t("card_boosted")}</span>
                           )}
-                          {launch.protocol?.pumpForever && reserveBalance >= 15000000000000 && (
+                          {launch.protocol?.pumpForever && reserveBalance >= MIGRATION_THRESHOLD_NANO && (
                             <span className="king-badge">👑 {t("card_pump_forever")}</span>
                           )}
                           {launch.status === 'on_chain_deployed' && (

@@ -1,6 +1,6 @@
 {
 	"ABI version": 2,
-	"version": "2.4",
+	"version": "2.3",
 	"header": ["pubkey", "time", "expire"],
 	"functions": [
 		{
@@ -350,6 +350,12 @@
 			]
 		}
 	],
+	"getters": [
+	],
+	"data": [
+		{"key":1,"name":"_tokenRoot","type":"address"},
+		{"key":2,"name":"_supplyCap","type":"uint256"}
+	],
 	"events": [
 		{
 			"name": "TokensPurchaseInitiated",
@@ -392,29 +398,29 @@
 		}
 	],
 	"fields": [
-		{"init":true,"name":"_pubkey","type":"uint256"},
-		{"init":false,"name":"_timestamp","type":"uint64"},
-		{"init":false,"name":"_constructorFlag","type":"bool"},
-		{"init":true,"name":"_tokenRoot","type":"address"},
-		{"init":true,"name":"_supplyCap","type":"uint256"},
-		{"init":false,"name":"reserveBalance","type":"uint256"},
-		{"init":false,"name":"totalSupply","type":"uint256"},
-		{"init":false,"name":"isAmm","type":"bool"},
-		{"init":false,"name":"ammKLast","type":"uint256"},
-		{"init":false,"name":"migratedAt","type":"uint32"},
-		{"init":false,"name":"owner","type":"address"},
-		{"init":false,"name":"feeRecipient","type":"address"},
-		{"init":false,"name":"paused","type":"bool"},
-		{"init":false,"name":"name","type":"string"},
-		{"init":false,"name":"symbol","type":"string"},
-		{"init":false,"name":"creationFeeTxHash","type":"bytes"},
-		{"init":false,"name":"pendingReserveByNonce","type":"map(uint32,uint256)"},
-		{"init":false,"name":"pendingTokensByNonce","type":"map(uint32,uint256)"},
-		{"init":false,"name":"pendingPlatformFeeByNonce","type":"map(uint32,uint256)"},
-		{"init":false,"name":"pendingCreatorFeeByNonce","type":"map(uint32,uint256)"},
-		{"init":false,"name":"pumpForever","type":"bool"},
-		{"init":false,"name":"slopeDivisor","type":"uint256"},
-		{"init":false,"name":"mintIdToBuyer","type":"map(uint32,address)"},
-		{"init":false,"name":"_mintSeqno","type":"uint32"}
+		{"name":"_pubkey","type":"uint256"},
+		{"name":"_timestamp","type":"uint64"},
+		{"name":"_constructorFlag","type":"bool"},
+		{"name":"_tokenRoot","type":"address"},
+		{"name":"_supplyCap","type":"uint256"},
+		{"name":"reserveBalance","type":"uint256"},
+		{"name":"totalSupply","type":"uint256"},
+		{"name":"isAmm","type":"bool"},
+		{"name":"ammKLast","type":"uint256"},
+		{"name":"migratedAt","type":"uint32"},
+		{"name":"owner","type":"address"},
+		{"name":"feeRecipient","type":"address"},
+		{"name":"paused","type":"bool"},
+		{"name":"name","type":"string"},
+		{"name":"symbol","type":"string"},
+		{"name":"creationFeeTxHash","type":"bytes"},
+		{"name":"pendingReserveByNonce","type":"map(uint32,uint256)"},
+		{"name":"pendingTokensByNonce","type":"map(uint32,uint256)"},
+		{"name":"pendingPlatformFeeByNonce","type":"map(uint32,uint256)"},
+		{"name":"pendingCreatorFeeByNonce","type":"map(uint32,uint256)"},
+		{"name":"pumpForever","type":"bool"},
+		{"name":"slopeDivisor","type":"uint256"},
+		{"name":"mintIdToBuyer","type":"map(uint32,address)"},
+		{"name":"_mintSeqno","type":"uint32"}
 	]
 }

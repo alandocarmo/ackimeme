@@ -1,6 +1,6 @@
 {
 	"ABI version": 2,
-	"version": "2.4",
+	"version": "2.3",
 	"header": ["pubkey", "time", "expire"],
 	"functions": [
 		{
@@ -99,6 +99,13 @@
 			]
 		}
 	],
+	"getters": [
+	],
+	"data": [
+		{"key":1,"name":"owner","type":"address"},
+		{"key":2,"name":"usdcRoot","type":"address"},
+		{"key":3,"name":"accumulatorAddress","type":"address"}
+	],
 	"events": [
 		{
 			"name": "RouterInitialized",
@@ -128,17 +135,33 @@
 			],
 			"outputs": [
 			]
+		},
+		{
+			"name": "FeeUpdated",
+			"inputs": [
+				{"name":"newFeeBps","type":"uint16"}
+			],
+			"outputs": [
+			]
+		},
+		{
+			"name": "FeeWalletUpdated",
+			"inputs": [
+				{"name":"newFeeWallet","type":"address"}
+			],
+			"outputs": [
+			]
 		}
 	],
 	"fields": [
-		{"init":true,"name":"_pubkey","type":"uint256"},
-		{"init":false,"name":"_timestamp","type":"uint64"},
-		{"init":false,"name":"_constructorFlag","type":"bool"},
-		{"init":true,"name":"owner","type":"address"},
-		{"init":true,"name":"usdcRoot","type":"address"},
-		{"init":true,"name":"accumulatorAddress","type":"address"},
-		{"init":false,"name":"feeWallet","type":"address"},
-		{"init":false,"name":"routerUsdcWallet","type":"address"},
-		{"init":false,"name":"feeBps","type":"uint16"}
+		{"name":"_pubkey","type":"uint256"},
+		{"name":"_timestamp","type":"uint64"},
+		{"name":"_constructorFlag","type":"bool"},
+		{"name":"owner","type":"address"},
+		{"name":"usdcRoot","type":"address"},
+		{"name":"accumulatorAddress","type":"address"},
+		{"name":"feeWallet","type":"address"},
+		{"name":"routerUsdcWallet","type":"address"},
+		{"name":"feeBps","type":"uint16"}
 	]
 }

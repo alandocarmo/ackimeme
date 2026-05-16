@@ -46,10 +46,6 @@ function verifyTelegramInitData(initData) {
   const parsed = parseTelegramInitData(initData);
 
   if (!parsed) {
-    if (config.telegramBotToken) {
-      throw new Error("Telegram init data é obrigatório para autenticação.");
-    }
-
     return {
       isVerified: false,
       status: "missing",

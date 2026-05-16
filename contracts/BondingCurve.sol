@@ -224,7 +224,10 @@ contract BondingCurve {
         if (address(this).balance > MIN_EXECUTION_GAS) {
             return;
         }
-        gosh.mintshell(GAS_TOP_UP);
+        // tvm.accept() is used to pay for gas with contract balance instead of minting new shell.
+        // In internal messages, gas is paid by the sender, but if we want to ensure
+        // execution even if the sender didn't attach enough, we would need external msg.
+        // For now, rely on msg.value attached by the caller (VMSHELL).
     }
 
     // ─── C-02: Buy via msg.currencies[2] (SHELL ECC cross-DappID) ────────────
@@ -311,7 +314,7 @@ contract BondingCurve {
         // Audit #3: Anti-rug Creator Lock. Creator cannot sell during the 30-day lock
         // period after AMM migration to ensure stability.
         if (isAmm && refundAddress == owner && migratedAt > 0) {
-            require(block.timestamp >= migratedAt + LOCK_PERIOD, 219, "Creator tokens are locked for 30 days after AMM migration");
+            require(block.timestamp >= migratedAt + LOCK_PERIOD, 223, "Creator tokens are locked for 30 days after AMM migration");
         }
 
 
@@ -403,7 +406,9 @@ contract BondingCurve {
         migratedAt = uint32(block.timestamp);
         
         // Setup initial x*y=k invariant
-        ammKLast = reserveBalance * (_supplyCap - totalSupply);
+        uint256 tokenPool = _supplyCap - totalSupply;
+        require(reserveBalance == 0 || tokenPool <= MAX_UINT128 / reserveBalance, 224, "AMM invariant overflow");
+        ammKLast = reserveBalance * tokenPool;
         
         emit MigratedToInternalAmm(liquidityToMove, migratedAt);
         emit FeeReduced(getTradeFeeBps());

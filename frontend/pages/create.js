@@ -74,18 +74,22 @@ export default function CreatePage() {
         tokenSymbol: "SHELL",
         isBoosted: form.isBoosted,
       });
-      setPaymentStatus({ ok: true, msg: "Payment confirmed ✓" });
+      setPaymentStatus({ ok: true, msg: "Payment confirmed ✓", verifiedTx: form.txHash.trim() });
     } catch (err) {
-      setPaymentStatus({ ok: false, msg: err.message });
+      setPaymentStatus({ ok: false, msg: err.message, verifiedTx: null });
     }
   }
 
   async function handleLaunch() {
     setLaunchStatus({ loading: true, error: "", success: false, ticket: null });
     try {
-      const res = await createLaunchRequest({
-        ...form, creatorWallet: session?.walletAddress, symbol: sanitizeSymbol(form.symbol)
-      });
+      const payload = {
+        ...form, 
+        txHash: paymentStatus.verifiedTx || form.txHash, // Send the verified hash
+        creatorWallet: session?.walletAddress, 
+        symbol: sanitizeSymbol(form.symbol)
+      };
+      const res = await createLaunchRequest(payload);
       setLaunchStatus({ loading: false, error: "", success: true, ticket: res.launchRequest });
     } catch (err) {
       setLaunchStatus({ loading: false, error: err.message, success: false, ticket: null });

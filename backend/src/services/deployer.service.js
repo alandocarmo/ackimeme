@@ -353,9 +353,6 @@ async function deployContract({
   if (ENABLE_ONCHAIN_DEPLOY) {
     await prefundFutureContractAddress(address, signer, onChainAttempt);
     console.log(`[Deployer] ${label}: Enviando deploy para a blockchain...`);
-    if (typeof onChainAttempt === "function") {
-      onChainAttempt();
-    }
     await client.processing.process_message({
       message_encode_params: deployParams,
       send_events: false,
@@ -556,7 +553,7 @@ async function deployTokenEcosystem({ name, symbol, totalSupply, ipfsHash, creat
           _tokenRootAddr: tokenRootAddress,
           _name: name,
           _symbol: symbol,
-          _creationFeeTxHash: Buffer.from(paymentTxHash || "genesis").toString("hex"),
+          _creationFeeTxHash: paymentTxHash || "genesis",
           _feeRecipient: feeRecipient,
           _pumpForever: pumpForever,
           _slopeDivisor: finalNanoDivisor
@@ -593,7 +590,7 @@ async function deployTokenEcosystem({ name, symbol, totalSupply, ipfsHash, creat
               _owner: creatorWallet,
               _name: name,
               _symbol: symbol,
-              _creationFeeTxHash: Buffer.from(paymentTxHash || "genesis").toString("hex"),
+              _creationFeeTxHash: paymentTxHash || "genesis",
               _supplyCap: maxTokenSupply,
               _initialBalance: 10000000000, // 10 VMSHELL to inner BondingCurve
               _feeRecipient: feeRecipient,

@@ -1,33 +1,33 @@
 .fragment _clearMint_e5152e88_internal, {
-	.loc BondingCurve.sol, 449
+	.loc BondingCurve.sol, 454
 	DUP
 	GETGLOB 23
 	PUSHINT 32
 	DICTUDEL
 	DROP
 	SETGLOB 23
-	.loc BondingCurve.sol, 450
+	.loc BondingCurve.sol, 455
 	DUP
 	GETGLOB 24
 	PUSHINT 32
 	DICTUDEL
 	DROP
 	SETGLOB 24
-	.loc BondingCurve.sol, 451
+	.loc BondingCurve.sol, 456
 	DUP
 	GETGLOB 25
 	PUSHINT 32
 	DICTUDEL
 	DROP
 	SETGLOB 25
-	.loc BondingCurve.sol, 452
+	.loc BondingCurve.sol, 457
 	DUP
 	GETGLOB 26
 	PUSHINT 32
 	DICTUDEL
 	DROP
 	SETGLOB 26
-	.loc BondingCurve.sol, 453
+	.loc BondingCurve.sol, 458
 	GETGLOB 29
 	PUSHINT 32
 	DICTUDEL
@@ -43,9 +43,6 @@
 	PUSHINT 1000000000
 	GREATER
 	IFRET
-	.loc BondingCurve.sol, 227
-	PUSHINT 2000000000
-	MINTSHELL
 	.loc BondingCurve.sol, 0
 }
 
@@ -59,10 +56,10 @@
 }
 
 .fragment _migrateToAmm_d64ae8ec_internal, {
-	.loc BondingCurve.sol, 399
+	.loc BondingCurve.sol, 402
 	GETGLOB 12
 	UFITS 128
-	.loc BondingCurve.sol, 400
+	.loc BondingCurve.sol, 403
 	PUSHREF {
 		.blob x746f6b656e73546f4d6f7665206f766572666c6f77
 	}
@@ -73,21 +70,39 @@
 	PUSHPOW2DEC 128
 	LEQ
 	THROWARGIFNOT 210
-	.loc BondingCurve.sol, 402
+	.loc BondingCurve.sol, 405
 	TRUE
 	SETGLOB 14
-	.loc BondingCurve.sol, 403
+	.loc BondingCurve.sol, 406
 	NOW
 	SETGLOB 16
-	.loc BondingCurve.sol, 406
-	GETGLOB 12
+	.loc BondingCurve.sol, 409
 	GETGLOB 11
 	GETGLOB 13
 	SUB
 	UFITS 256
+	.loc BondingCurve.sol, 410
+	PUSHREF {
+		.blob x414d4d20696e76617269616e74206f766572666c6f77
+	}
+	GETGLOB 12
+	EQINT 0
+	DUP
+	PUSHCONT {
+		DROP
+		OVER
+		PUSHPOW2DEC 128
+		GETGLOB 12
+		DIV
+		LEQ
+	}
+	IFNOT
+	THROWARGIFNOT 224
+	.loc BondingCurve.sol, 411
+	GETGLOB 12
 	MUL
 	SETGLOB 15
-	.loc BondingCurve.sol, 408
+	.loc BondingCurve.sol, 413
 	GETGLOB 16
 	SWAP
 	PUSHSLICE xc0000000000000000000000000465c2812
@@ -98,7 +113,7 @@
 	ENDC
 	PUSHINT 0
 	SENDRAWMSG
-	.loc BondingCurve.sol, 409
+	.loc BondingCurve.sol, 414
 	CALLREF {
 		.inline getTradeFeeBps_aa3c1e40_internal
 	}
@@ -113,16 +128,18 @@
 }
 
 .fragment _rollbackMint_742ea48a_internal, {
-	.loc BondingCurve.sol, 413
+	.loc BondingCurve.sol, 418
 	DUP
 	GETGLOB 29
 	PUSHINT 32
 	DICTUGET
 	PUSHCONT {
-		PUSHSLICE x2_
+		PUSHREFSLICE {
+			.blob x8000000000000000000000000000000000000000000000000000000000000000001_
+		}
 	}
 	IFNOT
-	.loc BondingCurve.sol, 415
+	.loc BondingCurve.sol, 420
 	OVER
 	GETGLOB 23
 	PUSHINT 32
@@ -132,7 +149,7 @@
 		PLDU 256
 	}
 	IF
-	.loc BondingCurve.sol, 416
+	.loc BondingCurve.sol, 421
 	PUSH S2
 	GETGLOB 24
 	PUSHINT 32
@@ -142,7 +159,7 @@
 		PLDU 256
 	}
 	IF
-	.loc BondingCurve.sol, 419
+	.loc BondingCurve.sol, 424
 	PUSH S3
 	GETGLOB 25
 	PUSHINT 32
@@ -152,7 +169,7 @@
 		PLDU 256
 	}
 	IF
-	.loc BondingCurve.sol, 420
+	.loc BondingCurve.sol, 425
 	PUSH S4
 	GETGLOB 26
 	PUSHINT 32
@@ -162,11 +179,11 @@
 		PLDU 256
 	}
 	IF
-	.loc BondingCurve.sol, 421
+	.loc BondingCurve.sol, 426
 	PUXC S3, S1
 	ADD
 	ADD
-	.loc BondingCurve.sol, 423
+	.loc BondingCurve.sol, 428
 	DUP
 	GTINT 0
 	PUSH S4
@@ -177,39 +194,39 @@
 	NOT
 	AND
 	PUSHCONT {
-		.loc BondingCurve.sol, 425
+		.loc BondingCurve.sol, 430
 		GETGLOB 12
 		PUSH S3
 		SUB
 		UFITS 256
 		SETGLOB 12
-		.loc BondingCurve.sol, 426
+		.loc BondingCurve.sol, 431
 		GETGLOB 13
 		PUSH S2
 		SUB
 		UFITS 256
 		SETGLOB 13
-		.loc BondingCurve.sol, 430
+		.loc BondingCurve.sol, 435
 		GETGLOB 14
 		GETGLOB 12
 		PUSHINT 15000000000000
 		LESS
 		AND
 		PUSHCONT {
-			.loc BondingCurve.sol, 431
+			.loc BondingCurve.sol, 436
 			FALSE
 			SETGLOB 14
-			.loc BondingCurve.sol, 432
+			.loc BondingCurve.sol, 437
 			PUSHINT 0
 			SETGLOB 15
-			.loc BondingCurve.sol, 433
+			.loc BondingCurve.sol, 438
 			PUSHINT 0
 			SETGLOB 16
 		}
 		PUSHCONT {
 			GETGLOB 14
 			PUSHCONT {
-				.loc BondingCurve.sol, 436
+				.loc BondingCurve.sol, 441
 				GETGLOB 12
 				GETGLOB 11
 				GETGLOB 13
@@ -222,7 +239,7 @@
 			IF
 		}
 		IFELSE
-		.loc BondingCurve.sol, 441
+		.loc BondingCurve.sol, 446
 		DUP
 		UFITS 248
 		PUSHINT 2
@@ -233,14 +250,14 @@
 		ROTREV
 		PUSHINT 32
 		DICTUSETB
-		.loc BondingCurve.sol, 442
+		.loc BondingCurve.sol, 447
 		PUSH S4
 		NEWC
 		STSLICECONST x42_
 		STSLICE
 		STSLICECONST x402faf080
 		STDICT
-		PUSHINT 110
+		PUSHINT 106
 		STZEROES
 		ENDC
 		PUSHINT 1
@@ -248,7 +265,7 @@
 		.loc BondingCurve.sol, 0
 	}
 	IF
-	.loc BondingCurve.sol, 445
+	.loc BondingCurve.sol, 450
 	BLKDROP 4
 	CALLREF {
 		.inline _clearMint_e5152e88_internal
@@ -321,11 +338,85 @@
 	SETGLOB 2
 }
 
+.fragment c4_to_c7_with_init_storage, {
+	PUSHROOT
+	CTOS
+	SBITS
+	GTINT 1
+	PUSHCONT {
+		PUSHINT 0
+		PUSHROOT
+		CTOS
+		PLDDICT ; D
+		PUSHINT 0
+		GETGLOBVAR
+		GETGLOB 1
+		GETGLOB 2
+		GETGLOB 3
+		GETGLOB 4
+		GETGLOB 5
+		GETGLOB 6
+		GETGLOB 7
+		GETGLOB 8
+		GETGLOB 9
+		PUSHINT 1
+		PUSH S11
+		PUSHINT 64
+		DICTUGET
+		PUSHCONT {
+			PUSHREFSLICE {
+				.blob x8000000000000000000000000000000000000000000000000000000000000000001_
+			}
+		}
+		IFNOT
+		PUSHINT 2
+		PUSH S12
+		PUSHINT 64
+		DICTUGET
+		ZEROSWAPIFNOT
+		PUSHCONT {
+			PLDU 256
+		}
+		IF
+		PUSHINT 0
+		BLKPUSH 4, 0
+		PUSHREFSLICE {
+			.blob x8000000000000000000000000000000000000000000000000000000000000000001_
+		}
+		DUP
+		PUSHINT 0
+		PUSHREF {
+		}
+		BLKPUSH 2, 0
+		NULL
+		BLKPUSH 3, 0
+		PUSHINT 0
+		DUP
+		NULL
+		PUSHINT 0
+		PUSHINT 31
+		TUPLEVAR
+		POP C7
+		PUSHINT 64
+		DICTUGET
+		THROWIFNOT 61
+		PLDU 256
+		SETGLOB 2
+		PUSHINT 0 ; timestamp
+		SETGLOB 3
+		PUSHINT 1
+		SETGLOB 30
+	}
+	IFREFELSE {
+		.inline c4_to_c7
+	}
+}
+
 .fragment _supplyCap, {
 	DROP
 	ENDS
 	CALLREF {
-		.inline c4_to_c7
+		.inline c4_to_c7_with_init_storage
 	}
 	GETGLOB 11
 	OVER
@@ -346,7 +437,7 @@
 	DROP
 	ENDS
 	CALLREF {
-		.inline c4_to_c7
+		.inline c4_to_c7_with_init_storage
 	}
 	GETGLOB 10
 	OVER
@@ -367,7 +458,7 @@
 	DROP
 	ENDS
 	CALLREF {
-		.inline c4_to_c7
+		.inline c4_to_c7_with_init_storage
 	}
 	GETGLOB 15
 	OVER
@@ -554,11 +645,11 @@
 	GETGLOB 19
 	NOT
 	THROWARGIFNOT 110
-	.loc BondingCurve.sol, 236
+	.loc BondingCurve.sol, 239
 	CALLREF {
 		.inline _ensureExecutionGas_f204381b_internal
 	}
-	.loc BondingCurve.sol, 240
+	.loc BondingCurve.sol, 243
 	PUSHREF {
 		.blob x4e41434b4c206e6f742061636365707465642e2053656e64205348454c4c20284543432049443d3229
 	}
@@ -594,7 +685,7 @@
 	IF
 	EQINT 0
 	THROWARGIFNOT 217
-	.loc BondingCurve.sol, 241
+	.loc BondingCurve.sol, 244
 	PUSHREF {
 		.blob x55534443206e6f742061636365707465642e2053656e64205348454c4c20284543432049443d3229
 	}
@@ -630,14 +721,14 @@
 	IF
 	EQINT 0
 	THROWARGIFNOT 218
-	.loc BondingCurve.sol, 244
+	.loc BondingCurve.sol, 247
 	PUSHREF {
 		.blob x416d6f756e74206d7573742062652067726561746572207468616e207a65726f
 	}
 	PUSH S2
 	GTINT 0
 	THROWARGIFNOT 202
-	.loc BondingCurve.sol, 245
+	.loc BondingCurve.sol, 248
 	PUSHREF {
 		.blob x416d6f756e742065786365656473206d617820627579206c696d6974
 	}
@@ -647,7 +738,7 @@
 	}
 	LEQ
 	THROWARGIFNOT 205
-	.loc BondingCurve.sol, 246
+	.loc BondingCurve.sol, 249
 	PUSHREF {
 		.blob x4578636565647320746f74616c20737570706c7920636170
 	}
@@ -657,7 +748,7 @@
 	GETGLOB 11
 	LEQ
 	THROWARGIFNOT 206
-	.loc BondingCurve.sol, 251
+	.loc BondingCurve.sol, 254
 	PUSHINT 2
 	CALLREF {
 		DEPTH
@@ -688,19 +779,19 @@
 		DROP
 	}
 	IF
-	.loc BondingCurve.sol, 254
+	.loc BondingCurve.sol, 257
 	PUSH S2
 	CALLREF {
 		.inline getBuyPrice_08d4db14_internal
 	}
-	.loc BondingCurve.sol, 255
+	.loc BondingCurve.sol, 258
 	PUSHREF {
 		.blob x507572636861736520616d6f756e7420746f6f20736d616c6c2c20636f737420726f756e647320746f207a65726f
 	}
 	OVER
 	GTINT 0
 	THROWARGIFNOT 211
-	.loc BondingCurve.sol, 258
+	.loc BondingCurve.sol, 261
 	DUP
 	CALLREF {
 		.inline getPlatformFeeBps_26e3c685_internal
@@ -708,7 +799,7 @@
 	MUL
 	PUSHINT 10000
 	DIV
-	.loc BondingCurve.sol, 259
+	.loc BondingCurve.sol, 262
 	OVER
 	CALLREF {
 		.inline getCreatorFeeBps_f02fcbb8_internal
@@ -716,12 +807,12 @@
 	MUL
 	PUSHINT 10000
 	DIV
-	.loc BondingCurve.sol, 260
+	.loc BondingCurve.sol, 263
 	BLKPUSH 2, 2
 	ADD
 	OVER
 	ADD
-	.loc BondingCurve.sol, 262
+	.loc BondingCurve.sol, 265
 	PUSHREF {
 		.blob x536c6970706167652070726f74656374696f6e207472696767657265643a20636f73742b6665652065786365656473206d61785368656c6c496e
 	}
@@ -729,16 +820,16 @@
 	ROLL 7
 	LEQ
 	THROWARGIFNOT 208
-	.loc BondingCurve.sol, 263
+	.loc BondingCurve.sol, 266
 	PUSHREF {
 		.blob x496e73756666696369656e74205348454c4c2073656e742028636f7374202b2031252066656529
 	}
 	PUSH2 S5, S1
 	GEQ
 	THROWARGIFNOT 203
-	.loc BondingCurve.sol, 267
+	.loc BondingCurve.sol, 270
 	ACCEPT
-	.loc BondingCurve.sol, 268
+	.loc BondingCurve.sol, 271
 	PUSHREF {
 		.blob x426f6e64696e67437572766520564d5348454c4c207265736572766520756e617661696c61626c65
 	}
@@ -747,30 +838,30 @@
 	PUSHINT 200000000
 	GEQ
 	THROWARGIFNOT 213
-	.loc BondingCurve.sol, 271
+	.loc BondingCurve.sol, 274
 	GETGLOB 13
 	PUSH S6
 	ADD
 	SETGLOB 13
-	.loc BondingCurve.sol, 272
+	.loc BondingCurve.sol, 275
 	GETGLOB 12
 	PUSH S4
 	ADD
 	SETGLOB 12
-	.loc BondingCurve.sol, 274
+	.loc BondingCurve.sol, 277
 	GETGLOB 30
 	INC
 	UFITS 32
 	DUP
 	SETGLOB 30
-	.loc BondingCurve.sol, 275
+	.loc BondingCurve.sol, 278
 	GETGLOB 9
 	OVER
 	GETGLOB 29
 	PUSHINT 32
 	DICTUSET
 	SETGLOB 29
-	.loc BondingCurve.sol, 276
+	.loc BondingCurve.sol, 279
 	DUP
 	GETGLOB 23
 	PUSH S6
@@ -780,7 +871,7 @@
 	PUSHINT 32
 	DICTUSETB
 	SETGLOB 23
-	.loc BondingCurve.sol, 277
+	.loc BondingCurve.sol, 280
 	DUP
 	GETGLOB 24
 	PUSH S8
@@ -790,7 +881,7 @@
 	PUSHINT 32
 	DICTUSETB
 	SETGLOB 24
-	.loc BondingCurve.sol, 279
+	.loc BondingCurve.sol, 282
 	CALLREF {
 		.inline currentPrice_9d1b464a_internal
 	}
@@ -814,7 +905,7 @@
 	ENDC
 	PUSHINT 0
 	SENDRAWMSG
-	.loc BondingCurve.sol, 282
+	.loc BondingCurve.sol, 285
 	ROLL 5
 	GETGLOB 9
 	PUSH S2
@@ -822,7 +913,7 @@
 	NEWC
 	STSLICECONST x62_
 	STSLICE
-	PUSHSLICE x39896800000000000000000000000000003_
+	PUSHSLICE x3989680000000000000000000000000003_
 	STSLICER
 	ROLLREV 3
 	NEWC
@@ -838,7 +929,7 @@
 	ENDC
 	PUSHINT 0
 	SENDRAWMSG
-	.loc BondingCurve.sol, 286
+	.loc BondingCurve.sol, 289
 	ROLL 3
 	OVER
 	GETGLOB 25
@@ -849,7 +940,7 @@
 	PUSHINT 32
 	DICTUSETB
 	SETGLOB 25
-	.loc BondingCurve.sol, 287
+	.loc BondingCurve.sol, 290
 	GETGLOB 26
 	ROLL 3
 	NEWC
@@ -858,7 +949,7 @@
 	PUSHINT 32
 	DICTUSETB
 	SETGLOB 26
-	.loc BondingCurve.sol, 290
+	.loc BondingCurve.sol, 293
 	DUP2
 	GREATER
 	ZEROSWAPIFNOT
@@ -868,11 +959,11 @@
 		UFITS 256
 	}
 	IF
-	.loc BondingCurve.sol, 291
+	.loc BondingCurve.sol, 294
 	DUP
 	GTINT 0
 	PUSHCONT {
-		.loc BondingCurve.sol, 294
+		.loc BondingCurve.sol, 297
 		DUP
 		UFITS 248
 		PUSHINT 2
@@ -883,14 +974,14 @@
 		ROTREV
 		PUSHINT 32
 		DICTUSETB
-		.loc BondingCurve.sol, 295
+		.loc BondingCurve.sol, 298
 		GETGLOB 9
 		NEWC
 		STSLICECONST x42_
 		STSLICE
 		STSLICECONST x402faf080
 		STDICT
-		PUSHINT 110
+		PUSHINT 106
 		STZEROES
 		ENDC
 		PUSHINT 1
@@ -898,7 +989,7 @@
 		.loc BondingCurve.sol, 0
 	}
 	IF
-	.loc BondingCurve.sol, 299
+	.loc BondingCurve.sol, 302
 	BLKDROP 3
 	GETGLOB 27
 	NOT
@@ -982,7 +1073,7 @@
 	IFREF {
 		.inline c4_to_c7
 	}
-	.loc BondingCurve.sol, 235
+	.loc BondingCurve.sol, 238
 	OVER
 	PUSHCONT {
 		LDREF
@@ -1008,10 +1099,8 @@
 	GETGLOB 2
 	ISNULL
 	IFREF {
-		.inline c4_to_c7
+		.inline c4_to_c7_with_init_storage
 	}
-	PUSHINT 1
-	SETGLOB 30
 	GETGLOB 6
 	THROWIF 51
 	OVER
@@ -1111,7 +1200,7 @@
 	DROP
 	ENDS
 	CALLREF {
-		.inline c4_to_c7
+		.inline c4_to_c7_with_init_storage
 	}
 	GETGLOB 22
 	OVER
@@ -1126,22 +1215,6 @@
 	}
 	IF
 	THROW 0
-}
-
-.fragment upd_only_time_in_c4, {
-	PUSHROOT
-	CTOS
-	LDU 256
-	LDU 64
-	NIP
-	GETGLOB 3
-	ROT
-	NEWC
-	STU 256
-	STU 64
-	STSLICE
-	ENDC
-	POPROOT
 }
 
 .fragment currentPrice, {
@@ -1182,7 +1255,7 @@
 	}
 	IFELSE
 	IFREF {
-		.inline upd_only_time_in_c4
+		.inline c7_to_c4
 	}
 	THROW 0
 }
@@ -1191,7 +1264,7 @@
 	DROP
 	ENDS
 	CALLREF {
-		.inline c4_to_c7
+		.inline c4_to_c7_with_init_storage
 	}
 	GETGLOB 18
 	OVER
@@ -1324,7 +1397,7 @@
 	}
 	IFELSE
 	IFREF {
-		.inline upd_only_time_in_c4
+		.inline c7_to_c4
 	}
 	THROW 0
 }
@@ -1402,7 +1475,7 @@
 	}
 	IFELSE
 	IFREF {
-		.inline upd_only_time_in_c4
+		.inline c7_to_c4
 	}
 	THROW 0
 }
@@ -1445,7 +1518,7 @@
 	}
 	IFELSE
 	IFREF {
-		.inline upd_only_time_in_c4
+		.inline c7_to_c4
 	}
 	THROW 0
 }
@@ -1500,7 +1573,7 @@
 	}
 	IFELSE
 	IFREF {
-		.inline upd_only_time_in_c4
+		.inline c7_to_c4
 	}
 	THROW 0
 }
@@ -1543,7 +1616,7 @@
 	}
 	IFELSE
 	IFREF {
-		.inline upd_only_time_in_c4
+		.inline c7_to_c4
 	}
 	THROW 0
 }
@@ -1686,7 +1759,7 @@
 	}
 	IFELSE
 	IFREF {
-		.inline upd_only_time_in_c4
+		.inline c7_to_c4
 	}
 	THROW 0
 }
@@ -1737,7 +1810,7 @@
 	}
 	IFELSE
 	IFREF {
-		.inline upd_only_time_in_c4
+		.inline c7_to_c4
 	}
 	THROW 0
 }
@@ -1815,7 +1888,7 @@
 	}
 	IFELSE
 	IFREF {
-		.inline upd_only_time_in_c4
+		.inline c7_to_c4
 	}
 	THROW 0
 }
@@ -1877,7 +1950,7 @@
 	}
 	IFELSE
 	IFREF {
-		.inline upd_only_time_in_c4
+		.inline c7_to_c4
 	}
 	THROW 0
 }
@@ -1920,7 +1993,7 @@
 	}
 	IFELSE
 	IFREF {
-		.inline upd_only_time_in_c4
+		.inline c7_to_c4
 	}
 	THROW 0
 }
@@ -1929,7 +2002,7 @@
 	DROP
 	ENDS
 	CALLREF {
-		.inline c4_to_c7
+		.inline c4_to_c7_with_init_storage
 	}
 	GETGLOB 14
 	OVER
@@ -1984,7 +2057,7 @@
 	}
 	IFELSE
 	IFREF {
-		.inline upd_only_time_in_c4
+		.inline c7_to_c4
 	}
 	THROW 0
 }
@@ -2033,7 +2106,7 @@
 	}
 	IFELSE
 	IFREF {
-		.inline upd_only_time_in_c4
+		.inline c7_to_c4
 	}
 	THROW 0
 }
@@ -2042,7 +2115,7 @@
 	DROP
 	ENDS
 	CALLREF {
-		.inline c4_to_c7
+		.inline c4_to_c7_with_init_storage
 	}
 	GETGLOB 16
 	OVER
@@ -2063,7 +2136,7 @@
 	DROP
 	ENDS
 	CALLREF {
-		.inline c4_to_c7
+		.inline c4_to_c7_with_init_storage
 	}
 	GETGLOB 29
 	OVER
@@ -2084,7 +2157,7 @@
 	DROP
 	ENDS
 	CALLREF {
-		.inline c4_to_c7
+		.inline c4_to_c7_with_init_storage
 	}
 	GETGLOB 20
 	OVER
@@ -2102,7 +2175,7 @@
 }
 
 .fragment onMintFailed_7c32e4c6_internal, {
-	.loc BondingCurve.sol, 368
+	.loc BondingCurve.sol, 371
 	PUSHREF {
 		.blob x4f6e6c7920546f6b656e526f6f742063616e207265706f7274206d696e74206661696c757265
 	}
@@ -2110,7 +2183,7 @@
 	GETGLOB 10
 	SDEQ
 	THROWARGIFNOT 151
-	.loc BondingCurve.sol, 369
+	.loc BondingCurve.sol, 372
 	CALLREF {
 		.inline _rollbackMint_742ea48a_internal
 	}
@@ -2126,7 +2199,7 @@
 	IFREF {
 		.inline c4_to_c7
 	}
-	.loc BondingCurve.sol, 367
+	.loc BondingCurve.sol, 370
 	LDU 32
 	ENDS
 	.loc BondingCurve.sol, 0
@@ -2140,7 +2213,7 @@
 }
 
 .fragment onMintSuccess_b3641ae1_internal, {
-	.loc BondingCurve.sol, 376
+	.loc BondingCurve.sol, 379
 	PUSHREF {
 		.blob x4f6e6c7920546f6b656e526f6f742063616e20636f6e6669726d206d696e742073756363657373
 	}
@@ -2148,7 +2221,7 @@
 	GETGLOB 10
 	SDEQ
 	THROWARGIFNOT 152
-	.loc BondingCurve.sol, 379
+	.loc BondingCurve.sol, 382
 	DUP
 	GETGLOB 25
 	PUSHINT 32
@@ -2158,7 +2231,7 @@
 		PLDU 256
 	}
 	IF
-	.loc BondingCurve.sol, 380
+	.loc BondingCurve.sol, 383
 	OVER
 	GETGLOB 26
 	PUSHINT 32
@@ -2168,11 +2241,11 @@
 		PLDU 256
 	}
 	IF
-	.loc BondingCurve.sol, 382
+	.loc BondingCurve.sol, 385
 	OVER
 	GTINT 0
 	PUSHCONT {
-		.loc BondingCurve.sol, 384
+		.loc BondingCurve.sol, 387
 		OVER
 		UFITS 248
 		PUSHINT 2
@@ -2183,14 +2256,14 @@
 		ROTREV
 		PUSHINT 32
 		DICTUSETB
-		.loc BondingCurve.sol, 385
+		.loc BondingCurve.sol, 388
 		GETGLOB 18
 		NEWC
 		STSLICECONST x42_
 		STSLICE
 		STSLICECONST x402faf080
 		STDICT
-		PUSHINT 110
+		PUSHINT 106
 		STZEROES
 		ENDC
 		PUSHINT 1
@@ -2198,7 +2271,7 @@
 		.loc BondingCurve.sol, 0
 	}
 	IF
-	.loc BondingCurve.sol, 388
+	.loc BondingCurve.sol, 391
 	DUP
 	GTINT 0
 	GETGLOB 17
@@ -2209,7 +2282,7 @@
 	NOT
 	AND
 	PUSHCONT {
-		.loc BondingCurve.sol, 390
+		.loc BondingCurve.sol, 393
 		DUP
 		UFITS 248
 		PUSHINT 2
@@ -2220,14 +2293,14 @@
 		ROTREV
 		PUSHINT 32
 		DICTUSETB
-		.loc BondingCurve.sol, 391
+		.loc BondingCurve.sol, 394
 		GETGLOB 17
 		NEWC
 		STSLICECONST x42_
 		STSLICE
 		STSLICECONST x402faf080
 		STDICT
-		PUSHINT 110
+		PUSHINT 106
 		STZEROES
 		ENDC
 		PUSHINT 1
@@ -2235,7 +2308,7 @@
 		.loc BondingCurve.sol, 0
 	}
 	IF
-	.loc BondingCurve.sol, 394
+	.loc BondingCurve.sol, 397
 	DROP2
 	CALLREF {
 		.inline _clearMint_e5152e88_internal
@@ -2252,7 +2325,7 @@
 	IFREF {
 		.inline c4_to_c7
 	}
-	.loc BondingCurve.sol, 375
+	.loc BondingCurve.sol, 378
 	LDU 32
 	ENDS
 	.loc BondingCurve.sol, 0
@@ -2273,11 +2346,11 @@
 	GETGLOB 19
 	NOT
 	THROWARGIFNOT 110
-	.loc BondingCurve.sol, 308
+	.loc BondingCurve.sol, 311
 	CALLREF {
 		.inline _ensureExecutionGas_f204381b_internal
 	}
-	.loc BondingCurve.sol, 309
+	.loc BondingCurve.sol, 312
 	PUSHREF {
 		.blob x4f6e6c7920546f6b656e526f6f742063616e206e6f74696679206275726e
 	}
@@ -2285,7 +2358,7 @@
 	GETGLOB 10
 	SDEQ
 	THROWARGIFNOT 103
-	.loc BondingCurve.sol, 313
+	.loc BondingCurve.sol, 316
 	GETGLOB 14
 	PUSH S2
 	GETGLOB 17
@@ -2295,7 +2368,7 @@
 	AND
 	AND
 	PUSHCONT {
-		.loc BondingCurve.sol, 314
+		.loc BondingCurve.sol, 317
 		PUSHREF {
 			.blob x43726561746f7220746f6b656e7320617265206c6f636b656420666f72203330206461797320616674657220414d4d206d6967726174696f6e
 		}
@@ -2305,11 +2378,11 @@
 		ADD
 		UFITS 32
 		GEQ
-		THROWARGIFNOT 219
+		THROWARGIFNOT 223
 		.loc BondingCurve.sol, 0
 	}
 	IF
-	.loc BondingCurve.sol, 319
+	.loc BondingCurve.sol, 322
 	PUSHREF {
 		.blob x496e73756666696369656e742067617320666f722073656c6c20657865637574696f6e
 	}
@@ -2319,7 +2392,7 @@
 	PUSHINT 300000000
 	GEQ
 	THROWARGIFNOT 221
-	.loc BondingCurve.sol, 320
+	.loc BondingCurve.sol, 323
 	PUSHREF {
 		.blob x416d6f756e742065786365656473206d61782073656c6c206c696d6974
 	}
@@ -2329,19 +2402,19 @@
 	}
 	LEQ
 	THROWARGIFNOT 222
-	.loc BondingCurve.sol, 325
+	.loc BondingCurve.sol, 328
 	PUSH S2
 	CALLREF {
 		.inline getSellReturn_a5a9ba8d_internal
 	}
-	.loc BondingCurve.sol, 327
+	.loc BondingCurve.sol, 330
 	PUSHREF {
 		.blob x53656c6c20616d6f756e7420746f6f20736d616c6c2c2072657475726e20726f756e647320746f207a65726f
 	}
 	OVER
 	GTINT 0
 	THROWARGIFNOT 216
-	.loc BondingCurve.sol, 328
+	.loc BondingCurve.sol, 331
 	PUSHREF {
 		.blob x496e73756666696369656e74207265736572766520666f722073656c6c
 	}
@@ -2349,7 +2422,7 @@
 	PUSH S2
 	GEQ
 	THROWARGIFNOT 204
-	.loc BondingCurve.sol, 331
+	.loc BondingCurve.sol, 334
 	DUP
 	CALLREF {
 		.inline getPlatformFeeBps_26e3c685_internal
@@ -2357,7 +2430,7 @@
 	MUL
 	PUSHINT 10000
 	DIV
-	.loc BondingCurve.sol, 332
+	.loc BondingCurve.sol, 335
 	OVER
 	CALLREF {
 		.inline getCreatorFeeBps_f02fcbb8_internal
@@ -2365,14 +2438,14 @@
 	MUL
 	PUSHINT 10000
 	DIV
-	.loc BondingCurve.sol, 333
+	.loc BondingCurve.sol, 336
 	BLKPUSH 2, 2
 	SUB
 	UFITS 256
 	OVER
 	SUB
 	UFITS 256
-	.loc BondingCurve.sol, 336
+	.loc BondingCurve.sol, 339
 	PUSHREF {
 		.blob x536c6970706167652070726f74656374696f6e207472696767657265643a206e657452657475726e203c206d696e5368656c6c4f7574
 	}
@@ -2380,19 +2453,19 @@
 	ROLL 6
 	GEQ
 	THROWARGIFNOT 208
-	.loc BondingCurve.sol, 338
+	.loc BondingCurve.sol, 341
 	GETGLOB 13
 	PUSH S6
 	SUB
 	UFITS 256
 	SETGLOB 13
-	.loc BondingCurve.sol, 339
+	.loc BondingCurve.sol, 342
 	GETGLOB 12
 	ROLL 4
 	SUB
 	UFITS 256
 	SETGLOB 12
-	.loc BondingCurve.sol, 341
+	.loc BondingCurve.sol, 344
 	CALLREF {
 		.inline currentPrice_9d1b464a_internal
 	}
@@ -2415,11 +2488,11 @@
 	ENDC
 	PUSHINT 0
 	SENDRAWMSG
-	.loc BondingCurve.sol, 344
+	.loc BondingCurve.sol, 347
 	PUSH S2
 	GTINT 0
 	PUSHCONT {
-		.loc BondingCurve.sol, 346
+		.loc BondingCurve.sol, 349
 		PUSH S2
 		UFITS 248
 		PUSHINT 2
@@ -2430,14 +2503,14 @@
 		ROTREV
 		PUSHINT 32
 		DICTUSETB
-		.loc BondingCurve.sol, 347
+		.loc BondingCurve.sol, 350
 		GETGLOB 18
 		NEWC
 		STSLICECONST x42_
 		STSLICE
 		STSLICECONST x402faf080
 		STDICT
-		PUSHINT 110
+		PUSHINT 106
 		STZEROES
 		ENDC
 		PUSHINT 1
@@ -2445,7 +2518,7 @@
 		.loc BondingCurve.sol, 0
 	}
 	IF
-	.loc BondingCurve.sol, 351
+	.loc BondingCurve.sol, 354
 	OVER
 	GTINT 0
 	GETGLOB 17
@@ -2456,7 +2529,7 @@
 	NOT
 	AND
 	PUSHCONT {
-		.loc BondingCurve.sol, 353
+		.loc BondingCurve.sol, 356
 		OVER
 		UFITS 248
 		PUSHINT 2
@@ -2467,14 +2540,14 @@
 		ROTREV
 		PUSHINT 32
 		DICTUSETB
-		.loc BondingCurve.sol, 354
+		.loc BondingCurve.sol, 357
 		GETGLOB 17
 		NEWC
 		STSLICECONST x42_
 		STSLICE
 		STSLICECONST x402faf080
 		STDICT
-		PUSHINT 110
+		PUSHINT 106
 		STZEROES
 		ENDC
 		PUSHINT 1
@@ -2482,11 +2555,11 @@
 		.loc BondingCurve.sol, 0
 	}
 	IF
-	.loc BondingCurve.sol, 358
+	.loc BondingCurve.sol, 361
 	PUSHINT 500000000
 	PUSHINT 0
 	RAWRESERVE
-	.loc BondingCurve.sol, 361
+	.loc BondingCurve.sol, 364
 	UFITS 248
 	PUSHINT 2
 	NULL
@@ -2496,14 +2569,14 @@
 	ROTREV
 	PUSHINT 32
 	DICTUSETB
-	.loc BondingCurve.sol, 362
+	.loc BondingCurve.sol, 365
 	ROLL 3
 	NEWC
 	STSLICECONST x42_
 	STSLICE
 	STSLICECONST x0
 	STDICT
-	PUSHINT 110
+	PUSHINT 106
 	STZEROES
 	ENDC
 	PUSHPOW2 7
@@ -2521,7 +2594,7 @@
 	IFREF {
 		.inline c4_to_c7
 	}
-	.loc BondingCurve.sol, 307
+	.loc BondingCurve.sol, 310
 	OVER
 	PUSHCONT {
 		LDU 32
@@ -2556,7 +2629,7 @@
 	DROP
 	ENDS
 	CALLREF {
-		.inline c4_to_c7
+		.inline c4_to_c7_with_init_storage
 	}
 	GETGLOB 17
 	OVER
@@ -2574,7 +2647,7 @@
 }
 
 .fragment pause_8456cb59_internal, {
-	.loc BondingCurve.sol, 479
+	.loc BondingCurve.sol, 484
 	PUSHREF {
 		.blob x4f6e6c7920706c6174666f726d2028666565526563697069656e74292063616e207061757365
 	}
@@ -2582,7 +2655,7 @@
 	GETGLOB 18
 	SDEQ
 	THROWARGIFNOT 111
-	.loc BondingCurve.sol, 480
+	.loc BondingCurve.sol, 485
 	TRUE
 	SETGLOB 19
 	.loc BondingCurve.sol, 0
@@ -2597,7 +2670,7 @@
 	IFREF {
 		.inline c4_to_c7
 	}
-	.loc BondingCurve.sol, 478
+	.loc BondingCurve.sol, 483
 	ENDS
 	.loc BondingCurve.sol, 0
 	CALLREF {
@@ -2613,7 +2686,7 @@
 	DROP
 	ENDS
 	CALLREF {
-		.inline c4_to_c7
+		.inline c4_to_c7_with_init_storage
 	}
 	GETGLOB 19
 	OVER
@@ -2634,7 +2707,7 @@
 	DROP
 	ENDS
 	CALLREF {
-		.inline c4_to_c7
+		.inline c4_to_c7_with_init_storage
 	}
 	GETGLOB 26
 	OVER
@@ -2655,7 +2728,7 @@
 	DROP
 	ENDS
 	CALLREF {
-		.inline c4_to_c7
+		.inline c4_to_c7_with_init_storage
 	}
 	GETGLOB 25
 	OVER
@@ -2676,7 +2749,7 @@
 	DROP
 	ENDS
 	CALLREF {
-		.inline c4_to_c7
+		.inline c4_to_c7_with_init_storage
 	}
 	GETGLOB 23
 	OVER
@@ -2697,7 +2770,7 @@
 	DROP
 	ENDS
 	CALLREF {
-		.inline c4_to_c7
+		.inline c4_to_c7_with_init_storage
 	}
 	GETGLOB 24
 	OVER
@@ -2718,7 +2791,7 @@
 	DROP
 	ENDS
 	CALLREF {
-		.inline c4_to_c7
+		.inline c4_to_c7_with_init_storage
 	}
 	GETGLOB 27
 	OVER
@@ -2739,7 +2812,7 @@
 	DROP
 	ENDS
 	CALLREF {
-		.inline c4_to_c7
+		.inline c4_to_c7_with_init_storage
 	}
 	GETGLOB 12
 	OVER
@@ -2760,7 +2833,7 @@
 	DROP
 	ENDS
 	CALLREF {
-		.inline c4_to_c7
+		.inline c4_to_c7_with_init_storage
 	}
 	GETGLOB 28
 	OVER
@@ -2781,7 +2854,7 @@
 	DROP
 	ENDS
 	CALLREF {
-		.inline c4_to_c7
+		.inline c4_to_c7_with_init_storage
 	}
 	GETGLOB 21
 	OVER
@@ -2802,7 +2875,7 @@
 	DROP
 	ENDS
 	CALLREF {
-		.inline c4_to_c7
+		.inline c4_to_c7_with_init_storage
 	}
 	GETGLOB 13
 	OVER
@@ -2820,7 +2893,7 @@
 }
 
 .fragment unpause_3f4ba83a_internal, {
-	.loc BondingCurve.sol, 484
+	.loc BondingCurve.sol, 489
 	PUSHREF {
 		.blob x4f6e6c7920706c6174666f726d2028666565526563697069656e74292063616e20756e7061757365
 	}
@@ -2828,7 +2901,7 @@
 	GETGLOB 18
 	SDEQ
 	THROWARGIFNOT 111
-	.loc BondingCurve.sol, 485
+	.loc BondingCurve.sol, 490
 	FALSE
 	SETGLOB 19
 	.loc BondingCurve.sol, 0
@@ -2843,7 +2916,7 @@
 	IFREF {
 		.inline c4_to_c7
 	}
-	.loc BondingCurve.sol, 483
+	.loc BondingCurve.sol, 488
 	ENDS
 	.loc BondingCurve.sol, 0
 	CALLREF {
@@ -2861,18 +2934,13 @@
 	LEQ
 	IFJMPREF {
 		DUP
-		PUSHINT 264760161
+		PUSHINT 303793982
 		LEQ
 		IFJMPREF {
 			DUP
-			PUSHINT 52593333
+			PUSHINT 75645798
 			LEQ
 			IFJMPREF {
-				DUP
-				EQINT 1
-				IFJMPREF {
-					.inline constructor
-				}
 				DUP
 				PUSHINT 24566123
 				EQUAL
@@ -2885,12 +2953,12 @@
 				IFJMPREF {
 					.inline onTokenBurned
 				}
-			}
-			DUP
-			PUSHINT 75645798
-			EQUAL
-			IFJMPREF {
-				.inline getCurrentMarketCap
+				DUP
+				PUSHINT 75645798
+				EQUAL
+				IFJMPREF {
+					.inline getCurrentMarketCap
+				}
 			}
 			DUP
 			PUSHINT 112778719
@@ -2904,16 +2972,22 @@
 			IFJMPREF {
 				.inline totalSupply
 			}
+			DUP
+			PUSHINT 303793982
+			EQUAL
+			IFJMPREF {
+				.inline maxBuyPerTx
+			}
 		}
 		DUP
 		PUSHINT 443110870
 		LEQ
 		IFJMPREF {
 			DUP
-			PUSHINT 303793982
+			PUSHINT 330651021
 			EQUAL
 			IFJMPREF {
-				.inline maxBuyPerTx
+				.inline constructor
 			}
 			DUP
 			PUSHINT 343614912
@@ -3179,13 +3253,19 @@
 }
 
 .fragment main_external, {
+	PUSHINT -1
+	PUSHROOT
+	CTOS
+	SBITS
+	NEQINT 1
+	SETGLOB 6
 	PUSHREFSLICE {
 		.blob x8000000000000000000000000000000000000000000000000000000000000000001_
 	}
 	SETGLOB 9
 	OVER
 	CALLREF {
-		.inline c4_to_c7
+		.inline c4_to_c7_with_init_storage
 	}
 	LDU 1 ; haveSign msgSlice
 	SWAP
@@ -3245,11 +3325,11 @@
 		.inline c4_to_c7
 	}
 	PUSHCONT {
-		.loc BondingCurve.sol, 460
+		.loc BondingCurve.sol, 465
 		CALLREF {
 			.inline _ensureExecutionGas_f204381b_internal
 		}
-		.loc BondingCurve.sol, 462
+		.loc BondingCurve.sol, 467
 		PUSHREF {
 			.blob x426f756e6365206e6f742066726f6d20546f6b656e526f6f74
 		}
@@ -3257,27 +3337,27 @@
 		GETGLOB 10
 		SDEQ
 		THROWARGIFNOT 150
-		.loc BondingCurve.sol, 464
+		.loc BondingCurve.sol, 469
 		DUP
 		SBITS
 		LESSINT 64
 		PUSHCONT {
-			.loc BondingCurve.sol, 465
+			.loc BondingCurve.sol, 470
 			DROP
 			.loc BondingCurve.sol, 0
 		}
 		IFJMP
-		.loc BondingCurve.sol, 468
+		.loc BondingCurve.sol, 473
 		LDU 32
 		SWAP
-		.loc BondingCurve.sol, 470
+		.loc BondingCurve.sol, 475
 		PUSHINT 1302170929
 		EQUAL
 		PUSHCONT {
-			.loc BondingCurve.sol, 471
+			.loc BondingCurve.sol, 476
 			LDU 32
 			SWAP
-			.loc BondingCurve.sol, 472
+			.loc BondingCurve.sol, 477
 			CALLREF {
 				.inline _rollbackMint_742ea48a_internal
 			}
@@ -3286,7 +3366,7 @@
 		IF
 		.loc BondingCurve.sol, 0
 		DROP
-		.loc BondingCurve.sol, 459
+		.loc BondingCurve.sol, 464
 	}
 	CALLX
 	.loc BondingCurve.sol, 0
@@ -3296,11 +3376,11 @@
 }
 
 .fragment main_internal, {
+	PUSHINT 0
 	PUSHROOT
 	CTOS
-	PUSHINT 320
-	SDSKIPFIRST
-	PLDI 1
+	SBITS
+	NEQINT 1
 	SETGLOB 6
 	PUSH S2
 	CTOS
@@ -3336,64 +3416,30 @@
 	THROW 60
 }
 
-.fragment default_data_cell, {
-	PUSHINT 0
-	NULL
-	PUSHINT 0
-	DUP
-	NULL
-	BLKPUSH 3, 0
-	PUSHREF {
-	}
-	BLKPUSH 2, 0
-	PUSHINT 0
-	PUSHSLICE x2_
-	DUP
-	PUSHINT 0
-	BLKPUSH 5, 0
-	NEWC
-	PUSHINT 323
-	STZEROES
-	PUSHINT 20
-	ROLLREVX
+.fragment upd_only_time_in_c4, {
+	PUSHROOT
+	CTOS
+	LDU 256
+	LDU 64
+	NIP
+	GETGLOB 3
+	ROT
 	NEWC
 	STU 256
-	STU 256
-	STU 256
-	STI 1
-	ROLLREV 16
-	NEWC
-	STU 256
-	STU 32
+	STU 64
 	STSLICE
-	ROLLREV 13
-	NEWC
-	STSLICE
-	STI 1
-	STREF
-	STREF
-	STREF
-	ROLLREV 8
-	NEWC
-	STDICT
-	STDICT
-	STDICT
-	ROLLREV 5
-	NEWC
-	STDICT
-	STI 1
-	STU 256
-	STDICT
-	STU 32
-	STBREFR
-	STBREFR
-	STBREFR
-	STBREFR
-	STBREFR
 	ENDC
+	POPROOT
 }
 
-.fragment onTickTock, {
+.fragment default_data_dict_cell, {
+	PUSHINT 0
+	NEWC
+	STU 256
+	PUSHINT 0
+	NEWDICT
+	PUSHINT 64
+	DICTUSETB
 }
 
 ; The code below forms a value of the StateInit type.
@@ -3401,35 +3447,20 @@
 .blob x4_ ; special = nothing
 .blob xc_ ; code = just
 .cell { ; code cell
-	PUSHREFCONT {
-		DICTPUSHCONST 32
-		DICTUGETJMPZ
-		THROW 78
-		.code-dict-cell 32, {
-		}
-		.cell { ; version
-			.blob x736f6c20302e37392e33 ; sol 0.79.3
-		}
-	}
-	POPCTR c3
-	DUP
-	IFNOTJMPREF {
-		.inline main_internal
-	}
-	DUP
-	EQINT -1
-	IFJMPREF {
-		.inline main_external
-	}
-	DUP
-	EQINT -2
-	IFJMPREF {
-		.inline onTickTock
-	}
+	SETCP0
+	DICTPUSHCONST 19
+	DICTIGETJMPZ
 	THROW 11
+	.code-dict-cell 19, {
+		x00001_ = main_internal,
+		xfffff_ = main_external,
+	}
 }
 .blob xc_ ; data = just
 .cell { 
-	.inline-computed-cell default_data_cell, 0
+	.blob xc_
+	.cell { 
+		.inline-computed-cell default_data_dict_cell, 0
+	}
 }
 .blob x4_ ; library = hme_empty

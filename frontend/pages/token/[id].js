@@ -215,15 +215,7 @@ function hashColor(str) {
   return `hsl(${h}, 65%, 55%)`;
 }
 
-function isSafeUrl(url) {
-  if (!url) return false;
-  try {
-    const u = new URL(url);
-    return u.protocol === 'https:';
-  } catch {
-    return false;
-  }
-}
+// C4 FIX: Removed local isSafeUrl — using the more secure version imported from lib/utils
 
 // Local getSlopeLabel removed, using shared utility
 
@@ -237,7 +229,14 @@ export default function TokenPage() {
   const [error, setError] = useState("");
   const { toast, ToastContainer } = useToast();
 
-  const [tradeMode, setTradeMode] = useState("buy");
+  // M2 FIX: wrap setTradeMode to clear stale messages
+  const [tradeMode, _setTradeMode] = useState("buy");
+  function setTradeMode(mode) {
+    _setTradeMode(mode);
+    setError("");
+    setTradeSuccess("");
+    setTradeAmount("");
+  }
   const [tradeAmount, setTradeAmount] = useState("");
   const [slippage, setSlippage] = useState("2");
   const [isTrading, setIsTrading] = useState(false);
@@ -249,6 +248,45 @@ export default function TokenPage() {
   // Balances for quick trade %
   const [userShellEccBalance, setUserShellEccBalance] = useState(null);
   const [userTokenBalance, setUserTokenBalance] = useState(null);
+
+  // A6 FIX: Memoize estimate to prevent recalculation on every render
+  const memoizedEstimate = useMemo(() => {
+    if (!tradeAmount || parseFloat(tradeAmount) <= 0) {
+      return { value: "0.00", fee: null, impact: null };
+    }
+    
+    if (tradeMode === "buy") {
+      const tokensOut = buyReturn !== null ? buyReturn : 0;
+      let impact = null;
+      if (onchainPrice && onchainPrice > 0) {
+         // spot value of tokens expected vs actual value
+         const expectedTokensWithoutImpact = parseFloat(tradeAmount) / onchainPrice;
+         if (expectedTokensWithoutImpact > 0) {
+           impact = Math.max(0, ((expectedTokensWithoutImpact - tokensOut) / expectedTokensWithoutImpact) * 100);
+         }
+      }
+      return { 
+        value: tokensOut > 0 ? tokensOut.toFixed(2) : "aguardando...", 
+        fee: (parseFloat(tradeAmount) * 0.01).toFixed(4),
+        impact 
+      };
+    } else {
+      const shellOut = sellReturn !== null ? sellReturn : 0;
+      let impact = null;
+      if (onchainPrice && onchainPrice > 0) {
+         // spot value vs actual
+         const expectedShellWithoutImpact = parseFloat(tradeAmount) * onchainPrice;
+         if (expectedShellWithoutImpact > 0) {
+           impact = Math.max(0, ((expectedShellWithoutImpact - shellOut) / expectedShellWithoutImpact) * 100);
+         }
+      }
+      return { 
+        value: shellOut > 0 ? shellOut.toFixed(4) : "aguardando...", 
+        fee: (shellOut * 0.01).toFixed(4),
+        impact 
+      };
+    }
+  }, [tradeAmount, tradeMode, buyReturn, sellReturn, onchainPrice]);
 
   // Chat/Comments state
   const [comments, setComments] = useState([]);
@@ -343,9 +381,7 @@ export default function TokenPage() {
     fetchUserBalances();
   }, [fetchUserBalances, tradeSuccess]);
 
-  useEffect(() => {
-    fetchUserBalances();
-  }, [fetchUserBalances, tradeSuccess]);
+  // C6 FIX: Removed duplicate useEffect for fetchUserBalances
 
   // Separate effect for buy return (binary search) to provide exact amounts and calculate impact
   useEffect(() => {
@@ -565,7 +601,8 @@ export default function TokenPage() {
       if (!accountInteraction) throw new Error("Conexão com a carteira negada.");
 
       const rawAmount = parseFloat(tradeAmount);
-      if (!tradeAmount || rawAmount <= 0) throw new Error("Valor inválido.");
+      // M4 FIX: NaN not caught by <= 0 comparison
+      if (!tradeAmount || !Number.isFinite(rawAmount) || rawAmount <= 0) throw new Error("Valor inválido.");
 
       const isBuy = tradeMode === "buy";
       const rawAmountNano = toNano(tradeAmount);
@@ -671,10 +708,16 @@ export default function TokenPage() {
           throw new Error(`Saldo insuficiente para gas. Precisa de pelo menos 0.5 SHELL na carteira. Saldo atual: ${Number(balanceNano) / 1e9} SHELL.`);
         }
 
+        // C5 FIX: Block sell when price is not available (prevents zero slippage)
+        if (!currentPrice && sellReturn === null) {
+          throw new Error("Preço on-chain não disponível ainda. Aguarde a sincronização.");
+        }
         // 3. Calculate minShellOut for slippage protection
-        const estimate = getEstimate();
-        const expectedNetShell = toNano(estimate.value);
-        const minShellOutNano = expectedNetShell * BigInt(Math.round(100 - slippagePct)) / 100n;
+        const grossReturnForSlippage = sellReturn !== null ? toNano(String(sellReturn)) : 0n;
+        if (grossReturnForSlippage === 0n) {
+          throw new Error("Não foi possível calcular o retorno da venda. Tente novamente.");
+        }
+        const minShellOutNano = grossReturnForSlippage * BigInt(Math.round(100 - slippagePct)) / 100n;
 
         // 4. Call burn on user's TokenWallet, passing BondingCurve as callbackTarget
         const walletContract = new ever.Contract(TokenWalletAbi, new Address(userWalletAddress.toString()));
@@ -998,15 +1041,15 @@ export default function TokenPage() {
                   {trades.length === 0 ? (
                     <p className="token-time" style={{ textAlign: 'center', padding: '20px' }}>{t("trades_empty")}</p>
                   ) : (
-                    trades.map(t => (
-                      <div key={t.id} style={{ display: 'flex', justifyContent: 'space-between', padding: '8px', background: 'var(--bg-deep)', borderRadius: '6px', borderLeft: `4px solid ${t.type === 'buy' ? '#10b981' : '#ef4444'}` }}>
+                    trades.map((trade) => (
+                      <div key={trade.id} style={{ display: 'flex', justifyContent: 'space-between', padding: '8px', background: 'var(--bg-deep)', borderRadius: '6px', borderLeft: `4px solid ${trade.type === 'buy' ? '#10b981' : '#ef4444'}` }}>
                         <div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
-                          <span style={{ color: t.type === 'buy' ? '#10b981' : '#ef4444', fontWeight: 'bold', fontSize: '12px', textTransform: 'uppercase', width: '40px' }}>{t.type}</span>
-                          <span style={{ fontSize: '12px', color: hashColor(t.walletAddress) }}>{compactWallet(t.walletAddress)}</span>
+                          <span style={{ color: trade.type === 'buy' ? '#10b981' : '#ef4444', fontWeight: 'bold', fontSize: '12px', textTransform: 'uppercase', width: '40px' }}>{trade.type}</span>
+                          <span style={{ fontSize: '12px', color: hashColor(trade.walletAddress) }}>{compactWallet(trade.walletAddress)}</span>
                         </div>
                         <div style={{ textAlign: 'right' }}>
-                          <span style={{ display: 'block', fontSize: '13px', fontWeight: 'bold' }}>{formatNum(nanoToDecimal(t.tokenAmount).toFixed(2))} {token.coin?.symbol}</span>
-                          <span style={{ display: 'block', fontSize: '11px', color: 'var(--ink-soft)' }}>{nanoToDecimal(t.shellAmount).toFixed(4)} SHELL</span>
+                          <span style={{ display: 'block', fontSize: '13px', fontWeight: 'bold' }}>{formatNum(nanoToDecimal(trade.tokenAmount).toFixed(2))} {token.coin?.symbol}</span>
+                          <span style={{ display: 'block', fontSize: '11px', color: 'var(--ink-soft)' }}>{nanoToDecimal(trade.shellAmount).toFixed(4)} SHELL</span>
                         </div>
                       </div>
                     ))
@@ -1162,8 +1205,9 @@ export default function TokenPage() {
                     </div>
                   </div>
 
+                  {/* A6 FIX: Use memoized estimate instead of IIFE that recalculates every render */}
                   {(() => {
-                    const estimate = getEstimate();
+                    const estimate = memoizedEstimate;
                     return (
                       <>
                         <div className="estimate-box">
