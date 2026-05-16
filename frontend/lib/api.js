@@ -132,6 +132,7 @@ export function getSecurityAnomalies() {
   return request("/admin/security/anomalies");
 }
 
+/** @deprecated Shell buy is now handled on-chain via USDCShellRouter. Backend returns 410. */
 export function verifyShellBuyPayment(payload) {
   return request("/shell-buy/verify", {
     method: "POST",
@@ -139,6 +140,7 @@ export function verifyShellBuyPayment(payload) {
   });
 }
 
+/** @deprecated Shell buy orders discontinued. Backend returns 410. */
 export function getMyShellBuyOrders() {
   return request("/shell-buy/my-orders");
 }

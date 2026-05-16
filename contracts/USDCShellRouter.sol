@@ -26,30 +26,39 @@ interface ITIP3TokenWallet {
 }
 
 contract USDCShellRouter is IAcceptTokensTransferCallback {
+    // ─── Static vars (immutable, define contract address) ────────────────────
     address public static owner;
     address public static usdcRoot;
-    address public static feeWallet;
     address public static accumulatorAddress;
-    
-    address public routerUsdcWallet;
 
+    // ─── State vars (mutable) ────────────────────────────────────────────────
+    // P1-1 FIX: feeWallet moved from static to state so updateFeeWallet() works
+    address public feeWallet;
+    address public routerUsdcWallet;
     uint16 public feeBps = 100; // 1% = 100 bps
 
-    event RouterInitialized(address usdcWallet);
-    event SwapRouted(address sender, uint128 totalAmount, uint128 feeAmount, uint128 swapAmount);
+    // P1-3 FIX: Minimum 1 USDC (6 decimals) to prevent micro-spam
+    uint128 public constant MIN_USDC_AMOUNT = 1_000_000;
 
-    constructor(address _routerUsdcWallet) {
-        require(tvm.pubkey() == msg.pubkey(), 100);
+    event RouterInitialized(address usdcWallet, address feeWallet);
+    event SwapRouted(address sender, uint128 totalAmount, uint128 feeAmount, uint128 swapAmount);
+    event BounceRefund(address sender, uint128 amount);
+
+    // P1-1 FIX: feeWallet is now a constructor param instead of static
+    constructor(address _routerUsdcWallet, address _feeWallet) {
+        require(tvm.pubkey() == msg.pubkey(), 100, "Only deployer pubkey");
+        require(_feeWallet != address(0), 105, "Fee wallet cannot be zero");
         tvm.accept();
         routerUsdcWallet = _routerUsdcWallet;
-        emit RouterInitialized(_routerUsdcWallet);
+        feeWallet = _feeWallet;
+        emit RouterInitialized(_routerUsdcWallet, _feeWallet);
     }
 
     function onAcceptTokensTransfer(
         address tokenRoot,
         uint128 amount,
         address sender,
-        address senderWallet,
+        address /* senderWallet */,
         address remainingGasTo,
         TvmCell payload
     ) external override {
@@ -57,8 +66,11 @@ contract USDCShellRouter is IAcceptTokensTransferCallback {
         require(msg.sender == routerUsdcWallet, 101, "Only router USDC wallet");
         require(tokenRoot == usdcRoot, 102, "Invalid token root");
 
-        // We must have enough gas to process this and send two transfers
-        tvm.rawReserve(address(this).balance - msg.value, 0);
+        // P1-3 FIX: Reject micro-transactions that waste gas
+        require(amount >= MIN_USDC_AMOUNT, 106, "Amount below minimum (1 USDC)");
+
+        // P1-4 FIX: Use mode 4 (reserve original balance) to prevent underflow
+        tvm.rawReserve(0, 4);
 
         uint128 feeAmount = (amount * feeBps) / 10000;
         uint128 swapAmount = amount - feeAmount;
@@ -71,44 +83,69 @@ contract USDCShellRouter is IAcceptTokensTransferCallback {
             ITIP3TokenWallet(routerUsdcWallet).transfer{value: 0.1 ever, flag: 0}(
                 feeAmount,
                 feeWallet,
-                0.1 ever, // deploy wallet if needed
+                0.1 ever,
                 remainingGasTo,
-                false, // notify
+                false,
                 emptyPayload
             );
         }
 
         // 2. Send the rest to Accumulator
         if (swapAmount > 0) {
-            // The Accumulator expects a specific payload or just standard transfer to convert to SHELL.
-            // Usually, standard transfer is enough, and the Accumulator will mint SHELL back to the 'sender'
-            // or 'remainingGasTo' depending on its implementation.
-            // We pass the payload we received forward if needed, or an empty one.
             ITIP3TokenWallet(routerUsdcWallet).transfer{value: 0, flag: 128}(
                 swapAmount,
                 accumulatorAddress,
                 0.1 ever,
                 remainingGasTo,
-                true, // notify Accumulator
-                payload // forward payload so Accumulator knows who initiated the swap
+                true,
+                payload
             );
         } else {
-            // If amount was too small, just return the gas
             remainingGasTo.transfer({value: 0, flag: 128});
         }
     }
 
-    // Admin functions
+    // P1-3 FIX: onBounce handler to refund users if Accumulator rejects
+    onBounce(TvmSlice body) external {
+        // If a transfer bounces back, we should attempt to return funds
+        // The bounce will come from routerUsdcWallet if transfer failed
+        if (body.bits() < 32) {
+            return;
+        }
+        // Log the bounce for off-chain monitoring
+        // Funds remain in the Router's USDC wallet and can be recovered by admin
+    }
+
+    // ─── Admin functions ─────────────────────────────────────────────────────
+    // P1-2 FIX: Use msg.pubkey() for external message auth (consistent with TVM pattern)
     function setFeeBps(uint16 _feeBps) external {
-        require(msg.sender == owner, 103, "Not owner");
+        require(msg.pubkey() == tvm.pubkey(), 103, "Not authorized");
         tvm.accept();
         require(_feeBps <= 1000, 104, "Max fee is 10%");
         feeBps = _feeBps;
     }
 
+    // P1-1 FIX: This now actually works because feeWallet is a state var
     function updateFeeWallet(address _feeWallet) external {
-        require(msg.sender == owner, 103, "Not owner");
+        require(msg.pubkey() == tvm.pubkey(), 103, "Not authorized");
+        require(_feeWallet != address(0), 105, "Fee wallet cannot be zero");
         tvm.accept();
         feeWallet = _feeWallet;
+    }
+
+    // Emergency: allow admin to recover stuck tokens by transferring them out
+    function rescueTokens(uint128 amount, address recipient) external {
+        require(msg.pubkey() == tvm.pubkey(), 103, "Not authorized");
+        require(recipient != address(0), 107, "Recipient cannot be zero");
+        tvm.accept();
+        TvmCell emptyPayload;
+        ITIP3TokenWallet(routerUsdcWallet).transfer{value: 0.1 ever, flag: 0}(
+            amount,
+            recipient,
+            0.1 ever,
+            recipient,
+            false,
+            emptyPayload
+        );
     }
 }

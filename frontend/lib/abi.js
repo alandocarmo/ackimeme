@@ -12,5 +12,6 @@
 import BondingCurveAbi from './BondingCurve.abi.json';
 import TokenWalletAbi from './TokenWallet.abi.json';
 import TokenRootAbi from './TokenRoot.abi.json';
+import USDCShellRouterAbi from './USDCShellRouter.abi.json';
 
-export { BondingCurveAbi, TokenWalletAbi, TokenRootAbi };
+export { BondingCurveAbi, TokenWalletAbi, TokenRootAbi, USDCShellRouterAbi };

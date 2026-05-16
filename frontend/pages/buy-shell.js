@@ -1,9 +1,8 @@
 import Head from "next/head";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { useMemo, useState, useEffect } from "react";
-import { formatNumber } from "../lib/utils";
-import { TokenWalletAbi } from "../lib/abi";
+import { useMemo, useState } from "react";
+import { formatNum as formatNumber } from "../lib/utils";
 
 // Official Acki Nacki Shell Buyer — supports card (Stripe) and crypto (NOWPayments)
 const SHELL_BUYER_URL = "https://shellbuy.ackinax.com/";
@@ -102,7 +101,7 @@ function SwapPanel() {
   return (
     <div className="card" style={{ background: 'var(--bg-panel)', border: '1px solid var(--line-soft)', marginBottom: '16px', padding: '20px', textAlign: 'left' }}>
       <h2 className="info-label" style={{ color: 'var(--ink)', marginBottom: '12px', fontSize: '14px' }}>
-        ?? Swap USDC to SHELL (1% Platform Fee)
+        🪙 Swap USDC to SHELL (1% Platform Fee)
       </h2>
       <p style={{ color: 'var(--ink-soft)', fontSize: '13px', lineHeight: '1.6', marginBottom: '16px' }}>
         Already have Acki Nacki USDC? Swap it directly for SHELL through our native router.
