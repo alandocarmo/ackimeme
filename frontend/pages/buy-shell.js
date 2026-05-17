@@ -1,8 +1,10 @@
 import Head from "next/head";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { useMemo, useState } from "react";
+import { useMemo, useState, useEffect } from "react";
 import { formatNum as formatNumber } from "../lib/utils";
+import { getConfig } from "../lib/api";
+import { TokenRootAbi, TokenWalletAbi } from "../lib/abi";
 
 // Official Acki Nacki Shell Buyer — supports card (Stripe) and crypto (NOWPayments)
 const SHELL_BUYER_URL = "https://shellbuy.ackinax.com/";
@@ -88,14 +90,86 @@ export default function BuyShellPage() {
   );
 }
 
+function toNano(valStr, decimals = 9) {
+  const num = parseFloat(valStr);
+  if (!valStr || !Number.isFinite(num) || num < 0) return 0n;
+  const fixed = num.toFixed(decimals);
+  const [whole = "0", frac = ""] = fixed.split(".");
+  const fracPad = frac.padEnd(decimals, "0").slice(0, decimals);
+  const multiplier = BigInt("1" + "0".repeat(decimals));
+  return BigInt(whole) * multiplier + BigInt(fracPad || "0");
+}
+
 function SwapPanel() {
   const [amount, setAmount] = useState('');
+  const [config, setConfig] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
+  const [success, setSuccess] = useState('');
+  
+  useEffect(() => {
+    getConfig().then(c => setConfig(c)).catch(() => {});
+  }, []);
+
   const parsedAmount = parseFloat(amount) || 0;
   const feeAmount = parsedAmount * 0.01;
   const shellOut = (parsedAmount - feeAmount) * 100;
 
   async function handleSwap() {
-    alert('USDC Wallet integration is required. Please check your extension.');
+    if (!config || !config.shellBuy || !config.shellBuy.enabled) {
+      setError("Swap de USDC não está habilitado na rede.");
+      return;
+    }
+    
+    setError('');
+    setSuccess('');
+    setLoading(true);
+
+    try {
+      const { ProviderRpcClient, Address } = await import('everscale-inpage-provider');
+      const ever = new ProviderRpcClient();
+      if (!(await ever.hasProvider())) throw new Error("Instale a extensão Acki Nacki / EVER Wallet.");
+      
+      await ever.ensureInitialized();
+      const { accountInteraction } = await ever.requestPermissions({ permissions: ['basic', 'accountInteraction'] });
+      if (!accountInteraction) throw new Error("Conexão com a carteira negada.");
+
+      const rootContract = new ever.Contract(TokenRootAbi, new Address(config.shellBuy.usdcRoot));
+      const walletResult = await rootContract.methods.getWalletAddress({
+        ownerAddress: accountInteraction.address,
+        answerId: 0
+      }).call();
+      
+      const userWalletAddress = walletResult.value0;
+      if (!userWalletAddress || userWalletAddress.toString() === "0:0000000000000000000000000000000000000000000000000000000000000000") {
+        throw new Error("Você não possui carteira USDC ou o saldo é nulo.");
+      }
+
+      const balance = await ever.getBalance(accountInteraction.address);
+      if (BigInt(balance || "0") < 500000000n) {
+         throw new Error("Saldo de SHELL insuficiente para o gas da transação.");
+      }
+
+      const walletContract = new ever.Contract(TokenWalletAbi, new Address(userWalletAddress.toString()));
+      
+      const tokensToSellNano = toNano(amount, config.shellBuy.usdcDecimals || 6);
+
+      const tx = await walletContract.methods.transfer({
+        recipientOwner: config.shellBuy.usdcRecipient,
+        amount: tokensToSellNano.toString(),
+      }).send({
+        from: accountInteraction.address,
+        amount: "500000000",
+        bounce: true
+      });
+      
+      setSuccess(`Swap iniciado com sucesso! Tx: ${tx?.transaction?.id?.hash?.slice(0, 8) || 'confirmada'}`);
+      setAmount('');
+    } catch(err) {
+      setError(err.message || "Falha no swap.");
+    } finally {
+      setLoading(false);
+    }
   }
 
   return (
@@ -109,7 +183,7 @@ function SwapPanel() {
       
       <div className="input-group" style={{ marginBottom: '16px' }}>
         <label className="input-label">Amount (USDC)</label>
-        <input type="number" placeholder="100" className="form-input" value={amount} onChange={(e) => setAmount(e.target.value)} />
+        <input type="number" placeholder="100" className="form-input" value={amount} onChange={(e) => setAmount(e.target.value)} disabled={loading} />
       </div>
       
       <div style={{ background: 'var(--bg-deep)', padding: '12px', borderRadius: '8px', marginBottom: '16px', fontSize: '12px' }}>
@@ -127,13 +201,16 @@ function SwapPanel() {
         </div>
       </div>
 
+      {error && <p style={{ color: 'var(--red)', fontSize: '12px', marginBottom: '12px' }}>{error}</p>}
+      {success && <p style={{ color: 'var(--accent)', fontSize: '12px', marginBottom: '12px', fontWeight: 'bold' }}>{success}</p>}
+
       <button
         className="btn-primary"
         style={{ width: '100%', display: 'block', textAlign: 'center', padding: '14px' }}
         onClick={handleSwap}
-        disabled={!parsedAmount || parsedAmount <= 0}
+        disabled={!parsedAmount || parsedAmount <= 0 || loading}
       >
-        Swap USDC to SHELL
+        {loading ? 'Processing...' : 'Swap USDC to SHELL'}
       </button>
     </div>
   );

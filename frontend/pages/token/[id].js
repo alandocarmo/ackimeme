@@ -402,13 +402,13 @@ export default function TokenPage() {
         await ever.ensureInitialized();
         const bcContract = new ever.Contract(BondingCurveAbi, new Address(token.onchainData.bondingCurveAddress));
         
-        const rawAmountNano = BigInt(Math.floor(parseFloat(tradeAmount) * 1e9));
+        const rawAmountNano = toNano(tradeAmount);
         // maxBaseCostNano = rawAmountNano * 100 / 101
         const maxBaseCostNano = (rawAmountNano * 100n) / 101n;
         
         let low = 0n;
         let high = rawAmountNano * 100000000n;
-        const currentPriceNano = BigInt(Math.floor(onchainPrice * 1e9));
+        const currentPriceNano = toNano(String(onchainPrice));
         
         if (currentPriceNano > 0n) {
            const spotEst = (maxBaseCostNano * 1000000000n) / currentPriceNano;
@@ -787,7 +787,7 @@ export default function TokenPage() {
     }
     
     return { 
-        value: netReturn.toFixed(9), 
+        value: formatNum(netReturn.toFixed(4), 4), 
         fee: fee.toFixed(4),
         impact: impactPct
     };

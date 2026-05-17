@@ -1153,6 +1153,15 @@ async function start() {
   
   // Anti-spam middleware for Socket.IO
   const socketRateLimit = new Map();
+  
+  // Periodic memory cleanup for socket rate limit map
+  setInterval(() => {
+    const now = Date.now();
+    for (const [key, val] of socketRateLimit.entries()) {
+      if (now - val.startTime > 60000) socketRateLimit.delete(key);
+    }
+  }, 60000);
+
   io.use((socket, next) => {
     const ip = socket.handshake.address;
     const now = Date.now();
@@ -1168,12 +1177,6 @@ async function start() {
       socketRateLimit.set(ip, { count: 1, startTime: now });
     }
     
-    // Periodic memory cleanup (5% chance per connection)
-    if (Math.random() < 0.05) {
-      for (const [key, val] of socketRateLimit.entries()) {
-        if (now - val.startTime > 60000) socketRateLimit.delete(key);
-      }
-    }
     
     next();
   });
@@ -1194,27 +1197,44 @@ async function start() {
   });
 
   // 3. Graceful Shutdown
+  let isShuttingDown = false;
+  const activeConnections = new Set();
+
+  server.on("connection", (socket) => {
+    activeConnections.add(socket);
+    socket.once("close", () => activeConnections.delete(socket));
+  });
+
   const shutdown = async (signal) => {
+    if (isShuttingDown) return;
+    isShuttingDown = true;
     console.log(`\n[Server] ${signal} received. Closing resources...`);
     
     // Stop sync job
     stopSyncJob();
 
-    // Stop accepting new connections
-    server.close(() => {
-      console.log("[Server] Connection pool closed.");
+    // Stop accepting new connections and wait for active requests
+    server.close(async () => {
+      console.log("[Server] Active HTTP requests finished.");
+      try {
+        await pool.end();
+        console.log("[Database] Pool closed.");
+      } catch (err) {
+        console.error("[Database] Error closing pool:", err.message);
+      }
+      console.log("[Server] Shutdown complete. Bye!\n");
+      process.exit(0);
     });
 
-    // Close DB pool
-    try {
-      await pool.end();
-      console.log("[Database] Pool closed.");
-    } catch (err) {
-      console.error("[Database] Error closing pool:", err.message);
-    }
-
-    console.log("[Server] Shutdown complete. Bye!\n");
-    process.exit(0);
+    // Fallback: force shutdown after 10s if requests hang
+    setTimeout(async () => {
+      console.warn("[Server] Force closing hanging connections after 10s timeout...");
+      for (const socket of activeConnections) {
+        socket.destroy();
+      }
+      try { await pool.end(); } catch (e) {}
+      process.exit(1);
+    }, 10000);
   };
 
   process.on("SIGTERM", () => shutdown("SIGTERM"));

@@ -84,84 +84,87 @@ async function syncOnchainData() {
     const launches = await listLaunchesForSync(SYNC_BATCH_SIZE);
     let updatedCount = 0;
     
-    for (const launch of launches) {
-      if (!["on_chain_deployed", "on_chain_pending_recovery"].includes(launch.status) || !launch.bondingCurveAddress) {
-        continue;
-      }
-
-      const bcState = await getAccountState(launch.bondingCurveAddress);
-      
-      if (bcState.isDeployed && bcState.boc) {
-        // Fallbacks
-        let reserveBalance = "0"; // H-32: Fallback corrected to ZERO, not gas balance
-        let tokenSupply = null; // Audit #23: Do not default to cap if getter fails, use null to indicate sync gap
-        let lockedLiquidity = launch.lockedLiquidity || false;
-
-        // Run Local Getters with BondingCurve BOC
-        const reserveOut = await runLocalGetter(bcState.boc, launch.bondingCurveAddress, bondingCurveAbiPath, "reserveBalance");
-        if (reserveOut && reserveOut.reserveBalance) {
-          reserveBalance = reserveOut.reserveBalance;
+    await Promise.allSettled(
+      launches.map(async (launch) => {
+        if (!["on_chain_deployed", "on_chain_pending_recovery"].includes(launch.status) || !launch.bondingCurveAddress) {
+          return;
         }
 
-        // A-04: BondingCurve was refactored to internal AMM — getter is `isAmm`, not `migrated`
-        const ammOut = await runLocalGetter(bcState.boc, launch.bondingCurveAddress, bondingCurveAbiPath, "isAmm");
-        if (ammOut && ammOut.isAmm !== undefined) {
-          lockedLiquidity = ammOut.isAmm;
-        }
-
-        // `migrationFailed` no longer exists in the contract — AMM is internal
-        let status = launch.status === "on_chain_pending_recovery" ? "on_chain_deployed" : launch.status;
-
-        // Run Local Getters with TokenRoot BOC
-        if (launch.tokenRootAddress) {
-          const rootState = await getAccountState(launch.tokenRootAddress);
-          if (rootState.isDeployed && rootState.boc) {
-             const supplyOut = await runLocalGetter(rootState.boc, launch.tokenRootAddress, tokenRootAbiPath, "totalSupply");
-             if (supplyOut && supplyOut.totalSupply) {
-               tokenSupply = supplyOut.totalSupply;
-             }
-          }
-        }
-
-        await updateLaunchOnchainState(launch.id, {
-          reserveBalance: reserveBalance.toString(),
-          tokenSupply: tokenSupply !== null ? tokenSupply.toString() : launch.tokenSupply,
-          lockedLiquidity,
-          status,
-          deployStatus: "deployed",
-          deployReason: "",
-        });
+        const bcState = await getAccountState(launch.bondingCurveAddress);
         
-        if (ioInstance) {
-          ioInstance.to(`token_${launch.id}`).emit("token_updated", {
-            id: launch.id,
+        if (bcState.isDeployed && bcState.boc) {
+          // Fallbacks
+          let reserveBalance = "0"; // H-32: Fallback corrected to ZERO, not gas balance
+          let tokenSupply = null; // Audit #23: Do not default to cap if getter fails, use null to indicate sync gap
+          let lockedLiquidity = launch.lockedLiquidity || false;
+
+          // Run Local Getters with BondingCurve BOC
+          const reserveOut = await runLocalGetter(bcState.boc, launch.bondingCurveAddress, bondingCurveAbiPath, "reserveBalance");
+          if (reserveOut && reserveOut.reserveBalance) {
+            reserveBalance = reserveOut.reserveBalance;
+          }
+
+          // A-04: BondingCurve was refactored to internal AMM — getter is `isAmm`, not `migrated`
+          const ammOut = await runLocalGetter(bcState.boc, launch.bondingCurveAddress, bondingCurveAbiPath, "isAmm");
+          if (ammOut && ammOut.isAmm !== undefined) {
+            lockedLiquidity = ammOut.isAmm;
+          }
+
+          // `migrationFailed` no longer exists in the contract — AMM is internal
+          let status = launch.status === "on_chain_pending_recovery" ? "on_chain_deployed" : launch.status;
+
+          // Run Local Getters with TokenRoot BOC
+          if (launch.tokenRootAddress) {
+            const rootState = await getAccountState(launch.tokenRootAddress);
+            if (rootState.isDeployed && rootState.boc) {
+               const supplyOut = await runLocalGetter(rootState.boc, launch.tokenRootAddress, tokenRootAbiPath, "totalSupply");
+               if (supplyOut && supplyOut.totalSupply) {
+                 tokenSupply = supplyOut.totalSupply;
+               }
+            }
+          }
+
+          await updateLaunchOnchainState(launch.id, {
             reserveBalance: reserveBalance.toString(),
             tokenSupply: tokenSupply !== null ? tokenSupply.toString() : launch.tokenSupply,
             lockedLiquidity,
             status,
-            updatedAt: new Date().toISOString()
+            deployStatus: "deployed",
+            deployReason: "",
           });
-        }
-        
-        // [New] Index Recent Trades
-        try {
-          const trades = await getRecentBondingCurveTrades(launch.bondingCurveAddress);
-          // Insert trades, process oldest first
-          for (let i = trades.length - 1; i >= 0; i--) {
-            const trade = trades[i];
-            trade.launchId = launch.id;
-            const newTrade = await insertTrade(trade);
-            if (newTrade && ioInstance) {
-              ioInstance.to(`token_${launch.id}`).emit("new_trade", newTrade);
-            }
+          
+          if (ioInstance) {
+            ioInstance.to(`token_${launch.id}`).emit("token_updated", {
+              id: launch.id,
+              reserveBalance: reserveBalance.toString(),
+              tokenSupply: tokenSupply !== null ? tokenSupply.toString() : launch.tokenSupply,
+              lockedLiquidity,
+              status,
+              updatedAt: new Date().toISOString()
+            });
           }
-        } catch (err) {
-          console.error(`[SyncJob] Error syncing trades for launch ${launch.id}:`, err.message);
+          
+          // [New] Index Recent Trades
+          try {
+            const trades = await getRecentBondingCurveTrades(launch.bondingCurveAddress);
+            // Insert trades, process oldest first
+            for (let i = trades.length - 1; i >= 0; i--) {
+              const trade = trades[i];
+              trade.launchId = launch.id;
+              const newTrade = await insertTrade(trade);
+              if (newTrade && ioInstance) {
+                ioInstance.to(`token_${launch.id}`).emit("new_trade", newTrade);
+              }
+            }
+          } catch (err) {
+            console.error(`[SyncJob] Error syncing trades for launch ${launch.id}:`, err.message);
+          }
+          
+          updatedCount++;
         }
-        
-        updatedCount++;
-      }
-    }
+      })
+    );
+
     if (updatedCount > 0) {
       console.log(`[SyncJob] Sincronização concluída: ${updatedCount} tokens atualizados.`);
     }

@@ -138,7 +138,7 @@ contract USDCShellRouter is IAcceptTokensTransferCallback {
     }
 
     // Emergency: allow admin to recover stuck tokens by transferring them out
-    function rescueTokens(uint128 amount, address recipient) external view {
+    function rescueTokens(uint128 amount, address recipient) external {
         require(msg.pubkey() == tvm.pubkey(), 103, "Not authorized");
         require(recipient != address(0), 107, "Recipient cannot be zero");
         tvm.accept();

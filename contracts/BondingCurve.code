@@ -134,9 +134,7 @@
 	PUSHINT 32
 	DICTUGET
 	PUSHCONT {
-		PUSHREFSLICE {
-			.blob x8000000000000000000000000000000000000000000000000000000000000000001_
-		}
+		PUSHSLICE x2_
 	}
 	IFNOT
 	.loc BondingCurve.sol, 420
@@ -257,7 +255,7 @@
 		STSLICE
 		STSLICECONST x402faf080
 		STDICT
-		PUSHINT 106
+		PUSHINT 110
 		STZEROES
 		ENDC
 		PUSHINT 1
@@ -338,85 +336,11 @@
 	SETGLOB 2
 }
 
-.fragment c4_to_c7_with_init_storage, {
-	PUSHROOT
-	CTOS
-	SBITS
-	GTINT 1
-	PUSHCONT {
-		PUSHINT 0
-		PUSHROOT
-		CTOS
-		PLDDICT ; D
-		PUSHINT 0
-		GETGLOBVAR
-		GETGLOB 1
-		GETGLOB 2
-		GETGLOB 3
-		GETGLOB 4
-		GETGLOB 5
-		GETGLOB 6
-		GETGLOB 7
-		GETGLOB 8
-		GETGLOB 9
-		PUSHINT 1
-		PUSH S11
-		PUSHINT 64
-		DICTUGET
-		PUSHCONT {
-			PUSHREFSLICE {
-				.blob x8000000000000000000000000000000000000000000000000000000000000000001_
-			}
-		}
-		IFNOT
-		PUSHINT 2
-		PUSH S12
-		PUSHINT 64
-		DICTUGET
-		ZEROSWAPIFNOT
-		PUSHCONT {
-			PLDU 256
-		}
-		IF
-		PUSHINT 0
-		BLKPUSH 4, 0
-		PUSHREFSLICE {
-			.blob x8000000000000000000000000000000000000000000000000000000000000000001_
-		}
-		DUP
-		PUSHINT 0
-		PUSHREF {
-		}
-		BLKPUSH 2, 0
-		NULL
-		BLKPUSH 3, 0
-		PUSHINT 0
-		DUP
-		NULL
-		PUSHINT 0
-		PUSHINT 31
-		TUPLEVAR
-		POP C7
-		PUSHINT 64
-		DICTUGET
-		THROWIFNOT 61
-		PLDU 256
-		SETGLOB 2
-		PUSHINT 0 ; timestamp
-		SETGLOB 3
-		PUSHINT 1
-		SETGLOB 30
-	}
-	IFREFELSE {
-		.inline c4_to_c7
-	}
-}
-
 .fragment _supplyCap, {
 	DROP
 	ENDS
 	CALLREF {
-		.inline c4_to_c7_with_init_storage
+		.inline c4_to_c7
 	}
 	GETGLOB 11
 	OVER
@@ -437,7 +361,7 @@
 	DROP
 	ENDS
 	CALLREF {
-		.inline c4_to_c7_with_init_storage
+		.inline c4_to_c7
 	}
 	GETGLOB 10
 	OVER
@@ -458,7 +382,7 @@
 	DROP
 	ENDS
 	CALLREF {
-		.inline c4_to_c7_with_init_storage
+		.inline c4_to_c7
 	}
 	GETGLOB 15
 	OVER
@@ -828,7 +752,15 @@
 	GEQ
 	THROWARGIFNOT 203
 	.loc BondingCurve.sol, 270
-	ACCEPT
+	PUSHREF {
+		.blob x496e73756666696369656e7420564d5348454c4c20657865637574696f6e20676173206174746163686564
+	}
+	DEPTH
+	ADDCONST -2
+	PICK
+	PUSHINT 500000000
+	GEQ
+	THROWARGIFNOT 212
 	.loc BondingCurve.sol, 271
 	PUSHREF {
 		.blob x426f6e64696e67437572766520564d5348454c4c207265736572766520756e617661696c61626c65
@@ -913,7 +845,7 @@
 	NEWC
 	STSLICECONST x62_
 	STSLICE
-	PUSHSLICE x3989680000000000000000000000000003_
+	PUSHSLICE x39896800000000000000000000000000003_
 	STSLICER
 	ROLLREV 3
 	NEWC
@@ -981,7 +913,7 @@
 		STSLICE
 		STSLICECONST x402faf080
 		STDICT
-		PUSHINT 106
+		PUSHINT 110
 		STZEROES
 		ENDC
 		PUSHINT 1
@@ -1099,8 +1031,10 @@
 	GETGLOB 2
 	ISNULL
 	IFREF {
-		.inline c4_to_c7_with_init_storage
+		.inline c4_to_c7
 	}
+	PUSHINT 1
+	SETGLOB 30
 	GETGLOB 6
 	THROWIF 51
 	OVER
@@ -1200,7 +1134,7 @@
 	DROP
 	ENDS
 	CALLREF {
-		.inline c4_to_c7_with_init_storage
+		.inline c4_to_c7
 	}
 	GETGLOB 22
 	OVER
@@ -1215,6 +1149,22 @@
 	}
 	IF
 	THROW 0
+}
+
+.fragment upd_only_time_in_c4, {
+	PUSHROOT
+	CTOS
+	LDU 256
+	LDU 64
+	NIP
+	GETGLOB 3
+	ROT
+	NEWC
+	STU 256
+	STU 64
+	STSLICE
+	ENDC
+	POPROOT
 }
 
 .fragment currentPrice, {
@@ -1255,7 +1205,7 @@
 	}
 	IFELSE
 	IFREF {
-		.inline c7_to_c4
+		.inline upd_only_time_in_c4
 	}
 	THROW 0
 }
@@ -1264,7 +1214,7 @@
 	DROP
 	ENDS
 	CALLREF {
-		.inline c4_to_c7_with_init_storage
+		.inline c4_to_c7
 	}
 	GETGLOB 18
 	OVER
@@ -1397,7 +1347,7 @@
 	}
 	IFELSE
 	IFREF {
-		.inline c7_to_c4
+		.inline upd_only_time_in_c4
 	}
 	THROW 0
 }
@@ -1475,7 +1425,7 @@
 	}
 	IFELSE
 	IFREF {
-		.inline c7_to_c4
+		.inline upd_only_time_in_c4
 	}
 	THROW 0
 }
@@ -1518,7 +1468,7 @@
 	}
 	IFELSE
 	IFREF {
-		.inline c7_to_c4
+		.inline upd_only_time_in_c4
 	}
 	THROW 0
 }
@@ -1573,7 +1523,7 @@
 	}
 	IFELSE
 	IFREF {
-		.inline c7_to_c4
+		.inline upd_only_time_in_c4
 	}
 	THROW 0
 }
@@ -1616,7 +1566,7 @@
 	}
 	IFELSE
 	IFREF {
-		.inline c7_to_c4
+		.inline upd_only_time_in_c4
 	}
 	THROW 0
 }
@@ -1759,7 +1709,7 @@
 	}
 	IFELSE
 	IFREF {
-		.inline c7_to_c4
+		.inline upd_only_time_in_c4
 	}
 	THROW 0
 }
@@ -1810,7 +1760,7 @@
 	}
 	IFELSE
 	IFREF {
-		.inline c7_to_c4
+		.inline upd_only_time_in_c4
 	}
 	THROW 0
 }
@@ -1888,7 +1838,7 @@
 	}
 	IFELSE
 	IFREF {
-		.inline c7_to_c4
+		.inline upd_only_time_in_c4
 	}
 	THROW 0
 }
@@ -1950,7 +1900,7 @@
 	}
 	IFELSE
 	IFREF {
-		.inline c7_to_c4
+		.inline upd_only_time_in_c4
 	}
 	THROW 0
 }
@@ -1993,7 +1943,7 @@
 	}
 	IFELSE
 	IFREF {
-		.inline c7_to_c4
+		.inline upd_only_time_in_c4
 	}
 	THROW 0
 }
@@ -2002,7 +1952,7 @@
 	DROP
 	ENDS
 	CALLREF {
-		.inline c4_to_c7_with_init_storage
+		.inline c4_to_c7
 	}
 	GETGLOB 14
 	OVER
@@ -2057,7 +2007,7 @@
 	}
 	IFELSE
 	IFREF {
-		.inline c7_to_c4
+		.inline upd_only_time_in_c4
 	}
 	THROW 0
 }
@@ -2106,7 +2056,7 @@
 	}
 	IFELSE
 	IFREF {
-		.inline c7_to_c4
+		.inline upd_only_time_in_c4
 	}
 	THROW 0
 }
@@ -2115,7 +2065,7 @@
 	DROP
 	ENDS
 	CALLREF {
-		.inline c4_to_c7_with_init_storage
+		.inline c4_to_c7
 	}
 	GETGLOB 16
 	OVER
@@ -2136,7 +2086,7 @@
 	DROP
 	ENDS
 	CALLREF {
-		.inline c4_to_c7_with_init_storage
+		.inline c4_to_c7
 	}
 	GETGLOB 29
 	OVER
@@ -2157,7 +2107,7 @@
 	DROP
 	ENDS
 	CALLREF {
-		.inline c4_to_c7_with_init_storage
+		.inline c4_to_c7
 	}
 	GETGLOB 20
 	OVER
@@ -2263,7 +2213,7 @@
 		STSLICE
 		STSLICECONST x402faf080
 		STDICT
-		PUSHINT 106
+		PUSHINT 110
 		STZEROES
 		ENDC
 		PUSHINT 1
@@ -2300,7 +2250,7 @@
 		STSLICE
 		STSLICECONST x402faf080
 		STDICT
-		PUSHINT 106
+		PUSHINT 110
 		STZEROES
 		ENDC
 		PUSHINT 1
@@ -2510,7 +2460,7 @@
 		STSLICE
 		STSLICECONST x402faf080
 		STDICT
-		PUSHINT 106
+		PUSHINT 110
 		STZEROES
 		ENDC
 		PUSHINT 1
@@ -2547,7 +2497,7 @@
 		STSLICE
 		STSLICECONST x402faf080
 		STDICT
-		PUSHINT 106
+		PUSHINT 110
 		STZEROES
 		ENDC
 		PUSHINT 1
@@ -2576,7 +2526,7 @@
 	STSLICE
 	STSLICECONST x0
 	STDICT
-	PUSHINT 106
+	PUSHINT 110
 	STZEROES
 	ENDC
 	PUSHPOW2 7
@@ -2629,7 +2579,7 @@
 	DROP
 	ENDS
 	CALLREF {
-		.inline c4_to_c7_with_init_storage
+		.inline c4_to_c7
 	}
 	GETGLOB 17
 	OVER
@@ -2686,7 +2636,7 @@
 	DROP
 	ENDS
 	CALLREF {
-		.inline c4_to_c7_with_init_storage
+		.inline c4_to_c7
 	}
 	GETGLOB 19
 	OVER
@@ -2707,7 +2657,7 @@
 	DROP
 	ENDS
 	CALLREF {
-		.inline c4_to_c7_with_init_storage
+		.inline c4_to_c7
 	}
 	GETGLOB 26
 	OVER
@@ -2728,7 +2678,7 @@
 	DROP
 	ENDS
 	CALLREF {
-		.inline c4_to_c7_with_init_storage
+		.inline c4_to_c7
 	}
 	GETGLOB 25
 	OVER
@@ -2749,7 +2699,7 @@
 	DROP
 	ENDS
 	CALLREF {
-		.inline c4_to_c7_with_init_storage
+		.inline c4_to_c7
 	}
 	GETGLOB 23
 	OVER
@@ -2770,7 +2720,7 @@
 	DROP
 	ENDS
 	CALLREF {
-		.inline c4_to_c7_with_init_storage
+		.inline c4_to_c7
 	}
 	GETGLOB 24
 	OVER
@@ -2791,7 +2741,7 @@
 	DROP
 	ENDS
 	CALLREF {
-		.inline c4_to_c7_with_init_storage
+		.inline c4_to_c7
 	}
 	GETGLOB 27
 	OVER
@@ -2812,7 +2762,7 @@
 	DROP
 	ENDS
 	CALLREF {
-		.inline c4_to_c7_with_init_storage
+		.inline c4_to_c7
 	}
 	GETGLOB 12
 	OVER
@@ -2833,7 +2783,7 @@
 	DROP
 	ENDS
 	CALLREF {
-		.inline c4_to_c7_with_init_storage
+		.inline c4_to_c7
 	}
 	GETGLOB 28
 	OVER
@@ -2854,7 +2804,7 @@
 	DROP
 	ENDS
 	CALLREF {
-		.inline c4_to_c7_with_init_storage
+		.inline c4_to_c7
 	}
 	GETGLOB 21
 	OVER
@@ -2875,7 +2825,7 @@
 	DROP
 	ENDS
 	CALLREF {
-		.inline c4_to_c7_with_init_storage
+		.inline c4_to_c7
 	}
 	GETGLOB 13
 	OVER
@@ -2934,13 +2884,18 @@
 	LEQ
 	IFJMPREF {
 		DUP
-		PUSHINT 303793982
+		PUSHINT 264760161
 		LEQ
 		IFJMPREF {
 			DUP
-			PUSHINT 75645798
+			PUSHINT 52593333
 			LEQ
 			IFJMPREF {
+				DUP
+				EQINT 1
+				IFJMPREF {
+					.inline constructor
+				}
 				DUP
 				PUSHINT 24566123
 				EQUAL
@@ -2953,12 +2908,12 @@
 				IFJMPREF {
 					.inline onTokenBurned
 				}
-				DUP
-				PUSHINT 75645798
-				EQUAL
-				IFJMPREF {
-					.inline getCurrentMarketCap
-				}
+			}
+			DUP
+			PUSHINT 75645798
+			EQUAL
+			IFJMPREF {
+				.inline getCurrentMarketCap
 			}
 			DUP
 			PUSHINT 112778719
@@ -2972,22 +2927,16 @@
 			IFJMPREF {
 				.inline totalSupply
 			}
-			DUP
-			PUSHINT 303793982
-			EQUAL
-			IFJMPREF {
-				.inline maxBuyPerTx
-			}
 		}
 		DUP
 		PUSHINT 443110870
 		LEQ
 		IFJMPREF {
 			DUP
-			PUSHINT 330651021
+			PUSHINT 303793982
 			EQUAL
 			IFJMPREF {
-				.inline constructor
+				.inline maxBuyPerTx
 			}
 			DUP
 			PUSHINT 343614912
@@ -3253,19 +3202,13 @@
 }
 
 .fragment main_external, {
-	PUSHINT -1
-	PUSHROOT
-	CTOS
-	SBITS
-	NEQINT 1
-	SETGLOB 6
 	PUSHREFSLICE {
 		.blob x8000000000000000000000000000000000000000000000000000000000000000001_
 	}
 	SETGLOB 9
 	OVER
 	CALLREF {
-		.inline c4_to_c7_with_init_storage
+		.inline c4_to_c7
 	}
 	LDU 1 ; haveSign msgSlice
 	SWAP
@@ -3376,11 +3319,11 @@
 }
 
 .fragment main_internal, {
-	PUSHINT 0
 	PUSHROOT
 	CTOS
-	SBITS
-	NEQINT 1
+	PUSHINT 320
+	SDSKIPFIRST
+	PLDI 1
 	SETGLOB 6
 	PUSH S2
 	CTOS
@@ -3416,30 +3359,64 @@
 	THROW 60
 }
 
-.fragment upd_only_time_in_c4, {
-	PUSHROOT
-	CTOS
-	LDU 256
-	LDU 64
-	NIP
-	GETGLOB 3
-	ROT
+.fragment default_data_cell, {
+	PUSHINT 0
+	NULL
+	PUSHINT 0
+	DUP
+	NULL
+	BLKPUSH 3, 0
+	PUSHREF {
+	}
+	BLKPUSH 2, 0
+	PUSHINT 0
+	PUSHSLICE x2_
+	DUP
+	PUSHINT 0
+	BLKPUSH 5, 0
+	NEWC
+	PUSHINT 323
+	STZEROES
+	PUSHINT 20
+	ROLLREVX
 	NEWC
 	STU 256
-	STU 64
+	STU 256
+	STU 256
+	STI 1
+	ROLLREV 16
+	NEWC
+	STU 256
+	STU 32
 	STSLICE
+	ROLLREV 13
+	NEWC
+	STSLICE
+	STI 1
+	STREF
+	STREF
+	STREF
+	ROLLREV 8
+	NEWC
+	STDICT
+	STDICT
+	STDICT
+	ROLLREV 5
+	NEWC
+	STDICT
+	STI 1
+	STU 256
+	STDICT
+	STU 32
+	STBREFR
+	STBREFR
+	STBREFR
+	STBREFR
+	STBREFR
 	ENDC
-	POPROOT
 }
 
-.fragment default_data_dict_cell, {
-	PUSHINT 0
-	NEWC
-	STU 256
-	PUSHINT 0
-	NEWDICT
-	PUSHINT 64
-	DICTUSETB
+.fragment onTickTock, {
 }
 
 ; The code below forms a value of the StateInit type.
@@ -3447,20 +3424,35 @@
 .blob x4_ ; special = nothing
 .blob xc_ ; code = just
 .cell { ; code cell
-	SETCP0
-	DICTPUSHCONST 19
-	DICTIGETJMPZ
-	THROW 11
-	.code-dict-cell 19, {
-		x00001_ = main_internal,
-		xfffff_ = main_external,
+	PUSHREFCONT {
+		DICTPUSHCONST 32
+		DICTUGETJMPZ
+		THROW 78
+		.code-dict-cell 32, {
+		}
+		.cell { ; version
+			.blob x736f6c20302e37392e33 ; sol 0.79.3
+		}
 	}
+	POPCTR c3
+	DUP
+	IFNOTJMPREF {
+		.inline main_internal
+	}
+	DUP
+	EQINT -1
+	IFJMPREF {
+		.inline main_external
+	}
+	DUP
+	EQINT -2
+	IFJMPREF {
+		.inline onTickTock
+	}
+	THROW 11
 }
 .blob xc_ ; data = just
 .cell { 
-	.blob xc_
-	.cell { 
-		.inline-computed-cell default_data_dict_cell, 0
-	}
+	.inline-computed-cell default_data_cell, 0
 }
 .blob x4_ ; library = hme_empty

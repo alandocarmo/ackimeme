@@ -265,9 +265,9 @@ contract BondingCurve {
         require(totalCostWithFee <= maxShellIn, 208, "Slippage protection triggered: cost+fee exceeds maxShellIn");
         require(receivedShell >= totalCostWithFee, 203, "Insufficient SHELL sent (cost + 1% fee)");
 
-        // Cross-Dapp calls arrive with msg.value/VMSHELL zeroed by the protocol.
-        // After validating the paid SHELL ECC amount, the Dapp pays execution gas.
-        tvm.accept();
+        // Cross-Dapp calls arrive with msg.value/VMSHELL representing execution gas.
+        // We ensure the buyer provides enough VMSHELL instead of paying from the contract.
+        require(msg.value >= 0.5 ton, 212, "Insufficient VMSHELL execution gas attached");
         require(address(this).balance >= 0.2 ton, 213, "BondingCurve VMSHELL reserve unavailable");
 
         // Update state — only base cost goes to reserve (fee is separate)

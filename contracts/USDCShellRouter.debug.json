@@ -2,69 +2,91 @@
   "003709ac4111a5b3a23b165057c97d3593f6851a0fcaf3c03fd1ba5c603180fc": {
     "0": {
       "filename": "./USDCShellRouter.code",
-      "line": 655
+      "line": 673
     },
     "8": {
       "filename": "./USDCShellRouter.code",
-      "line": 656
+      "line": 674
     },
     "16": {
       "filename": "./USDCShellRouter.code",
-      "line": 657
+      "line": 675
     },
     "32": {
       "filename": "./USDCShellRouter.code",
-      "line": 660
+      "line": 678
     },
     "48": {
       "filename": "./USDCShellRouter.code",
-      "line": 661
+      "line": 679
     },
     "56": {
       "filename": "./USDCShellRouter.code",
-      "line": 662
+      "line": 680
     },
     "72": {
       "filename": "./USDCShellRouter.code",
-      "line": 663
+      "line": 681
     },
     "232": {
       "filename": "./USDCShellRouter.code",
-      "line": 664
+      "line": 682
     },
     "240": {
       "filename": "./USDCShellRouter.code",
-      "line": 665
+      "line": 683
     },
     "248": {
       "filename": "./USDCShellRouter.code",
-      "line": 666
+      "line": 684
     },
     "256": {
       "filename": "./USDCShellRouter.code",
-      "line": 667
+      "line": 685
     },
     "264": {
       "filename": "./USDCShellRouter.code",
-      "line": 668
+      "line": 686
     },
     "272": {
       "filename": "./USDCShellRouter.code",
-      "line": 669
+      "line": 687
     },
     "288": {
       "filename": "./USDCShellRouter.code",
-      "line": 671
+      "line": 689
     },
     "296": {
       "filename": "./USDCShellRouter.code",
-      "line": 672
+      "line": 690
+    }
+  },
+  "003711a3b84712f0701173c5fca5abcf80bb3f5cb236edee44e2318d5f33ec96": {
+    "0": {
+      "filename": "./USDCShellRouter.code",
+      "line": 947
+    },
+    "1": {
+      "filename": "./USDCShellRouter.code",
+      "line": 948
+    },
+    "2": {
+      "filename": "./USDCShellRouter.code",
+      "line": 949
+    },
+    "3": {
+      "filename": "./USDCShellRouter.code",
+      "line": 978
+    },
+    "4": {
+      "filename": "./USDCShellRouter.code",
+      "line": 982
     }
   },
   "016cb440cbb7a0e57fb5225c1401ef1811d1ae65f808a3dfb8edc0eceb8631c8": {
     "0": {
       "filename": "USDCShellRouter.sol",
-      "line": 139
+      "line": 143
     }
   },
   "08f782d0547b08c4ae7f0442b7349daa90bd3343b60487105d5c495be34d6c6b": {
@@ -266,7 +288,7 @@
   "13f1c4b3d3fa86e44f5749f20597f220f8a7fe129d678d8fc0748f6b2c144127": {
     "0": {
       "filename": "USDCShellRouter.sol",
-      "line": 66
+      "line": 68
     }
   },
   "16053aed80817ff609111ff4b352462811ab11856266e349708c06c828167411": {
@@ -334,53 +356,7 @@
   "2492cc419f7690c31c45f8840900f04ba38f23e333a51b40a4596ab8c958ead6": {
     "0": {
       "filename": "USDCShellRouter.sol",
-      "line": 122
-    }
-  },
-  "2619370ace0de317e7f3a1e1f43f3e75122f64e257de35bfad117584df1a6fc0": {
-    "0": {
-      "filename": "./USDCShellRouter.code",
-      "line": 570
-    },
-    "8": {
-      "filename": "./USDCShellRouter.code",
-      "line": 571
-    },
-    "24": {
-      "filename": "./USDCShellRouter.code",
-      "line": 572
-    },
-    "48": {
-      "filename": "./USDCShellRouter.code",
-      "line": 573
-    },
-    "64": {
-      "filename": "./USDCShellRouter.code",
-      "line": 574
-    },
-    "72": {
-      "filename": "./USDCShellRouter.code",
-      "line": 575
-    },
-    "88": {
-      "filename": "USDCShellRouter.sol",
-      "line": 121
-    },
-    "104": {
-      "filename": "USDCShellRouter.sol",
-      "line": 121
-    },
-    "112": {
-      "filename": "./USDCShellRouter.code",
-      "line": 582
-    },
-    "128": {
-      "filename": "./USDCShellRouter.code",
-      "line": 585
-    },
-    "144": {
-      "filename": "./USDCShellRouter.code",
-      "line": 588
+      "line": 124
     }
   },
   "2d24833e2f58b38d573a9fb52a570a7c0392a7106ec86643992e98e881e7c1f5": {
@@ -445,120 +421,50 @@
       "line": 421
     }
   },
-  "313d7780b999a1c174ef8579957efb3f5f85c6f03e6ac8015e4ba0adcb5e62b7": {
-    "0": {
-      "filename": "./USDCShellRouter.code",
-      "line": 626
-    },
-    "8": {
-      "filename": "./USDCShellRouter.code",
-      "line": 627
-    },
-    "24": {
-      "filename": "./USDCShellRouter.code",
-      "line": 628
-    },
-    "48": {
-      "filename": "./USDCShellRouter.code",
-      "line": 629
-    },
-    "64": {
-      "filename": "./USDCShellRouter.code",
-      "line": 630
-    },
-    "72": {
-      "filename": "./USDCShellRouter.code",
-      "line": 631
-    },
-    "88": {
-      "filename": "USDCShellRouter.sol",
-      "line": 129
-    },
-    "96": {
-      "filename": "USDCShellRouter.sol",
-      "line": 129
-    },
-    "104": {
-      "filename": "USDCShellRouter.sol",
-      "line": 129
-    },
-    "112": {
-      "filename": "USDCShellRouter.sol",
-      "line": 129
-    },
-    "120": {
-      "filename": "USDCShellRouter.sol",
-      "line": 129
-    },
-    "128": {
-      "filename": "USDCShellRouter.sol",
-      "line": 129
-    },
-    "136": {
-      "filename": "USDCShellRouter.sol",
-      "line": 129
-    },
-    "152": {
-      "filename": "USDCShellRouter.sol",
-      "line": 129
-    },
-    "160": {
-      "filename": "./USDCShellRouter.code",
-      "line": 645
-    },
-    "176": {
-      "filename": "./USDCShellRouter.code",
-      "line": 648
-    },
-    "192": {
-      "filename": "./USDCShellRouter.code",
-      "line": 651
-    }
-  },
   "31db0f8ee787d692c9ce3b4c21cc23a4bc9f77212a88e083eb997a8e1a2b0e67": {
     "0": {
       "filename": "USDCShellRouter.sol",
-      "line": 95
+      "line": 97
     },
     "8": {
       "filename": "USDCShellRouter.sol",
-      "line": 104
+      "line": 106
     },
     "16": {
       "filename": "USDCShellRouter.sol",
-      "line": 104
+      "line": 106
     },
     "24": {
       "filename": "USDCShellRouter.sol",
-      "line": 104
+      "line": 106
     },
     "48": {
       "filename": "USDCShellRouter.sol",
-      "line": 104
+      "line": 106
     },
     "56": {
       "filename": "USDCShellRouter.sol",
-      "line": 104
+      "line": 106
     },
     "72": {
       "filename": "USDCShellRouter.sol",
-      "line": 104
+      "line": 106
     },
     "88": {
       "filename": "USDCShellRouter.sol",
-      "line": 104
+      "line": 106
     },
     "96": {
       "filename": "USDCShellRouter.sol",
-      "line": 104
+      "line": 106
     },
     "104": {
       "filename": "USDCShellRouter.sol",
-      "line": 104
+      "line": 106
     },
     "120": {
       "filename": "USDCShellRouter.sol",
-      "line": 104
+      "line": 106
     },
     "136": {
       "filename": "./USDCShellRouter.code",
@@ -566,511 +472,455 @@
     }
   },
   "37ccf4e9dcc170fe24f523240749b1976839643202bd800fee623c038430e5c1": {},
-  "3ade5b09cf26534d2381cbae0c010dbf5240c856d98343a0007072b08a35919d": {
-    "0": {
-      "filename": "./USDCShellRouter.code",
-      "line": 742
-    },
-    "8": {
-      "filename": "./USDCShellRouter.code",
-      "line": 743
-    },
-    "56": {
-      "filename": "./USDCShellRouter.code",
-      "line": 744
-    },
-    "64": {
-      "filename": "./USDCShellRouter.code",
-      "line": 745
-    },
-    "80": {
-      "filename": "./USDCShellRouter.code",
-      "line": 748
-    },
-    "88": {
-      "filename": "./USDCShellRouter.code",
-      "line": 749
-    },
-    "136": {
-      "filename": "./USDCShellRouter.code",
-      "line": 750
-    },
-    "144": {
-      "filename": "./USDCShellRouter.code",
-      "line": 751
-    }
-  },
   "45f21818055ac49b7251f07044d5c6f96afbb23cca2d49ffb3a31d2f23224447": {
     "0": {
       "filename": "./USDCShellRouter.code",
-      "line": 684
+      "line": 702
     },
     "8": {
       "filename": "./USDCShellRouter.code",
-      "line": 685
+      "line": 703
     },
     "24": {
       "filename": "./USDCShellRouter.code",
-      "line": 686
+      "line": 704
     },
     "40": {
       "filename": "./USDCShellRouter.code",
-      "line": 689
+      "line": 707
     },
     "48": {
       "filename": "./USDCShellRouter.code",
-      "line": 690
+      "line": 708
     },
     "96": {
       "filename": "./USDCShellRouter.code",
-      "line": 691
+      "line": 709
     },
     "104": {
       "filename": "./USDCShellRouter.code",
-      "line": 692
-    }
-  },
-  "463768a7e3a70221c6c86f0b67e6b2ae87a5f8671b41ae8debc90f07043d404c": {
-    "0": {
-      "filename": "USDCShellRouter.sol",
-      "line": 130
-    },
-    "8": {
-      "filename": "USDCShellRouter.sol",
-      "line": 130
-    },
-    "24": {
-      "filename": "USDCShellRouter.sol",
-      "line": 130
-    },
-    "32": {
-      "filename": "USDCShellRouter.sol",
-      "line": 130
-    },
-    "40": {
-      "filename": "USDCShellRouter.sol",
-      "line": 130
-    },
-    "48": {
-      "filename": "USDCShellRouter.sol",
-      "line": 130
-    },
-    "56": {
-      "filename": "USDCShellRouter.sol",
-      "line": 130
-    },
-    "64": {
-      "filename": "USDCShellRouter.sol",
-      "line": 130
-    },
-    "72": {
-      "filename": "USDCShellRouter.sol",
-      "line": 130
-    },
-    "88": {
-      "filename": "USDCShellRouter.sol",
-      "line": 130
-    },
-    "96": {
-      "filename": "USDCShellRouter.sol",
-      "line": 130
-    },
-    "120": {
-      "filename": "USDCShellRouter.sol",
-      "line": 131
-    },
-    "128": {
-      "filename": "USDCShellRouter.sol",
-      "line": 131
-    },
-    "136": {
-      "filename": "USDCShellRouter.sol",
-      "line": 131
-    },
-    "144": {
-      "filename": "USDCShellRouter.sol",
-      "line": 131
-    },
-    "160": {
-      "filename": "USDCShellRouter.sol",
-      "line": 131
-    },
-    "168": {
-      "filename": "USDCShellRouter.sol",
-      "line": 131
-    },
-    "192": {
-      "filename": "USDCShellRouter.sol",
-      "line": 132
-    },
-    "208": {
-      "filename": "USDCShellRouter.sol",
-      "line": 133
+      "line": 710
     }
   },
   "46f0ba64484ee514d2697fcf25ecf14af5a458ce0244f29af44983f1cb994ba4": {},
-  "48cec41a61911487fd1e99c50b4bd148bb55a6aa457e20a3f0dda5e7e0b1b3ab": {
-    "0": {
-      "filename": "USDCShellRouter.sol",
-      "line": 122
-    },
-    "8": {
-      "filename": "USDCShellRouter.sol",
-      "line": 122
-    },
-    "24": {
-      "filename": "USDCShellRouter.sol",
-      "line": 122
-    },
-    "32": {
-      "filename": "USDCShellRouter.sol",
-      "line": 122
-    },
-    "40": {
-      "filename": "USDCShellRouter.sol",
-      "line": 122
-    },
-    "48": {
-      "filename": "USDCShellRouter.sol",
-      "line": 122
-    },
-    "56": {
-      "filename": "USDCShellRouter.sol",
-      "line": 122
-    },
-    "64": {
-      "filename": "USDCShellRouter.sol",
-      "line": 122
-    },
-    "72": {
-      "filename": "USDCShellRouter.sol",
-      "line": 122
-    },
-    "88": {
-      "filename": "USDCShellRouter.sol",
-      "line": 122
-    },
-    "96": {
-      "filename": "USDCShellRouter.sol",
-      "line": 122
-    },
-    "120": {
-      "filename": "USDCShellRouter.sol",
-      "line": 123
-    },
-    "136": {
-      "filename": "USDCShellRouter.sol",
-      "line": 124
-    },
-    "144": {
-      "filename": "USDCShellRouter.sol",
-      "line": 124
-    },
-    "152": {
-      "filename": "USDCShellRouter.sol",
-      "line": 124
-    },
-    "176": {
-      "filename": "USDCShellRouter.sol",
-      "line": 124
-    },
-    "184": {
-      "filename": "USDCShellRouter.sol",
-      "line": 124
-    },
-    "208": {
-      "filename": "USDCShellRouter.sol",
-      "line": 125
-    }
-  },
-  "492d6dd3fe5e0f7f381b1167d403e0228b685b8abf6eb58c829f0dccf408538d": {
-    "0": {
-      "filename": "./USDCShellRouter.code",
-      "line": 676
-    },
-    "8": {
-      "filename": "./USDCShellRouter.code",
-      "line": 677
-    },
-    "56": {
-      "filename": "./USDCShellRouter.code",
-      "line": 678
-    },
-    "64": {
-      "filename": "./USDCShellRouter.code",
-      "line": 679
-    },
-    "80": {
-      "filename": "./USDCShellRouter.code",
-      "line": 715
-    },
-    "88": {
-      "filename": "./USDCShellRouter.code",
-      "line": 716
-    },
-    "136": {
-      "filename": "./USDCShellRouter.code",
-      "line": 717
-    },
-    "144": {
-      "filename": "./USDCShellRouter.code",
-      "line": 718
-    },
-    "160": {
-      "filename": "./USDCShellRouter.code",
-      "line": 738
-    },
-    "168": {
-      "filename": "./USDCShellRouter.code",
-      "line": 739
-    },
-    "216": {
-      "filename": "./USDCShellRouter.code",
-      "line": 740
-    },
-    "224": {
-      "filename": "./USDCShellRouter.code",
-      "line": 741
-    },
-    "240": {
-      "filename": "./USDCShellRouter.code",
-      "line": 755
-    },
-    "248": {
-      "filename": "./USDCShellRouter.code",
-      "line": 756
-    },
-    "296": {
-      "filename": "./USDCShellRouter.code",
-      "line": 757
-    },
-    "304": {
-      "filename": "./USDCShellRouter.code",
-      "line": 758
-    }
-  },
-  "589555e1ad3b5665a4c8dba1a85fc5cee1e1c5d83d8faa964000073748fb4fb2": {
-    "0": {
-      "filename": "./USDCShellRouter.code",
-      "line": 937
-    },
-    "8": {
-      "filename": "./USDCShellRouter.code",
-      "line": 947
-    },
-    "24": {
-      "filename": "./USDCShellRouter.code",
-      "line": 948
-    },
-    "32": {
-      "filename": "./USDCShellRouter.code",
-      "line": 949
-    },
-    "48": {
-      "filename": "./USDCShellRouter.code",
-      "line": 952
-    },
-    "56": {
-      "filename": "./USDCShellRouter.code",
-      "line": 953
-    },
-    "72": {
-      "filename": "./USDCShellRouter.code",
-      "line": 954
-    },
-    "88": {
-      "filename": "./USDCShellRouter.code",
-      "line": 957
-    },
-    "96": {
-      "filename": "./USDCShellRouter.code",
-      "line": 958
-    },
-    "112": {
-      "filename": "./USDCShellRouter.code",
-      "line": 959
-    },
-    "128": {
-      "filename": "./USDCShellRouter.code",
-      "line": 962
-    }
-  },
   "5f4cd7e9540d630988a3d7ac054510c8ad5a1411ab414bc2ff5383a682ecfec3": {},
   "61ab4641fa30d9310391025086eec65d200d79268e1b7cd402565e01ba64be3c": {
     "0": {
       "filename": "./USDCShellRouter.code",
-      "line": 765
-    }
-  },
-  "6225bdd2d06421888e8faa32a192b3e1fde667d0392d06561cd8a0c10bb66a0c": {
-    "0": {
-      "filename": "./USDCShellRouter.code",
-      "line": 846
-    },
-    "16": {
-      "filename": "./USDCShellRouter.code",
-      "line": 847
-    },
-    "24": {
-      "filename": "./USDCShellRouter.code",
-      "line": 848
-    },
-    "48": {
-      "filename": "./USDCShellRouter.code",
-      "line": 849
-    },
-    "64": {
-      "filename": "./USDCShellRouter.code",
-      "line": 850
-    },
-    "88": {
-      "filename": "./USDCShellRouter.code",
-      "line": 851
-    },
-    "104": {
-      "filename": "./USDCShellRouter.code",
-      "line": 852
-    },
-    "112": {
-      "filename": "./USDCShellRouter.code",
-      "line": 853
-    },
-    "120": {
-      "filename": "./USDCShellRouter.code",
-      "line": 854
-    },
-    "136": {
-      "filename": "./USDCShellRouter.code",
-      "line": 855
-    },
-    "152": {
-      "filename": "./USDCShellRouter.code",
-      "line": 856
-    },
-    "160": {
-      "filename": "./USDCShellRouter.code",
-      "line": 857
-    },
-    "176": {
-      "filename": "./USDCShellRouter.code",
-      "line": 858
-    },
-    "200": {
-      "filename": "./USDCShellRouter.code",
-      "line": 859
-    },
-    "216": {
-      "filename": "./USDCShellRouter.code",
-      "line": 865
-    },
-    "224": {
-      "filename": "./USDCShellRouter.code",
-      "line": 866
-    },
-    "240": {
-      "filename": "./USDCShellRouter.code",
-      "line": 867
-    },
-    "256": {
-      "filename": "./USDCShellRouter.code",
-      "line": 871
-    },
-    "264": {
-      "filename": "./USDCShellRouter.code",
-      "line": 872
-    },
-    "288": {
-      "filename": "./USDCShellRouter.code",
-      "line": 873
-    },
-    "304": {
-      "filename": "./USDCShellRouter.code",
-      "line": 874
-    },
-    "312": {
-      "filename": "./USDCShellRouter.code",
-      "line": 875
-    },
-    "328": {
-      "filename": "./USDCShellRouter.code",
-      "line": 879
-    },
-    "336": {
-      "filename": "./USDCShellRouter.code",
-      "line": 880
-    },
-    "352": {
-      "filename": "./USDCShellRouter.code",
-      "line": 883
+      "line": 783
     }
   },
   "6b2b3a4ad5ca35f238451f24eac56926fa3aaa7434a3087a67c9ff60e3ac1af9": {
     "0": {
       "filename": "USDCShellRouter.sol",
-      "line": 131
+      "line": 134
     }
   },
   "73068f1b028e90b125ce1ec888a25e2e9845139ec40b02ed5a375a6fdb5bd5e3": {
     "0": {
       "filename": "./USDCShellRouter.code",
-      "line": 719
+      "line": 737
     },
     "8": {
       "filename": "./USDCShellRouter.code",
-      "line": 720
+      "line": 738
     },
     "56": {
       "filename": "./USDCShellRouter.code",
-      "line": 721
+      "line": 739
     },
     "64": {
       "filename": "./USDCShellRouter.code",
-      "line": 722
+      "line": 740
     },
     "80": {
       "filename": "./USDCShellRouter.code",
-      "line": 725
+      "line": 743
     },
     "88": {
       "filename": "./USDCShellRouter.code",
-      "line": 726
+      "line": 744
     },
     "136": {
       "filename": "./USDCShellRouter.code",
-      "line": 727
+      "line": 745
     },
     "144": {
       "filename": "./USDCShellRouter.code",
-      "line": 728
+      "line": 746
     },
     "160": {
       "filename": "./USDCShellRouter.code",
-      "line": 731
+      "line": 749
     },
     "168": {
       "filename": "./USDCShellRouter.code",
-      "line": 732
+      "line": 750
     },
     "216": {
       "filename": "./USDCShellRouter.code",
-      "line": 733
+      "line": 751
     },
     "224": {
       "filename": "./USDCShellRouter.code",
-      "line": 734
+      "line": 752
     }
   },
   "7596e49daaae286c3370811e1f6f34c1b2a3e9003638bf05080b86aa5359255b": {},
+  "75e4a3ba06f01d11d295ec843dfc8cd719a7adc089a5d1cf5c276ade8b7aca51": {
+    "0": {
+      "filename": "./USDCShellRouter.code",
+      "line": 782
+    },
+    "8": {
+      "filename": "./USDCShellRouter.code",
+      "line": 785
+    },
+    "24": {
+      "filename": "./USDCShellRouter.code",
+      "line": 786
+    },
+    "32": {
+      "filename": "./USDCShellRouter.code",
+      "line": 787
+    },
+    "48": {
+      "filename": "./USDCShellRouter.code",
+      "line": 790
+    },
+    "64": {
+      "filename": "./USDCShellRouter.code",
+      "line": 791
+    },
+    "72": {
+      "filename": "./USDCShellRouter.code",
+      "line": 792
+    },
+    "88": {
+      "filename": "./USDCShellRouter.code",
+      "line": 793
+    },
+    "104": {
+      "filename": "./USDCShellRouter.code",
+      "line": 794
+    },
+    "120": {
+      "filename": "./USDCShellRouter.code",
+      "line": 795
+    },
+    "128": {
+      "filename": "./USDCShellRouter.code",
+      "line": 796
+    },
+    "144": {
+      "filename": "./USDCShellRouter.code",
+      "line": 797
+    },
+    "152": {
+      "filename": "./USDCShellRouter.code",
+      "line": 798
+    },
+    "160": {
+      "filename": "./USDCShellRouter.code",
+      "line": 799
+    },
+    "168": {
+      "filename": "./USDCShellRouter.code",
+      "line": 800
+    },
+    "176": {
+      "filename": "./USDCShellRouter.code",
+      "line": 801
+    },
+    "192": {
+      "filename": "./USDCShellRouter.code",
+      "line": 802
+    },
+    "200": {
+      "filename": "./USDCShellRouter.code",
+      "line": 803
+    },
+    "216": {
+      "filename": "./USDCShellRouter.code",
+      "line": 804
+    },
+    "224": {
+      "filename": "./USDCShellRouter.code",
+      "line": 805
+    },
+    "232": {
+      "filename": "./USDCShellRouter.code",
+      "line": 806
+    },
+    "248": {
+      "filename": "./USDCShellRouter.code",
+      "line": 807
+    },
+    "264": {
+      "filename": "./USDCShellRouter.code",
+      "line": 809
+    },
+    "272": {
+      "filename": "./USDCShellRouter.code",
+      "line": 810
+    },
+    "280": {
+      "filename": "./USDCShellRouter.code",
+      "line": 811
+    },
+    "296": {
+      "filename": "./USDCShellRouter.code",
+      "line": 813
+    },
+    "304": {
+      "filename": "./USDCShellRouter.code",
+      "line": 814
+    },
+    "312": {
+      "filename": "./USDCShellRouter.code",
+      "line": 815
+    },
+    "328": {
+      "filename": "./USDCShellRouter.code",
+      "line": 816
+    },
+    "344": {
+      "filename": "./USDCShellRouter.code",
+      "line": 817
+    },
+    "360": {
+      "filename": "./USDCShellRouter.code",
+      "line": 819
+    },
+    "368": {
+      "filename": "./USDCShellRouter.code",
+      "line": 820
+    },
+    "384": {
+      "filename": "./USDCShellRouter.code",
+      "line": 821
+    },
+    "392": {
+      "filename": "./USDCShellRouter.code",
+      "line": 822
+    },
+    "408": {
+      "filename": "./USDCShellRouter.code",
+      "line": 824
+    },
+    "416": {
+      "filename": "./USDCShellRouter.code",
+      "line": 825
+    },
+    "432": {
+      "filename": "./USDCShellRouter.code",
+      "line": 826
+    },
+    "440": {
+      "filename": "stdlib.sol",
+      "line": 22
+    },
+    "456": {
+      "filename": "stdlib.sol",
+      "line": 22
+    },
+    "464": {
+      "filename": "stdlib.sol",
+      "line": 22
+    },
+    "472": {
+      "filename": "stdlib.sol",
+      "line": 22
+    },
+    "488": {
+      "filename": "stdlib.sol",
+      "line": 23
+    },
+    "496": {
+      "filename": "stdlib.sol",
+      "line": 23
+    },
+    "512": {
+      "filename": "stdlib.sol",
+      "line": 23
+    },
+    "536": {
+      "filename": "stdlib.sol",
+      "line": 23
+    },
+    "544": {
+      "filename": "stdlib.sol",
+      "line": 23
+    },
+    "584": {
+      "filename": "stdlib.sol",
+      "line": 23
+    },
+    "592": {
+      "filename": "stdlib.sol",
+      "line": 23
+    },
+    "600": {
+      "filename": "stdlib.sol",
+      "line": 23
+    },
+    "616": {
+      "filename": "stdlib.sol",
+      "line": 24
+    },
+    "632": {
+      "filename": "./USDCShellRouter.code",
+      "line": 828
+    },
+    "648": {
+      "filename": "./USDCShellRouter.code",
+      "line": 829
+    },
+    "656": {
+      "filename": "./USDCShellRouter.code",
+      "line": 830
+    },
+    "672": {
+      "filename": "./USDCShellRouter.code",
+      "line": 831
+    },
+    "680": {
+      "filename": "./USDCShellRouter.code",
+      "line": 832
+    },
+    "696": {
+      "filename": "./USDCShellRouter.code",
+      "line": 833
+    },
+    "712": {
+      "filename": "./USDCShellRouter.code",
+      "line": 834
+    },
+    "720": {
+      "filename": "./USDCShellRouter.code",
+      "line": 835
+    },
+    "736": {
+      "filename": "./USDCShellRouter.code",
+      "line": 838
+    }
+  },
   "7872d3087ef13f6ae57c0667159d9e365496f27f233c6b0eaf900ec865db6496": {
     "0": {
       "filename": "USDCShellRouter.sol",
-      "line": 67
+      "line": 69
+    }
+  },
+  "796b442446093c845a88af637f7e6277c62aa44d427d759da61918191a7191dd": {
+    "0": {
+      "filename": "USDCShellRouter.sol",
+      "line": 124
+    },
+    "8": {
+      "filename": "USDCShellRouter.sol",
+      "line": 124
+    },
+    "24": {
+      "filename": "USDCShellRouter.sol",
+      "line": 124
+    },
+    "32": {
+      "filename": "USDCShellRouter.sol",
+      "line": 124
+    },
+    "40": {
+      "filename": "USDCShellRouter.sol",
+      "line": 124
+    },
+    "48": {
+      "filename": "USDCShellRouter.sol",
+      "line": 124
+    },
+    "56": {
+      "filename": "USDCShellRouter.sol",
+      "line": 124
+    },
+    "64": {
+      "filename": "USDCShellRouter.sol",
+      "line": 124
+    },
+    "72": {
+      "filename": "USDCShellRouter.sol",
+      "line": 124
+    },
+    "88": {
+      "filename": "USDCShellRouter.sol",
+      "line": 124
+    },
+    "96": {
+      "filename": "USDCShellRouter.sol",
+      "line": 124
+    },
+    "120": {
+      "filename": "USDCShellRouter.sol",
+      "line": 125
+    },
+    "136": {
+      "filename": "USDCShellRouter.sol",
+      "line": 126
+    },
+    "144": {
+      "filename": "USDCShellRouter.sol",
+      "line": 126
+    },
+    "152": {
+      "filename": "USDCShellRouter.sol",
+      "line": 126
+    },
+    "176": {
+      "filename": "USDCShellRouter.sol",
+      "line": 126
+    },
+    "184": {
+      "filename": "USDCShellRouter.sol",
+      "line": 126
+    },
+    "208": {
+      "filename": "USDCShellRouter.sol",
+      "line": 127
+    },
+    "216": {
+      "filename": "USDCShellRouter.sol",
+      "line": 127
+    },
+    "232": {
+      "filename": "USDCShellRouter.sol",
+      "line": 128
+    },
+    "392": {
+      "filename": "USDCShellRouter.sol",
+      "line": 128
+    },
+    "400": {
+      "filename": "USDCShellRouter.sol",
+      "line": 128
+    },
+    "408": {
+      "filename": "USDCShellRouter.sol",
+      "line": 128
+    },
+    "424": {
+      "filename": "USDCShellRouter.sol",
+      "line": 128
+    },
+    "432": {
+      "filename": "USDCShellRouter.sol",
+      "line": 128
+    },
+    "440": {
+      "filename": "USDCShellRouter.sol",
+      "line": 128
     }
   },
   "7bb027f5e30ae26732c11d21d7da3c4b8658502ecc94685cf4b5f087b1199766": {
     "0": {
       "filename": "USDCShellRouter.sol",
-      "line": 70
+      "line": 72
     }
   },
   "8041f091c6345033c0c68b724525d434c9246b9862afa05c1379550fb4d40e82": {
@@ -1100,91 +950,91 @@
     },
     "88": {
       "filename": "USDCShellRouter.sol",
-      "line": 57
+      "line": 59
     },
     "96": {
       "filename": "USDCShellRouter.sol",
-      "line": 57
+      "line": 59
     },
     "104": {
       "filename": "USDCShellRouter.sol",
-      "line": 57
+      "line": 59
     },
     "112": {
       "filename": "USDCShellRouter.sol",
-      "line": 57
+      "line": 59
     },
     "120": {
       "filename": "USDCShellRouter.sol",
-      "line": 57
+      "line": 59
     },
     "128": {
       "filename": "USDCShellRouter.sol",
-      "line": 57
+      "line": 59
     },
     "136": {
       "filename": "USDCShellRouter.sol",
-      "line": 57
+      "line": 59
     },
     "152": {
       "filename": "USDCShellRouter.sol",
-      "line": 57
+      "line": 59
     },
     "168": {
       "filename": "USDCShellRouter.sol",
-      "line": 57
+      "line": 59
     },
     "176": {
       "filename": "USDCShellRouter.sol",
-      "line": 57
+      "line": 59
     },
     "184": {
       "filename": "USDCShellRouter.sol",
-      "line": 57
+      "line": 59
     },
     "192": {
       "filename": "USDCShellRouter.sol",
-      "line": 57
+      "line": 59
     },
     "208": {
       "filename": "USDCShellRouter.sol",
-      "line": 57
+      "line": 59
     },
     "216": {
       "filename": "USDCShellRouter.sol",
-      "line": 57
+      "line": 59
     },
     "224": {
       "filename": "USDCShellRouter.sol",
-      "line": 57
+      "line": 59
     },
     "232": {
       "filename": "USDCShellRouter.sol",
-      "line": 57
+      "line": 59
     },
     "248": {
       "filename": "USDCShellRouter.sol",
-      "line": 57
+      "line": 59
     },
     "256": {
       "filename": "USDCShellRouter.sol",
-      "line": 57
+      "line": 59
     },
     "264": {
       "filename": "USDCShellRouter.sol",
-      "line": 57
+      "line": 59
     },
     "272": {
       "filename": "USDCShellRouter.sol",
-      "line": 57
+      "line": 59
     },
     "288": {
       "filename": "USDCShellRouter.sol",
-      "line": 57
+      "line": 59
     },
     "296": {
       "filename": "USDCShellRouter.sol",
-      "line": 57
+      "line": 59
     },
     "304": {
       "filename": "./USDCShellRouter.code",
@@ -1202,73 +1052,169 @@
   "8260b2e299c11bc510ab835d94f278c4238020697bce2e681969210ee0eeb7e1": {
     "0": {
       "filename": "USDCShellRouter.sol",
-      "line": 49
+      "line": 51
     }
   },
   "8320b31ef687dd8858c48c133ef22466f3661a01cd62a3240e0b7570e2050bc9": {
     "0": {
       "filename": "./USDCShellRouter.code",
-      "line": 680
+      "line": 698
     },
     "8": {
       "filename": "./USDCShellRouter.code",
-      "line": 681
+      "line": 699
     },
     "56": {
       "filename": "./USDCShellRouter.code",
-      "line": 682
+      "line": 700
     },
     "64": {
       "filename": "./USDCShellRouter.code",
-      "line": 683
+      "line": 701
     },
     "80": {
       "filename": "./USDCShellRouter.code",
-      "line": 696
+      "line": 714
     },
     "88": {
       "filename": "./USDCShellRouter.code",
-      "line": 697
+      "line": 715
     },
     "136": {
       "filename": "./USDCShellRouter.code",
-      "line": 698
+      "line": 716
     },
     "144": {
       "filename": "./USDCShellRouter.code",
-      "line": 699
+      "line": 717
     },
     "160": {
       "filename": "./USDCShellRouter.code",
-      "line": 702
+      "line": 720
     },
     "168": {
       "filename": "./USDCShellRouter.code",
-      "line": 703
+      "line": 721
     },
     "216": {
       "filename": "./USDCShellRouter.code",
-      "line": 704
+      "line": 722
     },
     "224": {
       "filename": "./USDCShellRouter.code",
-      "line": 705
+      "line": 723
     },
     "240": {
       "filename": "./USDCShellRouter.code",
-      "line": 708
+      "line": 726
     },
     "248": {
       "filename": "./USDCShellRouter.code",
-      "line": 709
+      "line": 727
     },
     "296": {
       "filename": "./USDCShellRouter.code",
-      "line": 710
+      "line": 728
     },
     "304": {
       "filename": "./USDCShellRouter.code",
-      "line": 711
+      "line": 729
+    }
+  },
+  "845197b363430359181ada486034b4377dc416e6acd99200b6392354a9f39569": {
+    "0": {
+      "filename": "./USDCShellRouter.code",
+      "line": 579
+    },
+    "8": {
+      "filename": "./USDCShellRouter.code",
+      "line": 580
+    },
+    "24": {
+      "filename": "./USDCShellRouter.code",
+      "line": 581
+    },
+    "48": {
+      "filename": "./USDCShellRouter.code",
+      "line": 582
+    },
+    "64": {
+      "filename": "./USDCShellRouter.code",
+      "line": 583
+    },
+    "72": {
+      "filename": "./USDCShellRouter.code",
+      "line": 584
+    },
+    "88": {
+      "filename": "USDCShellRouter.sol",
+      "line": 123
+    },
+    "104": {
+      "filename": "USDCShellRouter.sol",
+      "line": 123
+    },
+    "112": {
+      "filename": "./USDCShellRouter.code",
+      "line": 591
+    },
+    "128": {
+      "filename": "./USDCShellRouter.code",
+      "line": 594
+    },
+    "144": {
+      "filename": "./USDCShellRouter.code",
+      "line": 597
+    }
+  },
+  "85e778629ae7e38f49a574eadfc61ee6c7a6267f7c04ddbc222b6d64fbb24846": {
+    "0": {
+      "filename": "./USDCShellRouter.code",
+      "line": 890
+    },
+    "8": {
+      "filename": "./USDCShellRouter.code",
+      "line": 891
+    },
+    "24": {
+      "filename": "./USDCShellRouter.code",
+      "line": 892
+    },
+    "32": {
+      "filename": "./USDCShellRouter.code",
+      "line": 858
+    },
+    "48": {
+      "filename": "./USDCShellRouter.code",
+      "line": 859
+    },
+    "72": {
+      "filename": "./USDCShellRouter.code",
+      "line": 860
+    },
+    "80": {
+      "filename": "USDCShellRouter.sol",
+      "line": 114
+    },
+    "96": {
+      "filename": "USDCShellRouter.sol",
+      "line": 114
+    },
+    "112": {
+      "filename": "USDCShellRouter.sol",
+      "line": 114
+    },
+    "120": {
+      "filename": "USDCShellRouter.sol",
+      "line": 111
+    },
+    "128": {
+      "filename": "./USDCShellRouter.code",
+      "line": 869
+    },
+    "136": {
+      "filename": "./USDCShellRouter.code",
+      "line": 870
     }
   },
   "8a13099705b8716c4b8c591ded3d145be289112f05d87a6d0d890cd9f426f52e": {
@@ -1401,6 +1347,108 @@
       "line": 90
     }
   },
+  "910f093bae9f9163b5eec3b19cbac5ebfee7c78c5abf03462fa3522ab6d8cdec": {
+    "0": {
+      "filename": "./USDCShellRouter.code",
+      "line": 876
+    },
+    "16": {
+      "filename": "./USDCShellRouter.code",
+      "line": 877
+    },
+    "24": {
+      "filename": "./USDCShellRouter.code",
+      "line": 878
+    },
+    "48": {
+      "filename": "./USDCShellRouter.code",
+      "line": 879
+    },
+    "64": {
+      "filename": "./USDCShellRouter.code",
+      "line": 880
+    },
+    "88": {
+      "filename": "./USDCShellRouter.code",
+      "line": 881
+    },
+    "104": {
+      "filename": "./USDCShellRouter.code",
+      "line": 882
+    },
+    "112": {
+      "filename": "./USDCShellRouter.code",
+      "line": 883
+    },
+    "120": {
+      "filename": "./USDCShellRouter.code",
+      "line": 884
+    },
+    "136": {
+      "filename": "./USDCShellRouter.code",
+      "line": 885
+    },
+    "152": {
+      "filename": "./USDCShellRouter.code",
+      "line": 886
+    },
+    "160": {
+      "filename": "./USDCShellRouter.code",
+      "line": 887
+    },
+    "176": {
+      "filename": "./USDCShellRouter.code",
+      "line": 888
+    },
+    "200": {
+      "filename": "./USDCShellRouter.code",
+      "line": 889
+    },
+    "216": {
+      "filename": "./USDCShellRouter.code",
+      "line": 895
+    },
+    "224": {
+      "filename": "./USDCShellRouter.code",
+      "line": 896
+    },
+    "240": {
+      "filename": "./USDCShellRouter.code",
+      "line": 897
+    },
+    "256": {
+      "filename": "./USDCShellRouter.code",
+      "line": 901
+    },
+    "264": {
+      "filename": "./USDCShellRouter.code",
+      "line": 902
+    },
+    "288": {
+      "filename": "./USDCShellRouter.code",
+      "line": 903
+    },
+    "304": {
+      "filename": "./USDCShellRouter.code",
+      "line": 904
+    },
+    "312": {
+      "filename": "./USDCShellRouter.code",
+      "line": 905
+    },
+    "328": {
+      "filename": "./USDCShellRouter.code",
+      "line": 909
+    },
+    "336": {
+      "filename": "./USDCShellRouter.code",
+      "line": 910
+    },
+    "352": {
+      "filename": "./USDCShellRouter.code",
+      "line": 913
+    }
+  },
   "9228ecaaa846a9d058b56203fafc6d3163b051f195306a73186ed2ed5a26ba9f": {
     "0": {
       "filename": "./USDCShellRouter.code",
@@ -1484,396 +1532,224 @@
     },
     "224": {
       "filename": "USDCShellRouter.sol",
-      "line": 49
+      "line": 51
     },
     "232": {
-      "filename": "USDCShellRouter.sol",
-      "line": 49
-    },
-    "248": {
-      "filename": "USDCShellRouter.sol",
-      "line": 49
-    },
-    "264": {
-      "filename": "USDCShellRouter.sol",
-      "line": 49
-    },
-    "272": {
-      "filename": "USDCShellRouter.sol",
-      "line": 49
-    },
-    "280": {
-      "filename": "USDCShellRouter.sol",
-      "line": 49
-    },
-    "288": {
-      "filename": "USDCShellRouter.sol",
-      "line": 49
-    },
-    "296": {
-      "filename": "USDCShellRouter.sol",
-      "line": 49
-    },
-    "304": {
-      "filename": "USDCShellRouter.sol",
-      "line": 49
-    },
-    "312": {
-      "filename": "USDCShellRouter.sol",
-      "line": 49
-    },
-    "320": {
-      "filename": "USDCShellRouter.sol",
-      "line": 49
-    },
-    "344": {
-      "filename": "USDCShellRouter.sol",
-      "line": 50
-    },
-    "352": {
-      "filename": "USDCShellRouter.sol",
-      "line": 50
-    }
-  },
-  "93cf8da9a632d83735502e19abea662730a04c8fa2c0f6d553125746afcfff32": {
-    "0": {
-      "filename": "./USDCShellRouter.code",
-      "line": 764
-    },
-    "8": {
-      "filename": "./USDCShellRouter.code",
-      "line": 767
-    },
-    "24": {
-      "filename": "./USDCShellRouter.code",
-      "line": 768
-    },
-    "32": {
-      "filename": "./USDCShellRouter.code",
-      "line": 769
-    },
-    "48": {
-      "filename": "./USDCShellRouter.code",
-      "line": 772
-    },
-    "64": {
-      "filename": "./USDCShellRouter.code",
-      "line": 773
-    },
-    "72": {
-      "filename": "./USDCShellRouter.code",
-      "line": 774
-    },
-    "88": {
-      "filename": "./USDCShellRouter.code",
-      "line": 775
-    },
-    "104": {
-      "filename": "./USDCShellRouter.code",
-      "line": 776
-    },
-    "120": {
-      "filename": "./USDCShellRouter.code",
-      "line": 777
-    },
-    "128": {
-      "filename": "./USDCShellRouter.code",
-      "line": 778
-    },
-    "144": {
-      "filename": "./USDCShellRouter.code",
-      "line": 779
-    },
-    "152": {
-      "filename": "./USDCShellRouter.code",
-      "line": 780
-    },
-    "160": {
-      "filename": "./USDCShellRouter.code",
-      "line": 781
-    },
-    "168": {
-      "filename": "./USDCShellRouter.code",
-      "line": 782
-    },
-    "176": {
-      "filename": "./USDCShellRouter.code",
-      "line": 783
-    },
-    "192": {
-      "filename": "./USDCShellRouter.code",
-      "line": 784
-    },
-    "200": {
-      "filename": "./USDCShellRouter.code",
-      "line": 785
-    },
-    "216": {
-      "filename": "./USDCShellRouter.code",
-      "line": 786
-    },
-    "224": {
-      "filename": "./USDCShellRouter.code",
-      "line": 787
-    },
-    "232": {
-      "filename": "./USDCShellRouter.code",
-      "line": 788
-    },
-    "248": {
-      "filename": "./USDCShellRouter.code",
-      "line": 789
-    },
-    "264": {
-      "filename": "./USDCShellRouter.code",
-      "line": 791
-    },
-    "272": {
-      "filename": "./USDCShellRouter.code",
-      "line": 792
-    },
-    "280": {
-      "filename": "./USDCShellRouter.code",
-      "line": 793
-    },
-    "296": {
-      "filename": "./USDCShellRouter.code",
-      "line": 795
-    },
-    "304": {
-      "filename": "./USDCShellRouter.code",
-      "line": 796
-    },
-    "312": {
-      "filename": "./USDCShellRouter.code",
-      "line": 797
-    },
-    "328": {
-      "filename": "./USDCShellRouter.code",
-      "line": 798
-    },
-    "344": {
-      "filename": "./USDCShellRouter.code",
-      "line": 799
-    },
-    "360": {
-      "filename": "./USDCShellRouter.code",
-      "line": 801
-    },
-    "368": {
-      "filename": "./USDCShellRouter.code",
-      "line": 802
-    },
-    "384": {
-      "filename": "./USDCShellRouter.code",
-      "line": 803
-    },
-    "392": {
-      "filename": "./USDCShellRouter.code",
-      "line": 804
-    },
-    "408": {
-      "filename": "./USDCShellRouter.code",
-      "line": 806
-    },
-    "416": {
-      "filename": "./USDCShellRouter.code",
-      "line": 807
-    },
-    "432": {
-      "filename": "./USDCShellRouter.code",
-      "line": 808
-    },
-    "440": {
-      "filename": "stdlib.sol",
-      "line": 22
-    },
-    "456": {
-      "filename": "stdlib.sol",
-      "line": 22
-    },
-    "464": {
-      "filename": "stdlib.sol",
-      "line": 22
-    },
-    "472": {
-      "filename": "stdlib.sol",
-      "line": 22
-    },
-    "488": {
-      "filename": "stdlib.sol",
-      "line": 23
-    },
-    "496": {
-      "filename": "stdlib.sol",
-      "line": 23
-    },
-    "512": {
-      "filename": "stdlib.sol",
-      "line": 23
-    },
-    "536": {
-      "filename": "stdlib.sol",
-      "line": 23
-    },
-    "544": {
-      "filename": "stdlib.sol",
-      "line": 23
-    },
-    "584": {
-      "filename": "stdlib.sol",
-      "line": 23
-    },
-    "592": {
-      "filename": "stdlib.sol",
-      "line": 23
-    },
-    "600": {
-      "filename": "stdlib.sol",
-      "line": 23
-    },
-    "616": {
-      "filename": "stdlib.sol",
-      "line": 24
-    },
-    "632": {
-      "filename": "./USDCShellRouter.code",
-      "line": 810
-    },
-    "648": {
-      "filename": "./USDCShellRouter.code",
-      "line": 811
-    },
-    "656": {
-      "filename": "./USDCShellRouter.code",
-      "line": 812
-    },
-    "672": {
-      "filename": "./USDCShellRouter.code",
-      "line": 813
-    },
-    "680": {
-      "filename": "./USDCShellRouter.code",
-      "line": 814
-    },
-    "696": {
-      "filename": "./USDCShellRouter.code",
-      "line": 815
-    },
-    "712": {
-      "filename": "./USDCShellRouter.code",
-      "line": 816
-    },
-    "720": {
-      "filename": "./USDCShellRouter.code",
-      "line": 817
-    },
-    "736": {
-      "filename": "./USDCShellRouter.code",
-      "line": 820
-    }
-  },
-  "96a296d224f285c67bee93c30f8a309157f0daa35dc5b87e410b78630a09cfc7": {},
-  "9c8b53f2c8335fd434704c07d5eb7b7416d60ffde97859bbe3e21a96bfd0c06f": {
-    "0": {
-      "filename": "USDCShellRouter.sol",
-      "line": 50
-    },
-    "8": {
-      "filename": "USDCShellRouter.sol",
-      "line": 50
-    },
-    "24": {
-      "filename": "USDCShellRouter.sol",
-      "line": 50
-    },
-    "32": {
-      "filename": "USDCShellRouter.sol",
-      "line": 50
-    },
-    "56": {
       "filename": "USDCShellRouter.sol",
       "line": 51
     },
-    "72": {
-      "filename": "USDCShellRouter.sol",
-      "line": 52
-    },
-    "80": {
-      "filename": "USDCShellRouter.sol",
-      "line": 52
-    },
-    "96": {
-      "filename": "USDCShellRouter.sol",
-      "line": 53
-    },
-    "104": {
-      "filename": "USDCShellRouter.sol",
-      "line": 53
-    },
-    "120": {
-      "filename": "USDCShellRouter.sol",
-      "line": 54
-    },
-    "128": {
-      "filename": "USDCShellRouter.sol",
-      "line": 54
-    },
     "248": {
       "filename": "USDCShellRouter.sol",
-      "line": 54
-    },
-    "256": {
-      "filename": "USDCShellRouter.sol",
-      "line": 54
+      "line": 51
     },
     "264": {
       "filename": "USDCShellRouter.sol",
-      "line": 54
+      "line": 51
     },
     "272": {
       "filename": "USDCShellRouter.sol",
-      "line": 54
+      "line": 51
     },
     "280": {
       "filename": "USDCShellRouter.sol",
-      "line": 54
+      "line": 51
     },
-    "328": {
+    "288": {
       "filename": "USDCShellRouter.sol",
-      "line": 54
+      "line": 51
     },
-    "336": {
+    "296": {
       "filename": "USDCShellRouter.sol",
-      "line": 54
+      "line": 51
+    },
+    "304": {
+      "filename": "USDCShellRouter.sol",
+      "line": 51
+    },
+    "312": {
+      "filename": "USDCShellRouter.sol",
+      "line": 51
+    },
+    "320": {
+      "filename": "USDCShellRouter.sol",
+      "line": 51
     },
     "344": {
       "filename": "USDCShellRouter.sol",
-      "line": 54
+      "line": 52
     },
     "352": {
       "filename": "USDCShellRouter.sol",
+      "line": 52
+    }
+  },
+  "96a296d224f285c67bee93c30f8a309157f0daa35dc5b87e410b78630a09cfc7": {},
+  "9936a3d5a901a6bfb1f21c04abaa16470c9857ed34e27a60fdc092008c440997": {
+    "0": {
+      "filename": "./USDCShellRouter.code",
+      "line": 694
+    },
+    "8": {
+      "filename": "./USDCShellRouter.code",
+      "line": 695
+    },
+    "56": {
+      "filename": "./USDCShellRouter.code",
+      "line": 696
+    },
+    "64": {
+      "filename": "./USDCShellRouter.code",
+      "line": 697
+    },
+    "80": {
+      "filename": "./USDCShellRouter.code",
+      "line": 733
+    },
+    "88": {
+      "filename": "./USDCShellRouter.code",
+      "line": 734
+    },
+    "136": {
+      "filename": "./USDCShellRouter.code",
+      "line": 735
+    },
+    "144": {
+      "filename": "./USDCShellRouter.code",
+      "line": 736
+    },
+    "160": {
+      "filename": "./USDCShellRouter.code",
+      "line": 756
+    },
+    "168": {
+      "filename": "./USDCShellRouter.code",
+      "line": 757
+    },
+    "216": {
+      "filename": "./USDCShellRouter.code",
+      "line": 758
+    },
+    "224": {
+      "filename": "./USDCShellRouter.code",
+      "line": 759
+    },
+    "240": {
+      "filename": "./USDCShellRouter.code",
+      "line": 773
+    },
+    "248": {
+      "filename": "./USDCShellRouter.code",
+      "line": 774
+    },
+    "296": {
+      "filename": "./USDCShellRouter.code",
+      "line": 775
+    },
+    "304": {
+      "filename": "./USDCShellRouter.code",
+      "line": 776
+    }
+  },
+  "9c8b53f2c8335fd434704c07d5eb7b7416d60ffde97859bbe3e21a96bfd0c06f": {
+    "0": {
+      "filename": "USDCShellRouter.sol",
+      "line": 52
+    },
+    "8": {
+      "filename": "USDCShellRouter.sol",
+      "line": 52
+    },
+    "24": {
+      "filename": "USDCShellRouter.sol",
+      "line": 52
+    },
+    "32": {
+      "filename": "USDCShellRouter.sol",
+      "line": 52
+    },
+    "56": {
+      "filename": "USDCShellRouter.sol",
+      "line": 53
+    },
+    "72": {
+      "filename": "USDCShellRouter.sol",
       "line": 54
+    },
+    "80": {
+      "filename": "USDCShellRouter.sol",
+      "line": 54
+    },
+    "96": {
+      "filename": "USDCShellRouter.sol",
+      "line": 55
+    },
+    "104": {
+      "filename": "USDCShellRouter.sol",
+      "line": 55
+    },
+    "120": {
+      "filename": "USDCShellRouter.sol",
+      "line": 56
+    },
+    "128": {
+      "filename": "USDCShellRouter.sol",
+      "line": 56
+    },
+    "248": {
+      "filename": "USDCShellRouter.sol",
+      "line": 56
+    },
+    "256": {
+      "filename": "USDCShellRouter.sol",
+      "line": 56
+    },
+    "264": {
+      "filename": "USDCShellRouter.sol",
+      "line": 56
+    },
+    "272": {
+      "filename": "USDCShellRouter.sol",
+      "line": 56
+    },
+    "280": {
+      "filename": "USDCShellRouter.sol",
+      "line": 56
+    },
+    "328": {
+      "filename": "USDCShellRouter.sol",
+      "line": 56
+    },
+    "336": {
+      "filename": "USDCShellRouter.sol",
+      "line": 56
+    },
+    "344": {
+      "filename": "USDCShellRouter.sol",
+      "line": 56
+    },
+    "352": {
+      "filename": "USDCShellRouter.sol",
+      "line": 56
     },
     "360": {
       "filename": "USDCShellRouter.sol",
-      "line": 54
+      "line": 56
     },
     "368": {
       "filename": "USDCShellRouter.sol",
-      "line": 54
+      "line": 56
     },
     "376": {
       "filename": "USDCShellRouter.sol",
-      "line": 54
+      "line": 56
     },
     "384": {
       "filename": "USDCShellRouter.sol",
-      "line": 54
+      "line": 56
     },
     "392": {
       "filename": "USDCShellRouter.sol",
-      "line": 54
+      "line": 56
     },
     "408": {
       "filename": "./USDCShellRouter.code",
@@ -1887,65 +1763,7 @@
   "a8706c6358fecfba3c31d885dcf337fed67609c22ebf972396a9aca8faf7a108": {
     "0": {
       "filename": "./USDCShellRouter.code",
-      "line": 944
-    }
-  },
-  "b176ec81235dd186c68b39c87bcc8572c13ca6a2199169b50d95569e6497c870": {
-    "0": {
-      "filename": "./USDCShellRouter.code",
-      "line": 860
-    },
-    "8": {
-      "filename": "./USDCShellRouter.code",
-      "line": 861
-    },
-    "24": {
-      "filename": "./USDCShellRouter.code",
-      "line": 862
-    },
-    "32": {
-      "filename": "./USDCShellRouter.code",
-      "line": 824
-    },
-    "48": {
-      "filename": "./USDCShellRouter.code",
-      "line": 825
-    },
-    "72": {
-      "filename": "./USDCShellRouter.code",
-      "line": 826
-    },
-    "88": {
-      "filename": "./USDCShellRouter.code",
-      "line": 827
-    },
-    "96": {
-      "filename": "./USDCShellRouter.code",
-      "line": 828
-    },
-    "112": {
-      "filename": "./USDCShellRouter.code",
-      "line": 831
-    },
-    "120": {
-      "filename": "USDCShellRouter.sol",
-      "line": 112
-    },
-    "136": {
-      "filename": "USDCShellRouter.sol",
-      "line": 112
-    },
-    "152": {
-      "filename": "USDCShellRouter.sol",
-      "line": 112
-    },
-    "160": {
-      "filename": "USDCShellRouter.sol",
-      "line": 109
-    },
-    "168": {
-      "filename": "./USDCShellRouter.code",
-      "line": 840
+      "line": 958
     }
   },
   "b356b4c7bbc9f65db84999f62dffc027d4b3c56bb0f9f69df3e6f9f5a239705f": {
@@ -1975,39 +1793,39 @@
     },
     "88": {
       "filename": "USDCShellRouter.sol",
-      "line": 137
+      "line": 141
     },
     "96": {
       "filename": "USDCShellRouter.sol",
-      "line": 137
+      "line": 141
     },
     "104": {
       "filename": "USDCShellRouter.sol",
-      "line": 137
+      "line": 141
     },
     "112": {
       "filename": "USDCShellRouter.sol",
-      "line": 137
+      "line": 141
     },
     "120": {
       "filename": "USDCShellRouter.sol",
-      "line": 137
+      "line": 141
     },
     "128": {
       "filename": "USDCShellRouter.sol",
-      "line": 137
+      "line": 141
     },
     "136": {
       "filename": "USDCShellRouter.sol",
-      "line": 137
+      "line": 141
     },
     "152": {
       "filename": "USDCShellRouter.sol",
-      "line": 137
+      "line": 141
     },
     "168": {
       "filename": "USDCShellRouter.sol",
-      "line": 137
+      "line": 141
     },
     "176": {
       "filename": "./USDCShellRouter.code",
@@ -2025,119 +1843,119 @@
   "b61e6d2580c5f455531e0703f56a0d35f1aa6c16192e7f787450ffba787641e0": {
     "0": {
       "filename": "USDCShellRouter.sol",
-      "line": 81
+      "line": 83
     },
     "16": {
       "filename": "USDCShellRouter.sol",
-      "line": 82
+      "line": 84
     },
     "24": {
       "filename": "USDCShellRouter.sol",
-      "line": 83
+      "line": 85
     },
     "32": {
       "filename": "USDCShellRouter.sol",
-      "line": 83
+      "line": 85
     },
     "40": {
       "filename": "USDCShellRouter.sol",
-      "line": 83
+      "line": 85
     },
     "88": {
       "filename": "USDCShellRouter.sol",
-      "line": 83
+      "line": 85
     },
     "104": {
       "filename": "USDCShellRouter.sol",
-      "line": 83
+      "line": 85
     },
     "112": {
       "filename": "USDCShellRouter.sol",
-      "line": 83
+      "line": 85
     },
     "128": {
       "filename": "USDCShellRouter.sol",
-      "line": 83
+      "line": 85
     },
     "136": {
       "filename": "USDCShellRouter.sol",
-      "line": 83
+      "line": 85
     },
     "160": {
       "filename": "USDCShellRouter.sol",
-      "line": 83
+      "line": 85
     },
     "168": {
       "filename": "USDCShellRouter.sol",
-      "line": 83
+      "line": 85
     },
     "336": {
       "filename": "USDCShellRouter.sol",
-      "line": 83
+      "line": 85
     },
     "352": {
       "filename": "USDCShellRouter.sol",
-      "line": 83
+      "line": 85
     },
     "368": {
       "filename": "USDCShellRouter.sol",
-      "line": 83
+      "line": 85
     },
     "376": {
       "filename": "USDCShellRouter.sol",
-      "line": 83
+      "line": 85
     },
     "424": {
       "filename": "USDCShellRouter.sol",
-      "line": 83
+      "line": 85
     },
     "440": {
       "filename": "USDCShellRouter.sol",
-      "line": 83
+      "line": 85
     },
     "448": {
       "filename": "USDCShellRouter.sol",
-      "line": 83
+      "line": 85
     },
     "464": {
       "filename": "USDCShellRouter.sol",
-      "line": 83
+      "line": 85
     },
     "480": {
       "filename": "USDCShellRouter.sol",
-      "line": 83
+      "line": 85
     },
     "488": {
       "filename": "USDCShellRouter.sol",
-      "line": 83
+      "line": 85
     },
     "496": {
       "filename": "USDCShellRouter.sol",
-      "line": 83
+      "line": 85
     },
     "512": {
       "filename": "USDCShellRouter.sol",
-      "line": 83
+      "line": 85
     },
     "520": {
       "filename": "USDCShellRouter.sol",
-      "line": 83
+      "line": 85
     },
     "528": {
       "filename": "USDCShellRouter.sol",
-      "line": 83
+      "line": 85
     },
     "536": {
       "filename": "USDCShellRouter.sol",
-      "line": 83
+      "line": 85
     },
     "544": {
       "filename": "USDCShellRouter.sol",
-      "line": 83
+      "line": 85
     },
     "552": {
       "filename": "USDCShellRouter.sol",
-      "line": 83
+      "line": 85
     },
     "568": {
       "filename": "./USDCShellRouter.code",
@@ -2145,121 +1963,225 @@
     },
     "576": {
       "filename": "USDCShellRouter.sol",
-      "line": 94
+      "line": 96
     },
     "584": {
       "filename": "USDCShellRouter.sol",
-      "line": 94
+      "line": 96
     },
     "600": {
       "filename": "USDCShellRouter.sol",
-      "line": 94
+      "line": 96
     },
     "616": {
       "filename": "USDCShellRouter.sol",
-      "line": 95
+      "line": 97
     },
     "624": {
       "filename": "USDCShellRouter.sol",
-      "line": 95
+      "line": 97
     },
     "632": {
       "filename": "USDCShellRouter.sol",
-      "line": 95
+      "line": 97
     },
     "640": {
       "filename": "USDCShellRouter.sol",
-      "line": 95
+      "line": 97
     },
     "688": {
       "filename": "USDCShellRouter.sol",
-      "line": 95
+      "line": 97
     },
     "704": {
       "filename": "USDCShellRouter.sol",
-      "line": 95
+      "line": 97
     },
     "712": {
       "filename": "USDCShellRouter.sol",
-      "line": 95
+      "line": 97
     },
     "728": {
       "filename": "USDCShellRouter.sol",
-      "line": 95
+      "line": 97
     },
     "736": {
       "filename": "USDCShellRouter.sol",
-      "line": 95
+      "line": 97
     },
     "760": {
       "filename": "USDCShellRouter.sol",
-      "line": 95
+      "line": 97
     },
     "768": {
       "filename": "USDCShellRouter.sol",
-      "line": 95
+      "line": 97
     },
     "776": {
       "filename": "USDCShellRouter.sol",
-      "line": 95
+      "line": 97
     },
     "800": {
       "filename": "USDCShellRouter.sol",
-      "line": 95
+      "line": 97
     },
     "816": {
       "filename": "USDCShellRouter.sol",
-      "line": 95
+      "line": 97
     },
     "824": {
       "filename": "USDCShellRouter.sol",
-      "line": 95
+      "line": 97
     },
     "872": {
       "filename": "USDCShellRouter.sol",
-      "line": 95
+      "line": 97
     },
     "888": {
       "filename": "USDCShellRouter.sol",
-      "line": 95
+      "line": 97
     },
     "896": {
       "filename": "USDCShellRouter.sol",
-      "line": 95
+      "line": 97
     },
     "912": {
       "filename": "USDCShellRouter.sol",
-      "line": 95
+      "line": 97
     },
     "928": {
       "filename": "USDCShellRouter.sol",
-      "line": 95
+      "line": 97
     },
     "936": {
       "filename": "USDCShellRouter.sol",
-      "line": 95
+      "line": 97
     },
     "944": {
       "filename": "USDCShellRouter.sol",
-      "line": 95
+      "line": 97
     },
     "960": {
       "filename": "USDCShellRouter.sol",
-      "line": 95
+      "line": 97
     },
     "968": {
       "filename": "USDCShellRouter.sol",
-      "line": 95
+      "line": 97
     },
     "976": {
       "filename": "USDCShellRouter.sol",
-      "line": 95
+      "line": 97
+    }
+  },
+  "d49aad2764d4196ceabc4435db67c6af698ec3521eb919c2239bb7451ebbe10e": {
+    "0": {
+      "filename": "./USDCShellRouter.code",
+      "line": 760
+    },
+    "8": {
+      "filename": "./USDCShellRouter.code",
+      "line": 761
+    },
+    "56": {
+      "filename": "./USDCShellRouter.code",
+      "line": 762
+    },
+    "64": {
+      "filename": "./USDCShellRouter.code",
+      "line": 763
+    },
+    "80": {
+      "filename": "./USDCShellRouter.code",
+      "line": 766
+    },
+    "88": {
+      "filename": "./USDCShellRouter.code",
+      "line": 767
+    },
+    "136": {
+      "filename": "./USDCShellRouter.code",
+      "line": 768
+    },
+    "144": {
+      "filename": "./USDCShellRouter.code",
+      "line": 769
+    }
+  },
+  "d51f1dd88a490bd66701d30742a784e43e47b12b93da33f43250a353e3de2a41": {
+    "0": {
+      "filename": "./USDCShellRouter.code",
+      "line": 644
+    },
+    "8": {
+      "filename": "./USDCShellRouter.code",
+      "line": 645
+    },
+    "24": {
+      "filename": "./USDCShellRouter.code",
+      "line": 646
+    },
+    "48": {
+      "filename": "./USDCShellRouter.code",
+      "line": 647
+    },
+    "64": {
+      "filename": "./USDCShellRouter.code",
+      "line": 648
+    },
+    "72": {
+      "filename": "./USDCShellRouter.code",
+      "line": 649
+    },
+    "88": {
+      "filename": "USDCShellRouter.sol",
+      "line": 132
+    },
+    "96": {
+      "filename": "USDCShellRouter.sol",
+      "line": 132
+    },
+    "104": {
+      "filename": "USDCShellRouter.sol",
+      "line": 132
+    },
+    "112": {
+      "filename": "USDCShellRouter.sol",
+      "line": 132
+    },
+    "120": {
+      "filename": "USDCShellRouter.sol",
+      "line": 132
+    },
+    "128": {
+      "filename": "USDCShellRouter.sol",
+      "line": 132
+    },
+    "136": {
+      "filename": "USDCShellRouter.sol",
+      "line": 132
+    },
+    "152": {
+      "filename": "USDCShellRouter.sol",
+      "line": 132
+    },
+    "160": {
+      "filename": "./USDCShellRouter.code",
+      "line": 663
+    },
+    "176": {
+      "filename": "./USDCShellRouter.code",
+      "line": 666
+    },
+    "192": {
+      "filename": "./USDCShellRouter.code",
+      "line": 669
     }
   },
   "d618fa994db9cfcf19e13c3705fa6d82d435e31658ce3b0b0244894b0d3f5193": {
     "0": {
       "filename": "USDCShellRouter.sol",
-      "line": 124
+      "line": 126
     }
   },
   "e2d2171c41e3328a409f66fc4f47f02e12a8c8ad987f5eb6df0f64a493a28cb0": {
@@ -2324,419 +2246,607 @@
       "line": 55
     }
   },
+  "e6936e8f0e7b8fe98c2ca66eee9d4e9dafcfc747defef9cb795288fabb1b7ef3": {
+    "0": {
+      "filename": "./USDCShellRouter.code",
+      "line": 842
+    },
+    "16": {
+      "filename": "./USDCShellRouter.code",
+      "line": 843
+    },
+    "24": {
+      "filename": "./USDCShellRouter.code",
+      "line": 844
+    },
+    "40": {
+      "filename": "./USDCShellRouter.code",
+      "line": 845
+    },
+    "56": {
+      "filename": "./USDCShellRouter.code",
+      "line": 846
+    },
+    "64": {
+      "filename": "./USDCShellRouter.code",
+      "line": 847
+    },
+    "80": {
+      "filename": "./USDCShellRouter.code",
+      "line": 848
+    },
+    "88": {
+      "filename": "./USDCShellRouter.code",
+      "line": 849
+    },
+    "96": {
+      "filename": "./USDCShellRouter.code",
+      "line": 850
+    },
+    "112": {
+      "filename": "./USDCShellRouter.code",
+      "line": 851
+    },
+    "128": {
+      "filename": "./USDCShellRouter.code",
+      "line": 852
+    },
+    "136": {
+      "filename": "./USDCShellRouter.code",
+      "line": 853
+    },
+    "144": {
+      "filename": "./USDCShellRouter.code",
+      "line": 854
+    }
+  },
   "e86bffe314e8ec28cbd8d704fea935680c6b6fdb2c6c03b38c1f9f0df9ae45f4": {
     "0": {
       "filename": "USDCShellRouter.sol",
-      "line": 138
+      "line": 142
     },
     "8": {
       "filename": "USDCShellRouter.sol",
-      "line": 138
+      "line": 142
     },
     "24": {
       "filename": "USDCShellRouter.sol",
-      "line": 138
+      "line": 142
     },
     "32": {
       "filename": "USDCShellRouter.sol",
-      "line": 138
+      "line": 142
     },
     "40": {
       "filename": "USDCShellRouter.sol",
-      "line": 138
+      "line": 142
     },
     "48": {
       "filename": "USDCShellRouter.sol",
-      "line": 138
+      "line": 142
     },
     "56": {
       "filename": "USDCShellRouter.sol",
-      "line": 138
+      "line": 142
     },
     "64": {
       "filename": "USDCShellRouter.sol",
-      "line": 138
+      "line": 142
     },
     "72": {
       "filename": "USDCShellRouter.sol",
-      "line": 138
+      "line": 142
     },
     "88": {
       "filename": "USDCShellRouter.sol",
-      "line": 138
+      "line": 142
     },
     "96": {
       "filename": "USDCShellRouter.sol",
-      "line": 138
+      "line": 142
     },
     "120": {
       "filename": "USDCShellRouter.sol",
-      "line": 139
+      "line": 143
     },
     "128": {
       "filename": "USDCShellRouter.sol",
-      "line": 139
+      "line": 143
     },
     "136": {
       "filename": "USDCShellRouter.sol",
-      "line": 139
+      "line": 143
     },
     "144": {
       "filename": "USDCShellRouter.sol",
-      "line": 139
+      "line": 143
     },
     "160": {
       "filename": "USDCShellRouter.sol",
-      "line": 139
+      "line": 143
     },
     "168": {
       "filename": "USDCShellRouter.sol",
-      "line": 139
+      "line": 143
     },
     "192": {
       "filename": "USDCShellRouter.sol",
-      "line": 140
+      "line": 144
     },
     "208": {
       "filename": "USDCShellRouter.sol",
-      "line": 141
+      "line": 145
     },
     "216": {
       "filename": "USDCShellRouter.sol",
-      "line": 142
+      "line": 146
     },
     "224": {
       "filename": "USDCShellRouter.sol",
-      "line": 142
+      "line": 146
     },
     "232": {
       "filename": "USDCShellRouter.sol",
-      "line": 142
+      "line": 146
     },
     "280": {
       "filename": "USDCShellRouter.sol",
-      "line": 142
+      "line": 146
     },
     "296": {
       "filename": "USDCShellRouter.sol",
-      "line": 142
+      "line": 146
     },
     "304": {
       "filename": "USDCShellRouter.sol",
-      "line": 142
+      "line": 146
     },
     "320": {
       "filename": "USDCShellRouter.sol",
-      "line": 142
+      "line": 146
     },
     "328": {
       "filename": "USDCShellRouter.sol",
-      "line": 142
+      "line": 146
     },
     "352": {
       "filename": "USDCShellRouter.sol",
-      "line": 142
+      "line": 146
     },
     "360": {
       "filename": "USDCShellRouter.sol",
-      "line": 142
+      "line": 146
     },
     "528": {
       "filename": "USDCShellRouter.sol",
-      "line": 142
+      "line": 146
     },
     "544": {
       "filename": "USDCShellRouter.sol",
-      "line": 142
+      "line": 146
     },
     "560": {
       "filename": "USDCShellRouter.sol",
-      "line": 142
+      "line": 146
     },
     "568": {
       "filename": "USDCShellRouter.sol",
-      "line": 142
+      "line": 146
     },
     "616": {
       "filename": "USDCShellRouter.sol",
-      "line": 142
+      "line": 146
     },
     "632": {
       "filename": "USDCShellRouter.sol",
-      "line": 142
+      "line": 146
     },
     "640": {
       "filename": "USDCShellRouter.sol",
-      "line": 142
+      "line": 146
     },
     "656": {
       "filename": "USDCShellRouter.sol",
-      "line": 142
+      "line": 146
     },
     "672": {
       "filename": "USDCShellRouter.sol",
-      "line": 142
+      "line": 146
     },
     "680": {
       "filename": "USDCShellRouter.sol",
-      "line": 142
+      "line": 146
     },
     "688": {
       "filename": "USDCShellRouter.sol",
-      "line": 142
+      "line": 146
     },
     "704": {
       "filename": "USDCShellRouter.sol",
-      "line": 142
+      "line": 146
     },
     "712": {
       "filename": "USDCShellRouter.sol",
-      "line": 142
+      "line": 146
     },
     "720": {
       "filename": "USDCShellRouter.sol",
-      "line": 142
+      "line": 146
     },
     "728": {
       "filename": "USDCShellRouter.sol",
-      "line": 142
+      "line": 146
     },
     "736": {
       "filename": "USDCShellRouter.sol",
-      "line": 142
+      "line": 146
     },
     "744": {
       "filename": "USDCShellRouter.sol",
-      "line": 142
+      "line": 146
     }
   },
   "e9e5b08e673e611d8c08a9e26ee041127b0214182769f41d2f307b6369752fb3": {
     "0": {
       "filename": "./USDCShellRouter.code",
-      "line": 938
+      "line": 952
     },
     "24": {
       "filename": "./USDCShellRouter.code",
-      "line": 939
+      "line": 953
     },
     "40": {
       "filename": "./USDCShellRouter.code",
-      "line": 940
+      "line": 954
     }
   },
   "ecce4caba04c5e41e27b71c3768b6fbc528062886f0533069130f05396d36e07": {
     "0": {
       "filename": "USDCShellRouter.sol",
-      "line": 66
+      "line": 68
     },
     "8": {
       "filename": "USDCShellRouter.sol",
-      "line": 66
+      "line": 68
     },
     "24": {
       "filename": "USDCShellRouter.sol",
-      "line": 66
+      "line": 68
     },
     "40": {
       "filename": "USDCShellRouter.sol",
-      "line": 66
+      "line": 68
     },
     "56": {
       "filename": "USDCShellRouter.sol",
-      "line": 66
+      "line": 68
     },
     "80": {
       "filename": "USDCShellRouter.sol",
-      "line": 67
+      "line": 69
     },
     "88": {
       "filename": "USDCShellRouter.sol",
-      "line": 67
+      "line": 69
     },
     "104": {
       "filename": "USDCShellRouter.sol",
-      "line": 67
+      "line": 69
     },
     "120": {
       "filename": "USDCShellRouter.sol",
-      "line": 67
+      "line": 69
     },
     "136": {
       "filename": "USDCShellRouter.sol",
-      "line": 67
+      "line": 69
     },
     "160": {
       "filename": "USDCShellRouter.sol",
-      "line": 70
+      "line": 72
     },
     "168": {
       "filename": "USDCShellRouter.sol",
-      "line": 70
+      "line": 72
     },
     "176": {
       "filename": "USDCShellRouter.sol",
-      "line": 70
+      "line": 72
     },
     "216": {
       "filename": "USDCShellRouter.sol",
-      "line": 70
+      "line": 72
     },
     "224": {
       "filename": "USDCShellRouter.sol",
-      "line": 70
+      "line": 72
     },
     "248": {
       "filename": "USDCShellRouter.sol",
-      "line": 73
+      "line": 75
     },
     "256": {
       "filename": "USDCShellRouter.sol",
-      "line": 73
+      "line": 75
     },
     "264": {
       "filename": "USDCShellRouter.sol",
-      "line": 73
+      "line": 75
     },
     "280": {
       "filename": "USDCShellRouter.sol",
-      "line": 75
+      "line": 77
     },
     "288": {
       "filename": "USDCShellRouter.sol",
-      "line": 75
+      "line": 77
     },
     "304": {
       "filename": "USDCShellRouter.sol",
-      "line": 75
+      "line": 77
     },
     "312": {
       "filename": "USDCShellRouter.sol",
-      "line": 75
+      "line": 77
     },
     "328": {
       "filename": "USDCShellRouter.sol",
-      "line": 75
+      "line": 77
     },
     "352": {
       "filename": "USDCShellRouter.sol",
-      "line": 75
+      "line": 77
     },
     "368": {
       "filename": "USDCShellRouter.sol",
-      "line": 76
+      "line": 78
     },
     "384": {
       "filename": "USDCShellRouter.sol",
-      "line": 76
+      "line": 78
     },
     "392": {
       "filename": "USDCShellRouter.sol",
-      "line": 76
+      "line": 78
     },
     "408": {
       "filename": "USDCShellRouter.sol",
-      "line": 78
+      "line": 80
     },
     "424": {
       "filename": "USDCShellRouter.sol",
-      "line": 78
+      "line": 80
     },
     "440": {
       "filename": "USDCShellRouter.sol",
-      "line": 78
+      "line": 80
     },
     "560": {
       "filename": "USDCShellRouter.sol",
-      "line": 78
+      "line": 80
     },
     "568": {
       "filename": "USDCShellRouter.sol",
-      "line": 78
+      "line": 80
     },
     "576": {
       "filename": "USDCShellRouter.sol",
-      "line": 78
+      "line": 80
     },
     "592": {
       "filename": "USDCShellRouter.sol",
-      "line": 78
+      "line": 80
     },
     "600": {
       "filename": "USDCShellRouter.sol",
-      "line": 78
+      "line": 80
     },
     "648": {
       "filename": "USDCShellRouter.sol",
-      "line": 78
+      "line": 80
     },
     "656": {
       "filename": "USDCShellRouter.sol",
-      "line": 78
+      "line": 80
     },
     "672": {
       "filename": "USDCShellRouter.sol",
-      "line": 78
+      "line": 80
     },
     "688": {
       "filename": "USDCShellRouter.sol",
-      "line": 78
+      "line": 80
     },
     "704": {
       "filename": "USDCShellRouter.sol",
-      "line": 78
+      "line": 80
     },
     "712": {
       "filename": "USDCShellRouter.sol",
-      "line": 78
+      "line": 80
     },
     "720": {
       "filename": "USDCShellRouter.sol",
-      "line": 78
+      "line": 80
     },
     "728": {
       "filename": "USDCShellRouter.sol",
-      "line": 78
+      "line": 80
     },
     "744": {
       "filename": "USDCShellRouter.sol",
-      "line": 81
+      "line": 83
     },
     "752": {
       "filename": "USDCShellRouter.sol",
-      "line": 81
+      "line": 83
     }
   },
   "f1011f167108ef8dac3d2d75a0ce2941672b5f99bc2d5e42ad6f116d56288239": {},
   "f24e1e7aa04d89aad2945816b6e9b921f2b3892da9ba53e2383c148351b96d0c": {
     "0": {
       "filename": "./USDCShellRouter.code",
-      "line": 868
+      "line": 898
     },
     "16": {
       "filename": "./USDCShellRouter.code",
-      "line": 869
+      "line": 899
     }
   },
-  "f34c4a2d93f73cb9b018740cfe29d0523c1a8fbd8b45c03c4d7ad46337c5bcf8": {
+  "f45c976754d500426e2ce079c3c2d7081f0def219720d6e2fbb8b7ba2ebbbcfa": {
     "0": {
       "filename": "./USDCShellRouter.code",
-      "line": 933
+      "line": 951
     },
-    "1": {
+    "8": {
       "filename": "./USDCShellRouter.code",
-      "line": 934
+      "line": 961
     },
-    "2": {
+    "24": {
       "filename": "./USDCShellRouter.code",
-      "line": 935
+      "line": 962
     },
-    "3": {
+    "32": {
       "filename": "./USDCShellRouter.code",
-      "line": 964
+      "line": 963
     },
-    "4": {
+    "48": {
+      "filename": "./USDCShellRouter.code",
+      "line": 966
+    },
+    "56": {
+      "filename": "./USDCShellRouter.code",
+      "line": 967
+    },
+    "72": {
       "filename": "./USDCShellRouter.code",
       "line": 968
+    },
+    "88": {
+      "filename": "./USDCShellRouter.code",
+      "line": 971
+    },
+    "96": {
+      "filename": "./USDCShellRouter.code",
+      "line": 972
+    },
+    "112": {
+      "filename": "./USDCShellRouter.code",
+      "line": 973
+    },
+    "128": {
+      "filename": "./USDCShellRouter.code",
+      "line": 976
+    }
+  },
+  "f7ed930236fb32569c5b753c7320b40654e64bbf24c0b645cdf6715da8d07fda": {
+    "0": {
+      "filename": "USDCShellRouter.sol",
+      "line": 133
+    },
+    "8": {
+      "filename": "USDCShellRouter.sol",
+      "line": 133
+    },
+    "24": {
+      "filename": "USDCShellRouter.sol",
+      "line": 133
+    },
+    "32": {
+      "filename": "USDCShellRouter.sol",
+      "line": 133
+    },
+    "40": {
+      "filename": "USDCShellRouter.sol",
+      "line": 133
+    },
+    "48": {
+      "filename": "USDCShellRouter.sol",
+      "line": 133
+    },
+    "56": {
+      "filename": "USDCShellRouter.sol",
+      "line": 133
+    },
+    "64": {
+      "filename": "USDCShellRouter.sol",
+      "line": 133
+    },
+    "72": {
+      "filename": "USDCShellRouter.sol",
+      "line": 133
+    },
+    "88": {
+      "filename": "USDCShellRouter.sol",
+      "line": 133
+    },
+    "96": {
+      "filename": "USDCShellRouter.sol",
+      "line": 133
+    },
+    "120": {
+      "filename": "USDCShellRouter.sol",
+      "line": 134
+    },
+    "128": {
+      "filename": "USDCShellRouter.sol",
+      "line": 134
+    },
+    "136": {
+      "filename": "USDCShellRouter.sol",
+      "line": 134
+    },
+    "144": {
+      "filename": "USDCShellRouter.sol",
+      "line": 134
+    },
+    "160": {
+      "filename": "USDCShellRouter.sol",
+      "line": 134
+    },
+    "168": {
+      "filename": "USDCShellRouter.sol",
+      "line": 134
+    },
+    "192": {
+      "filename": "USDCShellRouter.sol",
+      "line": 135
+    },
+    "208": {
+      "filename": "USDCShellRouter.sol",
+      "line": 136
+    },
+    "216": {
+      "filename": "USDCShellRouter.sol",
+      "line": 136
+    },
+    "232": {
+      "filename": "USDCShellRouter.sol",
+      "line": 137
+    },
+    "392": {
+      "filename": "USDCShellRouter.sol",
+      "line": 137
+    },
+    "400": {
+      "filename": "USDCShellRouter.sol",
+      "line": 137
+    },
+    "408": {
+      "filename": "USDCShellRouter.sol",
+      "line": 137
+    },
+    "416": {
+      "filename": "USDCShellRouter.sol",
+      "line": 137
+    },
+    "424": {
+      "filename": "USDCShellRouter.sol",
+      "line": 137
+    },
+    "432": {
+      "filename": "USDCShellRouter.sol",
+      "line": 137
     }
   },
   "ffd6d44a435901e7e76716bfa74f82c2391279ff1d6989873efd66e64074e73c": {

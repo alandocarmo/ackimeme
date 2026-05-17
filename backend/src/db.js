@@ -11,6 +11,7 @@ const pool = new Pool({
   max: parseInt(process.env.DB_POOL_MAX || "5", 10), // max connection pool size
   idleTimeoutMillis: 30000,
   connectionTimeoutMillis: 5000, // Audit #29: 2s was too short for Render free tier cold starts
+  statement_timeout: 10000, // Prevent rogue long-running queries
 });
 
 pool.on("error", (err) => {
@@ -53,6 +54,7 @@ async function getAppliedMigrations() {
 
 async function applyMigration(version, sql) {
   await withTransaction(async (client) => {
+    await client.query("SET LOCAL statement_timeout = 0");
     await client.query(sql);
     await client.query(
       "INSERT INTO schema_migrations (version) VALUES ($1) ON CONFLICT (version) DO NOTHING",
