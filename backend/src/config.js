@@ -147,7 +147,7 @@ const config = {
   jwtSecret,
   jwtSecretConfigured: isStrongSecret(jwtSecret, 32) && jwtSecret !== adminToken,
   adminWallets: readCsv(process.env.ADMIN_WALLETS).map((item) => item.toLowerCase()),
-  appFeeSharePercent: 100,
+  appFeeSharePercent: readPositiveInteger(process.env.APP_FEE_SHARE_PERCENT, 100),
   shellBuy: {
     enabled: shellBuyEnabled,
     usdcRoot: shellBuyUsdcRoot,

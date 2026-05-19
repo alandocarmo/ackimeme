@@ -15,7 +15,13 @@ const fs = require("fs");
 const path = require("path");
 const { config } = require("../config");
 
-const BONDING_CURVE_ABI = JSON.parse(fs.readFileSync(path.join(__dirname, "../abi/BondingCurve.abi.json"), "utf8"));
+let BONDING_CURVE_ABI;
+try {
+  BONDING_CURVE_ABI = JSON.parse(fs.readFileSync(path.join(__dirname, "../abi/BondingCurve.abi.json"), "utf8"));
+} catch (e) {
+  console.warn("[GraphQL] Aviso: BondingCurve.abi.json não encontrado. Syncing de transações pode falhar.");
+  BONDING_CURVE_ABI = null;
+}
 
 // Audit #1: No silent fallback to shellnet — GRAPHQL_URL must be configured
 const GRAPHQL_ENDPOINT = config.graphqlUrl || "https://shellnet.ackinacki.org/graphql";
@@ -25,43 +31,7 @@ if (!config.graphqlUrl) {
   }
   console.warn("[GraphQL] ⚠️  GRAPHQL_URL não configurada! Usando shellnet (testnet) como fallback. NÃO use isso em produção.");
 }
-const TIP3_DEFAULT_DECIMALS = 6;
-const MAX_TIP3_TREE_TRANSACTIONS = 24;
 const SHELL_CURRENCY_ID = 2;
-
-const TIP3_TOKEN_WALLET_ABI = {
-  "ABI version": 2,
-  version: "2.3",
-  header: [],
-  functions: [
-    {
-      name: "transferToWallet",
-      inputs: [
-        { name: "amount", type: "uint128" },
-        { name: "recipientTokenWallet", type: "address" },
-        { name: "remainingGasTo", type: "address" },
-        { name: "notify", type: "bool" },
-        { name: "payload", type: "cell" },
-      ],
-      outputs: [],
-    },
-    {
-      name: "transfer",
-      inputs: [
-        { name: "amount", type: "uint128" },
-        { name: "recipient", type: "address" },
-        { name: "deployWalletValue", type: "uint128" },
-        { name: "remainingGasTo", type: "address" },
-        { name: "notify", type: "bool" },
-        { name: "payload", type: "cell" },
-      ],
-      outputs: [],
-    },
-  ],
-  events: [],
-  data: [],
-};
-const TIP3_METHOD_NAMES = ["transfer", "transferToWallet"];
 
 let tvmClient = null;
 let sdkClient = null;
@@ -87,7 +57,7 @@ if (isTvmSdkAvailable) {
   console.warn("[GraphQL] TVM SDK indisponível. Dependências faltando.");
 }
 
-function isTip3DecoderAvailable() {
+function isWasmDecoderAvailable() {
   return Boolean(tvmClient && typeof tvmClient.decodeInput === "function");
 }
 
@@ -241,7 +211,7 @@ function nanoToDecimal(nanoValue) {
   const nano = BigInt(String(nanoValue || "0").replace(/\D/g, "") || "0");
   const whole = nano / 1_000_000_000n;
   const frac = nano % 1_000_000_000n;
-  return Number(`${whole}.${String(frac).padStart(9, "0")}`);
+  return `${whole}.${String(frac).padStart(9, "0")}`;
 }
 
 function extractCurrencyNano(currencies, currencyId) {
@@ -314,259 +284,7 @@ function canonicalTxHash(hash) {
   return value;
 }
 
-function extractTip3RawAmount(input = {}) {
-  const candidates = [input.amount, input._value, input.value, input.tokens];
-  for (const candidate of candidates) {
-    if (candidate === undefined || candidate === null) {
-      continue;
-    }
 
-    const sanitized = String(candidate).trim();
-    if (!/^\d+$/.test(sanitized)) {
-      continue;
-    }
-
-    try {
-      return BigInt(sanitized);
-    } catch {
-      // ignore malformed values and continue probing
-    }
-  }
-
-  return null;
-}
-
-function tip3RawToDecimal(rawAmount, decimals = TIP3_DEFAULT_DECIMALS) {
-  const parsedDecimals = Number.isFinite(Number(decimals))
-    ? Math.max(0, Math.trunc(Number(decimals)))
-    : TIP3_DEFAULT_DECIMALS;
-  const base = 10n ** BigInt(parsedDecimals);
-  const whole = rawAmount / base;
-  const fraction = rawAmount % base;
-  return Number(`${whole}.${String(fraction).padStart(parsedDecimals, "0")}`);
-}
-
-function decodeTip3TransferBody(body) {
-  if (!isTip3DecoderAvailable() || !body) {
-    return null;
-  }
-
-  try {
-    const decoded = tvmClient.decodeInput(
-      body,
-      JSON.stringify(TIP3_TOKEN_WALLET_ABI),
-      TIP3_METHOD_NAMES,
-      true,
-    );
-
-    if (!decoded || !decoded.method || !decoded.input) {
-      return null;
-    }
-
-    const functionName = String(decoded.method);
-    if (!TIP3_METHOD_NAMES.includes(functionName)) {
-      return null;
-    }
-
-    const input = decoded.input;
-    const rawAmount = extractTip3RawAmount(input);
-    if (rawAmount === null) {
-      return null;
-    }
-
-    const recipient = normalizeAddress(
-      functionName === "transfer"
-        ? input.recipient
-        : input.recipientTokenWallet,
-    );
-
-    return {
-      functionName,
-      recipient,
-      rawAmount,
-    };
-  } catch {
-    return null;
-  }
-}
-
-async function getTransactionWithMessages(hash) {
-  const query = `
-    query GetTxWithMessages($hash: String!) {
-      blockchain {
-        transaction(hash: $hash) {
-          id
-          account_addr
-          status_name
-          in_message {
-            id
-            src
-            dst
-            body
-            msg_type_name
-            value(format: DEC)
-          }
-          out_messages {
-            id
-            src
-            dst
-            body
-            msg_type_name
-            value(format: DEC)
-            dst_transaction {
-              id
-            }
-          }
-        }
-      }
-    }
-  `;
-
-  const hashCandidates = buildTxHashCandidates(hash);
-
-  for (const hashCandidate of hashCandidates) {
-    // eslint-disable-next-line no-await-in-loop
-    const data = await gql(query, { hash: hashCandidate });
-    const node = data?.blockchain?.transaction || null;
-    if (node) {
-      return node;
-    }
-  }
-
-  return null;
-}
-
-async function collectTransactionTree(rootTxHash) {
-  const visited = new Set();
-  const queue = [String(rootTxHash || "").trim()];
-  const transactions = [];
-
-  while (queue.length > 0 && transactions.length < MAX_TIP3_TREE_TRANSACTIONS) {
-    const txHash = queue.shift();
-    const canonicalHash = canonicalTxHash(txHash);
-    if (!canonicalHash || visited.has(canonicalHash)) {
-      continue;
-    }
-    visited.add(canonicalHash);
-
-    // eslint-disable-next-line no-await-in-loop
-    const tx = await getTransactionWithMessages(txHash);
-    if (!tx) {
-      continue;
-    }
-
-    transactions.push(tx);
-
-    for (const message of tx.out_messages || []) {
-      const nextTxHash = String(message?.dst_transaction?.id || "").trim();
-      const nextCanonical = canonicalTxHash(nextTxHash);
-      if (nextTxHash && nextCanonical && !visited.has(nextCanonical)) {
-        queue.push(nextTxHash);
-      }
-    }
-  }
-
-  return transactions;
-}
-
-async function getTip3TransferPayment({
-  txHash,
-  senderWallet,
-  recipientWallet,
-  decimals = TIP3_DEFAULT_DECIMALS,
-}) {
-  if (!isTip3DecoderAvailable()) {
-    throw new Error(
-      "Decoder TIP-3 indisponível para validação de USDC. " +
-      "Verifique se a dependência nekoton-wasm está instalada no backend.",
-    );
-  }
-
-  const transactions = await collectTransactionTree(txHash);
-  if (transactions.length === 0) {
-    return null;
-  }
-
-  const expectedSender = normalizeAddress(senderWallet);
-  const expectedRecipient = normalizeAddress(recipientWallet);
-  const senderInvolved = transactions.some((tx) => {
-    const account = normalizeAddress(tx.account_addr);
-    const inSrc = normalizeAddress(tx.in_message?.src);
-    const inDst = normalizeAddress(tx.in_message?.dst);
-
-    if (expectedSender && (account === expectedSender || inSrc === expectedSender || inDst === expectedSender)) {
-      return true;
-    }
-
-    for (const outMessage of tx.out_messages || []) {
-      const outSrc = normalizeAddress(outMessage?.src);
-      const outDst = normalizeAddress(outMessage?.dst);
-      if (outSrc === expectedSender || outDst === expectedSender) {
-        return true;
-      }
-    }
-
-    return false;
-  });
-
-  if (expectedSender && !senderInvolved) {
-    return null;
-  }
-
-  const candidates = [];
-
-  for (const tx of transactions) {
-    const txMessages = [
-      ...(tx.in_message ? [tx.in_message] : []),
-      ...(tx.out_messages || []),
-    ];
-
-    for (const message of txMessages) {
-      const decoded = decodeTip3TransferBody(message?.body);
-      if (!decoded) {
-        continue;
-      }
-
-      if (expectedRecipient && decoded.recipient !== expectedRecipient) {
-        continue;
-      }
-
-      candidates.push({
-        sender: normalizeAddress(message?.src),
-        recipient: decoded.recipient,
-        rawAmount: decoded.rawAmount,
-        functionName: decoded.functionName,
-        messageId: message?.id || "",
-        txHash: tx.id || "",
-      });
-    }
-  }
-
-  if (candidates.length === 0) {
-    return null;
-  }
-
-  candidates.sort((a, b) => {
-    if (a.rawAmount === b.rawAmount) return 0;
-    return a.rawAmount > b.rawAmount ? -1 : 1;
-  });
-
-  const winner = candidates[0];
-
-  return {
-    sender: winner.sender,
-    recipient: winner.recipient,
-    amount: tip3RawToDecimal(winner.rawAmount, decimals),
-    rawAmount: winner.rawAmount.toString(),
-    decimals: Number(decimals),
-    proof: {
-      functionName: winner.functionName,
-      messageId: winner.messageId,
-      txHash: winner.txHash,
-      treeTransactionsScanned: transactions.length,
-    },
-  };
-}
 
 /**
  * Mapeia status_name da Acki Nacki para o formato interno.
@@ -582,11 +300,13 @@ function normalizeStatus(statusInt, statusName) {
   // Primary: numeric field (never null if transaction exists)
   if (statusInt === 3) return "SUCCESS";
   if (statusInt === 4) return "FAILED";
-  if (typeof statusInt === "number" && statusInt >= 0 && statusInt < 3) return "PENDING";
+  if (statusInt === 0) return "UNKNOWN";
+  if (typeof statusInt === "number" && statusInt > 0 && statusInt < 3) return "PENDING";
   // Fallback: legacy string field (may be null in some API versions)
   const name = String(statusName || "").toLowerCase();
   if (name === "finalized") return "SUCCESS";
   if (name === "refused") return "FAILED";
+  if (name === "unknown") return "UNKNOWN";
   return "PENDING";
 }
 
@@ -743,9 +463,15 @@ async function getAccountPublicKey(address) {
       boc: info.boc || "",
     };
   } catch (err) {
-    if (String(err.message || "").includes("Network") || String(err.message || "").includes("timeout")) {
-      console.error(`[GraphQL] getAccountPublicKey falhou para ${address}:`, err.message);
+    const errMsg = String(err.message || "");
+    // SEC-05: Propagate network/timeout errors instead of masking as "not deployed".
+    // Without this, a temporary API outage silently blocks ALL logins.
+    if (errMsg.includes("Network") || errMsg.includes("timeout") || errMsg.includes("ECONNREFUSED") || errMsg.includes("ETIMEDOUT") || errMsg.includes("ENOTFOUND")) {
+      console.error(`[GraphQL] getAccountPublicKey network error for ${address}:`, errMsg);
+      throw new Error(`Falha de rede ao consultar a blockchain para ${address}. Tente novamente em instantes.`);
     }
+    // Non-network errors (e.g., malformed response) still return gracefully
+    console.warn(`[GraphQL] getAccountPublicKey non-network error for ${address}:`, errMsg);
     return { isDeployed: false };
   }
 }
@@ -781,6 +507,9 @@ async function getAccountState(address) {
       boc: info.boc || "",
     };
   } catch (err) {
+    if (err.message && (err.message.includes("timeout") || err.message.includes("Network") || err.message.includes("ECONNREFUSED"))) {
+      throw err;
+    }
     return { isDeployed: false, boc: "" };
   }
 }
@@ -819,7 +548,7 @@ async function getRecentBondingCurveTrades(address) {
       const tx = edge.node;
       const outMsgs = tx.out_messages || [];
       for (const msg of outMsgs) {
-        if (msg.msg_type_name === "extOut" && msg.body && isTip3DecoderAvailable()) {
+        if (msg.msg_type_name === "extOut" && msg.body && isWasmDecoderAvailable()) {
           try {
             const decodedBuy = tvmClient.decodeEvent(msg.body, JSON.stringify(BONDING_CURVE_ABI), "TokensPurchaseInitiated");
             if (decodedBuy) {
@@ -829,7 +558,7 @@ async function getRecentBondingCurveTrades(address) {
                 type: "buy",
                 tokenAmount: String(decodedBuy.tokensOut),
                 shellAmount: String(decodedBuy.shellIn),
-                price: Number(decodedBuy.tokensOut) > 0 ? Number(decodedBuy.shellIn) / Number(decodedBuy.tokensOut) : 0,
+                price: Number(decodedBuy.tokensOut) > 0 ? Number((BigInt(decodedBuy.shellIn) * 1_000_000_000n) / BigInt(decodedBuy.tokensOut)) / 1_000_000_000 : 0,
                 createdAt: new Date(tx.now * 1000).toISOString()
               });
               continue;
@@ -847,7 +576,7 @@ async function getRecentBondingCurveTrades(address) {
                 type: "sell",
                 tokenAmount: String(decodedSell.tokensIn),
                 shellAmount: String(decodedSell.shellOut),
-                price: Number(decodedSell.tokensIn) > 0 ? Number(decodedSell.shellOut) / Number(decodedSell.tokensIn) : 0,
+                price: Number(decodedSell.tokensIn) > 0 ? Number((BigInt(decodedSell.shellOut) * 1_000_000_000n) / BigInt(decodedSell.tokensIn)) / 1_000_000_000 : 0,
                 createdAt: new Date(tx.now * 1000).toISOString()
               });
             }
@@ -865,8 +594,7 @@ async function getRecentBondingCurveTrades(address) {
 }
 
 module.exports = {
-  getTip3TransferPayment,
-  isTip3DecoderAvailable,
+  normalizeAddress,
   getTransaction,
   getAccountBalance,
   getAccountBalanceNano,

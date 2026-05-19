@@ -3,6 +3,7 @@ const path = require("path");
 const crypto = require("crypto");
 const { config } = require("../config");
 const { getAccountPublicKey, getAccountBalanceNano, getAccountState } = require("./graphql.service");
+const { parseSlopeDivisor } = require("../launches");
 
 /**
  * deployer.service.js
@@ -64,14 +65,21 @@ function contractFilesExist(contractName) {
 
 /**
  * Carrega ABI e TVC de um contrato.
+ * BP-06: Cached in memory to avoid synchronous disk I/O on every deploy request.
  */
+const _contractFileCache = new Map();
 function loadContractFiles(contractName) {
+  if (_contractFileCache.has(contractName)) {
+    return _contractFileCache.get(contractName);
+  }
   const abiPath = path.join(ABI_DIR, `${contractName}.abi.json`);
   const tvcPath = path.join(ABI_DIR, `${contractName}.tvc`);
-  return {
+  const result = {
     abi: JSON.parse(fs.readFileSync(abiPath, "utf-8")),
     tvc: fs.readFileSync(tvcPath).toString("base64"),
   };
+  _contractFileCache.set(contractName, result);
+  return result;
 }
 
 function parseTokenSupplyToNano(totalSupply, decimals = TOKEN_DECIMALS) {
@@ -87,7 +95,7 @@ function buildDeployNonce({ creatorWallet, symbol, paymentTxHash }) {
     "ackimeme-token-root-v1",
     String(creatorWallet || "").toLowerCase(),
     String(symbol || "").toUpperCase(),
-    String(paymentTxHash || "").toLowerCase(),
+    String(paymentTxHash || "").toLowerCase()
   ].join(":");
   const digest = crypto.createHash("sha256").update(input).digest("hex");
   return BigInt(`0x${digest}`).toString();
@@ -379,25 +387,8 @@ async function deployTokenEcosystem({ name, symbol, totalSupply, ipfsHash, creat
   };
   const maxTokenSupply = parseTokenSupplyToNano(totalSupply);
   
-  // C-02: Map frontend slope levels (1-5) to actual nano values.
-  // If slopeDivisor is already a nano value (sent by new frontend), use it.
-  const SLOPE_MAP = {
-    1: 20_000_000_000_000n,  // 0.5x Suave
-    2: 10_000_000_000_000n,  // 1x Normal
-    3:  5_000_000_000_000n,  // 2x Fast
-    4:  2_500_000_000_000n,  // 4x Aggressive
-    5:  1_000_000_000_000n,  // 10x INSANE
-  };
-  
-  let mappedSlope = BigInt(10_000_000_000_000);
-  if (SLOPE_MAP[Number(slopeDivisor)]) {
-    mappedSlope = SLOPE_MAP[Number(slopeDivisor)];
-  } else if (!isNaN(Number(slopeDivisor)) && Number(slopeDivisor) >= 1_000_000_000_000) {
-    mappedSlope = BigInt(slopeDivisor);
-  }
-  
   // Use finalNanoDivisor for BOTH prediction and deployment to prevent address divergence
-  const finalNanoDivisor = mappedSlope.toString();
+  const finalNanoDivisor = String(parseSlopeDivisor(slopeDivisor));
   
   const deployNonce = buildDeployNonce({ creatorWallet, symbol, paymentTxHash });
   const keyConfig = loadDeployerKeyConfig();
@@ -602,30 +593,11 @@ async function deployTokenEcosystem({ name, symbol, totalSupply, ipfsHash, creat
         },
         send_events: false
       });
-      console.log(`[Deployer] Mensagem interna disparada. Aguardando deploy on-chain do BondingCurve...`);
-      
-      // Wait for deployment
-      let isDeployed = false;
-      const deployAttempts = Number(
-        process.env.BONDING_CURVE_DEPLOY_CONFIRM_ATTEMPTS || DEFAULT_BONDING_CURVE_DEPLOY_ATTEMPTS,
-      );
-      for (let i = 0; i < deployAttempts; i++) {
-        await new Promise((res) => setTimeout(res, 3000));
-        const pubKey = await getAccountPublicKey(bondingCurveAddress);
-        if (pubKey.isDeployed) {
-           isDeployed = true;
-           break;
-        }
-      }
-      
-      if (!isDeployed) {
-        throw new Error("Timeout aguardando deploy do BondingCurve. Verifique se o TokenRoot possuía gás suficiente.");
-      }
-      console.log(`[Deployer] BondingCurve deployado com sucesso via mensagem interna no DappID!`);
+      console.log(`[Deployer] Mensagem interna disparada. Delegando monitoramento on-chain para o sync.service.js...`);
     }
 
     // Determinar status baseado no flag de deploy
-    const deployStatus = ENABLE_ONCHAIN_DEPLOY ? "deployed" : "awaiting_chain_integration";
+    const deployStatus = ENABLE_ONCHAIN_DEPLOY ? "deployment_queued" : "awaiting_chain_integration";
     const reason = ENABLE_ONCHAIN_DEPLOY
       ? ""
       : "Endereços dos contratos calculados, mas ENABLE_ONCHAIN_DEPLOY=false. "

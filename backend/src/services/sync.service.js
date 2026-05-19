@@ -1,3 +1,4 @@
+const crypto = require("crypto");
 const fs = require("fs");
 const path = require("path");
 const { listPublicLaunches, listLaunchesForSync, updateLaunchOnchainState, insertTrade } = require("../storage");
@@ -84,9 +85,9 @@ async function syncOnchainData() {
     const launches = await listLaunchesForSync(SYNC_BATCH_SIZE);
     let updatedCount = 0;
     
-    await Promise.allSettled(
+    const results = await Promise.allSettled(
       launches.map(async (launch) => {
-        if (!["on_chain_deployed", "on_chain_pending_recovery"].includes(launch.status) || !launch.bondingCurveAddress) {
+        if (!["on_chain_deployed", "on_chain_pending_recovery", "deployment_queued"].includes(launch.status) || !launch.bondingCurveAddress) {
           return;
         }
 
@@ -96,7 +97,7 @@ async function syncOnchainData() {
           // Fallbacks
           let reserveBalance = "0"; // H-32: Fallback corrected to ZERO, not gas balance
           let tokenSupply = null; // Audit #23: Do not default to cap if getter fails, use null to indicate sync gap
-          let lockedLiquidity = launch.lockedLiquidity || false;
+          let lockedLiquidity = launch.onchainData?.lockedLiquidity || launch.lockedLiquidity || false;
 
           // Run Local Getters with BondingCurve BOC
           const reserveOut = await runLocalGetter(bcState.boc, launch.bondingCurveAddress, bondingCurveAbiPath, "reserveBalance");
@@ -111,7 +112,7 @@ async function syncOnchainData() {
           }
 
           // `migrationFailed` no longer exists in the contract — AMM is internal
-          let status = launch.status === "on_chain_pending_recovery" ? "on_chain_deployed" : launch.status;
+          let status = ["on_chain_pending_recovery", "deployment_queued"].includes(launch.status) ? "on_chain_deployed" : launch.status;
 
           // Run Local Getters with TokenRoot BOC
           if (launch.tokenRootAddress) {
@@ -145,13 +146,20 @@ async function syncOnchainData() {
           }
           
           // [New] Index Recent Trades
+          // PERF-03: Concurrent inserts via Promise.all instead of sequential await loop.
+          // Each INSERT uses ON CONFLICT DO NOTHING, so parallelism is safe.
           try {
             const trades = await getRecentBondingCurveTrades(launch.bondingCurveAddress);
-            // Insert trades, process oldest first
-            for (let i = trades.length - 1; i >= 0; i--) {
-              const trade = trades[i];
-              trade.launchId = launch.id;
-              const newTrade = await insertTrade(trade);
+            // Prepare trades (oldest first for chronological ordering)
+            const preparedTrades = trades.reverse().map(trade => ({
+              ...trade,
+              launchId: launch.id,
+              id: crypto.randomUUID(),
+            }));
+            const insertedTrades = await Promise.all(
+              preparedTrades.map(trade => insertTrade(trade))
+            );
+            for (const newTrade of insertedTrades) {
               if (newTrade && ioInstance) {
                 ioInstance.to(`token_${launch.id}`).emit("new_trade", newTrade);
               }
@@ -164,6 +172,12 @@ async function syncOnchainData() {
         }
       })
     );
+
+    results.forEach(r => {
+      if (r.status === 'rejected') {
+        console.error(`[SyncJob] Error syncing launch: ${r.reason}`);
+      }
+    });
 
     if (updatedCount > 0) {
       console.log(`[SyncJob] Sincronização concluída: ${updatedCount} tokens atualizados.`);

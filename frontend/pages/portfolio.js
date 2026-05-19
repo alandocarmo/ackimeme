@@ -27,6 +27,9 @@ export default function PortfolioPage() {
   const [noProvider, setNoProvider] = useState(false);
   const [error, setError] = useState("");
 
+  const [activeTab, setActiveTab] = useState("holdings"); // holdings | watchlist
+  const [favorites, setFavorites] = useState([]);
+
   useEffect(() => {
     if (typeof window === "undefined") return;
     getSession()
@@ -38,6 +41,14 @@ export default function PortfolioPage() {
       .catch((err) => setError(err.message))
       .finally(() => setLoading(false));
   }, []);
+
+  useEffect(() => {
+    if (!session) return;
+    const { getFavorites } = require("../lib/api");
+    getFavorites()
+      .then((r) => setFavorites(r.launches || []))
+      .catch(() => {});
+  }, [session]);
 
   const scanBalances = useCallback(async () => {
     if (!session || launches.length === 0) return;
@@ -143,46 +154,117 @@ export default function PortfolioPage() {
           </div>
         )}
 
-        <div className="portfolio-stats-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '20px', marginBottom: '40px' }}>
-          <div className="card" style={{ border: '1px solid var(--accent-glow)', background: 'rgba(0, 255, 136, 0.05)' }}>
-            <p className="stat-label">Unique Assets</p>
-            <p className="stat-value" style={{ fontSize: '32px' }}>{holdings.length}</p>
-          </div>
-          <div className="card">
-            <p className="stat-label">Wallet Address</p>
-            <p className="stat-value" style={{ fontSize: '14px', color: 'var(--ink-soft)' }}>{compactWallet(session.walletAddress)}</p>
-          </div>
+        {/* Tab Toggle buttons */}
+        <div style={{ display: 'flex', gap: '16px', marginBottom: '32px', borderBottom: '1px solid var(--ink-faint)', paddingBottom: '12px' }}>
+          <button
+            onClick={() => setActiveTab("holdings")}
+            style={{
+              background: 'none',
+              border: 'none',
+              borderBottom: activeTab === "holdings" ? '2px solid var(--accent)' : 'none',
+              color: activeTab === "holdings" ? 'var(--ink)' : 'var(--ink-soft)',
+              paddingBottom: '8px',
+              fontSize: '14px',
+              fontWeight: 700,
+              cursor: 'pointer',
+              transition: 'all 0.2s'
+            }}
+          >
+            💰 holdings
+          </button>
+          <button
+            onClick={() => setActiveTab("watchlist")}
+            style={{
+              background: 'none',
+              border: 'none',
+              borderBottom: activeTab === "watchlist" ? '2px solid var(--accent)' : 'none',
+              color: activeTab === "watchlist" ? 'var(--ink)' : 'var(--ink-soft)',
+              paddingBottom: '8px',
+              fontSize: '14px',
+              fontWeight: 700,
+              cursor: 'pointer',
+              transition: 'all 0.2s'
+            }}
+          >
+            ★ watchlist
+          </button>
         </div>
 
-        {holdings.length === 0 && !noProvider ? (
-          <div className="card" style={{ textAlign: 'center', padding: '60px' }}>
-            <p style={{ fontSize: '48px', marginBottom: '20px' }}>📉</p>
-            <h3 style={{ color: 'var(--ink)', marginBottom: '10px' }}>{t("portfolio_empty")}</h3>
-            <p className="form-subtitle">Head over to the board to start trading!</p>
-            <Link href="/" className="btn-primary" style={{ display: 'inline-block', marginTop: '24px' }}>{t("nav_board")}</Link>
-          </div>
-        ) : holdings.length > 0 ? (
-          <div className="portfolio-list" style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-            {holdings.map((token) => (
-              <Link href={`/token/${token.id}`} key={token.id} className="card portfolio-item-card" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', textDecoration: 'none', transition: 'transform 0.2s' }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
-                  <div className="token-avatar" style={{ width: '48px', height: '48px', borderRadius: '12px', background: 'var(--bg-deep)', display: 'flex', justifyContent: 'center', alignItems: 'center', fontSize: '20px' }}>
-                    {isSafeUrl(token.coin.logoUrl) ? <img src={token.coin.logoUrl} alt="" referrerPolicy="no-referrer" style={{ width: '100%', height: '100%', borderRadius: '12px' }} /> : token.coin.symbol[0]}
-                  </div>
-                  <div>
-                    <h3 style={{ margin: 0, fontSize: '16px', color: 'var(--ink)' }}>{token.coin.name}</h3>
-                    <p style={{ margin: 0, fontSize: '13px', color: 'var(--accent)', fontWeight: 700 }}>${token.coin.symbol}</p>
-                  </div>
-                </div>
-                
-                <div style={{ textAlign: 'right' }}>
-                  <p className="stat-label">Balance</p>
-                  <p className="stat-value" style={{ margin: 0, color: 'var(--ink)' }}>{formatNum(token.balance.toFixed(2))}</p>
-                </div>
-              </Link>
-            ))}
-          </div>
-        ) : null}
+        {activeTab === "holdings" ? (
+          <>
+            <div className="portfolio-stats-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '20px', marginBottom: '40px' }}>
+              <div className="card" style={{ border: '1px solid var(--accent-glow)', background: 'rgba(0, 255, 136, 0.05)' }}>
+                <p className="stat-label">Unique Assets</p>
+                <p className="stat-value" style={{ fontSize: '32px' }}>{holdings.length}</p>
+              </div>
+              <div className="card">
+                <p className="stat-label">Wallet Address</p>
+                <p className="stat-value" style={{ fontSize: '14px', color: 'var(--ink-soft)' }}>{compactWallet(session.walletAddress)}</p>
+              </div>
+            </div>
+
+            {holdings.length === 0 && !noProvider ? (
+              <div className="card" style={{ textAlign: 'center', padding: '60px' }}>
+                <p style={{ fontSize: '48px', marginBottom: '20px' }}>📉</p>
+                <h3 style={{ color: 'var(--ink)', marginBottom: '10px' }}>{t("portfolio_empty")}</h3>
+                <p className="form-subtitle">Head over to the board to start trading!</p>
+                <Link href="/" className="btn-primary" style={{ display: 'inline-block', marginTop: '24px' }}>{t("nav_board")}</Link>
+              </div>
+            ) : holdings.length > 0 ? (
+              <div className="portfolio-list" style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                {holdings.map((token) => (
+                  <Link href={`/token/${token.id}`} key={token.id} className="card portfolio-item-card" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', textDecoration: 'none', transition: 'transform 0.2s' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+                      <div className="token-avatar" style={{ width: '48px', height: '48px', borderRadius: '12px', background: 'var(--bg-deep)', display: 'flex', justifyContent: 'center', alignItems: 'center', fontSize: '20px' }}>
+                        {isSafeUrl(token.coin.logoUrl) ? <img src={token.coin.logoUrl} alt="" referrerPolicy="no-referrer" style={{ width: '100%', height: '100%', borderRadius: '12px' }} /> : token.coin.symbol[0]}
+                      </div>
+                      <div>
+                        <h3 style={{ margin: 0, fontSize: '16px', color: 'var(--ink)' }}>{token.coin.name}</h3>
+                        <p style={{ margin: 0, fontSize: '13px', color: 'var(--accent)', fontWeight: 700 }}>${token.coin.symbol}</p>
+                      </div>
+                    </div>
+
+                    <div style={{ textAlign: 'right' }}>
+                      <p className="stat-label">Balance</p>
+                      <p className="stat-value" style={{ margin: 0, color: 'var(--ink)' }}>{formatNum(token.balance.toFixed(2))}</p>
+                    </div>
+                  </Link>
+                ))}
+              </div>
+            ) : null}
+          </>
+        ) : (
+          <>
+            {favorites.length === 0 ? (
+              <div className="card" style={{ textAlign: 'center', padding: '60px' }}>
+                <p style={{ fontSize: '48px', marginBottom: '20px' }}>★</p>
+                <h3 style={{ color: 'var(--ink)', marginBottom: '10px' }}>Your Watchlist is Empty</h3>
+                <p className="form-subtitle">Add tokens to your watchlist to track them here!</p>
+                <Link href="/" className="btn-primary" style={{ display: 'inline-block', marginTop: '24px' }}>Explore Tokens</Link>
+              </div>
+            ) : (
+              <div className="portfolio-list" style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                {favorites.map((token) => (
+                  <Link href={`/token/${token.id}`} key={token.id} className="card portfolio-item-card" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', textDecoration: 'none', transition: 'transform 0.2s' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+                      <div className="token-avatar" style={{ width: '48px', height: '48px', borderRadius: '12px', background: 'var(--bg-deep)', display: 'flex', justifyContent: 'center', alignItems: 'center', fontSize: '20px' }}>
+                        {isSafeUrl(token.coin.logoUrl) ? <img src={token.coin.logoUrl} alt="" referrerPolicy="no-referrer" style={{ width: '100%', height: '100%', borderRadius: '12px' }} /> : token.coin.symbol[0]}
+                      </div>
+                      <div>
+                        <h3 style={{ margin: 0, fontSize: '16px', color: 'var(--ink)' }}>{token.coin.name}</h3>
+                        <p style={{ margin: 0, fontSize: '13px', color: 'var(--accent)', fontWeight: 700 }}>${token.coin.symbol}</p>
+                      </div>
+                    </div>
+
+                    <div style={{ textAlign: 'right' }}>
+                      <span className="status-badge" style={{ fontSize: '10px' }}>{token.status.replace(/_/g, " ")}</span>
+                    </div>
+                  </Link>
+                ))}
+              </div>
+            )}
+          </>
+        )}
       </main>
 
       <style jsx>{`

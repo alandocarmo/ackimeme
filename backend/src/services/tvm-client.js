@@ -79,5 +79,5 @@ function getTvmCore() {
 module.exports = {
   getTvmClient,
   getTvmCore,
-  sdkAvailable
+  get sdkAvailable() { return sdkAvailable; }
 };

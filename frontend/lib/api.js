@@ -185,3 +185,34 @@ export function getTrades(launchId, limit = 50) {
 export function getHolders(launchId) {
   return request(`/launches/${encodeURIComponent(launchId)}/holders`);
 }
+
+// ─── Improvements API ────────────────────────────────────────────────────────
+
+export function searchLaunches(q) {
+  return request(`/launches/search?q=${encodeURIComponent(q)}`);
+}
+
+export function addFavorite(launchId) {
+  return request(`/launches/${encodeURIComponent(launchId)}/favorite`, {
+    method: "POST",
+  });
+}
+
+export function removeFavorite(launchId) {
+  return request(`/launches/${encodeURIComponent(launchId)}/favorite`, {
+    method: "DELETE",
+  });
+}
+
+export function getFavorites() {
+  return request("/launches/my/favorites");
+}
+
+export function getPriceHistory(launchId, interval = 15) {
+  return request(`/launches/${encodeURIComponent(launchId)}/price-history?interval=${interval}`);
+}
+
+export function getGlobalStats() {
+  return request("/stats");
+}
+

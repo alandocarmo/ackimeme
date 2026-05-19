@@ -1,7 +1,7 @@
 import Head from "next/head";
 import Link from "next/link";
 import { useDeferredValue, useEffect, useState } from "react";
-import { getPublicLaunches, getSocket } from "../lib/api";
+import { getPublicLaunches, getSocket, searchLaunches, getGlobalStats } from "../lib/api";
 import { formatSupply, compactWallet, isSafeUrl } from "../lib/utils";
 import { useI18n } from "../lib/i18n";
 
@@ -72,6 +72,8 @@ function computeAggregateStats(launches) {
 export default function Home() {
   const { t } = useI18n();
   const [launches, setLaunches] = useState([]);
+  const [searchResults, setSearchResults] = useState(null);
+  const [stats, setStats] = useState(null);
   const [error, setError] = useState("");
   const [search, setSearch] = useState("");
   const [filter, setFilter] = useState("new"); // new | trending | finishing
@@ -123,7 +125,32 @@ export default function Home() {
     };
   }, []);
 
-  let filtered = launches.filter((l) => matchesSearch(l, deferredSearch));
+  // Server-side search logic
+  useEffect(() => {
+    if (!deferredSearch) {
+      setSearchResults(null);
+      return;
+    }
+    searchLaunches(deferredSearch)
+      .then((r) => {
+        setSearchResults(r.launches || []);
+      })
+      .catch((e) => {
+        console.error("Search error", e);
+        setSearchResults([]); // Fallback to empty list so user knows it failed
+      });
+  }, [deferredSearch]);
+
+  // Global stats fetch
+  useEffect(() => {
+    getGlobalStats()
+      .then((r) => setStats(r.stats))
+      .catch((e) => console.error("Global stats error", e));
+  }, [launches]);
+
+  let filtered = searchResults !== null
+    ? searchResults
+    : launches.filter((l) => matchesSearch(l, deferredSearch));
 
   const isBoostedActive = (l) => l.protocol?.isBoosted && (Date.now() - new Date(l.createdAt).getTime() < 24 * 60 * 60 * 1000);
 
@@ -171,8 +198,8 @@ export default function Home() {
         </section>
 
         {/* Live Stats Banner */}
-        {launches.length > 0 && (() => {
-          const agg = computeAggregateStats(launches);
+        {(stats || launches.length > 0) && (() => {
+          const agg = stats || computeAggregateStats(launches);
           return (
             <div className="container">
               <div className="stats-banner">
@@ -185,8 +212,8 @@ export default function Home() {
                   <span className="stats-banner-label">{t("stats_shell_locked")}</span>
                 </div>
                 <div className="stats-banner-item">
-                  <span className="stats-banner-value"><span className="warm">{agg.activeTrading}</span></span>
-                  <span className="stats-banner-label">{t("stats_active_trading")}</span>
+                  <span className="stats-banner-value"><span className="warm">{stats ? agg.activeWallets : agg.activeTrading}</span></span>
+                  <span className="stats-banner-label">{stats ? "Active Traders" : t("stats_active_trading")}</span>
                 </div>
                 <div className="stats-banner-item">
                   <span className="stats-banner-value"><span className="purple">●</span></span>

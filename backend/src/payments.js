@@ -102,9 +102,9 @@ async function verifyPayment({ walletAddress, txHash, tokenSymbol, isBoosted = f
   const receivedNano = BigInt(rawShellAmount.replace(/\D/g, "") || "0");
   
   // Launch Boost: +500 SHELL if boosted
-  const baseFee = Number(requirement.minimumAmount);
-  const totalRequired = isBoosted ? baseFee + 500 : baseFee;
-  const requiredNano = BigInt(totalRequired) * 1_000_000_000n;
+  const baseFee = BigInt(requirement.minimumAmount);
+  const totalRequired = isBoosted ? baseFee + 500n : baseFee;
+  const requiredNano = totalRequired * 1_000_000_000n;
 
   if (receivedNano < requiredNano) {
     throw new Error(
@@ -119,7 +119,7 @@ async function verifyPayment({ walletAddress, txHash, tokenSymbol, isBoosted = f
     walletAddress: normalizedWallet,
     payerWallet: normalizedSender,
     tokenSymbol: "SHELL",
-    amount: Number(tx.amount),
+    amount: tx.amount,
     nanoAmount: receivedNano.toString(),
     feeWallet: requirement.feeWallet,
     minimumAmount: requirement.minimumAmount,

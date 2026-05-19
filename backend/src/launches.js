@@ -261,4 +261,5 @@ function createLaunchTicket({ launchRequest, treasuryPayment, riskProfile }) {
 module.exports = {
   createLaunchTicket,
   normalizeLaunchRequest,
+  parseSlopeDivisor
 };

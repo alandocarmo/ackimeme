@@ -163,6 +163,84 @@ function BubbleMap({ holders, totalSupply }) {
   );
 }
 
+function CandlestickChart({ history }) {
+  if (!history || history.length === 0) {
+    return (
+      <div className="card chart-card" style={{ height: '240px', display: 'flex', justifyContent: 'center', alignItems: 'center', color: 'var(--ink-soft)', border: '1px solid var(--ink-faint)', background: '#0a0a0a' }}>
+        No price history available yet. Start trading to generate candles!
+      </div>
+    );
+  }
+
+  let minPrice = Math.min(...history.map(c => c.low));
+  let maxPrice = Math.max(...history.map(c => c.high));
+  
+  const priceDiff = maxPrice - minPrice;
+  const padding = priceDiff === 0 ? minPrice * 0.1 : priceDiff * 0.1;
+  minPrice = Math.max(0, minPrice - padding);
+  maxPrice = maxPrice + padding;
+
+  const width = 1000;
+  const height = 240;
+  const paddingLeft = 10;
+  const paddingRight = 80;
+  const paddingTop = 20;
+  const paddingBottom = 20;
+
+  const chartWidth = width - paddingLeft - paddingRight;
+  const chartHeight = height - paddingTop - paddingBottom;
+
+  const scaleY = (val) => {
+    if (maxPrice - minPrice === 0) return paddingTop + chartHeight / 2;
+    return paddingTop + chartHeight - ((val - minPrice) / (maxPrice - minPrice)) * chartHeight;
+  };
+
+  const candleWidth = Math.max(2, (chartWidth / history.length) * 0.7);
+  const gap = (chartWidth / history.length) * 0.3;
+
+  return (
+    <div className="card chart-card" style={{ height: '240px', padding: '10px', border: '1px solid var(--ink-faint)', background: '#0a0a0a', position: 'relative', overflow: 'hidden' }}>
+      <svg viewBox={`0 0 ${width} ${height}`} style={{ width: '100%', height: '100%' }}>
+        {/* Horizontal grid lines */}
+        {[0, 0.25, 0.5, 0.75, 1].map((p, idx) => {
+          const price = minPrice + (maxPrice - minPrice) * p;
+          const y = scaleY(price);
+          return (
+            <g key={idx}>
+              <line x1={paddingLeft} y1={y} x2={width - paddingRight} y2={y} stroke="rgba(255,255,255,0.05)" strokeWidth="1" strokeDasharray="4 4" />
+              <text x={width - paddingRight + 5} y={y + 4} fill="var(--ink-soft)" fontSize="10" fontFamily="monospace">
+                {price.toFixed(9)}
+              </text>
+            </g>
+          );
+        })}
+
+        {/* Candles */}
+        {history.map((candle, idx) => {
+          const x = paddingLeft + idx * (chartWidth / history.length) + gap / 2;
+          const openY = scaleY(candle.open);
+          const closeY = scaleY(candle.close);
+          const highY = scaleY(candle.high);
+          const lowY = scaleY(candle.low);
+
+          const isUp = candle.close >= candle.open;
+          const color = isUp ? '#10b981' : '#ef4444';
+
+          const bodyY = Math.min(openY, closeY);
+          const bodyHeight = Math.max(2, Math.abs(closeY - openY));
+
+          return (
+            <g key={idx}>
+              <line x1={x + candleWidth / 2} y1={highY} x2={x + candleWidth / 2} y2={lowY} stroke={color} strokeWidth="1.5" />
+              <rect x={x} y={bodyY} width={candleWidth} height={bodyHeight} fill={color} stroke={color} strokeWidth="1" rx="1" />
+            </g>
+          );
+        })}
+      </svg>
+    </div>
+  );
+}
+
 /** Nano to decimal (9 decimals standard in TVM/SHELL) */
 function nanoToDecimal(nano) {
   const val = BigInt(String(nano || "0").replace(/\D/g, "") || "0");
@@ -228,6 +306,11 @@ export default function TokenPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const { toast, ToastContainer } = useToast();
+
+  const [isFavorite, setIsFavorite] = useState(false);
+  const [chartTab, setChartTab] = useState("theory"); // theory | live
+  const [priceHistory, setPriceHistory] = useState([]);
+  const [selectedInterval, setSelectedInterval] = useState(15);
 
   // M2 FIX: wrap setTradeMode to clear stale messages
   const [tradeMode, _setTradeMode] = useState("buy");
@@ -300,6 +383,53 @@ export default function TokenPage() {
     if (typeof window === "undefined") return;
     getSession().then(r => setSession(r.session)).catch(() => {});
   }, []);
+
+  // Fetch Favorites status for this user
+  useEffect(() => {
+    if (!session || !id) return;
+    import("../../lib/api").then(({ getFavorites }) => {
+      getFavorites()
+        .then(r => {
+          const favs = r.launches || [];
+          setIsFavorite(favs.some(f => f.id === id));
+        })
+        .catch(() => {});
+    });
+  }, [session, id]);
+
+  const handleToggleFavorite = useCallback(async () => {
+    if (!session) return router.push(`/auth?from=/token/${id}`);
+    try {
+      const { addFavorite, removeFavorite } = await import("../../lib/api");
+      if (isFavorite) {
+        await removeFavorite(id);
+        setIsFavorite(false);
+        toast.success("Removed", "Removido dos favoritos!");
+      } else {
+        await addFavorite(id);
+        setIsFavorite(true);
+        toast.success("Added", "Adicionado aos favoritos!");
+      }
+    } catch (err) {
+      toast.error("Erro", err.message || "Erro ao atualizar favoritos.");
+    }
+  }, [session, id, isFavorite, toast, router]);
+
+  // Fetch Candlestick Price History
+  const fetchPriceHistory = useCallback(() => {
+    if (!id) return;
+    import("../../lib/api").then(({ getPriceHistory }) => {
+      getPriceHistory(id, selectedInterval)
+        .then(r => {
+          setPriceHistory(r.history || []);
+        })
+        .catch((err) => console.error("Error fetching price history", err));
+    });
+  }, [id, selectedInterval]);
+
+  useEffect(() => {
+    fetchPriceHistory();
+  }, [fetchPriceHistory, trades]);
 
   const fetchToken = useCallback(() => {
     if (!id) return;
@@ -843,38 +973,132 @@ export default function TokenPage() {
                 </div>
                 <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: '8px' }}>
                   <div className="status-badge">{token.status.replace(/_/g, " ")}</div>
-                  <button 
-                    onClick={() => {
-                      const shareText = `Check out $${token.coin.symbol} on AckiMeme! 🚀`;
-                      const shareUrl = typeof window !== 'undefined' ? window.location.href : '';
-                      window.open(`https://t.me/share/url?url=${encodeURIComponent(shareUrl)}&text=${encodeURIComponent(shareText)}`, '_blank');
-                    }}
-                    style={{
-                      background: 'rgba(0, 136, 204, 0.1)',
-                      color: '#0088cc',
-                      border: '1px solid rgba(0, 136, 204, 0.2)',
-                      padding: '4px 12px',
-                      borderRadius: '12px',
-                      fontSize: '12px',
-                      fontWeight: 600,
-                      cursor: 'pointer',
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: '4px'
-                    }}
-                  >
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
-                    Share
-                  </button>
+                  <div style={{ display: 'flex', gap: '8px' }}>
+                    <button
+                      onClick={handleToggleFavorite}
+                      style={{
+                        background: isFavorite ? 'rgba(250, 204, 21, 0.15)' : 'rgba(255, 255, 255, 0.05)',
+                        color: isFavorite ? '#eab308' : 'var(--ink-soft)',
+                        border: isFavorite ? '1px solid rgba(250, 204, 21, 0.3)' : '1px solid var(--ink-faint)',
+                        padding: '4px 12px',
+                        borderRadius: '12px',
+                        fontSize: '12px',
+                        fontWeight: 600,
+                        cursor: 'pointer',
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '4px',
+                        transition: 'all 0.2s'
+                      }}
+                    >
+                      <span style={{ fontSize: '14px' }}>{isFavorite ? "★" : "☆"}</span>
+                      {isFavorite ? "Favorited" : "Favorite"}
+                    </button>
+
+                    <button 
+                      onClick={() => {
+                        const shareText = `Check out $${token.coin.symbol} on AckiMeme! 🚀`;
+                        const shareUrl = typeof window !== 'undefined' ? window.location.href : '';
+                        window.open(`https://t.me/share/url?url=${encodeURIComponent(shareUrl)}&text=${encodeURIComponent(shareText)}`, '_blank');
+                      }}
+                      style={{
+                        background: 'rgba(0, 136, 204, 0.1)',
+                        color: '#0088cc',
+                        border: '1px solid rgba(0, 136, 204, 0.2)',
+                        padding: '4px 12px',
+                        borderRadius: '12px',
+                        fontSize: '12px',
+                        fontWeight: 600,
+                        cursor: 'pointer',
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '4px'
+                      }}
+                    >
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
+                      Share
+                    </button>
+                  </div>
                 </div>
               </div>
 
-              {/* GAP-1: Price Chart */}
-              <PriceChart 
-                currentPrice={onchainPrice} 
-                progressPct={stats.progressPct} 
-                slopeDivisor={token.protocol?.slopeDivisor} 
-              />
+              {/* GAP-1: Price Chart with Theory / Candlestick Toggles */}
+              <div style={{ marginBottom: '24px' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
+                  <div style={{ display: 'flex', gap: '4px', background: 'rgba(255,255,255,0.05)', padding: '2px', borderRadius: '8px' }}>
+                    <button
+                      onClick={() => setChartTab("theory")}
+                      style={{
+                        padding: '6px 12px',
+                        borderRadius: '6px',
+                        border: 'none',
+                        background: chartTab === "theory" ? 'var(--accent)' : 'transparent',
+                        color: chartTab === "theory" ? '#000' : 'var(--ink-soft)',
+                        fontSize: '11px',
+                        fontWeight: 700,
+                        cursor: 'pointer',
+                        transition: 'all 0.2s'
+                      }}
+                    >
+                      {t("detail_bonding_curve") || "Theory Curve"}
+                    </button>
+                    <button
+                      onClick={() => setChartTab("live")}
+                      style={{
+                        padding: '6px 12px',
+                        borderRadius: '6px',
+                        border: 'none',
+                        background: chartTab === "live" ? 'var(--accent)' : 'transparent',
+                        color: chartTab === "live" ? '#000' : 'var(--ink-soft)',
+                        fontSize: '11px',
+                        fontWeight: 700,
+                        cursor: 'pointer',
+                        transition: 'all 0.2s'
+                      }}
+                    >
+                      📈 Price Candles
+                    </button>
+                  </div>
+
+                  {chartTab === "live" && (
+                    <div style={{ display: 'flex', gap: '4px', background: 'rgba(255,255,255,0.02)', padding: '2px', borderRadius: '6px', border: '1px solid var(--ink-faint)' }}>
+                      {[5, 15, 60, 1440].map((mins) => {
+                        const label = mins === 5 ? "5m" : mins === 15 ? "15m" : mins === 60 ? "1h" : "1d";
+                        const active = selectedInterval === mins;
+                        return (
+                          <button
+                            key={mins}
+                            onClick={() => setSelectedInterval(mins)}
+                            style={{
+                              padding: '4px 8px',
+                              borderRadius: '4px',
+                              border: 'none',
+                              background: active ? 'rgba(0, 255, 136, 0.15)' : 'transparent',
+                              color: active ? 'var(--accent)' : 'var(--ink-soft)',
+                              fontSize: '10px',
+                              fontWeight: 600,
+                              cursor: 'pointer',
+                              transition: 'all 0.1s'
+                            }}
+                          >
+                            {label}
+                          </button>
+                        );
+                      })}
+                    </div>
+                  )}
+                </div>
+
+                {chartTab === "theory" ? (
+                  <PriceChart 
+                    currentPrice={onchainPrice} 
+                    progressPct={stats.progressPct} 
+                    slopeDivisor={token.protocol?.slopeDivisor} 
+                  />
+                ) : (
+                  <CandlestickChart history={priceHistory} />
+                )}
+              </div>
 
               {/* Bonding Curve Card */}
               {!token.protocol?.pumpForever ? (

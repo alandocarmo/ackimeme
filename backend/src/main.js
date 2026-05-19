@@ -2,7 +2,7 @@ const crypto = require("crypto");
 require("dotenv").config();
 const express = require("express");
 const { buildPublicConfig, config, validateConfig } = require("./config");
-const { pool, pingDatabase, runMigrations } = require("./db");
+const { query, pool, pingDatabase, runMigrations } = require("./db");
 const {
   createWalletChallenge,
   revokeSession,
@@ -32,11 +32,18 @@ const {
   releaseTxHashReservation,
   getTradesByLaunchId,
   getTopHoldersByLaunchId,
+  searchLaunches,
+  addFavorite,
+  removeFavorite,
+  listFavorites,
+  getPriceHistoryByLaunchId,
+  getGlobalStats,
 } = require("./storage");
 const { createTreasuryPaymentRecord } = require("./treasury");
 const {
   getAccountBalance,
-  isTip3DecoderAvailable,
+  getTransaction,
+  getAccountPublicKey,
 } = require("./services/graphql.service");
 const { uploadToIPFS, createTokenMetadata } = require("./services/ipfs.service");
 const { deployTokenEcosystem } = require("./services/deployer.service");
@@ -64,23 +71,43 @@ function requireValidUUID(req, res, next) {
   next();
 }
 
+const ADDRESS_REGEX = /^-?[0-9]+:[0-9a-fA-F]{64}$/;
+function requireValidAddress(req, res, next) {
+  const address = req.params.address;
+  if (address && !ADDRESS_REGEX.test(address)) {
+    return res.status(400).json({ error: "Endereço inválido." });
+  }
+  next();
+}
+
 // ─── Redis Setup ────────────────────────────────────────────────────────────
 let redisClient = null;
 if (process.env.REDIS_URL) {
   redisClient = createClient({
     url: process.env.REDIS_URL,
     socket: {
-      tls: process.env.REDIS_URL.startsWith('rediss://')
+      tls: process.env.REDIS_URL.startsWith('rediss://'),
+      // PERF-05: Reconnect strategy with exponential backoff (max 30s)
+      reconnectStrategy: (retries) => {
+        if (retries > 20) {
+          console.error("[Redis] Max reconnection attempts exceeded. Rate limiting falls back to MemoryStore.");
+          return new Error("Redis max retries");
+        }
+        return Math.min(retries * 500, 30000);
+      }
     }
   });
-  redisClient.connect().catch(console.error);
-  console.log("[Redis] Conectado para rate limiting distribuído");
+  redisClient.on("error", (err) => console.error("[Redis] Client error:", err.message));
+  redisClient.on("reconnecting", () => console.warn("[Redis] Reconnecting..."));
+  redisClient.connect()
+    .then(() => console.log("[Redis] Conectado para rate limiting distribuído"))
+    .catch((err) => console.error("[Redis] Falha na conexão inicial:", err.message));
 }
 
 // ─── Background Jobs ────────────────────────────────────────────────────────
 // Limpeza de sessões e challenges expirados roda a cada 10 minutos 
 // em vez de sobrecarregar os endpoints de autenticação.
-setInterval(() => {
+const authCleanupTimer = setInterval(() => {
   cleanupExpiredAuthData().catch((err) =>
     console.error("[Cron] Erro ao limpar dados de auth expirados:", err.message)
   );
@@ -164,13 +191,14 @@ async function buildReadinessChecks(databaseReachable) {
     databaseConfigured: Boolean(config.databaseUrl),
     databaseReachable,
     graphqlConfigured: Boolean(config.graphqlUrl),
-    tip3DecoderAvailable: isTip3DecoderAvailable(),
     feeWalletConfigured: config.feeWalletConfigured,
     adminTokenConfigured: config.adminTokenStrong,
     allowedOriginsConfigured:
       config.allowedOrigins.length > 0 && !hasWildcardOrigin,
     storageProvider: "postgres",
-    redisReachable: redisClient ? await redisClient.ping().then(() => true).catch(() => false) : false
+    redisReachable: redisClient ? await redisClient.ping().then(() => true).catch(() => false) : false,
+    // BP-04: Verify Socket.IO is operational for real-time features
+    socketIoRunning: Boolean(io),
   };
 }
 
@@ -204,7 +232,7 @@ app.use(helmet({
 
 // Rate Limit Store
 const getRateLimitStore = () => {
-  if (redisClient) {
+  if (redisClient && redisClient.isOpen) {
     return new RedisStore({
       sendCommand: (...args) => redisClient.sendCommand(args),
     });
@@ -242,6 +270,15 @@ const paymentLimiter = rateLimit({
   message: { error: "Too many payment verification requests. Please wait." }
 });
 
+const apiLimiter = rateLimit({
+  windowMs: 60 * 1000,
+  max: 30, // 30 requests por IP por minuto
+  store: getRateLimitStore(),
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { error: "Too many requests. Please wait." }
+});
+
 // Parse JSON com limite rígido (100kb é suficiente para os payloads do DApp)
 app.use(express.json({ limit: "100kb" }));
 app.use(cookieParser());
@@ -268,7 +305,7 @@ app.use((req, res, next) => {
   }
 
   res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization, X-Admin-Token, x-admin-jwt");
-  res.setHeader("Access-Control-Allow-Methods", "GET, POST, PATCH, OPTIONS");
+  res.setHeader("Access-Control-Allow-Methods", "GET, POST, PATCH, DELETE, OPTIONS");
   res.setHeader("Access-Control-Allow-Credentials", "true");
 
   if (req.method === "OPTIONS") {
@@ -334,15 +371,19 @@ function buildPublicSession(session) {
 
 
 async function requireSession(req, res, next) {
-  const sessionToken = extractSessionToken(req);
-  const session = await touchSession(sessionToken);
+  try {
+    const sessionToken = extractSessionToken(req);
+    const session = await touchSession(sessionToken);
 
-  if (!session) {
-    return res.status(401).json({ error: "Sessão inválida ou expirada." });
+    if (!session) {
+      return res.status(401).json({ error: "Sessão inválida ou expirada." });
+    }
+
+    req.session = session;
+    return next();
+  } catch (err) {
+    return res.status(500).json({ error: "Erro interno ao validar sessão." });
   }
-
-  req.session = session;
-  return next();
 }
 
 
@@ -395,16 +436,20 @@ app.post("/admin/unlock", authLimiter, requireSession, async (req, res) => {
       }
     }
 
-    if (!password || password !== ADMIN_MASTER_PASSWORD) return res.status(401).json({ error: "Senha incorreta." });
+    // SEC-04: Constant-time comparison to prevent timing attacks on admin password
+    const passwordBuffer = Buffer.from(String(password || ""));
+    const masterBuffer = Buffer.from(ADMIN_MASTER_PASSWORD);
+    if (!password || passwordBuffer.length !== masterBuffer.length || !crypto.timingSafeEqual(passwordBuffer, masterBuffer)) return res.status(401).json({ error: "Senha incorreta." });
     
-    const token = signAdminJwt("admin");
+    // BUG-04: Use real wallet address for audit trail instead of hardcoded "admin"
+    const token = signAdminJwt(req.session.walletAddress);
     // Secure JWT via HttpOnly cookie
     res.cookie("adminJwt", token, {
        httpOnly: true,
        secure: config.isProduction,
-       sameSite: "strict",
+       sameSite: config.isProduction ? "none" : "lax",
        path: "/",
-       maxAge: 8 * 60 * 60 * 1000 // 8 hours
+       maxAge: 4 * 60 * 60 * 1000 // 4 hours
     });
     
     // A-06: JWT only via HttpOnly cookie — not in response body (prevents XSS exposure)
@@ -433,11 +478,13 @@ app.get("/healthz", (_, res) => {
 app.get("/readyz", async (_, res) => {
   try {
     await pingDatabase();
+    if (process.env.REDIS_URL && redisClient && redisClient.isOpen === false) {
+      throw new Error("Redis is not connected");
+    }
     const checks = await buildReadinessChecks(true);
     const readyForProduction =
       !config.isProduction ||
       (checks.graphqlConfigured &&
-        checks.tip3DecoderAvailable &&
         checks.feeWalletConfigured &&
         checks.adminTokenConfigured &&
         checks.allowedOriginsConfigured);
@@ -523,7 +570,7 @@ app.post("/auth/qr/generate", authLimiter, async (req, res) => {
   }
 });
 
-app.get("/auth/qr/status/:sessionId", async (req, res) => {
+app.get("/auth/qr/status/:sessionId", apiLimiter, requireValidUUID, async (req, res) => {
   try {
     const statusData = await getQrSessionStatus(req.params.sessionId);
     const sessionToken = statusData?.sessionToken;
@@ -537,14 +584,19 @@ app.get("/auth/qr/status/:sessionId", async (req, res) => {
   }
 });
 
-app.post("/auth/qr/webhook/:sessionId", async (req, res) => {
+app.post("/auth/qr/webhook/:sessionId", requireValidUUID, async (req, res) => {
   if (config.isProduction && !process.env.QR_WEBHOOK_SECRET) {
     return res.status(404).json({ error: "Not found." }); // ocultar em prod
   }
 
   if (config.isProduction) {
     const appSecret = req.headers["x-app-webhook-secret"];
-    if (!appSecret || appSecret !== process.env.QR_WEBHOOK_SECRET) {
+    if (!appSecret || !process.env.QR_WEBHOOK_SECRET) {
+      return res.status(401).json({ error: "Webhook não autorizado." });
+    }
+    const secretBuffer = Buffer.from(appSecret);
+    const expectedBuffer = Buffer.from(process.env.QR_WEBHOOK_SECRET);
+    if (secretBuffer.length !== expectedBuffer.length || !crypto.timingSafeEqual(secretBuffer, expectedBuffer)) {
       return res.status(401).json({ error: "Webhook não autorizado." });
     }
   }
@@ -567,32 +619,40 @@ app.post("/auth/qr/webhook/:sessionId", async (req, res) => {
 // ─────────────────────────────────────────────────────────────────────────────
 
 app.get("/auth/session", async (req, res) => {
-  const sessionToken = extractSessionToken(req);
-  const session = await touchSession(sessionToken);
+  try {
+    const sessionToken = extractSessionToken(req);
+    const session = await touchSession(sessionToken);
 
-  if (!session) {
-    return res.status(401).json({ error: "Sessão inválida ou expirada." });
+    if (!session) {
+      return res.status(401).json({ error: "Sessão inválida ou expirada." });
+    }
+
+    return res.json({
+      success: true,
+      session: buildPublicSession(session),
+    });
+  } catch (err) {
+    return res.status(500).json({ error: "Erro interno ao obter sessão." });
   }
-
-  return res.json({
-    success: true,
-    session: buildPublicSession(session),
-  });
 });
 
 app.post("/auth/logout", async (req, res) => {
-  const sessionToken = extractSessionToken(req);
-  const revoked = await revokeSession(sessionToken);
+  try {
+    const sessionToken = extractSessionToken(req);
+    const revoked = await revokeSession(sessionToken);
 
-  res.clearCookie("sessionToken", {
-    path: "/",
-    sameSite: config.isProduction ? "none" : "lax",
-    secure: config.isProduction,
-  });
+    res.clearCookie("sessionToken", {
+      path: "/",
+      sameSite: config.isProduction ? "none" : "lax",
+      secure: config.isProduction,
+    });
 
-  res.json({
-    success: revoked,
-  });
+    res.json({
+      success: revoked,
+    });
+  } catch (err) {
+    return res.status(500).json({ error: "Erro interno ao revogar sessão." });
+  }
 });
 
 
@@ -658,6 +718,18 @@ app.post("/verify-payment", paymentLimiter, requireSession, async (req, res) => 
       isBoosted,
     });
 
+    if (verifiedPaymentsCache.size >= 1000) {
+      // PERF-04: Evict oldest entries by timestamp, not just first key
+      let oldestKey = null;
+      let oldestTime = Infinity;
+      for (const [key, entry] of verifiedPaymentsCache) {
+        if (entry.timestamp < oldestTime) {
+          oldestTime = entry.timestamp;
+          oldestKey = key;
+        }
+      }
+      if (oldestKey) verifiedPaymentsCache.delete(oldestKey);
+    }
     verifiedPaymentsCache.set(
       buildVerifiedPaymentCacheKey({ walletAddress, txHash, tokenSymbol, isBoosted }),
       { payment, timestamp: Date.now() },
@@ -802,10 +874,10 @@ app.post("/launch-request", requireSession, async (req, res) => {
       deployReason: deployResult.reason || "",
     };
 
-    if (deployResult.status === "deployed") {
-      launchTicket.status = "on_chain_deployed";
-      launchTicket.mintingAvailable = true;
-      launchTicket.note = `Token criado com sucesso no IPFS (${ipfsHash}) e instanciado na Acki Nacki.`;
+    if (deployResult.status === "deployed" || deployResult.status === "deployment_queued") {
+      launchTicket.status = "deployment_queued";
+      launchTicket.mintingAvailable = false;
+      launchTicket.note = `Token submetido à blockchain com sucesso. Aguardando processamento on-chain da Acki Nacki...`;
     } else if (deployResult.status === "pending_onchain_recovery") {
       launchTicket.status = "on_chain_pending_recovery";
       launchTicket.mintingAvailable = false;
@@ -882,12 +954,57 @@ app.post("/launch-request", requireSession, async (req, res) => {
   }
 });
 
-app.get("/launches/my", requireSession, (req, res) => {
-  listLaunchesByWallet(req.session.walletAddress)
+function mapPublicLaunch(launch) {
+  if (!launch) return null;
+  return {
+    id: launch.id,
+    status: launch.status,
+    createdAt: launch.createdAt,
+    creatorWallet: launch.launchRequest?.creator?.wallet || launch.wallet_address || "",
+    coin: {
+      name: launch.launchRequest?.coin?.name || "",
+      symbol: launch.launchRequest?.coin?.symbol || "",
+      tagline: launch.launchRequest?.coin?.tagline || "",
+      description: launch.launchRequest?.coin?.description || "",
+      totalSupply: launch.launchRequest?.coin?.totalSupply || "0",
+      logoUrl: launch.launchRequest?.coin?.logoUrl || "",
+    },
+    links: launch.launchRequest?.links || {},
+    protocol: launch.launchRequest?.protocol || {},
+    treasuryPayment: {
+      tokenSymbol: launch.treasuryPayment?.tokenSymbol || "SHELL",
+      amount: launch.treasuryPayment?.amount || "0",
+    },
+    riskProfile: {
+      status: launch.riskProfile?.status || "low",
+      score: launch.riskProfile?.score || 0,
+    },
+    onchainData: {
+      ipfsHash: launch.ipfsHash || "",
+      tokenRootAddress: launch.tokenRootAddress || "",
+      bondingCurveAddress: launch.bondingCurveAddress || "",
+      deployStatus: launch.onchainData?.deployStatus || 
+                    (launch.status === "on_chain_deployed" ? "deployed" : "pending"),
+      reserveBalance: launch.onchainData?.reserveBalance || "0",
+      tokenSupply: launch.onchainData?.tokenSupply || "0",
+      lockedLiquidity: launch.onchainData?.lockedLiquidity || false,
+      updatedAt: launch.onchainData?.updatedAt || null,
+    },
+  };
+}
+
+app.get("/launches/search", (req, res) => {
+  const queryParam = String(req.query.q || "").trim();
+  const limit = Math.min(100, parseInt(req.query.limit) || 30);
+  const offset = Math.max(0, parseInt(req.query.offset) || 0);
+  if (!queryParam) {
+    return res.json({ success: true, launches: [] });
+  }
+  searchLaunches(queryParam, limit, offset)
     .then((launches) => {
       res.json({
         success: true,
-        launches,
+        launches: launches.map(mapPublicLaunch),
       });
     })
     .catch((error) => {
@@ -895,51 +1012,84 @@ app.get("/launches/my", requireSession, (req, res) => {
     });
 });
 
-app.get("/launches/public", (_, res) => {
-  res.set("Cache-Control", "public, s-maxage=10, stale-while-revalidate=30");
-  listPublicLaunches(30)
+app.post("/launches/:id/favorite", requireSession, requireValidUUID, async (req, res) => {
+  try {
+    const success = await addFavorite(req.session.walletAddress, req.params.id);
+    res.json({ success });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+app.delete("/launches/:id/favorite", requireSession, requireValidUUID, async (req, res) => {
+  try {
+    const success = await removeFavorite(req.session.walletAddress, req.params.id);
+    res.json({ success });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+app.get("/launches/my/favorites", requireSession, async (req, res) => {
+  try {
+    const launches = await listFavorites(req.session.walletAddress);
+    res.json({
+      success: true,
+      launches: launches.map(mapPublicLaunch),
+    });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+app.get("/launches/:id/price-history", requireValidUUID, async (req, res) => {
+  try {
+    const interval = parseInt(req.query.interval) || 15;
+    const history = await getPriceHistoryByLaunchId(req.params.id, interval);
+    res.json({
+      success: true,
+      history,
+    });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+app.get("/stats", async (req, res) => {
+  try {
+    res.set("Cache-Control", "public, s-maxage=5, stale-while-revalidate=15");
+    const stats = await getGlobalStats();
+    res.json({
+      success: true,
+      stats,
+    });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+app.get("/launches/my", requireSession, (req, res) => {
+  listLaunchesByWallet(req.session.walletAddress)
     .then((launches) => {
       res.json({
         success: true,
-        launches: launches.map((launch) => ({
-          id: launch.id,
-          status: launch.status,
-          createdAt: launch.createdAt,
-          creatorWallet: launch.launchRequest.creator.wallet,
-          coin: {
-            name: launch.launchRequest.coin.name,
-            symbol: launch.launchRequest.coin.symbol,
-            tagline: launch.launchRequest.coin.tagline,
-            description: launch.launchRequest.coin.description,
-            totalSupply: launch.launchRequest.coin.totalSupply,
-            logoUrl: launch.launchRequest.coin.logoUrl,
-          },
-          links: launch.launchRequest.links,
-          protocol: launch.launchRequest.protocol,
-          treasuryPayment: {
-            tokenSymbol: launch.treasuryPayment.tokenSymbol,
-            amount: launch.treasuryPayment.amount,
-          },
-          riskProfile: {
-            status: launch.riskProfile.status,
-            score: launch.riskProfile.score,
-          },
-          onchainData: {
-            ipfsHash: launch.ipfsHash,
-            tokenRootAddress: launch.tokenRootAddress,
-            bondingCurveAddress: launch.bondingCurveAddress,
-            // M-03: Expose real deployStatus from onchainData instead of
-            // binary deployed/pending mapping. This preserves intermediate states like
-            // 'awaiting_chain_integration', 'pending_deployer_configuration', 'deploy_error'
-            deployStatus: launch.onchainData?.deployStatus || 
-                          (launch.status === "on_chain_deployed" ? "deployed" : "pending"),
-            reserveBalance: launch.onchainData?.reserveBalance || "0",
-            tokenSupply: launch.onchainData?.tokenSupply || "0",
-            lockedLiquidity: launch.onchainData?.lockedLiquidity || false,
-            updatedAt: launch.onchainData?.updatedAt || null,
-          },
-        })),
+        launches: launches.map(mapPublicLaunch),
+      });
+    })
+    .catch((error) => {
+      res.status(500).json({ error: error.message });
+    });
+});
 
+app.get("/launches/public", (req, res) => {
+  const limit = Math.min(Math.max(Number(req.query.limit) || 30, 1), 100);
+  const offset = Math.max(Number(req.query.offset) || 0, 0);
+  res.set("Cache-Control", "public, s-maxage=10, stale-while-revalidate=30");
+  listPublicLaunches(limit, offset)
+    .then((launches) => {
+      res.json({
+        success: true,
+        launches: launches.map(mapPublicLaunch),
       });
     })
     .catch((error) => {
@@ -948,7 +1098,7 @@ app.get("/launches/public", (_, res) => {
 });
 
 // ── GET single token by ID (direct query — no full table scan) ───────────────
-app.get("/launches/:id", async (req, res) => {
+app.get("/launches/:id", requireValidUUID, async (req, res) => {
   try {
     // CDN cache agressivo para suportar grandes picos de acesso na página do token
     res.set("Cache-Control", "public, s-maxage=5, stale-while-revalidate=15");
@@ -998,7 +1148,7 @@ app.get("/launches/:id", async (req, res) => {
   }
 });
 // ── Comments API (Feature: Chat) ──────────────────────────────────────────────
-app.get("/launches/:id/comments", async (req, res) => {
+app.get("/launches/:id/comments", requireValidUUID, async (req, res) => {
   try {
     // Audit #P2: Clamp limit to prevent DoS via large queries
     const rawLimit = parseInt(req.query.limit) || 50;
@@ -1015,7 +1165,7 @@ app.get("/launches/:id/comments", async (req, res) => {
 app.post("/launches/:id/comments", requireSession, requireValidUUID, async (req, res) => {
   try {
     // P2 FIX: Ensure launch exists to prevent 500 FK error
-    const launchExists = await pool.query(`SELECT id FROM launches WHERE id=$1`, [req.params.id]);
+    const launchExists = await query(`SELECT id FROM launches WHERE id=$1`, [req.params.id]);
     if (launchExists.rowCount === 0) {
       return res.status(404).json({ error: "Token não encontrado." });
     }
@@ -1023,7 +1173,7 @@ app.post("/launches/:id/comments", requireSession, requireValidUUID, async (req,
     const wallet = req.session.walletAddress;
     
     // DESIGN-5 / Audit N3: Persistent Rate limit (1 comment per 30s per wallet)
-    const { rows } = await pool.query(
+    const { rows } = await query(
       `SELECT last_comment_at FROM wallet_rate_limits WHERE wallet_address = $1`,
       [wallet]
     );
@@ -1040,13 +1190,13 @@ app.post("/launches/:id/comments", requireSession, requireValidUUID, async (req,
 
     // DESIGN-5: Basic URL/link filtering to prevent spam/phishing
     // M1: Simplified to avoid blocking legitimate mentions like "ackimeme.fun"
-    const urlRegex = /(https?:\/\/[^\s]+)|(www\.[^\s]+)/i;
+    const urlRegex = /(https?:\/\/[^\s]+)|(www\.[^\s]+)|([a-zA-Z0-9-]+\.[a-zA-Z]{2,}(\/[^\s]*)?)/i;
     if (urlRegex.test(content)) {
       return res.status(400).json({ error: "Links não são permitidos nos comentários por segurança." });
     }
 
     // Upsert the last comment timestamp
-    await pool.query(
+    await query(
       `INSERT INTO wallet_rate_limits (wallet_address, last_comment_at) VALUES ($1, NOW())
        ON CONFLICT (wallet_address) DO UPDATE SET last_comment_at = NOW()`,
       [wallet]
@@ -1068,7 +1218,9 @@ app.post("/launches/:id/comments", requireSession, requireValidUUID, async (req,
     
     res.json({ success: true, comment: savedComment });
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    // BP-03: Distinguish client errors from server errors
+    const isClientError = err.message?.includes("não encontrado") || err.message?.includes("entre 1 e 500") || err.message?.includes("Links não são");
+    res.status(isClientError ? 400 : 500).json({ error: err.message });
   }
 });
 
@@ -1094,17 +1246,17 @@ app.get("/launches/:id/holders", requireValidUUID, async (req, res) => {
     
     // Calcula o saldo da Bonding Curve (Total Supply - Circulating)
     const rawSupply = launch.onchainData?.tokenSupply || launch.tokenSupply || "1000000000";
-    // Se o supply vier cru do formulário (ex: 1000000000), converte para nano (x 1e9)
-    const totalSupply = String(rawSupply).length < 15 ? Number(rawSupply) * 1e9 : Number(rawSupply);
+    const isNano = Boolean(launch.onchainData?.tokenSupply);
+    const totalSupply = isNano ? BigInt(rawSupply) : BigInt(rawSupply) * 1000000000n;
     
-    const circulating = holders.reduce((acc, h) => acc + h.balance, 0);
-    const bcBalance = Math.max(0, totalSupply - circulating);
+    const circulating = holders.reduce((acc, h) => acc + BigInt(h.balance), 0n);
+    const bcBalance = totalSupply > circulating ? (totalSupply - circulating) : 0n;
     
     // Adiciona o Bonding Curve como um holder virtual se tiver saldo
-    if (bcBalance > 0 && launch.onchainData?.bondingCurveAddress) {
+    if (bcBalance > 0n && launch.onchainData?.bondingCurveAddress) {
       holders.push({
         walletAddress: launch.onchainData.bondingCurveAddress,
-        balance: bcBalance,
+        balance: String(bcBalance),
         isBondingCurve: true
       });
     }
@@ -1119,7 +1271,7 @@ app.get("/launches/:id/holders", requireValidUUID, async (req, res) => {
 });
 
 // ── GET wallet SHELL balance (for UI pre-flight check) ───────────────────────
-app.get("/wallet/:address/balance", async (req, res) => {
+app.get("/wallet/:address/balance", apiLimiter, requireValidAddress, async (req, res) => {
   try {
     const balance = await getAccountBalance(req.params.address);
     if (!balance) return res.status(404).json({ error: "Conta não encontrada na Acki Nacki." });
@@ -1139,14 +1291,10 @@ async function start() {
   await pingDatabase();
   await runMigrations();
 
-  if (!isTip3DecoderAvailable()) {
-    console.warn("[Config] Decoder TIP-3 indisponível. Validação de pagamento USDC ficará bloqueada.");
-  }
-
   const server = http.createServer(app);
   io = new Server(server, {
     cors: {
-      origin: config.allowedOrigins,
+      origin: config.allowedOrigins?.length ? config.allowedOrigins : "*",
       credentials: true
     }
   });
@@ -1210,8 +1358,9 @@ async function start() {
     isShuttingDown = true;
     console.log(`\n[Server] ${signal} received. Closing resources...`);
     
-    // Stop sync job
+    // Stop sync job and cron jobs
     stopSyncJob();
+    clearInterval(authCleanupTimer);
 
     // Stop accepting new connections and wait for active requests
     server.close(async () => {

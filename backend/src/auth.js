@@ -317,9 +317,12 @@ async function getQrSessionStatus(sessionId) {
   const session = res.rows[0];
   
   if (session.status === 'done') {
-    // Return the token, then remove from DB to prevent replay
-    await query(`DELETE FROM qr_sessions WHERE id=$1`, [sessionId]);
-    return { status: 'done', sessionToken: session.session_token };
+    // Return the token atomically and remove from DB to prevent replay
+    const delRes = await query(`DELETE FROM qr_sessions WHERE id=$1 AND status='done' RETURNING session_token`, [sessionId]);
+    if (delRes.rowCount === 0) {
+      return { status: 'expired' };
+    }
+    return { status: 'done', sessionToken: delRes.rows[0].session_token };
   }
   
   return { status: session.status };
@@ -443,13 +446,8 @@ async function processQrWebhook({ sessionId, walletAddress, publicKey, signature
   }
 }
 
-async function getSessionFromToken(token) {
-  return getSessionByToken(trimString(token));
-}
-
 module.exports = {
   createWalletChallenge,
-  getSessionFromToken,
   revokeSession,
   touchSession,
   verifyWalletChallenge,

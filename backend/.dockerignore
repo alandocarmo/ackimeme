@@ -1,3 +1,7 @@
 node_modules
 npm-debug.log
-data/dev-wallet.json
+.env
+.env.*
+data/
+scripts/
+src/contracts/
