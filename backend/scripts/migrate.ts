@@ -1,5 +1,5 @@
-require("dotenv").config();
-const { runMigrations, pingDatabase } = require("../src/db");
+import "dotenv/config";
+import { runMigrations, pingDatabase } from "../src/db";
 
 async function main() {
   await pingDatabase();

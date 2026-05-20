@@ -1,13 +1,22 @@
-const { randomUUID } = require("crypto");
-const { config } = require("./config");
+import { randomUUID } from "crypto";
+import { config } from "./config";
 
-function normalizeTokenSymbol(value) {
+export function normalizeTokenSymbol(value: any): string {
   return String(value || "")
     .trim()
     .toUpperCase();
 }
 
-function getCreationFeeRequirement(tokenSymbol) {
+interface CreationFeeRequirement {
+  tokenSymbol: string;
+  minimumAmount: number;
+  feeWallet: string;
+  appFeeSharePercent: number;
+  networkSettlementToken: string;
+  networkSettlementStatus: string;
+}
+
+export function getCreationFeeRequirement(tokenSymbol: any): CreationFeeRequirement {
   if (!config.feeWalletConfigured) {
     throw new Error("FEE_WALLET não configurada corretamente no backend.");
   }
@@ -16,7 +25,7 @@ function getCreationFeeRequirement(tokenSymbol) {
 
   // SHELL-only: all creation fees are paid in the native SHELL token
   const option = config.creationFeeOptions.find(
-    (item) => item.tokenSymbol === normalizedToken,
+    (item: any) => item.tokenSymbol === normalizedToken,
   );
 
   if (!option) {
@@ -26,7 +35,8 @@ function getCreationFeeRequirement(tokenSymbol) {
   }
 
   return {
-    ...option,
+    tokenSymbol: option.tokenSymbol,
+    minimumAmount: option.minimumAmount,
     feeWallet: config.feeWallet,
     appFeeSharePercent: config.appFeeSharePercent,
     // SHELL is the native token — no secondary settlement needed
@@ -35,12 +45,32 @@ function getCreationFeeRequirement(tokenSymbol) {
   };
 }
 
-function createTreasuryPaymentRecord({
+interface CreateTreasuryPaymentRecordParams {
+  creatorWallet: string;
+  txHash: string;
+  tokenSymbol: string;
+  amount: any;
+}
+
+interface TreasuryPaymentRecord {
+  id: string;
+  creatorWallet: string;
+  txHash: string;
+  tokenSymbol: string;
+  amount: any;
+  feeWallet: string;
+  appFeeSharePercent: number;
+  networkSettlementToken: string;
+  networkSettlementStatus: string;
+  recordedAt: string;
+}
+
+export function createTreasuryPaymentRecord({
   creatorWallet,
   txHash,
   tokenSymbol,
   amount,
-}) {
+}: CreateTreasuryPaymentRecordParams): TreasuryPaymentRecord {
   const requirement = getCreationFeeRequirement(tokenSymbol);
 
   return {
@@ -56,9 +86,3 @@ function createTreasuryPaymentRecord({
     recordedAt: new Date().toISOString(),
   };
 }
-
-module.exports = {
-  createTreasuryPaymentRecord,
-  getCreationFeeRequirement,
-  normalizeTokenSymbol,
-};

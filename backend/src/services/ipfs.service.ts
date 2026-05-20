@@ -1,4 +1,4 @@
-const axios = require("axios");
+import axios from "axios";
 
 /**
  * ipfs.service.js
@@ -18,7 +18,7 @@ const PINATA_SECRET_KEY = process.env.PINATA_SECRET_API_KEY || "";
  * Faz o upload de um objeto JSON (metadados do token) para o IPFS.
  * Retorna o CID (hash) do conteúdo.
  */
-async function uploadToIPFS(metadata) {
+export async function uploadToIPFS(metadata: any) {
   if (!PINATA_API_KEY || !PINATA_SECRET_KEY) {
     if (process.env.NODE_ENV === "production") {
       throw new Error(
@@ -57,7 +57,7 @@ async function uploadToIPFS(metadata) {
       );
 
       return response.data.IpfsHash;
-    } catch (error) {
+    } catch (error: any) {
       attempt++;
       console.error(`[IPFS] Erro ao subir para o Pinata (Tentativa ${attempt}/${maxAttempts}):`, error.response?.data || error.message);
       if (attempt >= maxAttempts) {
@@ -71,7 +71,7 @@ async function uploadToIPFS(metadata) {
 /**
  * Estrutura os metadados no padrão TEP-74 / TIP-3 compatibility
  */
-function createTokenMetadata(launchRequest) {
+export function createTokenMetadata(launchRequest: any) {
   const attributes = [
     { trait_type: "Platform", value: "AckiMeme" },
     { trait_type: "LaunchMode", value: "Bonding Curve" },
@@ -93,7 +93,4 @@ function createTokenMetadata(launchRequest) {
   };
 }
 
-module.exports = {
-  uploadToIPFS,
-  createTokenMetadata
-};
+

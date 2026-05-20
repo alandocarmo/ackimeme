@@ -1,7 +1,43 @@
-const { randomUUID } = require("crypto");
+import { randomUUID } from "crypto";
 
-function createInitialRiskProfile({ launchRequest, session }) {
-  const signals = [];
+interface CreateInitialRiskProfileParams {
+  launchRequest: {
+    creator: {
+      wallet: string;
+    };
+    coin: {
+      name?: string;
+      description?: string;
+      totalSupply?: string;
+    };
+    links: {
+      website?: string;
+      telegramUrl?: string;
+    };
+  };
+  session?: {
+    proofLevel?: string;
+    telegramBinding?: {
+      userId?: string;
+    };
+  };
+}
+
+interface RiskProfile {
+  id: string;
+  launchId: string;
+  creatorWallet: string;
+  score: number;
+  status: "manual_review" | "watch";
+  signals: string[];
+  createdAt: string;
+}
+
+export function createInitialRiskProfile({
+  launchRequest,
+  session,
+}: CreateInitialRiskProfileParams): RiskProfile {
+  const signals: string[] = [];
   let score = 30; // L-04: Increased base score to +30 for new untrusted networks
 
   if (!session?.telegramBinding?.userId) {
@@ -16,7 +52,7 @@ function createInitialRiskProfile({ launchRequest, session }) {
     signals.push("wallet_contract_binding_pending");
   }
 
-  if (!launchRequest.links.website && !launchRequest.links.telegramUrl) {
+  if (!launchRequest.links?.website && !launchRequest.links?.telegramUrl) {
     score += 10;
     signals.push("limited_social_footprint");
   }
@@ -51,14 +87,10 @@ function createInitialRiskProfile({ launchRequest, session }) {
   return {
     id: randomUUID(),
     launchId: "",
-    creatorWallet: launchRequest.creator.wallet,
+    creatorWallet: launchRequest.creator?.wallet || "",
     score,
     status: score >= 50 ? "manual_review" : "watch",
     signals,
     createdAt: new Date().toISOString(),
   };
 }
-
-module.exports = {
-  createInitialRiskProfile,
-};

@@ -1,28 +1,28 @@
-const crypto = require("crypto");
-const { config } = require("./config");
-const { getAccountPublicKey } = require("./services/graphql.service");
-const { query } = require("./db");
-const {
-  createAuthChallenge: persistAuthChallenge,
+import * as crypto from "crypto";
+import { config } from "./config";
+import { getAccountPublicKey } from "./services/graphql.service";
+import { query } from "./db";
+import {
+  createAuthChallenge as persistAuthChallenge,
   consumeChallengeAndCreateSession,
-  getSessionByToken,
   getUnusedChallengeById,
   revokeSession,
   touchSession,
   createSessionOnly,
-} = require("./storage");
-const { verifyTelegramInitData } = require("./telegram");
+  getSessionByToken,
+} from "./storage";
+import { verifyTelegramInitData } from "./telegram";
 
 const ED25519_SPKI_PREFIX = Buffer.from(
   "302a300506032b6570032100",
   "hex",
 );
 
-function trimString(value) {
+function trimString(value: any): string {
   return typeof value === "string" ? value.trim() : "";
 }
 
-function decodeBuffer(value, fieldName) {
+function decodeBuffer(value: any, fieldName: string): Buffer {
   const normalized = trimString(value);
 
   if (!normalized) {
@@ -40,7 +40,13 @@ function decodeBuffer(value, fieldName) {
   }
 }
 
-function buildEd25519PublicKey(publicKeyInput) {
+interface BuildPublicKeyResult {
+  key: Buffer;
+  format: "der";
+  type: "spki";
+}
+
+function buildEd25519PublicKey(publicKeyInput: any): BuildPublicKeyResult {
   const rawPublicKey = decodeBuffer(publicKeyInput, "Public key");
 
   if (rawPublicKey.length === 32) {
@@ -58,11 +64,13 @@ function buildEd25519PublicKey(publicKeyInput) {
   };
 }
 
-// C-07: The everscale-inpage-provider signData() method hashes the data (SHA-256)
-// before signing. So when verifying a signature from the extension wallet,
-// we must hash the message first. For manual tvm-cli signatures, the raw
-// message is signed directly. We try both modes.
-function verifyDetachedSignature({ message, signature, publicKey }) {
+interface VerifyDetachedSignatureParams {
+  message: string;
+  signature: any;
+  publicKey: any;
+}
+
+function verifyDetachedSignature({ message, signature, publicKey }: VerifyDetachedSignatureParams): boolean {
   try {
     const signatureBuffer = decodeBuffer(signature, "Signature");
     const keyObject = buildEd25519PublicKey(publicKey);
@@ -88,13 +96,21 @@ function verifyDetachedSignature({ message, signature, publicKey }) {
   }
 }
 
+interface EncodeChallengeMessageParams {
+  challengeId: string;
+  nonce: string;
+  walletAddress: string;
+  expiresAt: string;
+  telegramUserId?: string;
+}
+
 function encodeChallengeMessage({
   challengeId,
   nonce,
   walletAddress,
   expiresAt,
   telegramUserId,
-}) {
+}: EncodeChallengeMessageParams): string {
   return [
     "AckiMeme Wallet Login",
     "Action: login",
@@ -107,7 +123,13 @@ function encodeChallengeMessage({
   ].join("\n");
 }
 
-function encodeQrSessionMessage({ sessionId, walletAddress, expiresAt }) {
+interface EncodeQrSessionMessageParams {
+  sessionId: string;
+  walletAddress: string;
+  expiresAt: string;
+}
+
+function encodeQrSessionMessage({ sessionId, walletAddress, expiresAt }: EncodeQrSessionMessageParams): string {
   return [
     "AckiMeme Wallet Login",
     "Action: qr_login",
@@ -118,9 +140,12 @@ function encodeQrSessionMessage({ sessionId, walletAddress, expiresAt }) {
   ].join("\n");
 }
 
-// Removidas funções legacy de crypto. Detached Signature agora validada na TVM.
+interface CreateWalletChallengeParams {
+  walletAddress: any;
+  telegramInitData: any;
+}
 
-async function createWalletChallenge({ walletAddress, telegramInitData }) {
+export async function createWalletChallenge({ walletAddress, telegramInitData }: CreateWalletChallengeParams): Promise<any> {
   const normalizedWallet = trimString(walletAddress);
 
   if (!normalizedWallet) {
@@ -131,7 +156,7 @@ async function createWalletChallenge({ walletAddress, telegramInitData }) {
   const challengeId = crypto.randomUUID();
   const nonce = crypto.randomBytes(16).toString("hex");
   
-  const challenge = {
+  const challenge: any = {
     id: challengeId,
     nonce: nonce,
     walletAddress: normalizedWallet,
@@ -167,13 +192,21 @@ async function createWalletChallenge({ walletAddress, telegramInitData }) {
   return challenge;
 }
 
-async function verifyWalletChallenge({
+interface VerifyWalletChallengeParams {
+  challengeId: any;
+  walletAddress: any;
+  publicKey: any;
+  signature: any;
+  telegramInitData: any;
+}
+
+export async function verifyWalletChallenge({
   challengeId,
   walletAddress,
   publicKey,
   signature,
   telegramInitData,
-}) {
+}: VerifyWalletChallengeParams): Promise<any> {
   const normalizedWallet = trimString(walletAddress);
   const normalizedChallengeId = trimString(challengeId);
 
@@ -293,9 +326,7 @@ async function verifyWalletChallenge({
   return session;
 }
 
-// ─── QR Code Auth (Deep Link Polling) ───────────────────────────────────────
-
-async function generateQrSession() {
+export async function generateQrSession(): Promise<any> {
   const sessionId = crypto.randomUUID();
   const expiresAt = new Date(Date.now() + 5 * 60 * 1000).toISOString();
   
@@ -307,11 +338,11 @@ async function generateQrSession() {
   return { sessionId, deepLink, expiresAt };
 }
 
-async function getQrSessionStatus(sessionId) {
+export async function getQrSessionStatus(sessionId: any): Promise<any> {
   // N6 FIX: Filter expired sessions in SQL so they return 'expired' immediately
   // instead of waiting for the cleanup cron (runs every 10 min)
   const res = await query(`SELECT * FROM qr_sessions WHERE id=$1 AND expires_at > NOW()`, [sessionId]);
-  if (res.rowCount === 0) {
+  if ((res.rowCount ?? 0) === 0) {
     return { status: 'expired' };
   }
   const session = res.rows[0];
@@ -319,7 +350,7 @@ async function getQrSessionStatus(sessionId) {
   if (session.status === 'done') {
     // Return the token atomically and remove from DB to prevent replay
     const delRes = await query(`DELETE FROM qr_sessions WHERE id=$1 AND status='done' RETURNING session_token`, [sessionId]);
-    if (delRes.rowCount === 0) {
+    if ((delRes.rowCount ?? 0) === 0) {
       return { status: 'expired' };
     }
     return { status: 'done', sessionToken: delRes.rows[0].session_token };
@@ -328,14 +359,21 @@ async function getQrSessionStatus(sessionId) {
   return { status: session.status };
 }
 
-async function processQrWebhook({ sessionId, walletAddress, publicKey, signature }) {
+interface ProcessQrWebhookParams {
+  sessionId: any;
+  walletAddress: any;
+  publicKey: any;
+  signature: any;
+}
+
+export async function processQrWebhook({ sessionId, walletAddress, publicKey, signature }: ProcessQrWebhookParams): Promise<any> {
   // N7 FIX: Atomic claim — prevents race condition on webhook retries.
   // Uses UPDATE ... WHERE status='pending' as optimistic lock instead of SELECT + UPDATE.
   const claimRes = await query(
     `UPDATE qr_sessions SET status='processing' WHERE id=$1 AND status='pending' AND expires_at > NOW() RETURNING *`,
     [sessionId]
   );
-  if (claimRes.rowCount === 0) {
+  if ((claimRes.rowCount ?? 0) === 0) {
     throw new Error("Sessão HTTP do QR Code expirada, já processada, ou inválida.");
   }
   const sessionData = claimRes.rows[0];
@@ -434,7 +472,7 @@ async function processQrWebhook({ sessionId, walletAddress, publicKey, signature
     await query(`UPDATE qr_sessions SET status='done', session_token=$1 WHERE id=$2`, [session.token, sessionId]);
 
     return { success: true };
-  } catch (error) {
+  } catch (error: any) {
     // Rollback processing lock so a retry can happen before expiration.
     await query(
       `UPDATE qr_sessions
@@ -446,12 +484,4 @@ async function processQrWebhook({ sessionId, walletAddress, publicKey, signature
   }
 }
 
-module.exports = {
-  createWalletChallenge,
-  revokeSession,
-  touchSession,
-  verifyWalletChallenge,
-  generateQrSession,
-  getQrSessionStatus,
-  processQrWebhook,
-};
+export { touchSession, revokeSession, getSessionByToken };

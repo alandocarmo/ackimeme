@@ -1,28 +1,15 @@
-const fs = require("fs");
-const path = require("path");
-const crypto = require("crypto");
-const { config } = require("../config");
-const { getAccountPublicKey, getAccountBalanceNano, getAccountState } = require("./graphql.service");
-const { parseSlopeDivisor } = require("../launches");
+import * as fs from "fs";
+import * as path from "path";
+import * as crypto from "crypto";
+import { config } from "../config";
+import { getAccountPublicKey, getAccountBalanceNano, getAccountState } from "./graphql.service";
+import { parseSlopeDivisor } from "../launches";
+import { getTvmClient, getTvmCore, sdkAvailable as isTvmSdkAvailable } from "./tvm-client";
 
 /**
- * deployer.service.js
+ * deployer.service.ts
  *
  * Serviço de deploy dos contratos TokenRoot e BondingCurve na Acki Nacki.
- *
- * FLUXO:
- *   1. Verifica pré-requisitos (private key, SDK, arquivos ABI/TVC)
- *   2. Deploya o contrato TokenRoot com supply, nome, símbolo e decimais
- *   3. Deploya o contrato BondingCurve vinculado ao TokenRoot
- *   4. Transfere ownership do TokenRoot para o BondingCurve
- *
- * CONTROLE DE DEPLOY:
- *   - A variável ENABLE_ONCHAIN_DEPLOY no .env controla se o deploy real é executado
- *   - Quando false (ou ausente), o sistema calcula endereços preditos sem enviar à rede
- *   - Quando true, o process_message é chamado para deploy real
- *
- * Ref: https://dev.ackinacki.com/acki-nacki-sdk/quick-start-tvm-sdk-javascript
- * SDK: https://github.com/tvmlabs/tvm-sdk
  */
 
 const ABI_DIR = path.join(__dirname, "../abi");
@@ -34,14 +21,11 @@ const SHELL_CURRENCY_ID = 2;
 const DEFAULT_DEPLOY_PREFUND_SHELL_NANO = "10000000000"; // 10 SHELL ECC
 const DEFAULT_DEPLOY_PREFUND_MESSAGE_VALUE_NANO = "500000000";
 const DEFAULT_DEPLOY_FUNDING_ATTEMPTS = 40;
-const DEFAULT_BONDING_CURVE_DEPLOY_ATTEMPTS = 200;
 
-let client = null;
+let client: any = null;
 let sdkAvailable = false;
-let abiContract = null;
-let signerKeys = null;
-
-const { getTvmClient, getTvmCore, sdkAvailable: isTvmSdkAvailable } = require("./tvm-client");
+let abiContract: any = null;
+let signerKeys: any = null;
 
 if (isTvmSdkAvailable) {
   const core = getTvmCore();
@@ -57,7 +41,7 @@ if (isTvmSdkAvailable) {
 /**
  * Verifica se os arquivos compilados de um contrato existem.
  */
-function contractFilesExist(contractName) {
+function contractFilesExist(contractName: string): boolean {
   const abiPath = path.join(ABI_DIR, `${contractName}.abi.json`);
   const tvcPath = path.join(ABI_DIR, `${contractName}.tvc`);
   return fs.existsSync(abiPath) && fs.existsSync(tvcPath);
@@ -65,12 +49,11 @@ function contractFilesExist(contractName) {
 
 /**
  * Carrega ABI e TVC de um contrato.
- * BP-06: Cached in memory to avoid synchronous disk I/O on every deploy request.
  */
-const _contractFileCache = new Map();
-function loadContractFiles(contractName) {
+const _contractFileCache = new Map<string, { abi: any; tvc: string }>();
+function loadContractFiles(contractName: string): { abi: any; tvc: string } {
   if (_contractFileCache.has(contractName)) {
-    return _contractFileCache.get(contractName);
+    return _contractFileCache.get(contractName)!;
   }
   const abiPath = path.join(ABI_DIR, `${contractName}.abi.json`);
   const tvcPath = path.join(ABI_DIR, `${contractName}.tvc`);
@@ -82,7 +65,7 @@ function loadContractFiles(contractName) {
   return result;
 }
 
-function parseTokenSupplyToNano(totalSupply, decimals = TOKEN_DECIMALS) {
+function parseTokenSupplyToNano(totalSupply: string | number, decimals = TOKEN_DECIMALS): string {
   const digits = String(totalSupply || "").trim().replace(/[.,]/g, "");
   if (!/^\d+$/.test(digits) || digits === "0") {
     throw new Error("totalSupply inválido para deploy on-chain.");
@@ -90,7 +73,13 @@ function parseTokenSupplyToNano(totalSupply, decimals = TOKEN_DECIMALS) {
   return (BigInt(digits) * (10n ** BigInt(decimals))).toString();
 }
 
-function buildDeployNonce({ creatorWallet, symbol, paymentTxHash }) {
+interface BuildDeployNonceParams {
+  creatorWallet: string;
+  symbol: string;
+  paymentTxHash: string;
+}
+
+function buildDeployNonce({ creatorWallet, symbol, paymentTxHash }: BuildDeployNonceParams): string {
   const input = [
     "ackimeme-token-root-v1",
     String(creatorWallet || "").toLowerCase(),
@@ -101,15 +90,15 @@ function buildDeployNonce({ creatorWallet, symbol, paymentTxHash }) {
   return BigInt(`0x${digest}`).toString();
 }
 
-function normalizeHex(value) {
+function normalizeHex(value: string | undefined): string {
   return String(value || "").trim().replace(/^0x/i, "");
 }
 
-function isPlaceholder(value) {
+function isPlaceholder(value: string | undefined): boolean {
   return !value || value.includes("CONFIGURE") || value.includes("your_") || value.includes("YOUR_");
 }
 
-function getPositiveIntegerEnv(name, fallback) {
+function getPositiveIntegerEnv(name: string, fallback: string): string {
   const value = String(process.env[name] || fallback).trim();
   if (!/^\d+$/.test(value) || BigInt(value) <= 0n) {
     throw new Error(`${name} deve ser um inteiro positivo em nano units.`);
@@ -117,7 +106,7 @@ function getPositiveIntegerEnv(name, fallback) {
   return value;
 }
 
-function getNonNegativeIntegerEnv(name, fallback) {
+function getNonNegativeIntegerEnv(name: string, fallback: string): string {
   const value = String(process.env[name] || fallback).trim();
   if (!/^\d+$/.test(value)) {
     throw new Error(`${name} deve ser um inteiro não negativo em nano units.`);
@@ -125,8 +114,17 @@ function getNonNegativeIntegerEnv(name, fallback) {
   return value;
 }
 
-function loadDeployerKeyConfig() {
-  let fileKeys = {};
+interface DeployerKeyConfig {
+  configured: boolean;
+  usable: boolean;
+  reason?: string;
+  publicKey?: string;
+  secretKey?: string;
+  secretFormat?: "raw_secret" | "signer_secret";
+}
+
+function loadDeployerKeyConfig(): DeployerKeyConfig {
+  let fileKeys: any = {};
   const keyFile = String(process.env.DEPLOYER_KEYS_FILE || "").trim();
   if (keyFile && !isPlaceholder(keyFile)) {
     if (!fs.existsSync(keyFile)) {
@@ -134,7 +132,7 @@ function loadDeployerKeyConfig() {
     }
     try {
       fileKeys = JSON.parse(fs.readFileSync(keyFile, "utf-8"));
-    } catch (err) {
+    } catch (err: any) {
       return { configured: true, usable: false, reason: `DEPLOYER_KEYS_FILE inválido: ${err.message}` };
     }
   }
@@ -182,10 +180,10 @@ function loadDeployerKeyConfig() {
   };
 }
 
-async function resolveDeployerKeyPair() {
+async function resolveDeployerKeyPair(): Promise<{ public: string; secret: string }> {
   const keyConfig = loadDeployerKeyConfig();
-  if (!keyConfig.usable) {
-    throw new Error(keyConfig.reason);
+  if (!keyConfig.usable || !keyConfig.secretKey) {
+    throw new Error(keyConfig.reason || "Key config not usable");
   }
 
   const keyPair =
@@ -211,9 +209,7 @@ async function resolveDeployerKeyPair() {
   };
 }
 
-// Removida: getAccountBalanceNano via query_collection foi migrada para graphql.service.js
-
-async function waitForFutureAddressFunding(address, minGasBalanceNano) {
+async function waitForFutureAddressFunding(address: string, minGasBalanceNano: string): Promise<boolean> {
   const attempts = Number(process.env.DEPLOY_FUNDING_CONFIRM_ATTEMPTS || DEFAULT_DEPLOY_FUNDING_ATTEMPTS);
   for (let i = 0; i < attempts; i += 1) {
     const gasBalanceNano = await getAccountBalanceNano(address);
@@ -225,12 +221,12 @@ async function waitForFutureAddressFunding(address, minGasBalanceNano) {
   return false;
 }
 
-async function buildEmptyPayloadCell() {
+async function buildEmptyPayloadCell(): Promise<string> {
   const { boc } = await client.boc.encode_boc({ builder: [] });
   return boc;
 }
 
-async function prefundFutureContractAddress(address, signer, onChainAttempt) {
+async function prefundFutureContractAddress(address: string, signer: any, onChainAttempt?: () => void): Promise<void> {
   const walletAddress = String(process.env.DEPLOYER_WALLET_ADDRESS || "").trim();
   if (!walletAddress || isPlaceholder(walletAddress)) {
     throw new Error("DEPLOYER_WALLET_ADDRESS deve apontar para a wallet/multisig financiadora do deployer.");
@@ -275,7 +271,6 @@ async function prefundFutureContractAddress(address, signer, onChainAttempt) {
   });
 
   // Audit #2: Wait for gas funding (VMSHELL), not ECC balance.
-  // The account must have enough gas to pay for its own deployment execution.
   const funded = await waitForFutureAddressFunding(address, messageValueNano);
   if (!funded) {
     throw new Error(
@@ -285,7 +280,17 @@ async function prefundFutureContractAddress(address, signer, onChainAttempt) {
   }
 }
 
-function getDeployerReadiness() {
+interface DeployerReadiness {
+  enabled: boolean;
+  sdkAvailable: boolean;
+  privateKeyConfigured: boolean;
+  keyPairConfigured: boolean;
+  keyPairReason: string;
+  fundingWalletConfigured: boolean;
+  contractsCompiled: boolean;
+}
+
+export function getDeployerReadiness(): DeployerReadiness {
   const keyConfig = loadDeployerKeyConfig();
   const fundingWallet = String(process.env.DEPLOYER_WALLET_ADDRESS || "").trim();
   const fundingWalletConfigured = Boolean(fundingWallet) && !isPlaceholder(fundingWallet);
@@ -295,7 +300,7 @@ function getDeployerReadiness() {
     sdkAvailable: Boolean(sdkAvailable && client),
     privateKeyConfigured: Boolean(keyConfig.usable),
     keyPairConfigured: Boolean(keyConfig.usable),
-    keyPairReason: keyConfig.usable ? "" : keyConfig.reason,
+    keyPairReason: keyConfig.usable ? "" : (keyConfig.reason || ""),
     fundingWalletConfigured,
     contractsCompiled:
       contractFilesExist("TokenRoot") &&
@@ -305,13 +310,13 @@ function getDeployerReadiness() {
   };
 }
 
-function assertOnchainDeployReady() {
+export function assertOnchainDeployReady(): void {
   const readiness = getDeployerReadiness();
   if (!readiness.enabled) {
     return;
   }
 
-  const missing = [];
+  const missing: string[] = [];
   if (!readiness.sdkAvailable) missing.push("TVM SDK/lib-node");
   if (!readiness.keyPairConfigured) missing.push(`DEPLOYER_SECRET_KEY (${readiness.keyPairReason})`);
   if (!readiness.fundingWalletConfigured) missing.push("DEPLOYER_WALLET_ADDRESS");
@@ -322,6 +327,16 @@ function assertOnchainDeployReady() {
       `Deploy on-chain habilitado, mas indisponível: ${missing.join(", ")}.`,
     );
   }
+}
+
+interface DeployContractParams {
+  contractName: string;
+  constructorInput: any;
+  initialData?: any;
+  signer: any;
+  label: string;
+  onAddressPredicted?: (address: string) => void;
+  onChainAttempt?: () => void;
 }
 
 /**
@@ -336,7 +351,7 @@ async function deployContract({
   label,
   onAddressPredicted,
   onChainAttempt,
-}) {
+}: DeployContractParams): Promise<string> {
   const { abi, tvc } = loadContractFiles(contractName);
 
   const deployParams = {
@@ -365,20 +380,46 @@ async function deployContract({
       message_encode_params: deployParams,
       send_events: false,
     });
-    console.log(`[Deployer] ${label}: Deploy confirmado! Endereço: ${address}`);
+    console.log(`[Deployer] ${label}: Deploy confirmed! Address: ${address}`);
   } else {
-    console.log(`[Deployer] ${label}: Endereço predito: ${address} (ENABLE_ONCHAIN_DEPLOY=false)`);
+    console.log(`[Deployer] ${label}: Predicted address: ${address} (ENABLE_ONCHAIN_DEPLOY=false)`);
   }
 
   return address;
 }
 
+interface DeployTokenEcosystemParams {
+  name: string;
+  symbol: string;
+  totalSupply: string | number;
+  ipfsHash?: string;
+  creatorWallet: string;
+  paymentTxHash: string;
+  pumpForever: boolean;
+  slopeDivisor: any;
+}
+
+interface DeployResult {
+  tokenRoot: string;
+  bondingCurve: string;
+  status: string;
+  chainAttempted: boolean;
+  reason?: string;
+}
+
 /**
  * Executa o deploy completo: TokenRoot + BondingCurve.
- *
- * NUNCA retorna status "deployed" se a transação não foi realmente enviada à rede.
  */
-async function deployTokenEcosystem({ name, symbol, totalSupply, ipfsHash, creatorWallet, paymentTxHash, pumpForever, slopeDivisor }) {
+export async function deployTokenEcosystem({
+  name,
+  symbol,
+  totalSupply,
+  ipfsHash,
+  creatorWallet,
+  paymentTxHash,
+  pumpForever,
+  slopeDivisor,
+}: DeployTokenEcosystemParams): Promise<DeployResult> {
   let chainAttempted = false;
   let tokenRootAddress = "";
   let bondingCurveAddress = "";
@@ -500,7 +541,6 @@ async function deployTokenEcosystem({ name, symbol, totalSupply, ipfsHash, creat
     console.log(`[Deployer] Preparando deploy para: ${name} (${symbol})`);
 
     // ── Passo 1: Deploy do TokenRoot ───────────────────────────────────────
-    // O TokenRoot precisa do walletCode (apenas a code cell, não a TVC inteira) para deployar wallets
     const walletTvc = loadContractFiles("TokenWallet").tvc;
     const { code: walletCodeCell } = await client.boc.get_code_from_tvc({ tvc: walletTvc });
 
@@ -512,7 +552,7 @@ async function deployTokenEcosystem({ name, symbol, totalSupply, ipfsHash, creat
         _decimals: TOKEN_DECIMALS,
         _walletCode: walletCodeCell,
         _owner: creatorWallet,
-        _shellToConvert: 10000000000 // M-02: 10 VMSHELL for gas (_shellToConvert matches ABI param name)
+        _shellToConvert: 10000000000 // M-02: 10 VMSHELL for gas
       },
       initialData: { deployNonce },
       signer,
@@ -525,8 +565,6 @@ async function deployTokenEcosystem({ name, symbol, totalSupply, ipfsHash, creat
 
     // ── Passo 2: Predizer/Deploy do BondingCurve (Mensagem Interna) ────────
     const { abi: bcAbi, tvc: bcTvc } = loadContractFiles("BondingCurve");
-    // C-05: Include static vars in initial_data for unique BondingCurve addresses
-    // Fee recipient = platform FEE_WALLET for trade fee distribution
     const feeRecipient = String(config.feeWallet || "").trim();
     const { address: predictedBondingCurveAddress } = await client.abi.encode_message({
       abi: abiContract(bcAbi),
@@ -593,7 +631,7 @@ async function deployTokenEcosystem({ name, symbol, totalSupply, ipfsHash, creat
         },
         send_events: false
       });
-      console.log(`[Deployer] Mensagem interna disparada. Delegando monitoramento on-chain para o sync.service.js...`);
+      console.log(`[Deployer] Mensagem interna disparada. Delegando monitoramento on-chain para o sync.service.ts...`);
     }
 
     // Determinar status baseado no flag de deploy
@@ -606,8 +644,6 @@ async function deployTokenEcosystem({ name, symbol, totalSupply, ipfsHash, creat
     console.log(`[Deployer] TokenRoot: ${tokenRootAddress}`);
     console.log(`[Deployer] TokenRoot e BondingCurve vinculados. Curva on-chain: ${bondingCurveAddress}`);
 
-    console.log(`[Deployer] Status: ${deployStatus}`);
-
     return {
       tokenRoot: tokenRootAddress,
       bondingCurve: bondingCurveAddress,
@@ -615,7 +651,7 @@ async function deployTokenEcosystem({ name, symbol, totalSupply, ipfsHash, creat
       chainAttempted,
       reason,
     };
-  } catch (error) {
+  } catch (error: any) {
     console.error("[Deployer] Erro na preparação do deploy:", error.message);
     if (chainAttempted) {
       return {
@@ -637,9 +673,3 @@ async function deployTokenEcosystem({ name, symbol, totalSupply, ipfsHash, creat
     };
   }
 }
-
-module.exports = {
-  assertOnchainDeployReady,
-  deployTokenEcosystem,
-  getDeployerReadiness,
-};

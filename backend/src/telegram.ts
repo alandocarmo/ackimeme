@@ -1,7 +1,14 @@
-const crypto = require("crypto");
-const { config } = require("./config");
+import * as crypto from "crypto";
+import { config } from "./config";
 
-function parseTelegramInitData(initData) {
+interface ParsedTelegramInitData {
+  authDate: number;
+  hash: string;
+  user: any;
+  params: URLSearchParams;
+}
+
+function parseTelegramInitData(initData: any): ParsedTelegramInitData | null {
   if (typeof initData !== "string" || !initData.trim()) {
     return null;
   }
@@ -10,7 +17,7 @@ function parseTelegramInitData(initData) {
   const userRaw = params.get("user");
 
   // M-08: Wrap JSON.parse in try/catch for malformed Telegram user data
-  let user = null;
+  let user: any = null;
   if (userRaw) {
     try {
       user = JSON.parse(userRaw);
@@ -27,7 +34,7 @@ function parseTelegramInitData(initData) {
   };
 }
 
-function buildDataCheckString(params) {
+function buildDataCheckString(params: URLSearchParams): string {
   return [...params.entries()]
     .filter(([key]) => key !== "hash")
     .sort(([left], [right]) => left.localeCompare(right))
@@ -35,14 +42,21 @@ function buildDataCheckString(params) {
     .join("\n");
 }
 
-function getTelegramSecretKey(botToken) {
+function getTelegramSecretKey(botToken: string): Buffer {
   return crypto
     .createHmac("sha256", "WebAppData")
     .update(botToken)
     .digest();
 }
 
-function verifyTelegramInitData(initData) {
+interface TelegramVerificationResult {
+  isVerified: boolean;
+  status: string;
+  user: any;
+  authDate?: number;
+}
+
+export function verifyTelegramInitData(initData: any): TelegramVerificationResult {
   const parsed = parseTelegramInitData(initData);
 
   if (!parsed) {
@@ -89,7 +103,3 @@ function verifyTelegramInitData(initData) {
     authDate: parsed.authDate,
   };
 }
-
-module.exports = {
-  verifyTelegramInitData,
-};

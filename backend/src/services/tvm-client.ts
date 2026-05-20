@@ -1,12 +1,12 @@
-const { config } = require("../config");
-const fs = require("fs");
-const path = require("path");
+import { config  } from "../config";
+import * as fs from "fs";
+import * as path from "path";
 
-let tvmCore = null;
-let _clientInstance = null;
+let tvmCore: any = null;
+let _clientInstance: any = null;
 let sdkAvailable = false;
 
-function loadLibNode() {
+export function loadLibNode(): any {
   const configuredBinary = String(process.env.TVM_SDK_NODE_BINARY || "").trim();
   if (configuredBinary) {
     if (!fs.existsSync(configuredBinary)) {
@@ -42,7 +42,7 @@ try {
   tvmCore.TvmClient.useBinaryLibrary(libNode);
   sdkAvailable = true;
   console.log("[TvmClient] SDK inicializado com lib-node (nativo).");
-} catch (e) {
+} catch (e: any) {
   console.warn("[TvmClient] SDK TVM não carregou:", e.message);
   console.error(
     "[TvmClient] ⚠️ Deploy on-chain e sync ficarão indisponíveis. " +
@@ -50,7 +50,7 @@ try {
   );
 }
 
-function getTvmClient() {
+export function getTvmClient(): any {
   if (!sdkAvailable) return null;
   
   if (!_clientInstance) {
@@ -63,7 +63,7 @@ function getTvmClient() {
           endpoints: [config.graphqlUrl || "https://shellnet.ackinacki.org/graphql"],
         },
       });
-    } catch (e) {
+    } catch (e: any) {
       console.warn("[TvmClient] Falha ao inicializar TvmClient:", e.message);
       sdkAvailable = false;
       return null;
@@ -72,12 +72,10 @@ function getTvmClient() {
   return _clientInstance;
 }
 
-function getTvmCore() {
+export function getTvmCore(): any {
   return tvmCore;
 }
 
-module.exports = {
-  getTvmClient,
-  getTvmCore,
-  get sdkAvailable() { return sdkAvailable; }
-};
+export { sdkAvailable };
+
+

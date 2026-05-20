@@ -10,15 +10,15 @@
  * Para lookup direto por hash/id usamos `blockchain { transaction(hash: $hash) { ... } }`.
  */
 
-const axios = require("axios");
-const fs = require("fs");
-const path = require("path");
-const { config } = require("../config");
+import axios from "axios";
+import * as fs from "fs";
+import * as path from "path";
+import { config  } from "../config";
 
-let BONDING_CURVE_ABI;
+let BONDING_CURVE_ABI: any;
 try {
   BONDING_CURVE_ABI = JSON.parse(fs.readFileSync(path.join(__dirname, "../abi/BondingCurve.abi.json"), "utf8"));
-} catch (e) {
+} catch (e: any) {
   console.warn("[GraphQL] Aviso: BondingCurve.abi.json não encontrado. Syncing de transações pode falhar.");
   BONDING_CURVE_ABI = null;
 }
@@ -33,19 +33,19 @@ if (!config.graphqlUrl) {
 }
 const SHELL_CURRENCY_ID = 2;
 
-let tvmClient = null;
-let sdkClient = null;
-let abiContract = null;
+let tvmClient: any = null;
+let sdkClient: any = null;
+let abiContract: any = null;
 
 try {
   // `nekoton-wasm` decodifica body de mensagens TIP-3 sem depender do binário
   // nativo do TVM SDK, que pode falhar em runtimes Node recentes.
   tvmClient = require("nekoton-wasm");
-} catch (error) {
+} catch (error: any) {
   console.warn("[GraphQL] Decoder TIP-3 indisponível:", error.message);
 }
 
-const { getTvmClient, getTvmCore, sdkAvailable: isTvmSdkAvailable } = require("./tvm-client");
+import { getTvmClient, getTvmCore, sdkAvailable as isTvmSdkAvailable  } from "./tvm-client";
 
 let sdkAvailable = false;
 if (isTvmSdkAvailable) {
@@ -57,7 +57,7 @@ if (isTvmSdkAvailable) {
   console.warn("[GraphQL] TVM SDK indisponível. Dependências faltando.");
 }
 
-function isWasmDecoderAvailable() {
+export function isWasmDecoderAvailable() {
   return Boolean(tvmClient && typeof tvmClient.decodeInput === "function");
 }
 
@@ -66,7 +66,7 @@ function isWasmDecoderAvailable() {
  * Inclui retry com backoff exponencial para resiliência contra
  * falhas de rede transitórias e timeouts do endpoint.
  */
-async function gql(query, variables = {}, retries = 3) {
+export async function gql(query: any, variables = {}, retries = 3) {
   let lastError;
 
   for (let attempt = 0; attempt < retries; attempt++) {
@@ -81,12 +81,12 @@ async function gql(query, variables = {}, retries = 3) {
       );
 
       if (res.data.errors && res.data.errors.length > 0) {
-        const msg = res.data.errors.map((e) => e.message).join("; ");
+        const msg = res.data.errors.map((e: any) => e.message).join("; ");
         throw new Error(`GraphQL error: ${msg}`);
       }
 
       return res.data.data;
-    } catch (err) {
+    } catch (err: any) {
       lastError = err;
 
       // Não fazer retry para erros de lógica GraphQL (422, 400)
@@ -117,7 +117,7 @@ async function gql(query, variables = {}, retries = 3) {
  *   tx.status    — 0=unknown, 1=preliminary, 2=proposed, 3=finalized, 4=refused
  *   tx.tr_type   — tipo de transação
  */
-async function getTransaction(hash) {
+export async function getTransaction(hash: any) {
   if (!hash) {
     throw new Error("Transaction hash is required.");
   }
@@ -207,14 +207,14 @@ async function getTransaction(hash) {
  * Converte nanotokens (string) para número decimal de tokens SHELL.
  * 1 SHELL = 1_000_000_000 nanotokens (9 casas decimais, padrão TVM).
  */
-function nanoToDecimal(nanoValue) {
+export function nanoToDecimal(nanoValue: any) {
   const nano = BigInt(String(nanoValue || "0").replace(/\D/g, "") || "0");
   const whole = nano / 1_000_000_000n;
   const frac = nano % 1_000_000_000n;
   return `${whole}.${String(frac).padStart(9, "0")}`;
 }
 
-function extractCurrencyNano(currencies, currencyId) {
+export function extractCurrencyNano(currencies: any, currencyId: any) {
   let rawCurrencies = currencies || {};
 
   if (typeof rawCurrencies === "string") {
@@ -255,11 +255,11 @@ function extractCurrencyNano(currencies, currencyId) {
   return "0";
 }
 
-function normalizeAddress(value) {
+export function normalizeAddress(value: any) {
   return String(value || "").trim().toLowerCase();
 }
 
-function buildTxHashCandidates(hash) {
+export function buildTxHashCandidates(hash: any) {
   const value = String(hash || "").trim();
   if (!value) {
     return [];
@@ -276,7 +276,7 @@ function buildTxHashCandidates(hash) {
   return [...new Set(candidates)];
 }
 
-function canonicalTxHash(hash) {
+export function canonicalTxHash(hash: any) {
   const value = String(hash || "").trim().toLowerCase();
   if (value.startsWith("0x") && value.length > 2) {
     return value.slice(2);
@@ -296,7 +296,7 @@ function canonicalTxHash(hash) {
  * Acki Nacki GraphQL status codes:
  *   0 = Unknown, 1 = Preliminary, 2 = Proposed, 3 = Finalized, 4 = Refused
  */
-function normalizeStatus(statusInt, statusName) {
+export function normalizeStatus(statusInt: any, statusName: any) {
   // Primary: numeric field (never null if transaction exists)
   if (statusInt === 3) return "SUCCESS";
   if (statusInt === 4) return "FAILED";
@@ -314,7 +314,7 @@ function normalizeStatus(statusInt, statusName) {
  * Busca o saldo de uma conta pelo endereço.
  * Útil para validar se a fee_wallet recebeu fundos.
  */
-async function getAccountBalance(address) {
+export async function getAccountBalance(address: any) {
   const query = `
     query GetBalance($address: String!) {
       blockchain {
@@ -352,7 +352,7 @@ async function getAccountBalance(address) {
 /**
  * Busca o saldo em Nano SHELL diretamente da rede via GraphQL.
  */
-async function getAccountBalanceNano(address) {
+export async function getAccountBalanceNano(address: any) {
   const query = `
     query GetBalance($address: String!) {
       blockchain {
@@ -388,7 +388,7 @@ async function getAccountBalanceNano(address) {
  * SEGURANÇA: Essa public key é usada para vincular a sessão de auth à wallet real.
  * Sem essa verificação, qualquer keypair Ed25519 pode se passar por qualquer wallet.
  */
-async function getAccountPublicKey(address) {
+export async function getAccountPublicKey(address: any) {
   const accountQuery = `
     query getAccount($address: String!) {
       blockchain {
@@ -462,7 +462,7 @@ async function getAccountPublicKey(address) {
       codeHash: info.code_hash || "",
       boc: info.boc || "",
     };
-  } catch (err) {
+  } catch (err: any) {
     const errMsg = String(err.message || "");
     // SEC-05: Propagate network/timeout errors instead of masking as "not deployed".
     // Without this, a temporary API outage silently blocks ALL logins.
@@ -480,7 +480,7 @@ async function getAccountPublicKey(address) {
  * Busca apenas o estado da conta (boc) sem verificações de Auth rigorosas.
  * Útil para o serviço de sync ler dados on-chain de contratos inativos ou recém-criados.
  */
-async function getAccountState(address) {
+export async function getAccountState(address: any) {
   const accountQuery = `
     query getAccount($address: String!) {
       blockchain {
@@ -506,7 +506,7 @@ async function getAccountState(address) {
       isDeployed: true,
       boc: info.boc || "",
     };
-  } catch (err) {
+  } catch (err: any) {
     if (err.message && (err.message.includes("timeout") || err.message.includes("Network") || err.message.includes("ECONNREFUSED"))) {
       throw err;
     }
@@ -517,7 +517,7 @@ async function getAccountState(address) {
 /**
  * Busca transações recentes na BondingCurve para indexar Trades (Buy/Sell)
  */
-async function getRecentBondingCurveTrades(address) {
+export async function getRecentBondingCurveTrades(address: any) {
   const query = `
     query getTrades($address: String!) {
       blockchain {
@@ -587,19 +587,10 @@ async function getRecentBondingCurveTrades(address) {
       }
     }
     return trades;
-  } catch (err) {
+  } catch (err: any) {
     console.error(`[GraphQL] Error fetching trades for ${address}:`, err.message);
     return [];
   }
 }
 
-module.exports = {
-  normalizeAddress,
-  getTransaction,
-  getAccountBalance,
-  getAccountBalanceNano,
-  getAccountPublicKey,
-  getAccountState,
-  nanoToDecimal,
-  getRecentBondingCurveTrades,
-};
+

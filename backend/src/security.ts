@@ -1,5 +1,6 @@
-const express = require('express');
-const { query } = require('./db');
+import * as express from 'express';
+import { query } from './db';
+
 const router = express.Router();
 
 /**
@@ -12,7 +13,7 @@ const router = express.Router();
 
 // GET /admin/security/anomalies
 // Returns risk profiles with high scores that need attention.
-router.get('/anomalies', async (req, res) => {
+router.get('/anomalies', async (req: express.Request, res: express.Response) => {
   try {
     const result = await query(
       `
@@ -31,7 +32,7 @@ router.get('/anomalies', async (req, res) => {
 
     res.json({
       success: true,
-      anomalies: result.rows.map((row) => ({
+      anomalies: result.rows.map((row: any) => ({
         wallet: row.wallet,
         type: row.type,
         score: row.score,
@@ -43,14 +44,14 @@ router.get('/anomalies', async (req, res) => {
         ? 'No high-risk profiles detected yet. Data populates as users create tokens.'
         : undefined,
     });
-  } catch (err) {
+  } catch (err: any) {
     res.status(500).json({ error: err.message });
   }
 });
 
 // GET /admin/security/viral-ranking
 // Returns tokens sorted by activity/risk score from actual launch data.
-router.get('/viral-ranking', async (req, res) => {
+router.get('/viral-ranking', async (req: express.Request, res: express.Response) => {
   try {
     const result = await query(
       `
@@ -72,7 +73,7 @@ router.get('/viral-ranking', async (req, res) => {
 
     res.json({
       success: true,
-      ranking: result.rows.map((row) => ({
+      ranking: result.rows.map((row: any) => ({
         id: row.id,
         name: row.name,
         symbol: row.symbol,
@@ -82,9 +83,9 @@ router.get('/viral-ranking', async (req, res) => {
       })),
       source: 'database',
     });
-  } catch (err) {
+  } catch (err: any) {
     res.status(500).json({ error: err.message });
   }
 });
 
-module.exports = router;
+export default router;

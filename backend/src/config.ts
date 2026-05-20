@@ -1,3 +1,6 @@
+import * as dotenv from "dotenv";
+dotenv.config();
+
 const DEFAULT_APP_NAME = "AckiMeme";
 const DEFAULT_NETWORK = "Acki Nacki";
 const DEFAULT_SHELL_MIN_PAYMENT = 300; // ~$3 USD (300 SHELL × $0.01/SHELL via Accumulator: 100 SHELL = 1 USDC)
@@ -13,37 +16,34 @@ const DEFAULT_DATABASE_URL = "";
 
 // V-AM-01: ECC Token ID constants matching on-chain BondingCurve.sol
 // These mirror the contract constants to keep the full stack aligned.
-const ECC_TOKEN_IDS = Object.freeze({
+export const ECC_TOKEN_IDS = Object.freeze({
   NACKL: 1,  // Staking & store of value (9 decimals)
   SHELL: 2,  // Utility token — the ONLY accepted payment (9 decimals)
   USDC:  3,  // Stablecoin (6 decimals)
 });
 
 // Official Accumulator rate: 100 SHELL = 1 USDC (fixed on-chain)
-const ACCUMULATOR_OFFICIAL_RATE = 100;
+export const ACCUMULATOR_OFFICIAL_RATE = 100;
 
-function readPositiveNumber(value, fallback) {
+function readPositiveNumber(value: any, fallback: number): number {
   const parsed = Number(value);
-
   if (!Number.isFinite(parsed) || parsed <= 0) {
     return fallback;
   }
-
   return parsed;
 }
 
-function readCsv(value) {
+function readCsv(value: any): string[] {
   if (typeof value !== "string") {
     return [];
   }
-
   return value
     .split(",")
     .map((item) => item.trim())
     .filter(Boolean);
 }
 
-function readPositiveInteger(value, fallback) {
+function readPositiveInteger(value: any, fallback: number): number {
   const parsed = Number(value);
   if (!Number.isFinite(parsed) || parsed <= 0) {
     return fallback;
@@ -51,13 +51,11 @@ function readPositiveInteger(value, fallback) {
   return Math.trunc(parsed);
 }
 
-function isPlaceholderValue(value) {
+function isPlaceholderValue(value: any): boolean {
   const normalized = String(value || "").trim().toLowerCase();
-
   if (!normalized) {
     return true;
   }
-
   return (
     normalized === "change_me" ||
     normalized.includes("placeholder") ||
@@ -68,28 +66,29 @@ function isPlaceholderValue(value) {
   );
 }
 
-function isConfiguredWallet(value) {
+function isConfiguredWallet(value: any): boolean {
   const normalized = String(value || "").trim();
-
   if (!normalized || isPlaceholderValue(normalized)) {
     return false;
   }
-
-  // Keep local dev wallet support explicit while requiring a real wallet in prod.
   return normalized === "dev-wallet-local" || /^0:[0-9a-f]{64}$/i.test(normalized);
 }
 
-function isStrongSecret(value, minimumLength = 32) {
+function isStrongSecret(value: any, minimumLength = 32): boolean {
   const normalized = String(value || "").trim();
-
   if (!normalized || isPlaceholderValue(normalized)) {
     return false;
   }
-
   return normalized.length >= minimumLength;
 }
 
-function readCreationFeeOptions() {
+export interface CreationFeeOption {
+  tokenSymbol: string;
+  minimumAmount: number;
+  decimals: number;
+}
+
+function readCreationFeeOptions(): CreationFeeOption[] {
   return [
     {
       tokenSymbol: "SHELL",
@@ -111,7 +110,48 @@ const shellBuyUsdcRecipient = process.env.SHELL_BUY_USDC_RECIPIENT || "";
 const shellBuyUsdcRoot = process.env.SHELL_BUY_USDC_ROOT || "";
 const shellBuyEnabled = process.env.ENABLE_SHELL_BUY === "true";
 
-const config = {
+export interface AppConfig {
+  port: number;
+  appName: string;
+  network: string;
+  isProduction: boolean;
+  databaseUrl: string;
+  databaseSsl: boolean;
+  graphqlUrl: string;
+  feeWallet: string;
+  feeWalletConfigured: boolean;
+  allowedOrigins: string[];
+  creationFeeOptions: CreationFeeOption[];
+  minCreatorShellBalance: number;
+  authChallengeTtlSeconds: number;
+  sessionTtlHours: number;
+  telegramBotToken: string;
+  telegramAuthMaxAgeSeconds: number;
+  telegramBotUsername: string;
+  adminToken: string;
+  adminTokenStrong: boolean;
+  jwtSecret: string;
+  jwtSecretConfigured: boolean;
+  adminWallets: string[];
+  appFeeSharePercent: number;
+  shellBuy: {
+    enabled: boolean;
+    usdcRoot: string;
+    usdcRootConfigured: boolean;
+    usdcRecipient: string;
+    usdcRecipientConfigured: boolean;
+    usdcTokenSymbol: string;
+    usdcDecimals: number;
+    minUsdcAmount: number;
+    shellPerUsdc: number;
+  };
+  launchDistribution: {
+    type: string;
+    fairLaunch: boolean;
+  };
+}
+
+export const config: AppConfig = {
   port: readPositiveNumber(process.env.PORT, 3000),
   appName: process.env.APP_NAME || DEFAULT_APP_NAME,
   network: process.env.APP_NETWORK || DEFAULT_NETWORK,
@@ -174,7 +214,7 @@ const config = {
   },
 };
 
-function buildPublicConfig() {
+export function buildPublicConfig() {
   return {
     appName: config.appName,
     network: config.network,
@@ -182,7 +222,6 @@ function buildPublicConfig() {
       feeWallet: config.feeWalletConfigured ? config.feeWallet : "Configure backend/.env",
       creationFees: config.creationFeeOptions,
       appFeeSharePercent: config.appFeeSharePercent,
-      // SHELL is the only fee token — it is also the native blockchain gas token
       feeTokenSymbol: "SHELL",
       blockchainFee: {
         tokenSymbol: "SHELL",
@@ -229,8 +268,8 @@ function buildPublicConfig() {
   };
 }
 
-function validateConfig() {
-  const errors = [];
+export function validateConfig(): void {
+  const errors: string[] = [];
 
   if (isProduction) {
     if (!config.feeWalletConfigured) {
@@ -258,28 +297,22 @@ function validateConfig() {
     if (!process.env.PINATA_API_KEY || !process.env.PINATA_SECRET_API_KEY) {
       errors.push("PINATA_API_KEY/SECRET_API_KEY ausentes (necessário para IPFS).");
     }
-    // Audit #1: GRAPHQL_URL é obrigatória — sem ela os serviços caem para shellnet (testnet)
     if (!config.graphqlUrl) {
       errors.push("GRAPHQL_URL é obrigatória em produção. Sem ela, GraphQL/Deployer/Sync caem para shellnet (testnet).");
     } else if (config.graphqlUrl.includes("shellnet") && !config.graphqlUrl.includes("mainnet")) {
-      // Allow shellnet for production-mode testing when explicitly opted in
       if (process.env.ALLOW_SHELLNET_GRAPHQL !== "true") {
         errors.push("GRAPHQL_URL aponta para testnet (shellnet) em ambiente de produção. Use o endpoint mainnet ou defina ALLOW_SHELLNET_GRAPHQL=true para testes.");
       } else {
         console.warn("⚠️  ALLOW_SHELLNET_GRAPHQL=true — usando shellnet em modo produção. NÃO usar em mainnet real!");
       }
     }
-    // C-05: QR_WEBHOOK_SECRET é obrigatório para proteger o endpoint de callback QR
     if (!process.env.QR_WEBHOOK_SECRET || process.env.QR_WEBHOOK_SECRET.length < 32) {
       errors.push("QR_WEBHOOK_SECRET é obrigatório em produção (mínimo 32 caracteres) para proteger o webhook de autenticação QR.");
     }
-    // M-05: BACKEND_URL deve ser a URL pública real, não localhost
     const backendUrl = process.env.BACKEND_URL || process.env.RENDER_EXTERNAL_URL || process.env.API_BASE_URL || "";
     if (!backendUrl || backendUrl.includes("localhost")) {
       errors.push("BACKEND_URL (ou API_BASE_URL) deve ser a URL pública do backend em produção (não localhost).");
     }
-
-    // Audit #6: TELEGRAM_BOT_USERNAME deve ser obrigatório em produção se QR estiver ativado
     if (process.env.TELEGRAM_BOT_USERNAME === "ackinacki_bot" || !process.env.TELEGRAM_BOT_USERNAME) {
        console.warn("⚠️ TELEGRAM_BOT_USERNAME não configurado ou usando default 'ackinacki_bot'. Recomenda-se configurar o bot oficial do seu projeto.");
     }
@@ -294,11 +327,3 @@ function validateConfig() {
 
   console.log("✅ Configuração validada com sucesso.");
 }
-
-module.exports = {
-  buildPublicConfig,
-  config,
-  validateConfig,
-  ECC_TOKEN_IDS,
-  ACCUMULATOR_OFFICIAL_RATE,
-};

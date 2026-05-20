@@ -1,18 +1,15 @@
-const crypto = require("crypto");
-const fs = require("fs");
-const path = require("path");
-const { listPublicLaunches, listLaunchesForSync, updateLaunchOnchainState, insertTrade } = require("../storage");
-const { getAccountState, getRecentBondingCurveTrades } = require("./graphql.service");
-const { config } = require("../config");
+import * as crypto from "crypto";
+import * as fs from "fs";
+import * as path from "path";
+import { listLaunchesForSync, updateLaunchOnchainState, insertTrade } from "../storage";
+import { getAccountState, getRecentBondingCurveTrades } from "./graphql.service";
+import { getTvmClient, getTvmCore, sdkAvailable } from "./tvm-client";
 
-// TVM SDK Initialization for local BOC decoding
-// Wrapped in try/catch to prevent backend crash if SDK is not installed
-let tvmCore = null;
-let client = null;
-let ioInstance = null;
-const { getTvmClient, getTvmCore, sdkAvailable } = require("./tvm-client");
+let tvmCore: any = null;
+let client: any = null;
+let ioInstance: any = null;
 
-function setSocketIo(io) {
+export function setSocketIo(io: any) {
   ioInstance = io;
 }
 
@@ -27,9 +24,9 @@ if (sdkAvailable) {
 const ABI_DIR = path.join(__dirname, "../abi");
 const bondingCurveAbiPath = path.join(ABI_DIR, "BondingCurve.abi.json");
 const tokenRootAbiPath = path.join(ABI_DIR, "TokenRoot.abi.json");
-const abiCache = new Map();
+const abiCache = new Map<string, any>();
 
-function getCachedAbi(abiPath) {
+function getCachedAbi(abiPath: string): any {
   if (abiCache.has(abiPath)) return abiCache.get(abiPath);
   if (!fs.existsSync(abiPath) || !tvmCore) return null;
   try {
@@ -37,16 +34,13 @@ function getCachedAbi(abiPath) {
     const contract = tvmCore.abiContract(abi);
     abiCache.set(abiPath, contract);
     return contract;
-  } catch (err) {
+  } catch (err: any) {
     console.error(`[SyncJob] Error loading ABI at ${abiPath}:`, err.message);
     return null;
   }
 }
 
-/**
- * Executes a getter function locally using the contract's BOC.
- */
-async function runLocalGetter(boc, address, abiPath, functionName) {
+async function runLocalGetter(boc: string, address: string, abiPath: string, functionName: string): Promise<any> {
   if (!client) return null;
   const abi = getCachedAbi(abiPath);
   if (!abi) return null;
@@ -72,21 +66,16 @@ async function runLocalGetter(boc, address, abiPath, functionName) {
   }
 }
 
-/**
- * Main routine. Iterates on-chain deployed tokens and retrieves current
- * reserveBalance, tokenSupply and migrated (locked) status directly from Blockchain.
- */
-async function syncOnchainData() {
+export async function syncOnchainData(): Promise<void> {
   try {
     // R-09: Limit batch to 10 tokens per cycle to prevent GraphQL saturation.
-    // Each token makes 2-3 GraphQL calls, so 10 tokens = ~30 requests max per cycle.
-    // With the default limit of 30, that's ~90 requests which can overwhelm the API.
     const SYNC_BATCH_SIZE = 10;
     const launches = await listLaunchesForSync(SYNC_BATCH_SIZE);
     let updatedCount = 0;
     
     const results = await Promise.allSettled(
       launches.map(async (launch) => {
+        if (!launch) return;
         if (!["on_chain_deployed", "on_chain_pending_recovery", "deployment_queued"].includes(launch.status) || !launch.bondingCurveAddress) {
           return;
         }
@@ -96,8 +85,8 @@ async function syncOnchainData() {
         if (bcState.isDeployed && bcState.boc) {
           // Fallbacks
           let reserveBalance = "0"; // H-32: Fallback corrected to ZERO, not gas balance
-          let tokenSupply = null; // Audit #23: Do not default to cap if getter fails, use null to indicate sync gap
-          let lockedLiquidity = launch.onchainData?.lockedLiquidity || launch.lockedLiquidity || false;
+          let tokenSupply: string | null = null; // Audit #23: Do not default to cap if getter fails, use null to indicate sync gap
+          let lockedLiquidity = launch.onchainData?.lockedLiquidity || false;
 
           // Run Local Getters with BondingCurve BOC
           const reserveOut = await runLocalGetter(bcState.boc, launch.bondingCurveAddress, bondingCurveAbiPath, "reserveBalance");
@@ -111,7 +100,6 @@ async function syncOnchainData() {
             lockedLiquidity = ammOut.isAmm;
           }
 
-          // `migrationFailed` no longer exists in the contract — AMM is internal
           let status = ["on_chain_pending_recovery", "deployment_queued"].includes(launch.status) ? "on_chain_deployed" : launch.status;
 
           // Run Local Getters with TokenRoot BOC
@@ -127,7 +115,7 @@ async function syncOnchainData() {
 
           await updateLaunchOnchainState(launch.id, {
             reserveBalance: reserveBalance.toString(),
-            tokenSupply: tokenSupply !== null ? tokenSupply.toString() : launch.tokenSupply,
+            tokenSupply: tokenSupply !== null ? tokenSupply.toString() : launch.onchainData?.tokenSupply,
             lockedLiquidity,
             status,
             deployStatus: "deployed",
@@ -138,7 +126,7 @@ async function syncOnchainData() {
             ioInstance.to(`token_${launch.id}`).emit("token_updated", {
               id: launch.id,
               reserveBalance: reserveBalance.toString(),
-              tokenSupply: tokenSupply !== null ? tokenSupply.toString() : launch.tokenSupply,
+              tokenSupply: tokenSupply !== null ? tokenSupply.toString() : launch.onchainData?.tokenSupply,
               lockedLiquidity,
               status,
               updatedAt: new Date().toISOString()
@@ -146,25 +134,23 @@ async function syncOnchainData() {
           }
           
           // [New] Index Recent Trades
-          // PERF-03: Concurrent inserts via Promise.all instead of sequential await loop.
-          // Each INSERT uses ON CONFLICT DO NOTHING, so parallelism is safe.
           try {
             const trades = await getRecentBondingCurveTrades(launch.bondingCurveAddress);
             // Prepare trades (oldest first for chronological ordering)
-            const preparedTrades = trades.reverse().map(trade => ({
+            const preparedTrades = trades.reverse().map((trade: any) => ({
               ...trade,
               launchId: launch.id,
               id: crypto.randomUUID(),
             }));
             const insertedTrades = await Promise.all(
-              preparedTrades.map(trade => insertTrade(trade))
+              preparedTrades.map((trade: any) => insertTrade(trade))
             );
             for (const newTrade of insertedTrades) {
               if (newTrade && ioInstance) {
                 ioInstance.to(`token_${launch.id}`).emit("new_trade", newTrade);
               }
             }
-          } catch (err) {
+          } catch (err: any) {
             console.error(`[SyncJob] Error syncing trades for launch ${launch.id}:`, err.message);
           }
           
@@ -182,15 +168,15 @@ async function syncOnchainData() {
     if (updatedCount > 0) {
       console.log(`[SyncJob] Sincronização concluída: ${updatedCount} tokens atualizados.`);
     }
-  } catch (e) {
+  } catch (e: any) {
     console.error(`[SyncJob] Erro durante o ciclo de sincronização: ${e.message}`);
   }
 }
 
-let syncTimer = null;
+let syncTimer: NodeJS.Timeout | null = null;
 let isSyncRunning = false;
 
-function startSyncJob(intervalMs = 120_000) { // R-09: Increased from 60s to 120s
+export function startSyncJob(intervalMs = 120_000): void { // R-09: Increased from 60s to 120s
   if (syncTimer) return;
   console.log("[SyncJob] Background on-chain data synchronizer started (Recursive Timeout).");
 
@@ -209,12 +195,10 @@ function startSyncJob(intervalMs = 120_000) { // R-09: Increased from 60s to 120
   scheduleNext();
 }
 
-function stopSyncJob() {
+export function stopSyncJob(): void {
   if (syncTimer) {
     clearTimeout(syncTimer);
     syncTimer = null;
     console.log("[SyncJob] Synchronizer stopped.");
   }
 }
-
-module.exports = { startSyncJob, stopSyncJob, syncOnchainData, setSocketIo };

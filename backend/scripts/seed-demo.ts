@@ -1,8 +1,23 @@
-require("dotenv").config();
-const { randomUUID } = require("crypto");
-const { pingDatabase, pool, runMigrations, withTransaction } = require("../src/db");
+import "dotenv/config";
+import { randomUUID } from "crypto";
+import { pingDatabase, pool, runMigrations, withTransaction } from "../src/db";
+import { PoolClient } from "pg";
 
-const DEMO_LAUNCHES = [
+interface DemoLaunch {
+  walletAddress: string;
+  name: string;
+  symbol: string;
+  tagline: string;
+  description: string;
+  totalSupply: string;
+  txHash: string;
+  paymentTokenSymbol: string;
+  paymentAmount: string;
+  riskStatus: string;
+  riskScore: number;
+}
+
+const DEMO_LAUNCHES: DemoLaunch[] = [
   {
     walletAddress: "demo-feed-bot",
     name: "Acki Doge",
@@ -33,7 +48,7 @@ const DEMO_LAUNCHES = [
   },
 ];
 
-async function seedPublicFeed(client) {
+async function seedPublicFeed(client: PoolClient) {
   await client.query(
     `
       DELETE FROM launches

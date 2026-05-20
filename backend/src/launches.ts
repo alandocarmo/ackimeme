@@ -1,6 +1,6 @@
-const { randomUUID } = require("crypto");
-const { config } = require("./config");
-const { getCreationFeeRequirement, normalizeTokenSymbol } = require("./treasury");
+import { randomUUID } from "crypto";
+import { config } from "./config";
+import { getCreationFeeRequirement } from "./treasury";
 
 const MAX_NAME_LENGTH = 32;
 const MAX_SYMBOL_LENGTH = 10;
@@ -8,11 +8,16 @@ const MAX_DESCRIPTION_LENGTH = 280;
 const MAX_SUPPLY_DIGITS = 18;
 const MAX_TAGLINE_LENGTH = 72;
 
-function trimString(value) {
+function trimString(value: any): string {
   return typeof value === "string" ? value.trim() : "";
 }
 
-function requireText(value, fieldName, options = {}) {
+interface RequireTextOptions {
+  minLength?: number;
+  maxLength?: number;
+}
+
+function requireText(value: any, fieldName: string, options: RequireTextOptions = {}): string {
   const text = trimString(value);
   const minLength = options.minLength || 1;
   const maxLength = options.maxLength || Number.POSITIVE_INFINITY;
@@ -36,7 +41,7 @@ function requireText(value, fieldName, options = {}) {
   return text;
 }
 
-function normalizeSymbol(value) {
+function normalizeSymbol(value: any): string {
   const sanitized = requireText(value, "Ticker", {
     minLength: 2,
     maxLength: MAX_SYMBOL_LENGTH * 2,
@@ -57,7 +62,7 @@ function normalizeSymbol(value) {
   return sanitized;
 }
 
-function normalizeSupply(value) {
+function normalizeSupply(value: any): string {
   const digits = String(value ?? "")
     .trim()
     .replace(/[.,]/g, "");
@@ -76,8 +81,9 @@ function normalizeSupply(value) {
 
   return digits;
 }
-function parseSlopeDivisor(val) {
-  const divisors = {
+
+export function parseSlopeDivisor(val: any): number {
+  const divisors: Record<string, number> = {
     "1": 20000000000000, // Suave (0.5x)
     "2": 10000000000000, // Normal (1x)
     "3": 5000000000000,  // Fast (2x)
@@ -100,7 +106,7 @@ function parseSlopeDivisor(val) {
   return 10000000000000;
 }
 
-function normalizeOptionalUrl(value, fieldName) {
+function normalizeOptionalUrl(value: any, fieldName: string): string {
   const url = trimString(value);
 
   if (!url) {
@@ -137,13 +143,13 @@ function normalizeOptionalUrl(value, fieldName) {
     }
 
     return parsed.toString();
-  } catch (error) {
+  } catch (error: any) {
     if (error.message.includes("HTTPS") || error.message.includes("IPFS")) throw error;
     throw new Error(`${fieldName} precisa ser uma URL válida.`);
   }
 }
 
-function normalizeImageUrl(value, fieldName) {
+function normalizeImageUrl(value: any, fieldName: string): string {
   const url = normalizeOptionalUrl(value, fieldName);
   if (!url) return url;
   
@@ -154,13 +160,13 @@ function normalizeImageUrl(value, fieldName) {
     if (match && !validExtensions.includes(match[0])) {
       throw new Error(`${fieldName} possui extensão inválida. Use imagens (${validExtensions.join(', ')}).`);
     }
-  } catch (err) {
+  } catch (err: any) {
     if (err.message.includes("extensão inválida")) throw err;
   }
   return url;
 }
 
-function normalizeLaunchRequest(body = {}, session = null) {
+export function normalizeLaunchRequest(body: any = {}, session: any = null): any {
   const creatorWallet = requireText(
     body.creatorWallet || session?.walletAddress,
     "Wallet do criador",
@@ -240,7 +246,13 @@ function normalizeLaunchRequest(body = {}, session = null) {
   };
 }
 
-function createLaunchTicket({ launchRequest, treasuryPayment, riskProfile }) {
+interface CreateLaunchTicketParams {
+  launchRequest: any;
+  treasuryPayment: any;
+  riskProfile: any;
+}
+
+export function createLaunchTicket({ launchRequest, treasuryPayment, riskProfile }: CreateLaunchTicketParams): any {
   const launchId = randomUUID();
 
   return {
@@ -257,9 +269,3 @@ function createLaunchTicket({ launchRequest, treasuryPayment, riskProfile }) {
     createdAt: new Date().toISOString(),
   };
 }
-
-module.exports = {
-  createLaunchTicket,
-  normalizeLaunchRequest,
-  parseSlopeDivisor
-};

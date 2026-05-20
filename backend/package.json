@@ -5,9 +5,11 @@
     "node": ">=20"
   },
   "scripts": {
-    "db:migrate": "node scripts/migrate.js",
-    "db:seed:demo": "node scripts/seed-demo.js",
-    "start": "node src/main.js",
+    "db:migrate": "tsx scripts/migrate.ts",
+    "db:seed:demo": "tsx scripts/seed-demo.ts",
+    "build": "tsc && node -e \"const fs = require('fs'); fs.mkdirSync('dist/migrations', { recursive: true }); fs.cpSync('src/migrations', 'dist/migrations', { recursive: true }); fs.mkdirSync('dist/abi', { recursive: true }); fs.cpSync('src/abi', 'dist/abi', { recursive: true })\"",
+    "start": "node dist/main.js",
+    "dev": "tsx watch src/main.ts",
     "dev:wallet:init": "node scripts/dev-wallet.js init",
     "dev:wallet:sign": "node scripts/dev-wallet.js sign"
   },
@@ -26,5 +28,15 @@
     "rate-limit-redis": "^5.0.0",
     "redis": "^5.12.1",
     "socket.io": "^4.8.3"
+  },
+  "devDependencies": {
+    "@types/cookie-parser": "^1.4.10",
+    "@types/express": "^5.0.6",
+    "@types/jsonwebtoken": "^9.0.10",
+    "@types/node": "^25.9.1",
+    "@types/pg": "^8.20.0",
+    "ts-node": "^10.9.2",
+    "tsx": "^4.22.3",
+    "typescript": "^6.0.3"
   }
 }

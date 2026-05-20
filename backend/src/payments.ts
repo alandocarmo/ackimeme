@@ -1,5 +1,5 @@
 /**
- * payments.js
+ * payments.ts
  *
  * Verificação de pagamento de fee de criação de coin.
  *
@@ -12,30 +12,53 @@
  * Endpoint testnet: https://shellnet.ackinacki.org/graphql
  */
 
-const { getTransaction } = require("./services/graphql.service");
-const { getCreationFeeRequirement, normalizeTokenSymbol } = require("./treasury");
+import { getTransaction } from "./services/graphql.service";
+import { getCreationFeeRequirement, normalizeTokenSymbol } from "./treasury";
 
 /**
  * Normaliza endereço TVM Acki Nacki: lowercase, trim, sem espaços.
  * Formato padrão: "0:hex64"
  */
-function normalizeTvmAddress(value) {
+export function normalizeTvmAddress(value: any): string {
   return String(value || "").trim().toLowerCase().replace(/\s+/g, "");
+}
+
+interface VerifyPaymentParams {
+  walletAddress: string;
+  txHash: string;
+  tokenSymbol: string;
+  isBoosted?: boolean;
+}
+
+interface VerifiedPaymentResult {
+  success: boolean;
+  txHash: string;
+  walletAddress: string;
+  payerWallet: string;
+  tokenSymbol: string;
+  amount: any;
+  nanoAmount: string;
+  feeWallet: string;
+  minimumAmount: any;
+  networkSettlementToken: string;
+  networkSettlementStatus: string;
 }
 
 /**
  * Verifica se uma transação SHELL cumpre os requisitos de fee.
- *
- * @param {{ walletAddress: string, txHash: string, tokenSymbol: string, isBoosted?: boolean }} params
- * @returns {Promise<object>} Dados do pagamento verificado
  */
-async function verifyPayment({ walletAddress, txHash, tokenSymbol, isBoosted = false }) {
+export async function verifyPayment({
+  walletAddress,
+  txHash,
+  tokenSymbol,
+  isBoosted = false,
+}: VerifyPaymentParams): Promise<VerifiedPaymentResult> {
   const requirement = getCreationFeeRequirement(tokenSymbol || "SHELL");
 
-  let tx;
+  let tx: any;
   try {
     tx = await getTransaction(txHash);
-  } catch (error) {
+  } catch (error: any) {
     throw new Error(`Erro ao consultar a blockchain: ${error.message}`);
   }
 
@@ -127,5 +150,3 @@ async function verifyPayment({ walletAddress, txHash, tokenSymbol, isBoosted = f
     networkSettlementStatus: "native_shell_direct",
   };
 }
-
-module.exports = { verifyPayment };

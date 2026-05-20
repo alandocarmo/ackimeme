@@ -30,3 +30,9 @@ Thumbs.db
 
 # Chaves privadas — NUNCA commitar
 *.keys.json
+
+# Compilação Backend TS
+backend/dist/
+
+# Backup temporário local
+backend_backup_js/
