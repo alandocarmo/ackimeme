@@ -14,7 +14,7 @@ export default function PortfolioPage() {
   const { t } = useI18n();
   const router = useRouter();
   const [session, setSession] = useState<Session | null>(null);
-  const [launches, setLaunches] = useState<any[]>([]);
+  const [launches, setLaunches] = useState<import("../types").Launch[]>([]);
   const [holdings, setHoldings] = useState<any[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [scanning, setScanning] = useState<boolean>(false);
@@ -31,7 +31,7 @@ export default function PortfolioPage() {
       .catch(() => {});
     
     getPublicLaunches()
-      .then((r: any) => { setLaunches(r.launches || []); })
+      .then((r) => { setLaunches(r.launches || []); })
       .catch((err) => setError(err.message))
       .finally(() => setLoading(false));
   }, []);
@@ -40,7 +40,7 @@ export default function PortfolioPage() {
     if (!session) return;
     const { getFavorites } = require("../lib/api");
     getFavorites()
-      .then((r: any) => setFavorites(r.launches || []))
+      .then((r: { launches?: import("../types").Launch[] }) => setFavorites(r.launches || []))
       .catch(() => {});
   }, [session]);
 
@@ -59,21 +59,22 @@ export default function PortfolioPage() {
       }
       const { Address } = await import('everscale-inpage-provider');
 
-      const deployedLaunches = launches.filter((l: any) => l.onchainData?.tokenRootAddress);
+      const deployedLaunches = launches.filter((l: import("../types").Launch) => l.onchainData?.tokenRootAddress);
 
       // Scan in parallel batches of 5 instead of sequentially
       const BATCH_SIZE = 10;
-      const foundHoldings: any[] = [];
+      const foundHoldings: any[] = []; // Reverted because the logic maps the entire launch ticket later
       const address = session.walletAddress;
 
       for (let i = 0; i < deployedLaunches.length; i += BATCH_SIZE) {
         const batch = deployedLaunches.slice(i, i + BATCH_SIZE);
         const results = await Promise.allSettled(batch.map(async (launch) => {
-          const cacheKey = `walletOf_${launch.onchainData.tokenRootAddress}_${address}`;
+          if (!launch.onchainData?.tokenRootAddress) return null;
+          const cacheKey = `walletOf_${(launch.onchainData?.tokenRootAddress || "")}_${address}`;
           let userWalletAddress = localStorage.getItem(cacheKey);
 
           if (!userWalletAddress) {
-            const rootContract = new ever.Contract(TokenRootAbi, new Address(launch.onchainData.tokenRootAddress));
+            const rootContract = new ever.Contract(TokenRootAbi, new Address((launch.onchainData?.tokenRootAddress || "")));
             const walletResult = await (rootContract.methods as any).walletOf({
               answerId: 0,
               walletOwner: address
@@ -222,7 +223,7 @@ export default function PortfolioPage() {
               </div>
             ) : holdings.length > 0 ? (
               <div className="portfolio-list" style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-                {holdings.map((token: any) => (
+                {holdings.map((token) => (
                   <Link href={`/token/${token.id}`} key={token.id} className={`card ${styles['portfolio-item-card']}`} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', textDecoration: 'none', transition: 'transform 0.2s' }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
                       <div className="token-avatar" style={{ width: '48px', height: '48px', borderRadius: '12px', background: 'var(--bg-deep)', display: 'flex', justifyContent: 'center', alignItems: 'center', fontSize: '20px' }}>
@@ -254,7 +255,7 @@ export default function PortfolioPage() {
               </div>
             ) : (
               <div className="portfolio-list" style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-                {favorites.map((token: any) => (
+                {favorites.map((token) => (
                   <Link href={`/token/${token.id}`} key={token.id} className={`card ${styles['portfolio-item-card']}`} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', textDecoration: 'none', transition: 'transform 0.2s' }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
                       <div className="token-avatar" style={{ width: '48px', height: '48px', borderRadius: '12px', background: 'var(--bg-deep)', display: 'flex', justifyContent: 'center', alignItems: 'center', fontSize: '20px' }}>

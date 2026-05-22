@@ -34,7 +34,7 @@ export default function CreatePage() {
     txHash: "", pumpForever: false, isBoosted: false, slopeDivisor: 10_000_000_000_000,
   });
   const [paymentStatus, setPaymentStatus] = useState<{ ok: boolean, msg: string, verifiedTx?: string | null }>({ ok: false, msg: "" });
-  const [launchStatus, setLaunchStatus] = useState<{ loading: boolean, error: string, success: boolean, ticket: any | null }>({ loading: false, error: "", success: false, ticket: null });
+  const [launchStatus, setLaunchStatus] = useState<{ loading: boolean, error: string, success: boolean, ticket: import("../types").LaunchTicket | null }>({ loading: false, error: "", success: false, ticket: null });
 
   useEffect(() => {
     if (typeof window === "undefined") return;
@@ -49,10 +49,10 @@ export default function CreatePage() {
       .catch(() => {});
   }, []);
 
-  function updateField(field: keyof typeof form, value: any) {
-    let v = value;
+  function updateField(field: keyof typeof form, value: string | boolean | number) {
+    let v = value as string | boolean | undefined;
     if (field === "symbol") {
-      v = sanitizeSymbol(value);
+      v = sanitizeSymbol(value as string);
     } else if (field === "totalSupply") {
       v = String(value || "").replace(/[^\d]/g, "");
     }
@@ -78,8 +78,9 @@ export default function CreatePage() {
         isBoosted: form.isBoosted,
       });
       setPaymentStatus({ ok: true, msg: "Payment confirmed ✓", verifiedTx: form.txHash.trim() });
-    } catch (err: any) {
-      setPaymentStatus({ ok: false, msg: err.message, verifiedTx: null });
+    } catch (err) {
+      setPaymentStatus({ ok: false, msg: "" });
+      setPaymentStatus({ ok: false, msg: (err as Error).message });
     }
   }
 
@@ -93,9 +94,9 @@ export default function CreatePage() {
         symbol: sanitizeSymbol(form.symbol)
       };
       const res = await createLaunchRequest(payload);
-      setLaunchStatus({ loading: false, error: "", success: true, ticket: res.launchRequest });
-    } catch (err: any) {
-      setLaunchStatus({ loading: false, error: err.message, success: false, ticket: null });
+      setLaunchStatus({ loading: false, error: "", success: true, ticket: (res.launchRequest as import("../types").LaunchTicket) });
+    } catch (err) {
+      setLaunchStatus(prev => ({ ...prev, loading: false, error: (err as Error).message }));
     }
   }
 

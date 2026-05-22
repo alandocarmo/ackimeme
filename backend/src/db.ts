@@ -18,7 +18,7 @@ pool.on("error", (err: Error) => {
   console.error("[Database] Unexpected error on idle client:", err.message);
 });
 
-export async function query(text: string, params: any[] = []): Promise<QueryResult> {
+export async function query(text: string, params: unknown[] = []): Promise<QueryResult> {
   return pool.query(text, params);
 }
 
@@ -49,7 +49,7 @@ async function ensureMigrationsTable(): Promise<void> {
 
 async function getAppliedMigrations(): Promise<Set<string>> {
   const result = await query("SELECT version FROM schema_migrations");
-  return new Set(result.rows.map((row: any) => row.version));
+  return new Set(result.rows.map((row: { version: string }) => String(row.version)));
 }
 
 async function applyMigration(version: string, sql: string): Promise<void> {
@@ -87,8 +87,8 @@ export async function pingDatabase(retries = 3, delayMs = 2000): Promise<boolean
     try {
       await query("SELECT 1");
       return true;
-    } catch (err: any) {
-      console.warn(`[Database] Ping attempt ${attempt}/${retries} failed: ${err.message}`);
+    } catch (err: unknown) {
+      console.warn(`[Database] Ping attempt ${attempt}/${retries} failed: ${err instanceof Error ? err.message : String(err)}`);
       if (attempt < retries) {
         await new Promise((r) => setTimeout(r, delayMs));
       } else {

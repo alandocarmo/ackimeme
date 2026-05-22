@@ -1,5 +1,5 @@
-require("dotenv").config();
-const { Telegraf } = require("telegraf");
+import "dotenv/config";
+import { Telegraf, Context } from "telegraf";
 
 if (!process.env.BOT_TOKEN) {
   throw new Error("BOT_TOKEN não definido no .env");
@@ -13,10 +13,10 @@ const welcomeText =
 const bot = new Telegraf(process.env.BOT_TOKEN);
 
 // ─── M-05: Rate limiting middleware to prevent spam ──────────────────────────
-const rateLimitMap = new Map();
+const rateLimitMap = new Map<number, number>();
 const RATE_LIMIT_MS = 3000; // 3 seconds between interactions per user
 
-bot.use((ctx, next) => {
+bot.use((ctx: Context, next: () => Promise<void>) => {
   const userId = ctx.from?.id;
   if (!userId) return next();
 
@@ -41,7 +41,7 @@ setInterval(() => {
   }
 }, 5 * 60 * 1000);
 
-bot.start((ctx) => {
+bot.start((ctx: Context) => {
   ctx.reply(`🚀 AckiMeme\n\n${welcomeText}`, {
     reply_markup: {
       inline_keyboard: [

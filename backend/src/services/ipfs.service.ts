@@ -66,6 +66,7 @@ export async function uploadToIPFS(metadata: any): Promise<string> {
       await new Promise(resolve => setTimeout(resolve, 1000 * attempt)); // exp backoff: 1s, 2s
     }
   }
+  throw new Error("Failed to upload to IPFS");
 }
 
 /**

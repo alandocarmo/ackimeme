@@ -155,8 +155,8 @@ function SwapPanel(): React.JSX.Element {
       
       setSuccess(`Swap iniciado com sucesso! Tx: ${(tx as any)?.transaction?.id?.hash?.slice(0, 8) || 'confirmada'}`);
       setAmount('');
-    } catch(err: any) {
-      setError(err.message || "Falha no swap.");
+    } catch(err) {
+      setError((err as Error).message);
     } finally {
       setLoading(false);
     }

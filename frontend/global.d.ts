@@ -4,5 +4,5 @@ declare module "*.module.css" {
 }
 
 interface Window {
-  Telegram?: any;
+  Telegram?: Record<string, unknown>;
 }

@@ -1,15 +1,30 @@
-const crypto = require("crypto");
-const fs = require("fs");
-const path = require("path");
+import * as crypto from "crypto";
+import * as fs from "fs";
+import * as path from "path";
 
 const dataDir = path.join(__dirname, "..", "data");
 const walletFile = path.join(dataDir, "dev-wallet.json");
 
-function ensureDir() {
+interface DevWallet {
+  walletAddress: string;
+  publicKeyHex: string;
+  publicKeyPem: string;
+  privateKeyPem: string;
+  createdAt: string;
+}
+
+interface SignResult {
+  walletAddress: string;
+  publicKeyHex: string;
+  signatureHex: string;
+  message: string;
+}
+
+function ensureDir(): void {
   fs.mkdirSync(dataDir, { recursive: true });
 }
 
-function getRawPublicKeyHex(publicKeyPem) {
+function getRawPublicKeyHex(publicKeyPem: string): string {
   const spkiDer = crypto
     .createPublicKey(publicKeyPem)
     .export({ format: "der", type: "spki" });
@@ -17,20 +32,20 @@ function getRawPublicKeyHex(publicKeyPem) {
   return Buffer.from(spkiDer).subarray(-32).toString("hex");
 }
 
-function initWallet() {
+function initWallet(): void {
   ensureDir();
 
   if (fs.existsSync(walletFile)) {
-    const existing = JSON.parse(fs.readFileSync(walletFile, "utf8"));
+    const existing: DevWallet = JSON.parse(fs.readFileSync(walletFile, "utf8"));
     console.log(JSON.stringify(existing, null, 2));
     return;
   }
 
   const { publicKey, privateKey } = crypto.generateKeyPairSync("ed25519");
-  const publicKeyPem = publicKey.export({ format: "pem", type: "spki" });
-  const privateKeyPem = privateKey.export({ format: "pem", type: "pkcs8" });
+  const publicKeyPem = publicKey.export({ format: "pem", type: "spki" }) as string;
+  const privateKeyPem = privateKey.export({ format: "pem", type: "pkcs8" }) as string;
 
-  const payload = {
+  const payload: DevWallet = {
     walletAddress: "dev-wallet-local",
     publicKeyHex: getRawPublicKeyHex(publicKeyPem),
     publicKeyPem,
@@ -42,17 +57,17 @@ function initWallet() {
   console.log(JSON.stringify(payload, null, 2));
 }
 
-function readWallet() {
+function readWallet(): DevWallet {
   if (!fs.existsSync(walletFile)) {
     throw new Error(
       "Carteira de teste não encontrada. Rode `npm run dev:wallet:init` primeiro.",
     );
   }
 
-  return JSON.parse(fs.readFileSync(walletFile, "utf8"));
+  return JSON.parse(fs.readFileSync(walletFile, "utf8")) as DevWallet;
 }
 
-function readMessage() {
+function readMessage(): string {
   const fileArg = process.argv[3];
 
   if (fileArg) {
@@ -62,7 +77,7 @@ function readMessage() {
   return fs.readFileSync(0, "utf8");
 }
 
-function signMessage() {
+function signMessage(): void {
   const wallet = readWallet();
   const message = readMessage();
 
@@ -76,21 +91,17 @@ function signMessage() {
     wallet.privateKeyPem,
   );
 
-  console.log(
-    JSON.stringify(
-      {
-        walletAddress: wallet.walletAddress,
-        publicKeyHex: wallet.publicKeyHex,
-        signatureHex: signature.toString("hex"),
-        message,
-      },
-      null,
-      2,
-    ),
-  );
+  const result: SignResult = {
+    walletAddress: wallet.walletAddress,
+    publicKeyHex: wallet.publicKeyHex,
+    signatureHex: signature.toString("hex"),
+    message,
+  };
+
+  console.log(JSON.stringify(result, null, 2));
 }
 
-function main() {
+function main(): void {
   const command = process.argv[2];
 
   if (command === "init") {

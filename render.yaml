@@ -1,0 +1,39 @@
+services:
+  - type: web
+    name: ackimeme-api
+    env: docker
+    dockerContext: ./backend
+    dockerfilePath: ./backend/Dockerfile
+    plan: free # Change to standard/pro if needed
+    healthCheckPath: /readyz
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: DATABASE_URL
+        sync: false # Set securely in Render dashboard (Neon URL)
+      - key: REDIS_URL
+        sync: false # Set if using Render Redis or Upstash
+      - key: ADMIN_TOKEN
+        sync: false
+      - key: DEPLOYER_SECRET_KEY
+        sync: false
+      - key: PINATA_API_KEY
+        sync: false
+      - key: PINATA_SECRET_API_KEY
+        sync: false
+      - key: ENABLE_SHELL_BUY
+        value: "false"
+
+  - type: worker
+    name: ackimeme-bot
+    env: node
+    buildCommand: "cd bot && npm ci && npm run build"
+    startCommand: "cd bot && npm start"
+    plan: free # Change to standard/pro if needed
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: BOT_TOKEN
+        sync: false # Set securely in Render dashboard
+      - key: WEB_APP_URL
+        sync: false # The deployed Vercel URL

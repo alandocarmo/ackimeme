@@ -12,236 +12,9 @@ import type { Session, Launch, CommentType, Trade, Holder, OnchainData } from ".
 
 // Removed duplicated functions
 
-function PriceChart({ currentPrice, progressPct, slopeDivisor }: { currentPrice: number | null, progressPct: string | null, slopeDivisor: number | null }): React.JSX.Element {
-  const { t } = useI18n();
-  const points = [];
-  const pct = parseFloat(progressPct || "0");
-  
-  // M-10: Reflect actual slope in the theoretical chart curve
-  const baseSlope = 10000000000000;
-  const currentSlope = Number(slopeDivisor || baseSlope);
-  const intensity = baseSlope / currentSlope; // Suave=0.5x, Normal=1x, Insane=10x
-  const exponent = 1.4 + (intensity * 0.2); // Dynamic exponent for visual steepness
-
-  for (let i = 0; i <= 40; i++) {
-     const x = (i / 40) * 100;
-     const y = 70 - (Math.pow(i / 40, exponent) * 50); 
-     points.push(`${x},${y}`);
-  }
-  
-  const currentX = pct;
-  const currentY = 70 - (Math.pow(pct / 100, exponent) * 50);
-
-  return (
-    <div className={`card ${styles.chartCard}`} style={{ height: '240px', padding: '0', position: 'relative', overflow: 'hidden', border: '1px solid var(--ink-faint)', background: 'linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(0,255,136,0.02) 100%)' }}>
-       <div style={{ position: 'absolute', top: '20px', left: '20px', zIndex: 10 }}>
-          <p className={styles.infoLabel} style={{ margin: 0, fontSize: '10px' }}>{t("detail_bonding_curve")}</p>
-          <p style={{ margin: 0, fontSize: '22px', fontWeight: 900, color: 'var(--accent)', letterSpacing: '-0.5px' }}>
-            {currentPrice ? `${currentPrice.toFixed(9)}` : '---'} <span style={{ fontSize: '12px', fontWeight: 400 }}>{t("common_shell")}</span>
-          </p>
-       </div>
-       
-       <svg viewBox="0 0 100 80" preserveAspectRatio="none" style={{ width: '100%', height: '100%', position: 'absolute', bottom: 0, left: 0 }}>
-          <defs>
-            <linearGradient id="chartGradient" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stopColor="var(--accent)" stopOpacity="0.15" />
-              <stop offset="100%" stopColor="var(--accent)" stopOpacity="0" />
-            </linearGradient>
-            <filter id="glow">
-              <feGaussianBlur stdDeviation="1.5" result="coloredBlur"/>
-              <feMerge>
-                <feMergeNode in="coloredBlur"/><feMergeNode in="SourceGraphic"/>
-              </feMerge>
-            </filter>
-          </defs>
-          
-          {/* Grid lines */}
-          <line x1="0" y1="20" x2="100" y2="20" stroke="var(--ink-faint)" strokeWidth="0.1" />
-          <line x1="0" y1="45" x2="100" y2="45" stroke="var(--ink-faint)" strokeWidth="0.1" />
-          
-          <polyline
-            fill="none"
-            stroke="var(--accent)"
-            strokeWidth="0.6"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            points={points.join(' ')}
-            style={{ filter: 'url(#glow)' }}
-          />
-          <path
-            d={`M 0 80 L ${points.join(' L ')} L 100 80 Z`}
-            fill="url(#chartGradient)"
-          />
-          
-          <circle 
-            cx={currentX} 
-            cy={currentY} 
-            r="1.2" 
-            fill="var(--bg)"
-            stroke="var(--accent)"
-            strokeWidth="0.5"
-            style={{ filter: 'drop-shadow(0 0 5px var(--accent))' }}
-          />
-       </svg>
-       
-       <div style={{ position: 'absolute', bottom: '10px', right: '15px', color: 'var(--ink-soft)', fontSize: '10px' }}>
-         {t("info_bonding_curve")}: {pct}%
-       </div>
-    </div>
-  );
-}
-
-// BubbleMap: SVG-based Sunflower Spiral packing for top holders
-function BubbleMap({ holders, totalSupply }: { holders: Holder[], totalSupply: number }): React.JSX.Element | null {
-  const placedNodes = useMemo(() => {
-    if (!holders || holders.length === 0) return [];
-
-    const SVG_SIZE = 320;
-    const CENTER = SVG_SIZE / 2;
-    const placed = [];
-
-    const sortedNodes = [...holders].map((h, i) => {
-      const pct = (h.balance / totalSupply) * 100;
-      const r = Math.max(8, Math.sqrt(pct) * 12);
-      return { ...h, pct, r, id: i };
-    }).sort((a, b) => b.balance - a.balance).slice(0, 50);
-
-    for (let i = 0; i < sortedNodes.length; i++) {
-      const node = sortedNodes[i];
-      let angle = 0;
-      let dist = 0;
-      let cx = CENTER, cy = CENTER;
-      let overlapping = true;
-      let attempts = 0;
-
-      while (overlapping && attempts < 400) {
-        cx = CENTER + Math.cos(angle) * dist;
-        cy = CENTER + Math.sin(angle) * dist;
-
-        overlapping = placed.some(p => {
-          const dx = (p as any).cx - cx;
-          const dy = (p as any).cy - cy;
-          const d = Math.sqrt(dx * dx + dy * dy);
-          return d < ((p as any).r + node.r + 3);
-        });
-
-        if (overlapping) {
-          dist += 1.5;
-          angle += 2.39996;
-          attempts++;
-        }
-      }
-      (node as any).cx = cx;
-      (node as any).cy = cy;
-      placed.push(node);
-    }
-    return placed;
-  }, [holders, totalSupply]);
-
-  if (placedNodes.length === 0) return null;
-  const SVG_SIZE = 320;
-
-  return (
-    <div style={{ background: 'var(--bg-deep)', borderRadius: '8px', padding: '16px', display: 'flex', justifyContent: 'center', overflow: 'hidden', position: 'relative' }}>
-      <svg width={SVG_SIZE} height={SVG_SIZE} viewBox={`0 0 ${SVG_SIZE} ${SVG_SIZE}`}>
-        {placedNodes.map(n => (
-          <g key={n.id} transform={`translate(${(n as any).cx}, ${(n as any).cy})`} style={{ transition: 'transform 0.3s ease' }}>
-            <circle 
-              r={n.r} 
-              fill={n.isBondingCurve ? 'rgba(59, 130, 246, 0.2)' : 'rgba(16, 185, 129, 0.2)'}
-              stroke={n.isBondingCurve ? '#3b82f6' : hashColor(n.walletAddress)}
-              strokeWidth="2"
-            />
-             {n.r > 15 && (
-               <text textAnchor="middle" dy=".3em" fill="#fff" fontSize={n.r > 25 ? "10px" : "8px"} fontWeight="bold" style={{ pointerEvents: 'none' }}>
-                 {n.pct.toFixed(1)}%
-               </text>
-            )}
-            <title>{n.isBondingCurve ? "Bonding Curve" : compactWallet(n.walletAddress)}: {n.pct.toFixed(2)}%</title>
-          </g>
-        ))}
-      </svg>
-    </div>
-  );
-}
-
-function CandlestickChart({ history }: { history: any[] }): React.JSX.Element {
-  if (!history || history.length === 0) {
-    return (
-      <div className={`card ${styles.chartCard}`} style={{ height: '240px', display: 'flex', justifyContent: 'center', alignItems: 'center', color: 'var(--ink-soft)', border: '1px solid var(--ink-faint)', background: '#0a0a0a' }}>
-        No price history available yet. Start trading to generate candles!
-      </div>
-    );
-  }
-
-  let minPrice = Math.min(...history.map(c => c.low));
-  let maxPrice = Math.max(...history.map(c => c.high));
-  
-  const priceDiff = maxPrice - minPrice;
-  const padding = priceDiff === 0 ? minPrice * 0.1 : priceDiff * 0.1;
-  minPrice = Math.max(0, minPrice - padding);
-  maxPrice = maxPrice + padding;
-
-  const width = 1000;
-  const height = 240;
-  const paddingLeft = 10;
-  const paddingRight = 80;
-  const paddingTop = 20;
-  const paddingBottom = 20;
-
-  const chartWidth = width - paddingLeft - paddingRight;
-  const chartHeight = height - paddingTop - paddingBottom;
-
-  const scaleY = (val: any) => {
-    if (maxPrice - minPrice === 0) return paddingTop + chartHeight / 2;
-    return paddingTop + chartHeight - ((val - minPrice) / (maxPrice - minPrice)) * chartHeight;
-  };
-
-  const candleWidth = Math.max(2, (chartWidth / history.length) * 0.7);
-  const gap = (chartWidth / history.length) * 0.3;
-
-  return (
-    <div className={`card ${styles.chartCard}`} style={{ height: '240px', padding: '10px', border: '1px solid var(--ink-faint)', background: '#0a0a0a', position: 'relative', overflow: 'hidden' }}>
-      <svg viewBox={`0 0 ${width} ${height}`} style={{ width: '100%', height: '100%' }}>
-        {/* Horizontal grid lines */}
-        {[0, 0.25, 0.5, 0.75, 1].map((p, idx) => {
-          const price = minPrice + (maxPrice - minPrice) * p;
-          const y = scaleY(price);
-          return (
-            <g key={idx}>
-              <line x1={paddingLeft} y1={y} x2={width - paddingRight} y2={y} stroke="rgba(255,255,255,0.05)" strokeWidth="1" strokeDasharray="4 4" />
-              <text x={width - paddingRight + 5} y={y + 4} fill="var(--ink-soft)" fontSize="10" fontFamily="monospace">
-                {price.toFixed(9)}
-              </text>
-            </g>
-          );
-        })}
-
-        {/* Candles */}
-        {history.map((candle, idx) => {
-          const x = paddingLeft + idx * (chartWidth / history.length) + gap / 2;
-          const openY = scaleY(candle.open);
-          const closeY = scaleY(candle.close);
-          const highY = scaleY(candle.high);
-          const lowY = scaleY(candle.low);
-
-          const isUp = candle.close >= candle.open;
-          const color = isUp ? '#10b981' : '#ef4444';
-
-          const bodyY = Math.min(openY, closeY);
-          const bodyHeight = Math.max(2, Math.abs(closeY - openY));
-
-          return (
-            <g key={idx}>
-              <line x1={x + candleWidth / 2} y1={highY} x2={x + candleWidth / 2} y2={lowY} stroke={color} strokeWidth="1.5" />
-              <rect x={x} y={bodyY} width={candleWidth} height={bodyHeight} fill={color} stroke={color} strokeWidth="1" rx="1" />
-            </g>
-          );
-        })}
-      </svg>
-    </div>
-  );
-}
+import { PriceChart } from "../../components/PriceChart";
+import { BubbleMap } from "../../components/BubbleMap";
+import { CandlestickChart } from "../../components/CandlestickChart";
 
 
 
@@ -365,7 +138,7 @@ export default function TokenPage(): React.JSX.Element {
 
   useEffect(() => {
     if (typeof window === "undefined") return;
-    (getSession as any)().then((r: any) => setSession(r.session)).catch(() => {});
+    getSession().then((r) => setSession(r.session)).catch(() => {});
   }, []);
 
   // Fetch Favorites status for this user
@@ -373,9 +146,9 @@ export default function TokenPage(): React.JSX.Element {
     if (!session || !idStr) return;
     import("../../lib/api").then(({ getFavorites }) => {
       (getFavorites as any)()
-        .then((r: any) => {
+        .then((r: { launches?: import("../../types").Launch[] }) => {
           const favs = r.launches || [];
-          setIsFavorite(favs.some((f: any) => f.id === idStr));
+          setIsFavorite(favs.some((f: import("../../types").Launch) => f.id === idStr));
         })
         .catch(() => {});
     });
@@ -394,8 +167,8 @@ export default function TokenPage(): React.JSX.Element {
         setIsFavorite(true);
         toast.success("Added", "Adicionado aos favoritos!");
       }
-    } catch (err: any) {
-      toast.error("Erro", err.message || "Erro ao atualizar favoritos.");
+    } catch (err) {
+      toast.error("Erro", (err as Error).message || "Erro ao atualizar favoritos.");
     }
   }, [session, id, isFavorite, toast, router]);
 
@@ -404,7 +177,7 @@ export default function TokenPage(): React.JSX.Element {
     if (!idStr) return;
     import("../../lib/api").then(({ getPriceHistory }) => {
       getPriceHistory(idStr, selectedInterval)
-        .then((r: any) => {
+        .then((r) => {
           setPriceHistory((r as any).history || []);
         })
         .catch((err) => console.error("Error fetching price history", err));
@@ -488,7 +261,7 @@ export default function TokenPage(): React.JSX.Element {
           setUserTokenBalance(Number(`${whole}.${String(frac).padStart(9, "0")}`));
         }
       }
-    } catch (err: any) {
+    } catch (err) {
       console.warn("Could not fetch user balances", err);
     }
   }, [session?.walletAddress, token?.onchainData?.tokenRootAddress, token?.onchainData?.deployStatus]);
@@ -524,7 +297,7 @@ export default function TokenPage(): React.JSX.Element {
         } else if (!cancelled) {
             setBuyReturn(0);
         }
-      } catch (err: any) {
+      } catch (err) {
         console.warn("Buy estimate failed", err);
       }
     }, 400);
@@ -574,13 +347,13 @@ export default function TokenPage(): React.JSX.Element {
     if (!idStr) return;
     
     // Initial fetch for comments, trades, and holders
-    getComments(idStr).then((r: any) => setComments((r as any).comments || [])).catch(() => {});
+    getComments(idStr).then((r) => setComments(r.comments || [])).catch(() => {});
     import("../../lib/api").then(api => {
       if (api.getTrades) {
-        api.getTrades(idStr).then((r: any) => setTrades((r as any).trades || [])).catch(() => {});
+        api.getTrades(idStr).then((r) => setTrades(r.trades || [])).catch(() => {});
       }
       if (api.getHolders) {
-        api.getHolders(idStr).then((r: any) => {
+        api.getHolders(idStr).then((r) => {
           setHolders((r as any).holders || []);
           if ((r as any).totalSupply) setTotalSupply((r as any).totalSupply);
         }).catch(() => {});
@@ -592,18 +365,18 @@ export default function TokenPage(): React.JSX.Element {
 
     socket.emit("join_token", idStr);
 
-    const handleTokenUpdated = (update: any) => {
+    const handleTokenUpdated = (update: Partial<import("../../types").Launch>) => {
       setToken((prev) => {
         if (!prev) return prev;
         return {
           ...prev,
-          status: update.status,
+          status: update.status || prev.status,
           onchainData: {
             ...prev.onchainData,
-            reserveBalance: update.reserveBalance,
-            tokenSupply: update.tokenSupply,
-            lockedLiquidity: update.lockedLiquidity,
-            updatedAt: update.updatedAt,
+            reserveBalance: update.onchainData?.reserveBalance ?? prev.onchainData?.reserveBalance,
+            tokenSupply: update.onchainData?.tokenSupply ?? prev.onchainData?.tokenSupply,
+            lockedLiquidity: update.onchainData?.lockedLiquidity ?? prev.onchainData?.lockedLiquidity,
+            updatedAt: update.onchainData?.updatedAt ?? prev.onchainData?.updatedAt,
           },
         };
       });
@@ -611,18 +384,18 @@ export default function TokenPage(): React.JSX.Element {
       fetchPrice();
     };
 
-    const handleNewComment = (comment: any) => {
+    const handleNewComment = (comment: import("../../types").CommentType) => {
       setComments((prev) => {
-        if (prev.find((c) => c.id === comment.idStr)) return prev;
+        if (prev.find((c) => c.id === comment.id)) return prev;
         return [comment, ...prev];
       });
     };
 
     let holdersTimeoutId: ReturnType<typeof setTimeout> | null = null;
 
-    const handleNewTrade = (trade: any) => {
+    const handleNewTrade = (trade: import("../../types").Trade) => {
       setTrades((prev) => {
-        if (prev.find((t) => t.id === trade.idStr)) return prev;
+        if (prev.find((t) => t.id === trade.id)) return prev;
         return [trade, ...prev];
       });
       // Refresh holders when a trade happens to keep the leaderboard somewhat live
@@ -630,7 +403,7 @@ export default function TokenPage(): React.JSX.Element {
       holdersTimeoutId = setTimeout(() => {
         import("../../lib/api").then(api => {
           if (api.getHolders) {
-            api.getHolders(idStr).then((r: any) => {
+            api.getHolders(idStr).then((r) => {
               setHolders((r as any).holders || []);
               if ((r as any).totalSupply) setTotalSupply((r as any).totalSupply);
             }).catch(() => {});
@@ -783,10 +556,9 @@ export default function TokenPage(): React.JSX.Element {
         toast.success("Venda Realizada", "Tokens queimados e SHELL enviado!");
       }
       
-    } catch(err: any) {
+    } catch(err) {
       setTradeSuccess("");
-      setError(err.message || "Erro durante o trade.");
-      toast.error("Falha no Trade", err.message || "Ocorreu um erro na transação.");
+      toast.error("Falha no Trade", (err as Error).message || "Ocorreu um erro na transação.");
     } finally {
       setIsTrading(false);
     }

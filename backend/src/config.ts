@@ -20,7 +20,7 @@ export const ECC_TOKEN_IDS = Object.freeze({
   USDC:  3,  // Stablecoin (6 decimals)
 });
 
-function readPositiveNumber(value: any, fallback: number): number {
+function readPositiveNumber(value: unknown, fallback: number): number {
   const parsed = Number(value);
   if (!Number.isFinite(parsed) || parsed <= 0) {
     return fallback;
@@ -28,7 +28,7 @@ function readPositiveNumber(value: any, fallback: number): number {
   return parsed;
 }
 
-function readCsv(value: any): string[] {
+function readCsv(value: unknown): string[] {
   if (typeof value !== "string") {
     return [];
   }
@@ -38,7 +38,7 @@ function readCsv(value: any): string[] {
     .filter(Boolean);
 }
 
-function readPositiveInteger(value: any, fallback: number): number {
+function readPositiveInteger(value: unknown, fallback: number): number {
   const parsed = Number(value);
   if (!Number.isFinite(parsed) || parsed <= 0) {
     return fallback;
@@ -46,7 +46,7 @@ function readPositiveInteger(value: any, fallback: number): number {
   return Math.trunc(parsed);
 }
 
-function isPlaceholderValue(value: any): boolean {
+function isPlaceholderValue(value: unknown): boolean {
   const normalized = String(value || "").trim().toLowerCase();
   if (!normalized) {
     return true;
@@ -61,7 +61,7 @@ function isPlaceholderValue(value: any): boolean {
   );
 }
 
-function isConfiguredWallet(value: any): boolean {
+function isConfiguredWallet(value: unknown): boolean {
   const normalized = String(value || "").trim();
   if (!normalized || isPlaceholderValue(normalized)) {
     return false;
@@ -69,7 +69,7 @@ function isConfiguredWallet(value: any): boolean {
   return normalized === "dev-wallet-local" || /^0:[0-9a-f]{64}$/i.test(normalized);
 }
 
-function isStrongSecret(value: any, minimumLength = 32): boolean {
+function isStrongSecret(value: unknown, minimumLength = 32): boolean {
   const normalized = String(value || "").trim();
   if (!normalized || isPlaceholderValue(normalized)) {
     return false;

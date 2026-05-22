@@ -88,9 +88,9 @@ export default function App({ Component, pageProps }: AppProps) {
 
     // Telegram WebApp SDK — notifica o Telegram que o Mini App carregou
     // e expande para tela cheia. Sem isso, o spinner do Telegram fica eterno.
-    if (window.Telegram?.WebApp) {
-      window.Telegram.WebApp.ready();
-      window.Telegram.WebApp.expand();
+      if ((window.Telegram as any)?.WebApp) {
+        (window.Telegram as any).WebApp.ready();
+        (window.Telegram as any).WebApp.expand();
     }
 
     const fetchSession = () => {

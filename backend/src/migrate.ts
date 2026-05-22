@@ -1,5 +1,5 @@
 import "dotenv/config";
-import { runMigrations, pingDatabase } from "../src/db";
+import { runMigrations, pingDatabase } from "./db";
 
 async function main() {
   await pingDatabase();

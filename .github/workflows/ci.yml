@@ -9,7 +9,7 @@ on:
 jobs:
   # ─── Backend ────────────────────────────────────────────────────────────
   backend:
-    name: Backend — Lint & Validate
+    name: Backend — Type Check & Build
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -26,14 +26,16 @@ jobs:
 
       - run: npm ci
 
-      # Syntax check — will catch missing requires, bad imports, etc.
-      - name: Syntax Check (node --check)
-        run: |
-          find src -name "*.js" -exec node --check {} +
+      # TypeScript type-check — catches type errors, bad imports, missing types
+      - name: Type Check (tsc --noEmit)
+        run: npx tsc --noEmit
+
+      - name: Build
+        run: npm run build
 
   # ─── Frontend ───────────────────────────────────────────────────────────
   frontend:
-    name: Frontend — Build
+    name: Frontend — Type Check & Build
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -50,10 +52,36 @@ jobs:
 
       - run: npm ci
 
+      # TypeScript type-check
+      - name: Type Check (tsc --noEmit)
+        run: npx tsc --noEmit
+
       - name: Build Next.js
         run: npm run build
         env:
           NEXT_PUBLIC_API_BASE_URL: http://localhost:3000
+
+  # ─── Bot ────────────────────────────────────────────────────────────────
+  bot:
+    name: Bot — Type Check & Build
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: bot
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: bot/package-lock.json
+
+      - run: npm ci
+
+      - name: Type Check & Build (tsc)
+        run: npx tsc
 
   # ─── Contracts ──────────────────────────────────────────────────────────
   contracts:

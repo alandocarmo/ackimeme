@@ -365,6 +365,19 @@ export async function revokeSession(token: any) {
   return (result.rowCount ?? 0) > 0;
 }
 
+export async function getSessionByToken(token: any) {
+  const result = await query(
+    `
+      SELECT *
+      FROM wallet_sessions
+      WHERE token = $1
+    `,
+    [token],
+  );
+
+  return normalizeSessionRow(result.rows[0]);
+}
+
 export async function createLaunchBundle(params: { launchTicket: LaunchTicket; auditEvent: any }) {
   const { launchTicket, auditEvent } = params;
   return withTransaction(async (client: any) => {

@@ -6,7 +6,7 @@ import authStyles from "../../styles/Auth.module.css";
 import adminStyles from "../../styles/Admin.module.css";
 
 export default function SecurityAdmin() {
-  const [anomalies, setAnomalies] = useState<any[]>([]);
+  const [anomalies, setAnomalies] = useState<Record<string, unknown>[]>([]);
   const [password, setPassword] = useState<string>("");
   const [loggedIn, setLoggedIn] = useState<boolean>(false);
   const [error, setError] = useState<string>("");
@@ -27,15 +27,15 @@ export default function SecurityAdmin() {
       await unlockAdmin(password, session.walletAddress);
       setLoggedIn(true);
       fetchAnomalies();
-    } catch(err: any) {
-      setError(err.message);
+    } catch(err) {
+      setError((err as Error).message);
     }
   }
 
   const fetchAnomalies = async () => {
     try {
-      const data = await getSecurityAnomalies();
-      setAnomalies(data.anomalies || []);
+      const r = await getSecurityAnomalies();
+      setAnomalies((r.anomalies as Record<string, unknown>[]) || []);
     } catch (err) {
       console.error(err);
     }
@@ -113,14 +113,14 @@ export default function SecurityAdmin() {
               </thead>
               <tbody>
                 {anomalies.map((ano: any, i: number) => (
-                  <tr key={ano.wallet}>
+                  <tr key={(String(ano.wallet)) || i}>
                     <td>
-                      <div style={{ fontWeight: 700, color: 'var(--ink)' }}>{ano.wallet}</div>
+                      <div style={{ fontWeight: 700, color: 'var(--ink)' }}>{String(ano.wallet)}</div>
                       <div style={{ fontSize: '11px', color: 'var(--ink-soft)' }}>{ano.ip}</div>
                     </td>
                     <td>
                       <span className="status-badge" style={{ marginBottom: 0 }}>
-                        {ano.type}
+                      {ano.timestamp ? new Date(ano.timestamp as string).toLocaleString() : ''}
                       </span>
                     </td>
                     <td>
@@ -133,7 +133,7 @@ export default function SecurityAdmin() {
                     </td>
                     <td>
                       <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap' }}>
-                        {ano.triggers.map((t: string) => <span key={t} className={adminStyles['trigger-tag']}>{t}</span>)}
+                        {(Array.isArray(ano.triggers) ? ano.triggers : []).map((t: any) => <span key={t} className={adminStyles['trigger-tag']}>{t}</span>)}
                       </div>
                     </td>
                     <td style={{ textAlign: 'right' }}>

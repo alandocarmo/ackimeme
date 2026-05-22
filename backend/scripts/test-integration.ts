@@ -1,8 +1,8 @@
 // Teste prático do Backend: Deployer e Pagamentos
-const { deployTokenEcosystem } = require("../src/services/deployer.service");
-const { verifyPayment } = require("../src/payments");
+import { deployTokenEcosystem } from "../src/services/deployer.service";
+import { verifyPayment } from "../src/payments";
 
-async function runTests() {
+async function runTests(): Promise<void> {
   console.log("=== INICIANDO TESTE PRÁTICO ===");
   
   // Teste 1: Deployer Real
@@ -14,11 +14,15 @@ async function runTests() {
       symbol: "TESTC",
       totalSupply: "1000000000",
       ipfsHash: "QmTeste123",
-      creatorWallet: "0:bdf1f14108bcc289dac252d970a74bee29386e7a7782937f2bcd92e7f2dba1be" // Carteira mock que geramos
+      creatorWallet: "0:bdf1f14108bcc289dac252d970a74bee29386e7a7782937f2bcd92e7f2dba1be", // Carteira mock que geramos
+      paymentTxHash: "0xFakeDeployHash",
+      pumpForever: false,
+      slopeDivisor: "1000000000",
     });
     console.log(">> SUCESSO DEPLOYER:", result);
-  } catch (error) {
-    console.log(">> ERRO CONTROLADO DEPLOYER (Falta de envs):", error.message);
+  } catch (error: unknown) {
+    const message = error instanceof Error ? error.message : String(error);
+    console.log(">> ERRO CONTROLADO DEPLOYER (Falta de envs):", message);
   }
 
   // Teste 2: Verify Payment Logic (Mocking SHELL txHash that does not exist to see how it fails)
@@ -30,8 +34,9 @@ async function runTests() {
       tokenSymbol: "SHELL"
     });
     console.log(">> SUCESSO PAGAMENTO (Inesperado)");
-  } catch (error) {
-    console.log(">> ERRO CONTROLADO PAGAMENTO:", error.message);
+  } catch (error: unknown) {
+    const message = error instanceof Error ? error.message : String(error);
+    console.log(">> ERRO CONTROLADO PAGAMENTO:", message);
   }
 }
 

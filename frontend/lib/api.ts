@@ -26,14 +26,14 @@ export function getSocket(): Socket | null {
 
 interface RequestOptions {
   method?: string;
-  body?: any;
+  body?: unknown;
   token?: string;
   adminToken?: string;
   headers?: Record<string, string>;
   timeoutMs?: number;
 }
 
-async function request<T = any>(path: string, options: RequestOptions = {}): Promise<T> {
+async function request<T = unknown>(path: string, options: RequestOptions = {}): Promise<T> {
   const headers: Record<string, string> = {
     ...(options.body ? { "Content-Type": "application/json" } : {}),
     ...(options.token ? { Authorization: `Bearer ${options.token}` } : {}),
@@ -56,7 +56,7 @@ async function request<T = any>(path: string, options: RequestOptions = {}): Pro
     clearTimeout(timeoutId);
 
     const isJson = response.headers.get("content-type")?.includes("application/json");
-    let data: any = null;
+    let data: unknown = null;
     try {
       data = isJson ? await response.json() : null;
     } catch (e) {
@@ -64,13 +64,13 @@ async function request<T = any>(path: string, options: RequestOptions = {}): Pro
     }
 
     if (!response.ok) {
-      throw new Error(data?.error || `error_http_${response.status}`);
+      throw new Error((data as Record<string, string>)?.error || `error_http_${response.status}`);
     }
 
     return data as T;
-  } catch (err: any) {
+  } catch (err) {
     clearTimeout(timeoutId);
-    if (err.name === 'AbortError') {
+    if (err instanceof Error && err.name === 'AbortError') {
       throw new Error('error_timeout');
     }
     throw err;
@@ -106,15 +106,15 @@ export function logout(token?: string): Promise<{ success: boolean }> {
   });
 }
 
-export function verifyPayment(payload: any): Promise<any> {
-  return request<any>("/verify-payment", {
+export function verifyPayment(payload: unknown): Promise<Record<string, unknown>> {
+  return request<Record<string, unknown>>("/verify-payment", {
     method: "POST",
     body: payload,
   });
 }
 
-export function createLaunchRequest(payload: any, token?: string): Promise<any> {
-  return request<any>("/launch-request", {
+export function createLaunchRequest(payload: unknown, token?: string): Promise<Record<string, unknown>> {
+  return request<Record<string, unknown>>("/launch-request", {
     method: "POST",
     body: payload,
     token,
@@ -134,15 +134,15 @@ export function getLaunchById(id: string): Promise<Launch> {
   return request<Launch>(`/launches/${encodeURIComponent(id)}`);
 }
 
-export function unlockAdmin(password: string, walletAddress: string): Promise<any> {
-  return request<any>("/admin/unlock", {
+export function unlockAdmin(password: string, walletAddress: string): Promise<Record<string, unknown>> {
+  return request<Record<string, unknown>>("/admin/unlock", {
     method: "POST",
     body: { password, walletAddress },
   });
 }
 
-export function getSecurityAnomalies(): Promise<any> {
-  return request<any>("/admin/security/anomalies");
+export function getSecurityAnomalies(): Promise<Record<string, unknown>> {
+  return request<Record<string, unknown>>("/admin/security/anomalies");
 }
 
 // ─── QR Code Auth Endpoints ──────────────────────────────────────────────────
@@ -190,14 +190,14 @@ export function searchLaunches(q: string): Promise<{ launches: Launch[] }> {
   return request<{ launches: Launch[] }>(`/launches/search?q=${encodeURIComponent(q)}`);
 }
 
-export function addFavorite(launchId: string): Promise<any> {
-  return request<any>(`/launches/${encodeURIComponent(launchId)}/favorite`, {
+export function addFavorite(launchId: string): Promise<Record<string, unknown>> {
+  return request<Record<string, unknown>>(`/launches/${encodeURIComponent(launchId)}/favorite`, {
     method: "POST",
   });
 }
 
-export function removeFavorite(launchId: string): Promise<any> {
-  return request<any>(`/launches/${encodeURIComponent(launchId)}/favorite`, {
+export function removeFavorite(launchId: string): Promise<Record<string, unknown>> {
+  return request<Record<string, unknown>>(`/launches/${encodeURIComponent(launchId)}/favorite`, {
     method: "DELETE",
   });
 }
@@ -206,10 +206,10 @@ export function getFavorites(): Promise<{ launches: Launch[] }> {
   return request<{ launches: Launch[] }>("/launches/my/favorites");
 }
 
-export function getPriceHistory(launchId: string, interval = 15): Promise<{ history: any[] }> {
-  return request<{ history: any[] }>(`/launches/${encodeURIComponent(launchId)}/price-history?interval=${interval}`);
+export function getPriceHistory(launchId: string, interval = 15): Promise<{ history: Record<string, unknown>[] }> {
+  return request<{ history: Record<string, unknown>[] }>(`/launches/${encodeURIComponent(launchId)}/price-history?interval=${interval}`);
 }
 
-export function getGlobalStats(): Promise<any> {
-  return request<any>("/stats");
+export function getGlobalStats(): Promise<Record<string, unknown>> {
+  return request<Record<string, unknown>>("/stats");
 }

@@ -181,8 +181,8 @@ export default function AuthPage() {
         setStep("done");
         setTimeout(() => router.push(String(returnTo)), 1200);
       }
-    } catch (err: any) {
-      setError(err.message || "Erro ao conectar com a extensão.");
+    } catch (err) {
+      setError(err instanceof Error ? err.message : String(err));
     } finally {
       setLoading(false);
     }

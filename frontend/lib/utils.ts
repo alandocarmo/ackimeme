@@ -142,8 +142,8 @@ export async function calculateExactBuyAmount(
       if (mid === 0n) break;
       
       try {
-          const costResult = await bcContract.methods.getBuyPrice({ tokenAmount: mid.toString() }).call();
-          const cost = BigInt(costResult.value0);
+          const res = await (bcContract as { methods: { calculateBuyAmount: (args: { amount: string }) => { call: () => Promise<{ value0: string }> } } }).methods.calculateBuyAmount({ amount: mid.toString() }).call();
+          const cost = BigInt(res.value0);
           
           if (cost <= maxBaseCostNano) {
               expectedNanoTokens = mid;

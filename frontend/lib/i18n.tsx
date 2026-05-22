@@ -488,8 +488,9 @@ function detectLanguage(): string {
   }
 
   // 2. Check Telegram WebApp language
-  if (typeof window !== "undefined" && window.Telegram?.WebApp?.initDataUnsafe?.user?.language_code) {
-    const tgLang = window.Telegram.WebApp.initDataUnsafe.user.language_code;
+  const WebApp = typeof window !== 'undefined' && window.Telegram && (window.Telegram as any).WebApp;
+  if (WebApp?.initDataUnsafe?.user?.language_code) {
+    const tgLang = WebApp.initDataUnsafe.user.language_code;
     if (tgLang.startsWith("pt")) return "pt";
     if (tgLang.startsWith("ru")) return "ru";
     return "en";

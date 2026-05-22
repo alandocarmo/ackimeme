@@ -543,7 +543,7 @@ app.post("/auth/verify", authLimiter, async (req: Request, res: Response) => {
       telegramInitData: req.body?.telegramInitData || "",
     });
 
-    setSessionCookie(res, session.token);
+    setSessionCookie(res, session.token || "");
 
     res.json({
       success: true,

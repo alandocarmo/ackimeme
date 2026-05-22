@@ -1,0 +1,13 @@
+{
+  "name": "@ackimeme/shared-types",
+  "version": "1.0.0",
+  "description": "Shared TypeScript definitions for AckiMeme",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc"
+  },
+  "devDependencies": {
+    "typescript": "^5.4.0"
+  }
+}

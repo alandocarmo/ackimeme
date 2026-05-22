@@ -6,9 +6,10 @@ Toda a economia usa SHELL (token nativo da Acki Nacki) para fees e trading.
 
 ## Estrutura
 
-- `frontend`: interface Next.js aberta dentro do Telegram.
-- `backend`: API Express para config pública, verificação de fee e preparo do launch request.
-- `bot`: bot Telegraf que abre a Web App.
+- `frontend`: interface Next.js (TypeScript) aberta dentro do Telegram.
+- `backend`: API Express (TypeScript) para config pública, verificação de fee e preparo do launch request.
+- `bot`: bot Telegraf (TypeScript) que abre a Web App.
+- `shared-types`: pacote interno TypeScript com tipagens e interfaces unificadas entre todos os módulos.
 
 ## Ambiente
 

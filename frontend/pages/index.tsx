@@ -27,7 +27,7 @@ function formatTimeAgo(dateStr: string, t: (key: string) => string): string {
 
 const MIGRATION_THRESHOLD_NANO = 15_000_000_000_000; // 15K SHELL in nano (contract uses nano)
 
-function readReserveBalance(onchainData: any): number | null {
+function readReserveBalance(onchainData: import("../types").OnchainData | undefined): number | null {
   const parsed = Number(onchainData?.reserveBalance);
   if (!Number.isFinite(parsed) || parsed < 0) {
     return null;
@@ -105,19 +105,19 @@ export default function Home() {
       });
     };
 
-    const handleTokenUpdated = (update: any) => {
+    const handleTokenUpdated = (update: Partial<import("../types").Launch>) => {
       setLaunches((prev) =>
         prev.map((l) => {
           if (l.id === update.id) {
             return {
               ...l,
-              status: update.status,
+              status: update.status || l.status,
               onchainData: {
                 ...l.onchainData,
-                reserveBalance: update.reserveBalance,
-                tokenSupply: update.tokenSupply,
-                lockedLiquidity: update.lockedLiquidity,
-                updatedAt: update.updatedAt,
+                reserveBalance: update.onchainData?.reserveBalance ?? l.onchainData?.reserveBalance,
+                tokenSupply: update.onchainData?.tokenSupply ?? l.onchainData?.tokenSupply,
+                lockedLiquidity: update.onchainData?.lockedLiquidity ?? l.onchainData?.lockedLiquidity,
+                updatedAt: update.onchainData?.updatedAt ?? l.onchainData?.updatedAt,
               },
             };
           }

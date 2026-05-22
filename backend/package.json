@@ -5,15 +5,18 @@
     "node": ">=20"
   },
   "scripts": {
-    "db:migrate": "tsx scripts/migrate.ts",
+    "db:migrate": "tsx src/migrate.ts",
     "db:seed:demo": "tsx scripts/seed-demo.ts",
     "build": "tsc && node -e \"const fs = require('fs'); fs.mkdirSync('dist/migrations', { recursive: true }); fs.cpSync('src/migrations', 'dist/migrations', { recursive: true }); fs.mkdirSync('dist/abi', { recursive: true }); fs.cpSync('src/abi', 'dist/abi', { recursive: true })\"",
-    "start": "node dist/main.js",
+    "start": "node dist/migrate.js && node dist/main.js",
     "dev": "tsx watch src/main.ts",
-    "dev:wallet:init": "node scripts/dev-wallet.js init",
-    "dev:wallet:sign": "node scripts/dev-wallet.js sign"
+    "dev:wallet:init": "tsx scripts/dev-wallet.ts init",
+    "dev:wallet:sign": "tsx scripts/dev-wallet.ts sign",
+    "test:integration": "tsx scripts/test-integration.ts",
+    "generate:keys": "tsx scripts/generate-keys.ts"
   },
   "dependencies": {
+    "@ackimeme/shared-types": "file:../shared-types",
     "@tvmsdk/core": "^2.2.0",
     "@tvmsdk/lib-node": "^2.0.1",
     "axios": "^1.6.0",

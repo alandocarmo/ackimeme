@@ -18,11 +18,11 @@ const ED25519_SPKI_PREFIX = Buffer.from(
   "hex",
 );
 
-function trimString(value: any): string {
+function trimString(value: unknown): string {
   return typeof value === "string" ? value.trim() : "";
 }
 
-function decodeBuffer(value: any, fieldName: string): Buffer {
+function decodeBuffer(value: unknown, fieldName: string): Buffer {
   const normalized = trimString(value);
 
   if (!normalized) {
@@ -46,7 +46,7 @@ interface BuildPublicKeyResult {
   type: "spki";
 }
 
-function buildEd25519PublicKey(publicKeyInput: any): BuildPublicKeyResult {
+function buildEd25519PublicKey(publicKeyInput: unknown): BuildPublicKeyResult {
   const rawPublicKey = decodeBuffer(publicKeyInput, "Public key");
 
   if (rawPublicKey.length === 32) {
@@ -66,8 +66,8 @@ function buildEd25519PublicKey(publicKeyInput: any): BuildPublicKeyResult {
 
 interface VerifyDetachedSignatureParams {
   message: string;
-  signature: any;
-  publicKey: any;
+  signature: string;
+  publicKey: string;
 }
 
 function verifyDetachedSignature({ message, signature, publicKey }: VerifyDetachedSignatureParams): boolean {
@@ -141,11 +141,11 @@ function encodeQrSessionMessage({ sessionId, walletAddress, expiresAt }: EncodeQ
 }
 
 interface CreateWalletChallengeParams {
-  walletAddress: any;
-  telegramInitData: any;
+  walletAddress: string;
+  telegramInitData: string;
 }
 
-export async function createWalletChallenge({ walletAddress, telegramInitData }: CreateWalletChallengeParams): Promise<any> {
+export async function createWalletChallenge({ walletAddress, telegramInitData }: CreateWalletChallengeParams): Promise<Record<string, unknown>> {
   const normalizedWallet = trimString(walletAddress);
 
   if (!normalizedWallet) {
@@ -156,16 +156,15 @@ export async function createWalletChallenge({ walletAddress, telegramInitData }:
   const challengeId = crypto.randomUUID();
   const nonce = crypto.randomBytes(16).toString("hex");
   
-  const challenge: any = {
+  const challenge: Record<string, unknown> = {
     id: challengeId,
     nonce: nonce,
     walletAddress: normalizedWallet,
-    telegramBinding: {
-      status: telegram.status,
-      userId: telegram.user?.id ? String(telegram.user.id) : "",
+    telegramBinding: telegram.user?.id ? {
+      telegramId: Number(telegram.user.id),
       username: telegram.user?.username || "",
       firstName: telegram.user?.first_name || "",
-    },
+    } : undefined,
     issuedAt: new Date().toISOString(),
     expiresAt: new Date(
       Date.now() + config.authChallengeTtlSeconds * 1000,
@@ -173,11 +172,11 @@ export async function createWalletChallenge({ walletAddress, telegramInitData }:
   };
 
   challenge.message = encodeChallengeMessage({
-    challengeId: challenge.id,
-    nonce: challenge.nonce,
-    walletAddress: challenge.walletAddress,
-    expiresAt: challenge.expiresAt,
-    telegramUserId: challenge.telegramBinding.userId,
+    challengeId: String(challenge.id),
+    nonce: String(challenge.nonce),
+    walletAddress: String(challenge.walletAddress),
+    expiresAt: String(challenge.expiresAt),
+    telegramUserId: challenge.telegramBinding ? String((challenge.telegramBinding as Record<string, unknown>).telegramId) : "",
   });
 
   await persistAuthChallenge(challenge, {
@@ -193,11 +192,11 @@ export async function createWalletChallenge({ walletAddress, telegramInitData }:
 }
 
 interface VerifyWalletChallengeParams {
-  challengeId: any;
-  walletAddress: any;
-  publicKey: any;
-  signature: any;
-  telegramInitData: any;
+  challengeId: string;
+  walletAddress: string;
+  publicKey: string;
+  signature: string;
+  telegramInitData?: string;
 }
 
 export async function verifyWalletChallenge({
@@ -206,7 +205,7 @@ export async function verifyWalletChallenge({
   publicKey,
   signature,
   telegramInitData,
-}: VerifyWalletChallengeParams): Promise<any> {
+}: VerifyWalletChallengeParams): Promise<import("./types").Session> {
   const normalizedWallet = trimString(walletAddress);
   const normalizedChallengeId = trimString(challengeId);
 
@@ -230,8 +229,9 @@ export async function verifyWalletChallenge({
   }
 
   if (
-    challenge.telegramBinding.userId &&
-    challenge.telegramBinding.userId !== String(telegram.user?.id || "")
+    challenge.telegramBinding &&
+    (challenge.telegramBinding as Record<string, unknown>).telegramId &&
+    String((challenge.telegramBinding as Record<string, unknown>).telegramId) !== String(telegram.user?.id || "")
   ) {
     throw new Error("Sessão Telegram divergente do challenge original.");
   }
@@ -278,7 +278,7 @@ export async function verifyWalletChallenge({
 
   // Verifica assinatura usando NodeJS Native Crypto para Ed25519 (Padrão TVM/Everscale)
   const signatureValid = verifyDetachedSignature({
-    message: challenge.message,
+    message: String(challenge.message),
     signature,
     publicKey,
   });
@@ -297,12 +297,11 @@ export async function verifyWalletChallenge({
     publicKey: trimString(publicKey),
     proofLevel,
 
-    telegramBinding: {
-      status: telegram.status,
-      userId: telegram.user?.id ? String(telegram.user.id) : "",
+    telegramBinding: telegram.user?.id ? {
+      telegramId: Number(telegram.user.id),
       username: telegram.user?.username || "",
       firstName: telegram.user?.first_name || "",
-    },
+    } : undefined,
     issuedAt: new Date().toISOString(),
     expiresAt: new Date(
       Date.now() + config.sessionTtlHours * 60 * 60 * 1000,
@@ -326,7 +325,7 @@ export async function verifyWalletChallenge({
   return session;
 }
 
-export async function generateQrSession(): Promise<any> {
+export async function generateQrSession(): Promise<{ sessionId: string, deepLink: string, expiresAt: string }> {
   const sessionId = crypto.randomUUID();
   const expiresAt = new Date(Date.now() + 5 * 60 * 1000).toISOString();
   
@@ -338,7 +337,7 @@ export async function generateQrSession(): Promise<any> {
   return { sessionId, deepLink, expiresAt };
 }
 
-export async function getQrSessionStatus(sessionId: any): Promise<any> {
+export async function getQrSessionStatus(sessionId: string): Promise<{ status: string, sessionToken?: string }> {
   // N6 FIX: Filter expired sessions in SQL so they return 'expired' immediately
   // instead of waiting for the cleanup cron (runs every 10 min)
   const res = await query(`SELECT * FROM qr_sessions WHERE id=$1 AND expires_at > NOW()`, [sessionId]);
@@ -360,13 +359,13 @@ export async function getQrSessionStatus(sessionId: any): Promise<any> {
 }
 
 interface ProcessQrWebhookParams {
-  sessionId: any;
-  walletAddress: any;
-  publicKey: any;
-  signature: any;
+  sessionId: string;
+  walletAddress: string;
+  publicKey: string;
+  signature: string;
 }
 
-export async function processQrWebhook({ sessionId, walletAddress, publicKey, signature }: ProcessQrWebhookParams): Promise<any> {
+export async function processQrWebhook({ sessionId, walletAddress, publicKey, signature }: ProcessQrWebhookParams): Promise<{ success: boolean }> {
   // N7 FIX: Atomic claim — prevents race condition on webhook retries.
   // Uses UPDATE ... WHERE status='pending' as optimistic lock instead of SELECT + UPDATE.
   const claimRes = await query(
@@ -472,7 +471,7 @@ export async function processQrWebhook({ sessionId, walletAddress, publicKey, si
     await query(`UPDATE qr_sessions SET status='done', session_token=$1 WHERE id=$2`, [session.token, sessionId]);
 
     return { success: true };
-  } catch (error: any) {
+  } catch (error: unknown) {
     // Rollback processing lock so a retry can happen before expiration.
     await query(
       `UPDATE qr_sessions
