@@ -101,9 +101,9 @@ export function nanoToDecimal(nano: string | number | bigint | null | undefined)
 
 /** Helper to convert decimal string to BigInt nano (9 decimals) avoiding float imprecision */
 export function toNano(valStr: string | number | null | undefined): bigint {
-  if (valStr === null || valStr === undefined) return 0n;
+  if (valStr === null || valStr === undefined || valStr === "") return 0n;
   const num = typeof valStr === "string" ? parseFloat(valStr) : valStr;
-  if (!valStr || !Number.isFinite(num) || num < 0) return 0n;
+  if (!Number.isFinite(num) || num < 0) return 0n;
   // Use toFixed to normalize scientific notation to decimal string
   const fixed = num.toFixed(9);
   const [whole = "0", frac = ""] = fixed.split(".");

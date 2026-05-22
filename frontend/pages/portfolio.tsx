@@ -62,19 +62,28 @@ export default function PortfolioPage() {
       const deployedLaunches = launches.filter((l: any) => l.onchainData?.tokenRootAddress);
 
       // Scan in parallel batches of 5 instead of sequentially
-      const BATCH_SIZE = 5;
+      const BATCH_SIZE = 10;
       const foundHoldings: any[] = [];
       const address = session.walletAddress;
 
       for (let i = 0; i < deployedLaunches.length; i += BATCH_SIZE) {
         const batch = deployedLaunches.slice(i, i + BATCH_SIZE);
         const results = await Promise.allSettled(batch.map(async (launch) => {
-          const rootContract = new ever.Contract(TokenRootAbi, new Address(launch.onchainData.tokenRootAddress));
-          const walletResult = await (rootContract.methods as any).walletOf({
-            answerId: 0,
-            walletOwner: address
-          }).call();
-          const userWalletAddress = walletResult.value0.toString();
+          const cacheKey = `walletOf_${launch.onchainData.tokenRootAddress}_${address}`;
+          let userWalletAddress = localStorage.getItem(cacheKey);
+
+          if (!userWalletAddress) {
+            const rootContract = new ever.Contract(TokenRootAbi, new Address(launch.onchainData.tokenRootAddress));
+            const walletResult = await (rootContract.methods as any).walletOf({
+              answerId: 0,
+              walletOwner: address
+            }).call();
+            userWalletAddress = walletResult.value0.toString();
+            
+            if (userWalletAddress && userWalletAddress !== "0:0000000000000000000000000000000000000000000000000000000000000000") {
+               localStorage.setItem(cacheKey, userWalletAddress);
+            }
+          }
 
           if (!userWalletAddress || userWalletAddress === "0:0000000000000000000000000000000000000000000000000000000000000000") {
             return null;

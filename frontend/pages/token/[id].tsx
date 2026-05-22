@@ -104,7 +104,7 @@ function BubbleMap({ holders, totalSupply }: { holders: Holder[], totalSupply: n
       const pct = (h.balance / totalSupply) * 100;
       const r = Math.max(8, Math.sqrt(pct) * 12);
       return { ...h, pct, r, id: i };
-    }).sort((a, b) => b.balance - a.balance);
+    }).sort((a, b) => b.balance - a.balance).slice(0, 50);
 
     for (let i = 0; i < sortedNodes.length; i++) {
       const node = sortedNodes[i];
@@ -510,7 +510,7 @@ export default function TokenPage(): React.JSX.Element {
     if (!onchainPrice) return;
 
     let cancelled = false;
-    (async () => {
+    const timeoutId = setTimeout(async () => {
       try {
         const { getEver } = await import('../../lib/ever');
         const ever = await getEver();
@@ -527,9 +527,12 @@ export default function TokenPage(): React.JSX.Element {
       } catch (err: any) {
         console.warn("Buy estimate failed", err);
       }
-    })();
+    }, 400);
 
-    return () => { cancelled = true; };
+    return () => { 
+      cancelled = true; 
+      clearTimeout(timeoutId);
+    };
   }, [tradeAmount, tradeMode, token?.onchainData?.bondingCurveAddress, token?.onchainData?.deployStatus, onchainPrice]);
 
   // Separate effect for sell return — avoids re-registering socket listeners on every keystroke
@@ -541,7 +544,7 @@ export default function TokenPage(): React.JSX.Element {
     if (!token?.onchainData?.bondingCurveAddress || token!.onchainData!.deployStatus !== "deployed") return;
 
     let cancelled = false;
-    (async () => {
+    const timeoutId = setTimeout(async () => {
       try {
         const { getEver } = await import('../../lib/ever');
         const ever = await getEver();
@@ -555,8 +558,11 @@ export default function TokenPage(): React.JSX.Element {
       } catch {
         // Provider not available
       }
-    })();
-    return () => { cancelled = true; };
+    }, 400);
+    return () => { 
+      cancelled = true; 
+      clearTimeout(timeoutId);
+    };
   }, [token?.onchainData?.bondingCurveAddress, token?.onchainData?.deployStatus, tradeMode, tradeAmount]);
 
   useEffect(() => {
@@ -612,20 +618,25 @@ export default function TokenPage(): React.JSX.Element {
       });
     };
 
+    let holdersTimeoutId: ReturnType<typeof setTimeout> | null = null;
+
     const handleNewTrade = (trade: any) => {
       setTrades((prev) => {
         if (prev.find((t) => t.id === trade.idStr)) return prev;
         return [trade, ...prev];
       });
       // Refresh holders when a trade happens to keep the leaderboard somewhat live
-      import("../../lib/api").then(api => {
-        if (api.getHolders) {
-          api.getHolders(idStr).then((r: any) => {
-            setHolders((r as any).holders || []);
-            if ((r as any).totalSupply) setTotalSupply((r as any).totalSupply);
-          }).catch(() => {});
-        }
-      });
+      if (holdersTimeoutId) clearTimeout(holdersTimeoutId);
+      holdersTimeoutId = setTimeout(() => {
+        import("../../lib/api").then(api => {
+          if (api.getHolders) {
+            api.getHolders(idStr).then((r: any) => {
+              setHolders((r as any).holders || []);
+              if ((r as any).totalSupply) setTotalSupply((r as any).totalSupply);
+            }).catch(() => {});
+          }
+        });
+      }, 5000);
     };
 
     socket.on("token_updated", handleTokenUpdated);
@@ -633,6 +644,7 @@ export default function TokenPage(): React.JSX.Element {
     socket.on("new_trade", handleNewTrade);
 
     return () => {
+      if (holdersTimeoutId) clearTimeout(holdersTimeoutId);
       socket.off("token_updated", handleTokenUpdated);
       socket.off("new_comment", handleNewComment);
       socket.off("new_trade", handleNewTrade);
@@ -676,15 +688,15 @@ export default function TokenPage(): React.JSX.Element {
       // Load the Provider Extension
       const { ProviderRpcClient, Address } = await import('everscale-inpage-provider');
       const ever = new ProviderRpcClient();
-      if (!(await ever.hasProvider())) throw new Error("Instale a extensão Acki Nacki / EVER Wallet.");
+      if (!(await ever.hasProvider())) throw new Error(t("error_install_wallet"));
       
       await ever.ensureInitialized();
       const { accountInteraction } = await ever.requestPermissions({ permissions: ['basic', 'accountInteraction'] });
-      if (!accountInteraction) throw new Error("Conexão com a carteira negada.");
+      if (!accountInteraction) throw new Error(t("error_denied"));
 
       const rawAmount = parseFloat(tradeAmount);
       // M4 FIX: NaN not caught by <= 0 comparison
-      if (!tradeAmount || !Number.isFinite(rawAmount) || rawAmount <= 0) throw new Error("Valor inválido.");
+      if (!tradeAmount || !Number.isFinite(rawAmount) || rawAmount <= 0) throw new Error(t("error_invalid_value"));
 
       const isBuy = tradeMode === "buy";
       const rawAmountNano = toNano(tradeAmount);
@@ -694,7 +706,7 @@ export default function TokenPage(): React.JSX.Element {
         // R-02: Send SHELL as Extra Currency cc[2], NOT as msg.value (VMSHELL)
         // The BondingCurve.buy() reads payment from msg.currencies[2].
         // msg.value (amount) is used ONLY for gas.
-        if (!currentPrice) throw new Error("Preço ainda não disponível. Aguarde sync on-chain.");
+        if (!currentPrice) throw new Error(t("error_no_price"));
 
         const bcContract = new ever.Contract(BondingCurveAbi, new Address(token!.onchainData!.bondingCurveAddress as string));
 
@@ -717,8 +729,8 @@ export default function TokenPage(): React.JSX.Element {
           // SHELL payment via Extra Currency cc[2] (Acki Nacki Standard)
           currencies: { 2: maxShellNano.toString() }
         });
-        setTradeSuccess(`Compra realizada com sucesso! Tx: ${(tx as any)?.transaction?.id?.hash || 'confirmada'}`);
-        toast.success("Compra Realizada", `Sucesso! Tx: ${(tx as any)?.transaction?.id?.hash?.slice(0,8) || 'confirmada'}`);
+        setTradeSuccess(`${t("success_buy")} ${(tx as any)?.transaction?.id?.hash || 'confirmada'}`);
+        toast.success(t("common_success"), `${t("success_buy")} ${(tx as any)?.transaction?.id?.hash?.slice(0,8) || 'confirmada'}`);
       } else {
         // SELL: Burn tokens via TokenWallet → TokenRoot.notifyBurn → BondingCurve.onTokenBurned
         if (!token?.onchainData?.tokenRootAddress) {
@@ -733,25 +745,24 @@ export default function TokenPage(): React.JSX.Element {
         
         const userWalletAddress = (walletResult as any).value0;
         if (!userWalletAddress || userWalletAddress.toString() === "0:0000000000000000000000000000000000000000000000000000000000000000") {
-          throw new Error("Você não possui uma TokenWallet para este token. Compre tokens primeiro.");
+          throw new Error(t("error_no_wallet"));
         }
 
         // 2. M-07: Verify user has enough balance for gas before attempting sell
         const balance = await ever.getBalance(accountInteraction.address);
         const balanceNano = BigInt(balance || "0");
-        const gasNeeded = BigInt("500000000"); // 0.5 SHELL
-        if (balanceNano < gasNeeded) {
-          throw new Error(`Saldo insuficiente para gas. Precisa de pelo menos 0.5 SHELL na carteira. Saldo atual: ${Number(balanceNano) / 1e9} SHELL.`);
+        if (BigInt(balanceNano) < 500000000n) {
+          throw new Error(t("error_no_balance_gas"));
         }
 
         // C5 FIX: Block sell when price is not available (prevents zero slippage)
-        if (!currentPrice && sellReturn === null) {
-          throw new Error("Preço on-chain não disponível ainda. Aguarde a sincronização.");
+        if (!currentPrice) {
+          throw new Error(t("error_no_price"));
         }
         // 3. Calculate minShellOut for slippage protection
         const grossReturnForSlippage = sellReturn !== null ? toNano(String(sellReturn)) : BigInt("0");
         if (grossReturnForSlippage === BigInt("0")) {
-          throw new Error("Não foi possível calcular o retorno da venda. Tente novamente.");
+          throw new Error(t("error_sell_return"));
         }
         const minShellOutNano = grossReturnForSlippage * BigInt(Math.round(100 - slippagePct)) / BigInt("100");
 

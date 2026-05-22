@@ -163,7 +163,7 @@ export default function AuthPage() {
       
       // 2. Sign Challenge
       const signature = await ever.signData({
-        data: Buffer.from(challengeRes.challenge.message).toString('base64'),
+        data: window.btoa(unescape(encodeURIComponent(challengeRes.challenge.message))),
         publicKey: accountInteraction.publicKey
       });
 

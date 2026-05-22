@@ -240,7 +240,7 @@ export default function Home() {
             <div className={styles['ticker-track']}>
               {/* Duplicate items for seamless loop */}
               {[...launches, ...launches].slice(0, 20).map((l, i) => (
-                <span className={styles['ticker-item']} key={`tick-${i}`}>
+                <span className={styles['ticker-item']} key={`tick-${l.id}-${i}`}>
                   <span className={styles['ticker-dot']} />
                   <span className={`${styles['ticker-action']} ${styles['ticker-launch']}`}>LAUNCHED</span>
                   <span>${l.coin?.symbol}</span>

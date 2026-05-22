@@ -301,7 +301,7 @@ export default function CreatePage() {
                   <div className="card" style={{ background: form.isBoosted ? 'rgba(255, 184, 0, 0.1)' : 'var(--accent-glow)', borderColor: form.isBoosted ? '#FFB800' : 'var(--accent)', marginBottom: '24px', padding: '20px' }}>
                     <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '12px' }}>
                       <span className="info-label">{form.isBoosted ? "Creation Fee + Boost" : "Creation Fee"}</span>
-                      <span className="info-value" style={{ color: form.isBoosted ? '#FFB800' : 'var(--accent)' }}>{requiredFee} {fee.tokenSymbol} {form.isBoosted ? '(Boosted)' : '(~$3 USD)'}</span>
+                      <span className="info-value" style={{ color: form.isBoosted ? '#FFB800' : 'var(--accent)' }}>{requiredFee} {fee.tokenSymbol} {form.isBoosted ? '(Boosted)' : ''}</span>
                     </div>
                     <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '12px' }}>
                       <span className="info-label">Blockchain Gas</span>
