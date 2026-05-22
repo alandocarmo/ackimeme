@@ -47,7 +47,7 @@ import {
   getAccountPublicKey,
 } from "./services/graphql.service";
 import { uploadToIPFS, createTokenMetadata } from "./services/ipfs.service";
-import { deployTokenEcosystem } from "./services/deployer.service";
+import { deployTokenEcosystem, assertOnchainDeployReady } from "./services/deployer.service";
 import helmet from "helmet";
 import rateLimit from "express-rate-limit";
 import { RedisStore } from "rate-limit-redis";
@@ -732,23 +732,7 @@ app.post("/verify-payment", paymentLimiter, requireSession, async (req: Request,
   }
 });
 
-app.post("/shell-buy/verify", (req: Request, res: Response) => {
-  res.status(410).json({
-    error: "A compra de SHELL agora é feita diretamente no contrato Accumulator on-chain. Atualize sua página.",
-  });
-});
 
-app.get("/shell-buy/my-orders", (req: Request, res: Response) => {
-  res.status(410).json({
-    error: "O histórico de ordens manuais foi descontinuado.",
-  });
-});
-
-app.get("/shell-buy/order/:id", (req: Request, res: Response) => {
-  res.status(410).json({
-    error: "Ordens manuais foram descontinuadas.",
-  });
-});
 
 app.post("/launch-request", requireSession, async (req: Request, res: Response) => {
   let txHashReserved = false;
@@ -1015,7 +999,7 @@ app.get("/launches/my/favorites", requireSession, async (req: Request, res: Resp
 
 app.get("/launches/:id/price-history", requireValidUUID, async (req: Request, res: Response) => {
   try {
-    const interval = parseInt(req.query.interval as string) || 15;
+    const interval = Math.max(1, parseInt(req.query.interval as string) || 15);
     const history = await getPriceHistoryByLaunchId(req.params.id, interval);
     res.json({
       success: true,
@@ -1029,7 +1013,14 @@ app.get("/launches/:id/price-history", requireValidUUID, async (req: Request, re
 app.get("/stats", async (req: Request, res: Response) => {
   try {
     res.set("Cache-Control", "public, s-maxage=5, stale-while-revalidate=15");
+    if (redisClient && redisClient.isOpen) {
+      const cached = await redisClient.get("global_stats");
+      if (cached) return res.json({ success: true, stats: JSON.parse(cached) });
+    }
     const stats = await getGlobalStats();
+    if (redisClient && redisClient.isOpen) {
+      await redisClient.set("global_stats", JSON.stringify(stats), { EX: 15 });
+    }
     res.json({
       success: true,
       stats,
@@ -1244,11 +1235,12 @@ async function start() {
 
   await pingDatabase();
   await runMigrations();
+  assertOnchainDeployReady();
 
   const server = http.createServer(app);
   io = new Server(server, {
     cors: {
-      origin: config.allowedOrigins?.length ? config.allowedOrigins : "*",
+      origin: config.allowedOrigins?.length ? config.allowedOrigins : false,
       credentials: true
     }
   });
@@ -1316,6 +1308,14 @@ async function start() {
         console.log("[Database] Pool closed.");
       } catch (err: any) {
         console.error("[Database] Error closing pool:", err.message);
+      }
+      try {
+        if (redisClient && redisClient.isOpen) {
+          await redisClient.quit();
+          console.log("[Redis] Connection closed.");
+        }
+      } catch (err: any) {
+        console.error("[Redis] Error closing connection:", err.message);
       }
       console.log("[Server] Shutdown complete. Bye!\n");
       process.exit(0);

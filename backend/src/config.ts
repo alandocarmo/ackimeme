@@ -7,8 +7,6 @@ const DEFAULT_SHELL_MIN_PAYMENT = 300; // ~$3 USD (300 SHELL × $0.01/SHELL via 
 const DEFAULT_SHELL_DECIMALS = 9;    // SHELL uses 9 decimals (nano)
 const DEFAULT_USDC_DECIMALS = 6;
 const DEFAULT_MIN_CREATOR_SHELL_BALANCE = 1;
-const DEFAULT_SHELL_BUY_MIN_USDC = 1;
-const DEFAULT_SHELL_PER_USDC = 100;
 const DEFAULT_AUTH_CHALLENGE_TTL_SECONDS = 5 * 60;
 const DEFAULT_SESSION_TTL_HOURS = 24;
 const DEFAULT_TELEGRAM_AUTH_MAX_AGE_SECONDS = 24 * 60 * 60;
@@ -21,9 +19,6 @@ export const ECC_TOKEN_IDS = Object.freeze({
   SHELL: 2,  // Utility token — the ONLY accepted payment (9 decimals)
   USDC:  3,  // Stablecoin (6 decimals)
 });
-
-// Official Accumulator rate: 100 SHELL = 1 USDC (fixed on-chain)
-export const ACCUMULATOR_OFFICIAL_RATE = 100;
 
 function readPositiveNumber(value: any, fallback: number): number {
   const parsed = Number(value);
@@ -106,9 +101,6 @@ const feeWallet = process.env.FEE_WALLET || "";
 const adminToken = process.env.ADMIN_TOKEN || "";
 const jwtSecret = process.env.JWT_SECRET || "";
 const isProduction = process.env.NODE_ENV === "production";
-const shellBuyUsdcRecipient = process.env.SHELL_BUY_USDC_RECIPIENT || "";
-const shellBuyUsdcRoot = process.env.SHELL_BUY_USDC_ROOT || "";
-const shellBuyEnabled = process.env.ENABLE_SHELL_BUY === "true";
 
 export interface AppConfig {
   port: number;
@@ -134,17 +126,6 @@ export interface AppConfig {
   jwtSecretConfigured: boolean;
   adminWallets: string[];
   appFeeSharePercent: number;
-  shellBuy: {
-    enabled: boolean;
-    usdcRoot: string;
-    usdcRootConfigured: boolean;
-    usdcRecipient: string;
-    usdcRecipientConfigured: boolean;
-    usdcTokenSymbol: string;
-    usdcDecimals: number;
-    minUsdcAmount: number;
-    shellPerUsdc: number;
-  };
   launchDistribution: {
     type: string;
     fairLaunch: boolean;
@@ -188,26 +169,6 @@ export const config: AppConfig = {
   jwtSecretConfigured: isStrongSecret(jwtSecret, 32) && jwtSecret !== adminToken,
   adminWallets: readCsv(process.env.ADMIN_WALLETS).map((item) => item.toLowerCase()),
   appFeeSharePercent: readPositiveInteger(process.env.APP_FEE_SHARE_PERCENT, 100),
-  shellBuy: {
-    enabled: shellBuyEnabled,
-    usdcRoot: shellBuyUsdcRoot,
-    usdcRootConfigured: isConfiguredWallet(shellBuyUsdcRoot),
-    usdcRecipient: shellBuyUsdcRecipient,
-    usdcRecipientConfigured: isConfiguredWallet(shellBuyUsdcRecipient),
-    usdcTokenSymbol: "USDC",
-    usdcDecimals: readPositiveInteger(
-      process.env.SHELL_BUY_USDC_DECIMALS,
-      DEFAULT_USDC_DECIMALS,
-    ),
-    minUsdcAmount: readPositiveNumber(
-      process.env.SHELL_BUY_MIN_USDC,
-      DEFAULT_SHELL_BUY_MIN_USDC,
-    ),
-    shellPerUsdc: readPositiveNumber(
-      process.env.SHELL_BUY_SHELL_PER_USDC,
-      DEFAULT_SHELL_PER_USDC,
-    ),
-  },
   launchDistribution: {
     type: "pump_fun_bonding_curve",
     fairLaunch: true,
@@ -228,24 +189,6 @@ export function buildPublicConfig() {
         minimumCreatorBalance: config.minCreatorShellBalance,
         note: "Taxa de produto em SHELL ECC (~$3). A execução on-chain (gas) é paga em VMSHELL.",
       },
-    },
-    shellBuy: {
-      enabled:
-        config.shellBuy.enabled &&
-        config.shellBuy.usdcRecipientConfigured &&
-        config.shellBuy.usdcRootConfigured,
-      usdcTokenSymbol: config.shellBuy.usdcTokenSymbol,
-      usdcRoot: config.shellBuy.usdcRootConfigured
-        ? config.shellBuy.usdcRoot
-        : "Configure SHELL_BUY_USDC_ROOT no backend/.env",
-      usdcRecipient: config.shellBuy.usdcRecipientConfigured
-        ? config.shellBuy.usdcRecipient
-        : "Configure SHELL_BUY_USDC_RECIPIENT no backend/.env",
-      minUsdcAmount: config.shellBuy.minUsdcAmount,
-      shellPerUsdc: config.shellBuy.shellPerUsdc,
-      usdcDecimals: config.shellBuy.usdcDecimals,
-      note:
-        "Fluxo in-app: envie USDC (TIP-3) para o contrato de acumulação e valide o txHash.",
     },
     auth: {
       challengeTtlSeconds: config.authChallengeTtlSeconds,

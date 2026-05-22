@@ -10,8 +10,11 @@ import {
 } from "../lib/api";
 import { formatNum, getSlopeLabel, sliderToSlopeDivisor, slopeDivisorToSlider } from "../lib/utils";
 import { useI18n } from "../lib/i18n";
+import { Session } from "../types";
+import styles from "../styles/Create.module.css";
+import authStyles from "../styles/Auth.module.css";
 
-function sanitizeSymbol(v) {
+function sanitizeSymbol(v: string | undefined): string {
   return String(v || "").toUpperCase().replace(/[^A-Z0-9]/g, "").slice(0, 10);
 }
 
@@ -20,18 +23,18 @@ function sanitizeSymbol(v) {
 export default function CreatePage() {
   const { t } = useI18n();
   const router = useRouter();
-  const [session, setSession] = useState(null);
-  const [token, setToken] = useState("");
-  const [config, setConfig] = useState(null);
-  const [step, setStep] = useState(1); // 1=info, 2=pay, 3=confirm
+  const [session, setSession] = useState<Session | null>(null);
+  const [token, setToken] = useState<string>("");
+  const [config, setConfig] = useState<any>(null);
+  const [step, setStep] = useState<number>(1); // 1=info, 2=pay, 3=confirm
   const [form, setForm] = useState({
     name: "", symbol: "", tagline: "", description: "",
     totalSupply: "1000000000", logoUrl: "",
     website: "", xUrl: "", telegramUrl: "",
     txHash: "", pumpForever: false, isBoosted: false, slopeDivisor: 10_000_000_000_000,
   });
-  const [paymentStatus, setPaymentStatus] = useState({ ok: false, msg: "" });
-  const [launchStatus, setLaunchStatus] = useState({ loading: false, error: "", success: false, ticket: null });
+  const [paymentStatus, setPaymentStatus] = useState<{ ok: boolean, msg: string, verifiedTx?: string | null }>({ ok: false, msg: "" });
+  const [launchStatus, setLaunchStatus] = useState<{ loading: boolean, error: string, success: boolean, ticket: any | null }>({ loading: false, error: "", success: false, ticket: null });
 
   useEffect(() => {
     if (typeof window === "undefined") return;
@@ -46,7 +49,7 @@ export default function CreatePage() {
       .catch(() => {});
   }, []);
 
-  function updateField(field, value) {
+  function updateField(field: keyof typeof form, value: any) {
     let v = value;
     if (field === "symbol") {
       v = sanitizeSymbol(value);
@@ -75,7 +78,7 @@ export default function CreatePage() {
         isBoosted: form.isBoosted,
       });
       setPaymentStatus({ ok: true, msg: "Payment confirmed ✓", verifiedTx: form.txHash.trim() });
-    } catch (err) {
+    } catch (err: any) {
       setPaymentStatus({ ok: false, msg: err.message, verifiedTx: null });
     }
   }
@@ -91,7 +94,7 @@ export default function CreatePage() {
       };
       const res = await createLaunchRequest(payload);
       setLaunchStatus({ loading: false, error: "", success: true, ticket: res.launchRequest });
-    } catch (err) {
+    } catch (err: any) {
       setLaunchStatus({ loading: false, error: err.message, success: false, ticket: null });
     }
   }
@@ -100,11 +103,11 @@ export default function CreatePage() {
     return (
       <>
         <Head><title>{t("create_title")} | AckiMeme</title></Head>
-        <main className="auth-layout">
-          <div className="auth-card" style={{ textAlign: 'center' }}>
+        <main className={authStyles['auth-layout']}>
+          <div className={authStyles['auth-card']} style={{ textAlign: 'center' }}>
             <p style={{ fontSize: '48px', marginBottom: '20px' }}>🔒</p>
-            <h2 className="form-title">{t("auth_title")}</h2>
-            <p className="form-subtitle">{t("auth_subtitle")}</p>
+            <h2 className={styles['form-title']}>{t("auth_title")}</h2>
+            <p className={styles['form-subtitle']}>{t("auth_subtitle")}</p>
             <Link href="/auth?from=/create" className="btn-primary" style={{ width: '100%' }}>{t("nav_connect")}</Link>
           </div>
         </main>
@@ -118,11 +121,11 @@ export default function CreatePage() {
       <>
         <Head><title>🚀 Launched! | AckiMeme</title></Head>
         <main className="page-wrapper container">
-          <div className="success-card">
-            <div className="rocket-icon">🚀</div>
-            <h2 className="success-title">Your coin is live!</h2>
-            <p className="success-ticker">${sanitizeSymbol(form.symbol)}</p>
-            <p className="form-subtitle">{form.name} is now on the AckiMeme bonding curve.</p>
+          <div className={styles['success-card']}>
+            <div className={styles['rocket-icon']}>🚀</div>
+            <h2 className={styles['success-title']}>Your coin is live!</h2>
+            <p className={styles['success-ticker']}>${sanitizeSymbol(form.symbol)}</p>
+            <p className={styles['form-subtitle']}>{form.name} is now on the AckiMeme bonding curve.</p>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', marginTop: '32px' }}>
               <Link href={`/token/${launchStatus.ticket.id}`} className="btn-primary">
                 View Token Page →
@@ -145,74 +148,74 @@ export default function CreatePage() {
       <main className="page-wrapper container" style={{ paddingTop: '40px' }}>
         <div style={{ maxWidth: '600px', margin: '0 auto' }}>
           {/* Steps indicator */}
-          <div className="stepper">
+          <div className={styles.stepper}>
             {[1, 2, 3].map((n) => (
-              <div key={n} className={`step-item ${step >= n ? "active" : ""}`}>
-                <div className="step-circle">{n}</div>
-                <span className="step-name">
+              <div key={n} className={`${styles['step-item']} ${step >= n ? styles.active : ""}`}>
+                <div className={styles['step-circle']}>{n}</div>
+                <span className={styles['step-name']}>
                   {n === 1 ? "Info" : n === 2 ? "Pay" : "Launch"}
                 </span>
               </div>
             ))}
-            <div className="step-line" />
+            <div className={styles['step-line']} />
           </div>
 
           <div className="card">
               {/* Step 1: Token Info */}
               {step === 1 && (
-                <div className="animate-fade-in">
-                  <h2 className="form-title">{t("create_title")}</h2>
-                  <p className="form-subtitle">{t("create_subtitle")}</p>
+                <div className={authStyles['animate-fade-in']}>
+                  <h2 className={styles['form-title']}>{t("create_title")}</h2>
+                  <p className={styles['form-subtitle']}>{t("create_subtitle")}</p>
 
-                  <div className="field-grid">
+                  <div className={styles['field-grid']}>
                     <label>
-                      <span className="input-label">{t("create_name")} *</span>
-                      <input className="text-input" maxLength={32} value={form.name}
+                      <span className={styles['input-label']}>{t("create_name")} *</span>
+                      <input className={styles['text-input']} maxLength={32} value={form.name}
                         onChange={(e) => updateField("name", e.target.value)} placeholder="e.g. AckiDoge" />
                     </label>
                     <label>
-                      <span className="input-label">{t("create_symbol")} *</span>
-                      <input className="text-input" maxLength={10} value={form.symbol}
+                      <span className={styles['input-label']}>{t("create_symbol")} *</span>
+                      <input className={styles['text-input']} maxLength={10} value={form.symbol}
                         onChange={(e) => updateField("symbol", e.target.value)} placeholder="e.g. ADOGE" />
                     </label>
                   </div>
 
-                  <div className="field-grid full">
+                  <div className={`${styles['field-grid']} ${styles.full}`}>
                     <label>
-                      <span className="input-label">{t("create_tagline")}</span>
-                      <input className="text-input" value={form.tagline}
+                      <span className={styles['input-label']}>{t("create_tagline")}</span>
+                      <input className={styles['text-input']} value={form.tagline}
                         onChange={(e) => updateField("tagline", e.target.value)} placeholder="One line about your coin" />
                     </label>
                     <label>
-                      <span className="input-label">{t("create_description")} * (min 20 chars)</span>
-                      <textarea className="text-area" maxLength={280} value={form.description}
+                      <span className={styles['input-label']}>{t("create_description")} * (min 20 chars)</span>
+                      <textarea className={styles['text-area']} maxLength={280} value={form.description}
                         onChange={(e) => updateField("description", e.target.value)} placeholder="What's your coin about?" rows={3} />
-                      <span className="input-hint" style={{ textAlign: 'right' }}>{form.description.length}/280</span>
+                      <span className={styles['input-hint']} style={{ textAlign: 'right' }}>{form.description.length}/280</span>
                     </label>
                   </div>
 
                   <div className="card" style={{ background: 'var(--bg-deep)', padding: '16px', marginBottom: '24px', borderRadius: '12px', border: '1px solid var(--accent)' }}>
-                    <h3 className="input-label" style={{ marginTop: 0, marginBottom: '12px', color: 'var(--accent)' }}>Economic Model</h3>
+                    <h3 className={styles['input-label']} style={{ marginTop: 0, marginBottom: '12px', color: 'var(--accent)' }}>{t("create_eco_model")}</h3>
                     <div style={{ display: 'flex', gap: '16px', flexDirection: 'column' }}>
                       <label style={{ display: 'flex', alignItems: 'flex-start', gap: '12px', cursor: 'pointer' }}>
                         <input type="radio" name="pumpForever" checked={!form.pumpForever} onChange={() => updateField("pumpForever", false)} style={{ marginTop: '4px' }} />
                         <div>
-                          <div style={{ fontWeight: '600', color: 'var(--ink)' }}>⚖️ Automatic Graduation (Classic)</div>
-                          <div style={{ fontSize: '13px', color: 'var(--ink-soft)', marginTop: '4px' }}>Migrates to an internal AMM (x*y=k) automatically when it reaches 15K SHELL, stabilizing the price for community growth.</div>
+                          <div style={{ fontWeight: '600', color: 'var(--ink)' }}>{t("create_eco_auto")}</div>
+                          <div style={{ fontSize: '13px', color: 'var(--ink-soft)', marginTop: '4px' }}>{t("create_eco_auto_desc")}</div>
                         </div>
                       </label>
                       <label style={{ display: 'flex', alignItems: 'flex-start', gap: '12px', cursor: 'pointer' }}>
                         <input type="radio" name="pumpForever" checked={form.pumpForever} onChange={() => updateField("pumpForever", true)} style={{ marginTop: '4px' }} />
                         <div>
-                          <div style={{ fontWeight: '600', color: 'var(--ink)' }}>🚀 Pump Forever (Infinite Curve)</div>
-                          <div style={{ fontSize: '13px', color: 'var(--ink-soft)', marginTop: '4px' }}>Never graduates. The price continues to climb exponentially on the bonding curve forever. High risk, high volatility.</div>
+                          <div style={{ fontWeight: '600', color: 'var(--ink)' }}>{t("create_eco_pump")}</div>
+                          <div style={{ fontSize: '13px', color: 'var(--ink-soft)', marginTop: '4px' }}>{t("create_eco_pump_desc")}</div>
                         </div>
                       </label>
                     </div>
                   </div>
                   <div className="card" style={{ background: 'var(--bg-deep)', padding: '16px', marginBottom: '24px', borderRadius: '12px', border: '1px solid var(--accent)' }}>
-                    <h3 className="input-label" style={{ marginTop: 0, marginBottom: '12px', color: 'var(--accent)' }}>🚀 Pump Aggressiveness</h3>
-                    <p style={{ fontSize: '13px', color: 'var(--ink-soft)', marginBottom: '16px' }}>Choose how fast the price will climb on the bonding curve. Higher aggressiveness means higher risk and faster price action.</p>
+                    <h3 className={styles['input-label']} style={{ marginTop: 0, marginBottom: '12px', color: 'var(--accent)' }}>{t("create_pump_title")}</h3>
+                    <p style={{ fontSize: '13px', color: 'var(--ink-soft)', marginBottom: '16px' }}>{t("create_pump_subtitle")}</p>
                     <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
                       <input 
                         type="range" 
@@ -229,55 +232,55 @@ export default function CreatePage() {
                         ))}
                       </div>
                       <div style={{ marginTop: '12px', padding: '10px', background: 'rgba(0,0,0,0.2)', borderRadius: '8px', fontSize: '12px', color: 'var(--ink-soft)', borderLeft: `3px solid ${getSlopeLabel(form.slopeDivisor).color}` }}>
-                        {form.slopeDivisor >= 20_000_000_000_000 && "🐢 Suave: Curva tranquila. O preço sobe 2x mais devagar, ideal para projetos que buscam estabilidade."}
-                        {form.slopeDivisor >= 10_000_000_000_000 && form.slopeDivisor < 20_000_000_000_000 && "⚖️ Normal: O padrão clássico. Equilíbrio perfeito entre risco e recompensa, igual ao pump.fun."}
-                        {form.slopeDivisor >= 5_000_000_000_000 && form.slopeDivisor < 10_000_000_000_000 && "⚡ Fast: Crescimento acelerado. O preço sobe 2x mais rápido, gerando FOMO imediato."}
-                        {form.slopeDivisor >= 2_500_000_000_000 && form.slopeDivisor < 5_000_000_000_000 && "🔥 Aggressive: Alta voltagem. Movimentos rápidos que recompensam os primeiros compradores."}
-                        {form.slopeDivisor < 2_500_000_000_000 && "💀 INSANE: Modo DeGen! O preço explode 10x mais rápido que o normal. Volatilidade extrema!"}
+                        {form.slopeDivisor >= 20_000_000_000_000 && t("create_pump_1")}
+                        {form.slopeDivisor >= 10_000_000_000_000 && form.slopeDivisor < 20_000_000_000_000 && t("create_pump_2")}
+                        {form.slopeDivisor >= 5_000_000_000_000 && form.slopeDivisor < 10_000_000_000_000 && t("create_pump_3")}
+                        {form.slopeDivisor >= 2_500_000_000_000 && form.slopeDivisor < 5_000_000_000_000 && t("create_pump_4")}
+                        {form.slopeDivisor < 2_500_000_000_000 && t("create_pump_5")}
                       </div>
                     </div>
                   </div>
 
                   {/* Launch Boost */}
                   <div className="card" style={{ background: form.isBoosted ? 'rgba(255, 184, 0, 0.1)' : 'var(--bg-deep)', padding: '16px', marginBottom: '24px', borderRadius: '12px', border: form.isBoosted ? '1px solid #FFB800' : '1px solid var(--line-soft)', transition: 'all 0.2s ease' }}>
-                    <h3 className="input-label" style={{ marginTop: 0, marginBottom: '12px', color: form.isBoosted ? '#FFB800' : 'var(--ink)' }}>🔥 Launch Boost</h3>
+                    <h3 className={styles['input-label']} style={{ marginTop: 0, marginBottom: '12px', color: form.isBoosted ? '#FFB800' : 'var(--ink)' }}>{t("create_boost_title")}</h3>
                     <label style={{ display: 'flex', alignItems: 'flex-start', gap: '12px', cursor: 'pointer' }}>
                       <input type="checkbox" checked={form.isBoosted} onChange={(e) => updateField("isBoosted", e.target.checked)} style={{ marginTop: '4px' }} />
                       <div>
-                        <div style={{ fontWeight: '600', color: 'var(--ink)' }}>Fixar no Topo por 24h (+500 SHELL)</div>
-                        <div style={{ fontSize: '13px', color: 'var(--ink-soft)', marginTop: '4px' }}>Seu token aparecerá em destaque no topo do feed principal para atrair investidores mais rápido.</div>
+                        <div style={{ fontWeight: '600', color: 'var(--ink)' }}>{t("create_boost_label")}</div>
+                        <div style={{ fontSize: '13px', color: 'var(--ink-soft)', marginTop: '4px' }}>{t("create_boost_desc")}</div>
                       </div>
                     </label>
                   </div>
 
-                  <div className="field-grid">
+                  <div className={styles['field-grid']}>
                     <label>
-                      <span className="input-label">{t("create_supply")}</span>
-                      <input className="text-input" inputMode="numeric" value={form.totalSupply}
+                      <span className={styles['input-label']}>{t("create_supply")}</span>
+                      <input className={styles['text-input']} inputMode="numeric" value={form.totalSupply}
                         onChange={(e) => updateField("totalSupply", e.target.value)} />
-                      <span className="input-hint">{formatNum(form.totalSupply)} tokens</span>
+                      <span className={styles['input-hint']}>{formatNum(form.totalSupply)} tokens</span>
                     </label>
                     <label>
-                      <span className="input-label">{t("create_logo")}</span>
-                      <input className="text-input" value={form.logoUrl}
+                      <span className={styles['input-label']}>{t("create_logo")}</span>
+                      <input className={styles['text-input']} value={form.logoUrl}
                         onChange={(e) => updateField("logoUrl", e.target.value)} placeholder="https://..." />
                     </label>
                   </div>
 
                   {/* Socials */}
-                  <h3 className="input-label" style={{ marginTop: '32px', marginBottom: '16px', color: 'var(--ink)' }}>Social Links (optional)</h3>
-                  <div className="field-grid">
+                  <h3 className={styles['input-label']} style={{ marginTop: '32px', marginBottom: '16px', color: 'var(--ink)' }}>Social Links (optional)</h3>
+                  <div className={styles['field-grid']}>
                     <label>
-                      <span className="input-label">🌐 Website</span>
-                      <input className="text-input" value={form.website} onChange={(e) => updateField("website", e.target.value)} />
+                      <span className={styles['input-label']}>🌐 Website</span>
+                      <input className={styles['text-input']} value={form.website} onChange={(e) => updateField("website", e.target.value)} />
                     </label>
                     <label>
-                      <span className="input-label">𝕏 Twitter</span>
-                      <input className="text-input" value={form.xUrl} onChange={(e) => updateField("xUrl", e.target.value)} />
+                      <span className={styles['input-label']}>𝕏 Twitter</span>
+                      <input className={styles['text-input']} value={form.xUrl} onChange={(e) => updateField("xUrl", e.target.value)} />
                     </label>
                     <label>
-                      <span className="input-label">✈ Telegram</span>
-                      <input className="text-input" value={form.telegramUrl} onChange={(e) => updateField("telegramUrl", e.target.value)} />
+                      <span className={styles['input-label']}>✈ Telegram</span>
+                      <input className={styles['text-input']} value={form.telegramUrl} onChange={(e) => updateField("telegramUrl", e.target.value)} />
                     </label>
                   </div>
 
@@ -291,9 +294,9 @@ export default function CreatePage() {
 
               {/* Step 2: Payment */}
               {step === 2 && (
-                <div className="animate-fade-in">
-                  <h2 className="form-title">Pay Creation Fee</h2>
-                  <p className="form-subtitle">Send the fee to list your coin on the board.</p>
+                <div className={authStyles['animate-fade-in']}>
+                  <h2 className={styles['form-title']}>Pay Creation Fee</h2>
+                  <p className={styles['form-subtitle']}>Send the fee to list your coin on the board.</p>
 
                   <div className="card" style={{ background: form.isBoosted ? 'rgba(255, 184, 0, 0.1)' : 'var(--accent-glow)', borderColor: form.isBoosted ? '#FFB800' : 'var(--accent)', marginBottom: '24px', padding: '20px' }}>
                     <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '12px' }}>
@@ -326,13 +329,13 @@ export default function CreatePage() {
                   </p>
 
                   <label style={{ display: 'block', marginTop: '24px' }}>
-                    <span className="input-label">Transaction Hash</span>
-                    <input className="text-input" value={form.txHash} placeholder="Paste your tx hash after sending"
+                    <span className={styles['input-label']}>Transaction Hash</span>
+                    <input className={styles['text-input']} value={form.txHash} placeholder="Paste your tx hash after sending"
                       onChange={(e) => updateField("txHash", e.target.value)} />
                   </label>
 
                   {paymentStatus.msg && (
-                    <p className={paymentStatus.ok ? "hero-accent" : "error-msg"} style={{ fontSize: '13px', marginTop: '12px', fontWeight: 600 }}>
+                    <p className={paymentStatus.ok ? "hero-accent" : authStyles['error-msg']} style={{ fontSize: '13px', marginTop: '12px', fontWeight: 600 }}>
                       {paymentStatus.msg}
                     </p>
                   )}
@@ -355,9 +358,9 @@ export default function CreatePage() {
 
               {/* Step 3: Preview & Launch */}
               {step === 3 && (
-                <div className="animate-fade-in">
-                  <h2 className="form-title">🚀 Ready to Launch</h2>
-                  <p className="form-subtitle">Review your token and hit launch.</p>
+                <div className={authStyles['animate-fade-in']}>
+                  <h2 className={styles['form-title']}>🚀 Ready to Launch</h2>
+                  <p className={styles['form-subtitle']}>Review your token and hit launch.</p>
 
                   <div className="card" style={{ background: 'var(--bg-deep)', marginBottom: '24px' }}>
                     <div style={{ display: 'flex', justifyContent: 'space-between', padding: '12px 0', borderBottom: '1px solid var(--line-soft)' }}>
@@ -374,7 +377,7 @@ export default function CreatePage() {
                     </div>
                   </div>
 
-                  {launchStatus.error && <p className="error-msg" style={{ marginBottom: '20px' }}>{launchStatus.error}</p>}
+                  {launchStatus.error && <p className={authStyles['error-msg']} style={{ marginBottom: '20px' }}>{launchStatus.error}</p>}
 
                   <div style={{ display: 'flex', gap: '12px' }}>
                     <button className="filter-btn" onClick={() => setStep(2)} style={{ padding: '12px 24px' }}>{t("detail_back")}</button>
@@ -388,10 +391,7 @@ export default function CreatePage() {
         </div>
       </main>
 
-      <style jsx>{`
-        .animate-fade-in { animation: fadeInUp 0.4s ease both; }
-        .error-msg { color: var(--red); }
-      `}</style>
+      <style jsx>{``}</style>
     </>
   );
 }

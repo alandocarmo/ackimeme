@@ -4,8 +4,16 @@ import { useDeferredValue, useEffect, useState } from "react";
 import { getPublicLaunches, getSocket, searchLaunches, getGlobalStats } from "../lib/api";
 import { formatSupply, compactWallet, isSafeUrl } from "../lib/utils";
 import { useI18n } from "../lib/i18n";
+import styles from "../styles/Home.module.css";
+import { Launch } from "../types";
 
-function formatTimeAgo(dateStr, t) {
+function formatDate(date: string | number | Date): string {
+  const d = new Date(date);
+  if (isNaN(d.getTime())) return "";
+  return d.toLocaleString(undefined, { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' });
+}
+
+function formatTimeAgo(dateStr: string, t: (key: string) => string): string {
   if (!dateStr) return "";
   const diff = Date.now() - new Date(dateStr).getTime();
   const mins = Math.floor(diff / 60000);
@@ -19,7 +27,7 @@ function formatTimeAgo(dateStr, t) {
 
 const MIGRATION_THRESHOLD_NANO = 15_000_000_000_000; // 15K SHELL in nano (contract uses nano)
 
-function readReserveBalance(onchainData) {
+function readReserveBalance(onchainData: any): number | null {
   const parsed = Number(onchainData?.reserveBalance);
   if (!Number.isFinite(parsed) || parsed < 0) {
     return null;
@@ -27,24 +35,25 @@ function readReserveBalance(onchainData) {
   return parsed; // returns nano-SHELL
 }
 
-function calcProgressFromReserve(reserveNano) {
-  if (!Number.isFinite(reserveNano)) {
+function calcProgressFromReserve(reserveNano: number | null): string | null {
+  if (reserveNano === null || !Number.isFinite(reserveNano)) {
     return null;
   }
   return Math.min((reserveNano / MIGRATION_THRESHOLD_NANO) * 100, 100).toFixed(1);
 }
 
-function matchesSearch(launch, q) {
+function matchesSearch(launch: Launch, q: string): boolean {
   if (!q) return true;
   const hay = [launch.coin?.name, launch.coin?.symbol, launch.coin?.tagline, launch.creatorWallet].join(" ").toLowerCase();
   return hay.includes(q.toLowerCase());
 }
 
 // Generate a consistent color from a string
-function hashColor(str) {
+function hashColor(str: string | undefined): string {
   let hash = 0;
-  for (let i = 0; i < (str || "").length; i++) {
-    hash = str.charCodeAt(i) + ((hash << 5) - hash);
+  const safeStr = str || "";
+  for (let i = 0; i < safeStr.length; i++) {
+    hash = safeStr.charCodeAt(i) + ((hash << 5) - hash);
   }
   const h = Math.abs(hash) % 360;
   return `hsl(${h}, 65%, 55%)`;
@@ -52,7 +61,7 @@ function hashColor(str) {
 
 
 
-function computeAggregateStats(launches) {
+function computeAggregateStats(launches: Launch[]) {
   let totalReserve = 0;
   let activeCount = 0;
   for (const l of launches) {
@@ -66,17 +75,18 @@ function computeAggregateStats(launches) {
     totalTokens: launches.length,
     totalReserveShell: (totalReserve / 1e9).toFixed(1),
     activeTrading: activeCount,
+    activeWallets: 0,
   };
 }
 
 export default function Home() {
   const { t } = useI18n();
-  const [launches, setLaunches] = useState([]);
-  const [searchResults, setSearchResults] = useState(null);
-  const [stats, setStats] = useState(null);
-  const [error, setError] = useState("");
-  const [search, setSearch] = useState("");
-  const [filter, setFilter] = useState("new"); // new | trending | finishing
+  const [launches, setLaunches] = useState<Launch[]>([]);
+  const [searchResults, setSearchResults] = useState<Launch[] | null>(null);
+  const [stats, setStats] = useState<any>(null);
+  const [error, setError] = useState<string>("");
+  const [search, setSearch] = useState<string>("");
+  const [filter, setFilter] = useState<string>("new"); // new | trending | finishing | hall_of_fame
   const deferredSearch = useDeferredValue(search);
 
   useEffect(() => {
@@ -87,7 +97,7 @@ export default function Home() {
     const socket = getSocket();
     if (!socket) return;
 
-    const handleNewLaunch = (launch) => {
+    const handleNewLaunch = (launch: Launch) => {
       setLaunches((prev) => {
         // Prevent duplicates
         if (prev.find((l) => l.id === launch.id)) return prev;
@@ -95,7 +105,7 @@ export default function Home() {
       });
     };
 
-    const handleTokenUpdated = (update) => {
+    const handleTokenUpdated = (update: any) => {
       setLaunches((prev) =>
         prev.map((l) => {
           if (l.id === update.id) {
@@ -152,7 +162,7 @@ export default function Home() {
     ? searchResults
     : launches.filter((l) => matchesSearch(l, deferredSearch));
 
-  const isBoostedActive = (l) => l.protocol?.isBoosted && (Date.now() - new Date(l.createdAt).getTime() < 24 * 60 * 60 * 1000);
+  const isBoostedActive = (l: Launch) => l.protocol?.isBoosted && (Date.now() - new Date(l.createdAt || Date.now()).getTime() < 24 * 60 * 60 * 1000);
 
   // Sort by filter
   filtered = [...filtered].sort((a, b) => {
@@ -171,7 +181,7 @@ export default function Home() {
     }
     
     // "new" (default) sorting
-    return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+    return new Date(b.createdAt || Date.now()).getTime() - new Date(a.createdAt || Date.now()).getTime();
   });
 
   return (
@@ -183,13 +193,13 @@ export default function Home() {
 
       <main className="page-wrapper">
         {/* Hero */}
-        <section className="hero">
-          <div className="hero-glow" />
-          <h1 className="hero-title">
+        <section className={styles.hero}>
+          <div className={styles['hero-glow']} />
+          <h1 className={styles['hero-title']}>
             {t("hero_title_1")}<br />
-            <span className="hero-accent">{t("hero_title_2")}</span>
+            <span className={styles['hero-accent']}>{t("hero_title_2")}</span>
           </h1>
-          <p className="hero-subtitle">
+          <p className={styles['hero-subtitle']}>
             {t("hero_subtitle")}
           </p>
           <Link href="/create" className="btn-primary">
@@ -202,22 +212,22 @@ export default function Home() {
           const agg = stats || computeAggregateStats(launches);
           return (
             <div className="container">
-              <div className="stats-banner">
-                <div className="stats-banner-item">
-                  <span className="stats-banner-value"><span className="accent">{agg.totalTokens}</span></span>
-                  <span className="stats-banner-label">{t("stats_tokens_launched")}</span>
+              <div className={styles['stats-banner']}>
+                <div className={styles['stats-banner-item']}>
+                  <span className={styles['stats-banner-value']}><span className={styles.accent}>{agg.totalTokens}</span></span>
+                  <span className={styles['stats-banner-label']}>{t("stats_tokens_launched")}</span>
                 </div>
-                <div className="stats-banner-item">
-                  <span className="stats-banner-value"><span className="cyan">{agg.totalReserveShell}</span></span>
-                  <span className="stats-banner-label">{t("stats_shell_locked")}</span>
+                <div className={styles['stats-banner-item']}>
+                  <span className={styles['stats-banner-value']}><span className={styles.cyan}>{agg.totalReserveShell}</span></span>
+                  <span className={styles['stats-banner-label']}>{t("stats_shell_locked")}</span>
                 </div>
-                <div className="stats-banner-item">
-                  <span className="stats-banner-value"><span className="warm">{stats ? agg.activeWallets : agg.activeTrading}</span></span>
-                  <span className="stats-banner-label">{stats ? "Active Traders" : t("stats_active_trading")}</span>
+                <div className={styles['stats-banner-item']}>
+                  <span className={styles['stats-banner-value']}><span className={styles.warm}>{stats ? agg.activeWallets : agg.activeTrading}</span></span>
+                  <span className={styles['stats-banner-label']}>{stats ? "Active Traders" : t("stats_active_trading")}</span>
                 </div>
-                <div className="stats-banner-item">
-                  <span className="stats-banner-value"><span className="purple">●</span></span>
-                  <span className="stats-banner-label">{t("stats_live")}</span>
+                <div className={styles['stats-banner-item']}>
+                  <span className={styles['stats-banner-value']}><span className={styles.purple}>●</span></span>
+                  <span className={styles['stats-banner-label']}>{t("stats_live")}</span>
                 </div>
               </div>
             </div>
@@ -226,15 +236,15 @@ export default function Home() {
 
         {/* Activity Ticker */}
         {launches.length > 0 && (
-          <div className="activity-ticker">
-            <div className="ticker-track">
+          <div className={styles['activity-ticker']}>
+            <div className={styles['ticker-track']}>
               {/* Duplicate items for seamless loop */}
               {[...launches, ...launches].slice(0, 20).map((l, i) => (
-                <span className="ticker-item" key={`tick-${i}`}>
-                  <span className="ticker-dot" />
-                  <span className="ticker-action ticker-launch">LAUNCHED</span>
+                <span className={styles['ticker-item']} key={`tick-${i}`}>
+                  <span className={styles['ticker-dot']} />
+                  <span className={`${styles['ticker-action']} ${styles['ticker-launch']}`}>LAUNCHED</span>
                   <span>${l.coin?.symbol}</span>
-                  <span style={{ color: 'var(--ink-muted)' }}>{formatTimeAgo(l.createdAt, t)}</span>
+                  <span style={{ color: 'var(--ink-muted)' }}>{formatTimeAgo(l.createdAt || "", t)}</span>
                 </span>
               ))}
             </div>
@@ -243,12 +253,12 @@ export default function Home() {
 
         {/* Controls */}
         <div className="container">
-          <section className="controls-row">
-            <div className="filter-group">
+          <section className={styles['controls-row']}>
+            <div className={styles['filter-group']}>
               {["new", "trending", "finishing", "hall_of_fame"].map((f) => (
                 <button
                   key={f}
-                  className={`filter-btn ${filter === f ? "active" : ""}`}
+                  className={`${styles['filter-btn']} ${filter === f ? styles.active : ""}`}
                   onClick={() => setFilter(f)}
                 >
                   {f === "new" ? t("filter_new") : f === "trending" ? t("filter_trending") : f === "finishing" ? t("filter_finishing") : t("filter_hall_of_fame")}
@@ -256,63 +266,59 @@ export default function Home() {
               ))}
             </div>
             
-            <div className="search-field">
-              <span className="search-icon">🔍</span>
+            <div className={styles['search-field']}>
+              <span className={styles['search-icon']}>🔍</span>
               <input
-                className="search-input"
+                className={styles['search-input']}
                 placeholder={t("search_placeholder")}
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
               />
             </div>
             
-            <span className="token-time">{filtered.length} tokens found</span>
+            <span className={styles['token-time']}>{filtered.length} tokens found</span>
           </section>
 
           {/* Feed */}
-          {error && <p className="error-msg">{error}</p>}
+          {error && <p className={styles['error-msg']}>{error}</p>}
           {!error && filtered.length === 0 && (
-            <div className="empty-state">
-              <p className="empty-icon">⬡</p>
-              <p className="empty-text">{t("card_no_tokens")}</p>
+            <div className={styles['empty-state']}>
+              <p className={styles['empty-icon']}>⬡</p>
+              <p className={styles['empty-text']}>{t("card_no_tokens")}</p>
               <Link href="/create" className="btn-primary" style={{ padding: '10px 24px', fontSize: '13px' }}>{t("nav_create")}</Link>
             </div>
           )}
 
-          <div className="token-grid">
+          <div className={styles['token-grid']}>
             {filtered.map((launch, i) => {
               const reserveBalance = readReserveBalance(launch.onchainData);
               const progress = calcProgressFromReserve(reserveBalance);
               const color = hashColor(launch.coin?.symbol);
               return (
                 <Link href={`/token/${launch.id}`} key={launch.id} style={{ textDecoration: "none" }}>
-                  <article className={`token-card ${isBoostedActive(launch) ? 'card-boosted' : ''}`} style={{ animationDelay: `${i * 40}ms` }}>
-                    <div className="token-card-header">
-                      <div className="token-avatar" style={{ background: `linear-gradient(135deg, ${color}, ${color}44)` }}>
+                  <article className={`${styles['token-card']} ${isBoostedActive(launch) ? styles['card-boosted'] : ''}`} style={{ animationDelay: `${i * 40}ms` }}>
+                    <div className={styles['token-card-header']}>
+                      <div className={styles['token-avatar']} style={{ background: `linear-gradient(135deg, ${color}, ${color}44)` }}>
                         {isSafeUrl(launch.coin?.logoUrl) ? (
-                          <img src={launch.coin.logoUrl} alt="" referrerPolicy="no-referrer" />
+                          <img src={launch.coin!.logoUrl!} alt="" referrerPolicy="no-referrer" />
                         ) : (
                           <span style={{ color: '#fff', fontSize: '18px', fontWeight: 700 }}>
                             {(launch.coin?.symbol || "?")[0]}
                           </span>
                         )}
                       </div>
-                      <div className="token-meta">
-                        <div className="token-ticker-row">
-                          <span className="token-ticker">${launch.coin?.symbol}</span>
-                          <span className="token-time">{formatTimeAgo(launch.createdAt, t)}</span>
+                      <div className={styles['token-meta']}>
+                        <div className={styles['token-ticker-row']}>
+                          <span className={styles['token-ticker']}>${launch.coin?.symbol}</span>
+                          <span className={styles.timeTag}>{formatDate(launch.createdAt || Date.now())}</span>
                           {isBoostedActive(launch) && (
-                            <span className="badge-boosted">🚀 {t("card_boosted")}</span>
+                            <span className={styles['badge-boosted']}>🚀 {t("card_boosted")}</span>
                           )}
-                          {launch.protocol?.pumpForever && reserveBalance >= MIGRATION_THRESHOLD_NANO && (
-                            <span className="king-badge">👑 {t("card_pump_forever")}</span>
+                          {launch.protocol?.pumpForever && reserveBalance && reserveBalance >= MIGRATION_THRESHOLD_NANO && (
+                            <span className={styles['king-badge']}>👑 {t("card_pump_forever")}</span>
                           )}
                           {launch.status === 'on_chain_deployed' && (
-                            <span className="badge-live" style={{
-                              marginLeft: '8px', 
-                              fontSize: '10px', 
-                              padding: '2px 6px', 
-                              borderRadius: '12px',
+                            <span className={styles['badge-live']} style={{
                               background: launch.onchainData?.updatedAt && (Date.now() - new Date(launch.onchainData.updatedAt).getTime() < 120000) ? 'rgba(0,255,136,0.2)' : 'rgba(255,165,0,0.2)',
                               color: launch.onchainData?.updatedAt && (Date.now() - new Date(launch.onchainData.updatedAt).getTime() < 120000) ? '#00ff88' : '#ffa500'
                             }}>
@@ -320,26 +326,26 @@ export default function Home() {
                             </span>
                           )}
                           {!launch.protocol?.pumpForever && parseFloat(progress || "0") > 80 && (
-                            <span className="badge-finishing">🔥 Almost there!</span>
+                            <span className={styles['badge-finishing']}>🔥 Almost there!</span>
                           )}
                         </div>
-                        <p className="token-name">{launch.coin?.name}</p>
+                        <p className={styles['token-name']}>{launch.coin?.name}</p>
                       </div>
                     </div>
 
-                    <p className="token-tagline">
+                    <p className={styles['token-tagline']}>
                       {(launch.coin?.tagline || launch.coin?.description || "").slice(0, 80)}
                       {(launch.coin?.tagline || launch.coin?.description || "").length > 80 ? "…" : ""}
                     </p>
 
                     {launch.protocol?.pumpForever ? (
-                      <div className="progress-bar">
-                        <div className="progress-header">
+                      <div className={styles['progress-bar']}>
+                        <div className={styles['progress-header']}>
                           <span>Mode</span>
                           <span style={{ color: '#ef4444', fontWeight: 700 }}>{t("card_pump_forever")}</span>
                         </div>
-                        <div className="progress-track">
-                          <div className="progress-fill" style={{
+                        <div className={styles['progress-track']}>
+                          <div className={styles['progress-fill']} style={{
                             width: '100%',
                             background: 'linear-gradient(90deg, #ef4444, #f97316)',
                             opacity: 0.4,
@@ -347,13 +353,13 @@ export default function Home() {
                         </div>
                       </div>
                     ) : (
-                      <div className="progress-bar">
-                        <div className="progress-header">
+                      <div className={styles['progress-bar']}>
+                        <div className={styles['progress-header']}>
                           <span>{t("card_progress")}</span>
                           <span>{progress === null ? "N/A" : `${progress}%`}</span>
                         </div>
-                        <div className="progress-track">
-                          <div className={`progress-fill${parseFloat(progress || "0") > 80 ? " near-complete" : ""}`} style={{
+                        <div className={styles['progress-track']}>
+                          <div className={`${styles['progress-fill']} ${parseFloat(progress || "0") > 80 ? styles['near-complete'] : ""}`} style={{
                             width: progress === null ? "0%" : `${progress}%`,
                             background: parseFloat(progress || "0") > 80
                               ? "linear-gradient(90deg, #f97316, #ef4444)"
@@ -363,20 +369,20 @@ export default function Home() {
                       </div>
                     )}
 
-                    <div className="token-stats">
-                      <div className="stat-box">
-                        <span className="stat-label">{t("card_reserve")}</span>
-                        <span className="stat-value">
+                    <div className={styles['token-stats']}>
+                      <div className={styles['stat-box']}>
+                        <span className="info-value">{new Date(launch.createdAt || Date.now()).toLocaleDateString()}</span>
+                        <span className={styles['stat-value']}>
                           {reserveBalance === null ? "on-chain pending" : `${(reserveBalance / 1e9).toFixed(2)} ${t("common_shell")}`}
                         </span>
                       </div>
-                      <div className="stat-box">
-                        <span className="stat-label">{t("card_supply")}</span>
-                        <span className="stat-value">{formatSupply(launch.onchainData?.tokenSupply || launch.coin?.totalSupply, !!launch.onchainData?.tokenSupply)}</span>
+                      <div className={styles['stat-box']}>
+                        <span className={styles['stat-label']}>{t("card_supply")}</span>
+                        <span className={styles['stat-value']}>{formatSupply(launch.onchainData?.tokenSupply || launch.coin?.totalSupply, !!launch.onchainData?.tokenSupply)}</span>
                       </div>
-                      <div className="stat-box">
-                        <span className="stat-label">{t("card_by")}</span>
-                        <span className="stat-value" style={{ fontFamily: 'var(--font-mono)', fontSize: '10px' }}>
+                      <div className={styles['stat-box']}>
+                        <span className={styles['stat-label']}>{t("card_by")}</span>
+                        <span className={styles['stat-value']} style={{ fontFamily: 'var(--font-mono)', fontSize: '10px' }}>
                           {compactWallet(launch.creatorWallet)}
                         </span>
                       </div>
@@ -403,12 +409,7 @@ export default function Home() {
         </div>
       </footer>
       
-      <style jsx>{`
-        .empty-state { text-align: center; padding: 80px 24px; }
-        .empty-icon { font-size: 48px; color: var(--line); margin-bottom: 12px; }
-        .empty-text { color: var(--ink-muted); margin-bottom: 24px; }
-        .error-msg { color: var(--red); text-align: center; padding: 40px; }
-      `}</style>
+      <style jsx>{``}</style>
     </>
   );
 }

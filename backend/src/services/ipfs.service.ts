@@ -18,7 +18,7 @@ const PINATA_SECRET_KEY = process.env.PINATA_SECRET_API_KEY || "";
  * Faz o upload de um objeto JSON (metadados do token) para o IPFS.
  * Retorna o CID (hash) do conteúdo.
  */
-export async function uploadToIPFS(metadata: any) {
+export async function uploadToIPFS(metadata: any): Promise<string> {
   if (!PINATA_API_KEY || !PINATA_SECRET_KEY) {
     if (process.env.NODE_ENV === "production") {
       throw new Error(

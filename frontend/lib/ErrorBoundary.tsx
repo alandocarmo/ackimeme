@@ -1,22 +1,31 @@
-import React from "react";
+import React, { ReactNode, ErrorInfo } from "react";
+
+interface ErrorBoundaryProps {
+  children: ReactNode;
+}
+
+interface ErrorBoundaryState {
+  hasError: boolean;
+  error: Error | null;
+}
 
 /**
  * ErrorBoundary catches unhandled errors in child components
  * and displays a recovery UI instead of crashing the entire page.
- * 
- * Usage: Wrap page content in _app.js or individual pages.
+ *
+ * Usage: Wrap page content in _app.tsx or individual pages.
  */
-class ErrorBoundary extends React.Component {
-  constructor(props) {
+class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoundaryState> {
+  constructor(props: ErrorBoundaryProps) {
     super(props);
     this.state = { hasError: false, error: null };
   }
 
-  static getDerivedStateFromError(error) {
+  static getDerivedStateFromError(error: Error): ErrorBoundaryState {
     return { hasError: true, error };
   }
 
-  componentDidCatch(error, errorInfo) {
+  componentDidCatch(error: Error, errorInfo: ErrorInfo): void {
     console.error("[ErrorBoundary] Caught error:", error, errorInfo);
   }
 

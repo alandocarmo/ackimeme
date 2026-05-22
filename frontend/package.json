@@ -18,5 +18,11 @@
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "socket.io-client": "^4.8.3"
+  },
+  "devDependencies": {
+    "@types/node": "^25.9.1",
+    "@types/react": "^19.2.15",
+    "@types/react-dom": "^19.2.3",
+    "typescript": "^6.0.3"
   }
 }

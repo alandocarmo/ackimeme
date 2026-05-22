@@ -2,14 +2,15 @@ import Head from "next/head";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useMemo, useState, useEffect } from "react";
-import { formatNum as formatNumber } from "../lib/utils";
+import { formatNum as formatNumber, toNano } from "../lib/utils";
 import { getConfig } from "../lib/api";
 import { TokenRootAbi, TokenWalletAbi } from "../lib/abi";
+import type { AppConfig } from "../types";
 
 // Official Acki Nacki Shell Buyer — supports card (Stripe) and crypto (NOWPayments)
 const SHELL_BUYER_URL = "https://shellbuy.ackinax.com/";
 
-function sanitizeReturnTo(url) {
+function sanitizeReturnTo(url: string | string[] | undefined): string {
   if (!url || typeof url !== "string") return "/";
   if (url.startsWith("http://") || url.startsWith("https://") || url.startsWith("//")) {
     return "/";
@@ -19,7 +20,7 @@ function sanitizeReturnTo(url) {
 
 export default function BuyShellPage() {
   const router = useRouter();
-  const returnTo = useMemo(() => sanitizeReturnTo(router.query.from), [router.query.from]);
+  const returnTo = useMemo(() => sanitizeReturnTo(router.query.from as string | undefined), [router.query.from]);
 
   return (
     <>
@@ -90,22 +91,13 @@ export default function BuyShellPage() {
   );
 }
 
-function toNano(valStr, decimals = 9) {
-  const num = parseFloat(valStr);
-  if (!valStr || !Number.isFinite(num) || num < 0) return 0n;
-  const fixed = num.toFixed(decimals);
-  const [whole = "0", frac = ""] = fixed.split(".");
-  const fracPad = frac.padEnd(decimals, "0").slice(0, decimals);
-  const multiplier = BigInt("1" + "0".repeat(decimals));
-  return BigInt(whole) * multiplier + BigInt(fracPad || "0");
-}
 
-function SwapPanel() {
-  const [amount, setAmount] = useState('');
-  const [config, setConfig] = useState(null);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
-  const [success, setSuccess] = useState('');
+function SwapPanel(): React.JSX.Element {
+  const [amount, setAmount] = useState<string>('');
+  const [config, setConfig] = useState<AppConfig | null>(null);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [error, setError] = useState<string>('');
+  const [success, setSuccess] = useState<string>('');
   
   useEffect(() => {
     getConfig().then(c => setConfig(c)).catch(() => {});
@@ -115,7 +107,7 @@ function SwapPanel() {
   const feeAmount = parsedAmount * 0.01;
   const shellOut = (parsedAmount - feeAmount) * 100;
 
-  async function handleSwap() {
+  async function handleSwap(): Promise<void> {
     if (!config || !config.shellBuy || !config.shellBuy.enabled) {
       setError("Swap de USDC não está habilitado na rede.");
       return;
@@ -126,16 +118,14 @@ function SwapPanel() {
     setLoading(true);
 
     try {
-      const { ProviderRpcClient, Address } = await import('everscale-inpage-provider');
-      const ever = new ProviderRpcClient();
-      if (!(await ever.hasProvider())) throw new Error("Instale a extensão Acki Nacki / EVER Wallet.");
-      
-      await ever.ensureInitialized();
+      const { getEver } = await import('../lib/ever');
+      const ever = await getEver();
+      const { Address } = await import('everscale-inpage-provider');
       const { accountInteraction } = await ever.requestPermissions({ permissions: ['basic', 'accountInteraction'] });
       if (!accountInteraction) throw new Error("Conexão com a carteira negada.");
 
       const rootContract = new ever.Contract(TokenRootAbi, new Address(config.shellBuy.usdcRoot));
-      const walletResult = await rootContract.methods.getWalletAddress({
+      const walletResult = await (rootContract.methods as any).getWalletAddress({
         ownerAddress: accountInteraction.address,
         answerId: 0
       }).call();
@@ -152,9 +142,9 @@ function SwapPanel() {
 
       const walletContract = new ever.Contract(TokenWalletAbi, new Address(userWalletAddress.toString()));
       
-      const tokensToSellNano = toNano(amount, config.shellBuy.usdcDecimals || 6);
+      const tokensToSellNano = toNano(amount);
 
-      const tx = await walletContract.methods.transfer({
+      const tx = await (walletContract.methods as any).transfer({
         recipientOwner: config.shellBuy.usdcRecipient,
         amount: tokensToSellNano.toString(),
       }).send({
@@ -163,9 +153,9 @@ function SwapPanel() {
         bounce: true
       });
       
-      setSuccess(`Swap iniciado com sucesso! Tx: ${tx?.transaction?.id?.hash?.slice(0, 8) || 'confirmada'}`);
+      setSuccess(`Swap iniciado com sucesso! Tx: ${(tx as any)?.transaction?.id?.hash?.slice(0, 8) || 'confirmada'}`);
       setAmount('');
-    } catch(err) {
+    } catch(err: any) {
       setError(err.message || "Falha no swap.");
     } finally {
       setLoading(false);

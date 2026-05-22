@@ -1,4 +1,5 @@
 import { query, withTransaction } from "./db";
+import { LaunchTicket, Session, Trade, Comment } from "./types";
 
 const USED_CHALLENGE_RETENTION_DAYS = 7;
 
@@ -19,11 +20,8 @@ export function normalizeChallengeRow(row: any) {
   };
 }
 
-export function normalizeSessionRow(row: any) {
-  if (!row) {
-    return null;
-  }
-
+export function normalizeSessionRow(row: any): Session | null {
+  if (!row) return null;
   return {
     id: row.id,
     walletAddress: row.wallet_address,
@@ -36,7 +34,7 @@ export function normalizeSessionRow(row: any) {
   };
 }
 
-export function normalizeLaunchRow(row: any) {
+export function normalizeLaunchRow(row: any): LaunchTicket | null {
   if (!row) {
     return null;
   }
@@ -339,22 +337,6 @@ export async function createSessionOnly({ session, auditEvent }: any) {
   });
 }
 
-export async function getSessionByToken(token: any) {
-
-  const result = await query(
-    `
-      SELECT *
-      FROM wallet_sessions
-      WHERE token = $1
-        AND expires_at > NOW()
-      LIMIT 1
-    `,
-    [token],
-  );
-
-  return normalizeSessionRow(result.rows[0]);
-}
-
 export async function touchSession(token: any) {
 
   const result = await query(
@@ -383,7 +365,8 @@ export async function revokeSession(token: any) {
   return (result.rowCount ?? 0) > 0;
 }
 
-export async function createLaunchBundle({ launchTicket, auditEvent }: any) {
+export async function createLaunchBundle(params: { launchTicket: LaunchTicket; auditEvent: any }) {
+  const { launchTicket, auditEvent } = params;
   return withTransaction(async (client: any) => {
     await client.query(
       `
@@ -588,7 +571,7 @@ export async function listLaunchesForSync(limit: any = 10) {
   return result.rows.map(normalizeLaunchRow);
 }
 
-export async function getLaunchById(id: any) {
+export async function getLaunchById(id: string): Promise<LaunchTicket | null> {
   const result = await query(
     `SELECT * FROM launches WHERE id = $1 LIMIT 1`,
     [id],
@@ -646,7 +629,7 @@ export async function updateWalletLastLaunch(walletAddress: any) {
 
 // ─── Token Comments (Feature: Chat) ──────────────────────────────────────────
 
-export async function addComment(comment: any) {
+export async function addComment(comment: Comment) {
   const sql = `
     INSERT INTO token_comments (id, launch_id, wallet_address, content, created_at)
     VALUES ($1, $2, $3, $4, $5)
@@ -693,7 +676,7 @@ export async function getCommentsByLaunchId(launchId: any, limit: any = 50, offs
 
 // ─── Trade History (Fita de Negociações) ─────────────────────────────────────
 
-export async function insertTrade(trade: any) {
+export async function insertTrade(trade: Trade) {
   const sql = `
     INSERT INTO trades (id, launch_id, tx_hash, wallet_address, type, token_amount, shell_amount, price, created_at)
     VALUES ($1, $2, $3, $4, $5, $6, $7, $8, COALESCE($9, NOW()))

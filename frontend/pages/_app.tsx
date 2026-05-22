@@ -1,4 +1,3 @@
-import "../styles/globals.css";
 import Head from "next/head";
 import Link from "next/link";
 import Script from "next/script";
@@ -8,6 +7,9 @@ import { useEffect, useState } from "react";
 import { getSession } from "../lib/api";
 import ErrorBoundary from "../lib/ErrorBoundary";
 import { I18nProvider, useI18n, SUPPORTED_LANGS } from "../lib/i18n";
+import type { AppProps } from "next/app";
+import type { Session } from "../types";
+import styles from "../styles/GlobalNav.module.css";
 
 function LanguageSwitcher() {
   const { lang, setLang } = useI18n();
@@ -38,25 +40,25 @@ function LanguageSwitcher() {
   );
 }
 
-function GlobalNav({ session }) {
+function GlobalNav({ session }: { session: Session | null }) {
   const router = useRouter();
   const isAuth = router.pathname === "/auth";
   const { t } = useI18n();
 
   return (
-    <nav className="navbar">
-      <div className="nav-left">
-        <Link href="/" className="nav-brand">
-          <span className="nav-brand-icon">⬡</span>
-          <span className="nav-brand-text">AckiMeme</span>
+    <nav className={styles.navbar}>
+      <div className={styles.navLeft}>
+        <Link href="/" className={styles.navBrand}>
+          <span className={styles.navBrandIcon}>⬡</span>
+          <span className={styles.navBrandText}>AckiMeme</span>
         </Link>
-        <span className="nav-network-tag">Acki Nacki</span>
+        <span className={styles.navNetworkTag}>Acki Nacki</span>
       </div>
-      <div className="nav-right">
-        <Link href="/" className="nav-link">
+      <div className={styles.navRight}>
+        <Link href="/" className={styles.navLink}>
           {t("nav_board")}
         </Link>
-        <Link href="/portfolio" className="nav-link">
+        <Link href="/portfolio" className={styles.navLink}>
           {t("nav_portfolio")}
         </Link>
         <Link href="/create" className="btn-primary" style={{ fontSize: '12px', padding: '8px 16px' }}>
@@ -64,8 +66,8 @@ function GlobalNav({ session }) {
         </Link>
         <LanguageSwitcher />
         {session ? (
-          <Link href="/auth" className="wallet-badge">
-            <span className="wallet-dot" />
+          <Link href="/auth" className={styles.walletBadge}>
+            <span className={styles.walletDot} />
             {session.walletAddress.slice(0, 6)}…{session.walletAddress.slice(-4)}
           </Link>
         ) : !isAuth ? (
@@ -78,8 +80,8 @@ function GlobalNav({ session }) {
   );
 }
 
-export default function App({ Component, pageProps }) {
-  const [session, setSession] = useState(null);
+export default function App({ Component, pageProps }: AppProps) {
+  const [session, setSession] = useState<Session | null>(null);
 
   useEffect(() => {
     if (typeof window === "undefined") return;
@@ -112,7 +114,7 @@ export default function App({ Component, pageProps }) {
   return (
     <I18nProvider>
       <Head>
-        {/* Removed standard script tag from Head */}
+        <title>AckiMeme</title>
       </Head>
       {/* Telegram WebApp SDK — deve ser carregado antes de qualquer interação */}
       <Script src="https://telegram.org/js/telegram-web-app.js" strategy="beforeInteractive" />

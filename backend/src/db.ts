@@ -10,7 +10,7 @@ export const pool = new Pool({
   ssl: process.env.DATABASE_SSL === "true" ? { rejectUnauthorized: process.env.DATABASE_SSL_VERIFY === "true" } : false,
   max: parseInt(process.env.DB_POOL_MAX || "5", 10), // max connection pool size
   idleTimeoutMillis: 30000,
-  connectionTimeoutMillis: 5000, // Audit #29: 2s was too short for Render free tier cold starts
+  connectionTimeoutMillis: 10000, // Audit #29: 2s was too short for Render free tier cold starts
   statement_timeout: 10000, // Prevent rogue long-running queries
 });
 

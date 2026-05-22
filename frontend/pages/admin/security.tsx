@@ -1,20 +1,23 @@
 import React, { useEffect, useState } from "react";
 import Head from "next/head";
 import { getSecurityAnomalies, unlockAdmin, getSession } from "../../lib/api";
+import { Session } from "../../types";
+import authStyles from "../../styles/Auth.module.css";
+import adminStyles from "../../styles/Admin.module.css";
 
 export default function SecurityAdmin() {
-  const [anomalies, setAnomalies] = useState([]);
-  const [password, setPassword] = useState("");
-  const [loggedIn, setLoggedIn] = useState(false);
-  const [error, setError] = useState("");
-  const [session, setSession] = useState(null);
+  const [anomalies, setAnomalies] = useState<any[]>([]);
+  const [password, setPassword] = useState<string>("");
+  const [loggedIn, setLoggedIn] = useState<boolean>(false);
+  const [error, setError] = useState<string>("");
+  const [session, setSession] = useState<Session | null>(null);
 
   // Load user session on mount
   useEffect(() => {
     getSession().then(r => setSession(r.session)).catch(() => {});
   }, []);
 
-  const handleLogin = async (e) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
       if (!session?.walletAddress) {
@@ -24,7 +27,7 @@ export default function SecurityAdmin() {
       await unlockAdmin(password, session.walletAddress);
       setLoggedIn(true);
       fetchAnomalies();
-    } catch(err) {
+    } catch(err: any) {
       setError(err.message);
     }
   }
@@ -49,10 +52,10 @@ export default function SecurityAdmin() {
 
   if (!loggedIn) {
     return (
-      <main className="auth-layout" style={{ background: 'var(--bg-deep)' }}>
-        <div className="auth-card" style={{ border: '1px solid var(--accent-warm)' }}>
-          <h2 className="auth-title" style={{ color: 'var(--accent-warm)' }}>SECURITY OVERRIDE</h2>
-          <p className="auth-subtitle">Admin Mission Control</p>
+      <main className={authStyles['auth-layout']} style={{ background: 'var(--bg-deep)' }}>
+        <div className={authStyles['auth-card']} style={{ border: '1px solid var(--accent-warm)' }}>
+          <h2 className={authStyles['auth-title']} style={{ color: 'var(--accent-warm)' }}>SECURITY OVERRIDE</h2>
+          <p className={authStyles['auth-subtitle']}>Admin Mission Control</p>
           <form onSubmit={handleLogin}>
             <input 
               type="password" 
@@ -74,21 +77,21 @@ export default function SecurityAdmin() {
 
   return (
     <>
-    <main className="admin-layout container">
+    <main className={`${adminStyles['admin-layout']} container`}>
       <Head><title>AckiMeme - Security Mission Control</title></Head>
 
       <div className="animate-fade-in">
-        <header className="threat-monitor-header">
+        <header className={adminStyles['threat-monitor-header']}>
           <div>
-            <h1 className="threat-monitor-title">
+            <h1 className={adminStyles['threat-monitor-title']}>
               THREAT<span style={{ color: 'var(--accent-warm)' }}>_MONITOR</span>
             </h1>
-            <p className="threat-monitor-subtitle">
+            <p className={adminStyles['threat-monitor-subtitle']}>
               Live Network Anomaly Detection System /// Acki Nacki
             </p>
           </div>
-          <div className="wallet-badge" style={{ borderColor: 'var(--accent-warm-glow)', color: 'var(--accent-warm)' }}>
-            <span className="wallet-dot" style={{ background: 'var(--accent-warm)', boxShadow: '0 0 8px var(--accent-warm-glow)' }} />
+          <div className="card" style={{ padding: '8px 16px', borderRadius: '32px', border: '1px solid var(--accent-warm-glow)', color: 'var(--accent-warm)', display: 'flex', alignItems: 'center', gap: '8px', fontSize: '11px', fontWeight: 'bold' }}>
+            <span style={{ width: '8px', height: '8px', borderRadius: '50%', background: 'var(--accent-warm)', boxShadow: '0 0 8px var(--accent-warm-glow)' }} />
             LIVE SENSORS
           </div>
         </header>
@@ -98,7 +101,7 @@ export default function SecurityAdmin() {
             <h2 className="info-label" style={{ marginBottom: '20px', fontSize: '14px', color: 'var(--ink)' }}>
                RECENT ANOMALIES
             </h2>
-            <table className="monitoring-table">
+            <table className={adminStyles['monitoring-table']}>
               <thead>
                 <tr>
                   <th>Wallet / IP</th>
@@ -109,28 +112,28 @@ export default function SecurityAdmin() {
                 </tr>
               </thead>
               <tbody>
-                {anomalies.map((ano, i) => (
+                {anomalies.map((ano: any, i: number) => (
                   <tr key={ano.wallet}>
                     <td>
                       <div style={{ fontWeight: 700, color: 'var(--ink)' }}>{ano.wallet}</div>
-                      <div className="token-time">{ano.ip}</div>
+                      <div style={{ fontSize: '11px', color: 'var(--ink-soft)' }}>{ano.ip}</div>
                     </td>
                     <td>
-                      <span className="step-badge" style={{ marginBottom: 0 }}>
+                      <span className="status-badge" style={{ marginBottom: 0 }}>
                         {ano.type}
                       </span>
                     </td>
                     <td>
                       <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                         <div className="score-bar-bg">
-                           <div className="score-bar-fill" style={{ width: `${ano.score}%` }}></div>
+                         <div className={adminStyles['score-bar-bg']}>
+                           <div className={adminStyles['score-bar-fill']} style={{ width: `${ano.score}%` }}></div>
                          </div>
-                         <span className="token-time" style={{ fontWeight: 800 }}>{ano.score}</span>
+                         <span style={{ fontSize: '11px', color: 'var(--ink-soft)', fontWeight: 800 }}>{ano.score}</span>
                       </div>
                     </td>
                     <td>
                       <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap' }}>
-                        {ano.triggers.map(t => <span key={t} className="trigger-tag">{t}</span>)}
+                        {ano.triggers.map((t: string) => <span key={t} className={adminStyles['trigger-tag']}>{t}</span>)}
                       </div>
                     </td>
                     <td style={{ textAlign: 'right' }}>
@@ -142,7 +145,7 @@ export default function SecurityAdmin() {
                 ))}
                 {anomalies.length === 0 && (
                   <tr>
-                    <td colSpan="5" style={{ textAlign: 'center', padding: '48px', color: 'var(--ink-muted)' }}>
+                    <td colSpan={5} style={{ textAlign: 'center', padding: '48px', color: 'var(--ink-muted)' }}>
                       No recent anomalies detected.
                     </td>
                   </tr>
@@ -176,7 +179,7 @@ export default function SecurityAdmin() {
 
              <div className="card" style={{ borderLeft: '4px solid var(--accent-warm)' }}>
                 <h3 className="info-label" style={{ marginBottom: '16px', color: 'var(--accent-warm)' }}>System Status</h3>
-                <p className="token-time" style={{ color: 'var(--ink)', fontSize: '13px', lineHeight: 1.6 }}>
+                <p style={{ color: 'var(--ink)', fontSize: '13px', lineHeight: 1.6 }}>
                   Persistent rate limiting active via PostgreSQL. 
                   Session tokens managed via HttpOnly cookies. 
                   TxHash deduplication enforced to prevent double-spend.
@@ -187,10 +190,10 @@ export default function SecurityAdmin() {
       </div>
     </main>
 
-    <style jsx>{`
+    <style dangerouslySetInnerHTML={{ __html: `
       .animate-fade-in { animation: fadeInUp 0.4s ease both; }
       .error-msg { color: var(--red); text-align: center; }
-    `}</style>
+    `}} />
     </>
   );
 }

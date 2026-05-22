@@ -1,8 +1,8 @@
-import { createContext, useContext, useState, useEffect, useCallback } from "react";
+import React, { createContext, useContext, useState, useEffect, useCallback, ReactNode } from "react";
 
 // ─── Translation Dictionaries ────────────────────────────────────────────────
 
-const translations = {
+const translations: Record<string, Record<string, string>> = {
   // ═══════════════════════════════════════════════════════════════════════════
   // ENGLISH (default)
   // ═══════════════════════════════════════════════════════════════════════════
@@ -108,6 +108,21 @@ const translations = {
     create_fee: "Launch Fee",
     create_submit: "🚀 Launch Token",
     create_launching: "Launching…",
+    create_eco_model: "Economic Model",
+    create_eco_auto: "⚖️ Automatic Graduation (Classic)",
+    create_eco_auto_desc: "Migrates to an internal AMM (x*y=k) automatically when it reaches 15K SHELL, stabilizing the price for community growth.",
+    create_eco_pump: "🚀 Pump Forever (Infinite Curve)",
+    create_eco_pump_desc: "Never graduates. The price continues to climb exponentially on the bonding curve forever. High risk, high volatility.",
+    create_pump_title: "🚀 Pump Aggressiveness",
+    create_pump_subtitle: "Choose how fast the price will climb on the bonding curve. Higher aggressiveness means higher risk and faster price action.",
+    create_pump_1: "🐢 Suave: Slow curve. Price climbs 2x slower, ideal for stability.",
+    create_pump_2: "⚖️ Normal: The classic standard. Perfect balance between risk and reward.",
+    create_pump_3: "⚡ Fast: Accelerated growth. Price climbs 2x faster, creating immediate FOMO.",
+    create_pump_4: "🔥 Aggressive: High voltage. Fast movements rewarding early buyers.",
+    create_pump_5: "💀 INSANE: DeGen mode! Price explodes 10x faster. Extreme volatility!",
+    create_boost_title: "🔥 Launch Boost",
+    create_boost_label: "Pin to Top for 24h (+500 SHELL)",
+    create_boost_desc: "Your token will be highlighted at the top of the main feed to attract investors faster.",
 
     // Auth
     auth_title: "Connect Wallet",
@@ -126,10 +141,14 @@ const translations = {
     portfolio_empty: "You haven't created any tokens yet.",
     portfolio_login: "Connect your wallet to view your portfolio.",
 
-    // Error Boundary
+    // Error Boundary & API
     error_title: "Something went wrong",
     error_desc: "An unexpected error occurred. Try reloading the page.",
     error_reload: "Reload Page",
+    error_timeout: "The request took too long and was cancelled.",
+    error_http_502: "Bad Gateway. Please try again.",
+    error_http_504: "Gateway Timeout. Please try again.",
+    error_default: "Request failed.",
 
     // Common
     common_loading: "Loading…",
@@ -238,6 +257,21 @@ const translations = {
     create_fee: "Taxa de Lançamento",
     create_submit: "🚀 Lançar Token",
     create_launching: "Lançando…",
+    create_eco_model: "Modelo Econômico",
+    create_eco_auto: "⚖️ Graduação Automática (Clássico)",
+    create_eco_auto_desc: "Migra automaticamente para um AMM interno (x*y=k) ao alcançar 15K SHELL, estabilizando o preço para crescimento da comunidade.",
+    create_eco_pump: "🚀 Pump Eterno (Curva Infinita)",
+    create_eco_pump_desc: "Nunca gradua. O preço continua a subir exponencialmente na curva de ligação para sempre. Alto risco, alta volatilidade.",
+    create_pump_title: "🚀 Agressividade do Pump",
+    create_pump_subtitle: "Escolha o quão rápido o preço subirá na curva de ligação. Maior agressividade significa maior risco e ação de preço mais rápida.",
+    create_pump_1: "🐢 Suave: Curva tranquila. O preço sobe 2x mais devagar, ideal para projetos que buscam estabilidade.",
+    create_pump_2: "⚖️ Normal: O padrão clássico. Equilíbrio perfeito entre risco e recompensa, igual ao pump.fun.",
+    create_pump_3: "⚡ Fast: Crescimento acelerado. O preço sobe 2x mais rápido, gerando FOMO imediato.",
+    create_pump_4: "🔥 Aggressive: Alta voltagem. Movimentos rápidos que recompensam os primeiros compradores.",
+    create_pump_5: "💀 INSANE: Modo DeGen! O preço explode 10x mais rápido que o normal. Volatilidade extrema!",
+    create_boost_title: "🔥 Impulso de Lançamento",
+    create_boost_label: "Fixar no Topo por 24h (+500 SHELL)",
+    create_boost_desc: "Seu token aparecerá em destaque no topo do feed principal para atrair investidores mais rápido.",
 
     auth_title: "Conectar Carteira",
     auth_subtitle: "Autentique com sua carteira Acki Nacki para acessar todos os recursos.",
@@ -254,9 +288,14 @@ const translations = {
     portfolio_empty: "Você ainda não criou nenhum token.",
     portfolio_login: "Conecte sua carteira para ver seu portfólio.",
 
+    // Error Boundary & API
     error_title: "Algo deu errado",
     error_desc: "Ocorreu um erro inesperado. Tente recarregar a página.",
     error_reload: "Recarregar Página",
+    error_timeout: "A requisição demorou muito e foi cancelada.",
+    error_http_502: "Bad Gateway. Tente novamente.",
+    error_http_504: "Gateway Timeout. Tente novamente.",
+    error_default: "Falha na requisição.",
 
     common_loading: "Carregando…",
     common_error: "Erro",
@@ -363,6 +402,21 @@ const translations = {
     create_fee: "Комиссия запуска",
     create_submit: "🚀 Запустить токен",
     create_launching: "Запуск…",
+    create_eco_model: "Экономическая модель",
+    create_eco_auto: "⚖️ Автоматический выпуск (Классика)",
+    create_eco_auto_desc: "Автоматически мигрирует в AMM (x*y=k) при достижении 15K SHELL, стабилизируя цену.",
+    create_eco_pump: "🚀 Вечный памп (Бесконечная кривая)",
+    create_eco_pump_desc: "Никогда не выпускается. Цена продолжает экспоненциально расти на кривой навсегда. Высокий риск.",
+    create_pump_title: "🚀 Агрессивность пампа",
+    create_pump_subtitle: "Выберите, как быстро будет расти цена. Более высокая агрессивность — больше риска.",
+    create_pump_1: "🐢 Suave: Медленная кривая. Цена растет в 2 раза медленнее, идеально для стабильности.",
+    create_pump_2: "⚖️ Normal: Классический стандарт. Идеальный баланс.",
+    create_pump_3: "⚡ Fast: Ускоренный рост. Цена растет в 2 раза быстрее, создавая FOMO.",
+    create_pump_4: "🔥 Aggressive: Высокое напряжение. Быстрые движения для первых покупателей.",
+    create_pump_5: "💀 INSANE: Режим DeGen! Цена взрывается в 10 раз быстрее. Экстремальная волатильность!",
+    create_boost_title: "🔥 Ускорение запуска",
+    create_boost_label: "Закрепить в топе на 24ч (+500 SHELL)",
+    create_boost_desc: "Ваш токен будет выделен в топе главной ленты.",
 
     auth_title: "Подключить кошелёк",
     auth_subtitle: "Аутентифицируйтесь с кошельком Acki Nacki для доступа ко всем функциям.",
@@ -379,9 +433,14 @@ const translations = {
     portfolio_empty: "Вы ещё не создали токенов.",
     portfolio_login: "Подключите кошелёк для просмотра портфеля.",
 
+    // Error Boundary & API
     error_title: "Что-то пошло не так",
     error_desc: "Произошла непредвиденная ошибка. Попробуйте перезагрузить страницу.",
     error_reload: "Перезагрузить",
+    error_timeout: "Запрос занял слишком много времени и был отменён.",
+    error_http_502: "Плохой шлюз. Пожалуйста, попробуйте еще раз.",
+    error_http_504: "Тайм-аут шлюза. Пожалуйста, попробуйте еще раз.",
+    error_default: "Ошибка запроса.",
 
     common_loading: "Загрузка…",
     common_error: "Ошибка",
@@ -397,7 +456,7 @@ const translations = {
 
 // ─── Language detection ──────────────────────────────────────────────────────
 
-function detectLanguage() {
+function detectLanguage(): string {
   // 1. Check localStorage
   if (typeof window !== "undefined") {
     const saved = localStorage.getItem("ackimeme_lang");
@@ -424,16 +483,22 @@ function detectLanguage() {
 
 // ─── React Context ───────────────────────────────────────────────────────────
 
-const I18nContext = createContext({ t: (k) => k, lang: "en", setLang: () => {} });
+interface I18nContextType {
+  t: (key: string) => string;
+  lang: string;
+  setLang: (lang: string) => void;
+}
 
-export function I18nProvider({ children }) {
+const I18nContext = createContext<I18nContextType>({ t: (k) => k, lang: "en", setLang: () => {} });
+
+export function I18nProvider({ children }: { children: ReactNode }) {
   const [lang, setLangState] = useState("en");
 
   useEffect(() => {
     setLangState(detectLanguage());
   }, []);
 
-  const setLang = useCallback((newLang) => {
+  const setLang = useCallback((newLang: string) => {
     if (translations[newLang]) {
       setLangState(newLang);
       if (typeof window !== "undefined") {
@@ -442,7 +507,7 @@ export function I18nProvider({ children }) {
     }
   }, []);
 
-  const t = useCallback((key) => {
+  const t = useCallback((key: string): string => {
     return translations[lang]?.[key] || translations.en[key] || key;
   }, [lang]);
 
@@ -457,7 +522,7 @@ export function useI18n() {
   return useContext(I18nContext);
 }
 
-export const SUPPORTED_LANGS = [
+export const SUPPORTED_LANGS: Array<{ code: string; label: string; flag: string }> = [
   { code: "en", label: "EN", flag: "🇺🇸" },
   { code: "pt", label: "PT", flag: "🇧🇷" },
   { code: "ru", label: "RU", flag: "🇷🇺" },

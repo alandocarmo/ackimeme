@@ -4,12 +4,14 @@ import { useEffect, useState, useRef } from "react";
 import { QRCodeSVG } from "qrcode.react";
 import { generateQrChallenge, getQrStatus, getSession, logout } from "../lib/api";
 import { useI18n } from "../lib/i18n";
+import { Session } from "../types";
+import styles from "../styles/Auth.module.css";
 
 export default function AuthPage() {
   const { t } = useI18n();
   const router = useRouter();
   
-  const sanitizeReturnTo = (url) => {
+  const sanitizeReturnTo = (url: string | string[] | undefined): string => {
     if (!url || typeof url !== "string") return "/";
     if (url.startsWith("http://") || url.startsWith("https://") || url.startsWith("//")) {
       return "/"; 
@@ -18,17 +20,17 @@ export default function AuthPage() {
   };
   const returnTo = sanitizeReturnTo(router.query.from);
 
-  const [session, setSession] = useState(null);
-  const [qrData, setQrData] = useState(null);
-  const [step, setStep] = useState("connect"); // connect, done
-  const [error, setError] = useState("");
-  const [loading, setLoading] = useState(true);
+  const [session, setSession] = useState<Session | null>(null);
+  const [qrData, setQrData] = useState<{ sessionId: string, authUrl: string } | null>(null);
+  const [step, setStep] = useState<string>("connect"); // connect, done
+  const [error, setError] = useState<string>("");
+  const [loading, setLoading] = useState<boolean>(true);
   
   // Polling ref
-  const pollingRef = useRef(null);
-  const stepRef = useRef("connect");
-  const qrSessionIdRef = useRef("");
-  const isMountedRef = useRef(true);
+  const pollingRef = useRef<NodeJS.Timeout | null>(null);
+  const stepRef = useRef<string>("connect");
+  const qrSessionIdRef = useRef<string>("");
+  const isMountedRef = useRef<boolean>(true);
 
   useEffect(() => {
     isMountedRef.current = true;
@@ -87,7 +89,7 @@ export default function AuthPage() {
       setLoading(true);
       setError("");
       const res = await generateQrChallenge();
-      setQrData({ sessionId: res.sessionId, deepLink: res.deepLink });
+      setQrData({ sessionId: res.sessionId, authUrl: res.authUrl });
       qrSessionIdRef.current = res.sessionId;
       setStep("connect");
       startPolling(res.sessionId);
@@ -98,7 +100,7 @@ export default function AuthPage() {
     }
   };
 
-  const startPolling = (sessionId) => {
+  const startPolling = (sessionId?: string) => {
     const effectiveSessionId = sessionId || qrSessionIdRef.current;
     if (!effectiveSessionId) return;
 
@@ -148,11 +150,8 @@ export default function AuthPage() {
     try {
       setLoading(true);
       setError("");
-      const { ProviderRpcClient } = await import('everscale-inpage-provider');
-      const ever = new ProviderRpcClient();
-      if (!(await ever.hasProvider())) throw new Error("Instale a extensão Acki Nacki / EVER Wallet.");
-      
-      await ever.ensureInitialized();
+      const { getEver } = await import('../lib/ever');
+      const ever = await getEver();
       const { accountInteraction } = await ever.requestPermissions({ permissions: ['basic', 'accountInteraction'] });
       if (!accountInteraction) throw new Error("Acesso à carteira negado.");
       
@@ -160,7 +159,7 @@ export default function AuthPage() {
       
       // 1. Get Challenge
       const { createAuthChallenge, verifyAuthChallenge } = await import('../lib/api');
-      const challengeRes = await createAuthChallenge({ walletAddress });
+      const challengeRes = await createAuthChallenge(walletAddress);
       
       // 2. Sign Challenge
       const signature = await ever.signData({
@@ -182,7 +181,7 @@ export default function AuthPage() {
         setStep("done");
         setTimeout(() => router.push(String(returnTo)), 1200);
       }
-    } catch (err) {
+    } catch (err: any) {
       setError(err.message || "Erro ao conectar com a extensão.");
     } finally {
       setLoading(false);
@@ -203,15 +202,15 @@ export default function AuthPage() {
         <title>{t("auth_title")} | AckiMeme</title>
         <meta name="description" content={t("auth_subtitle")} />
       </Head>
-      <main className="auth-layout">
+      <main className={styles['auth-layout']}>
         <div className="hero-glow" style={{ position: 'fixed', top: '50%', transform: 'translate(-50%, -50%)' }} />
-        <div className="auth-card">
-          <div className="auth-logo">⬡</div>
-          <h1 className="auth-title">{t("auth_title")}</h1>
-          <p className="auth-subtitle">Acki Nacki Blockchain</p>
+        <div className={styles['auth-card']}>
+          <div className={styles['auth-logo']}>⬡</div>
+          <h1 className={styles['auth-title']}>{t("auth_title")}</h1>
+          <p className={styles['auth-subtitle']}>Acki Nacki Blockchain</p>
 
           {step === "done" && session ? (
-            <div className="animate-fade-in" style={{ textAlign: 'center' }}>
+            <div className={styles['animate-fade-in']} style={{ textAlign: 'center' }}>
               <div className="hero-accent" style={{ fontSize: '20px', fontWeight: 800, marginBottom: '16px' }}>✓ {t("auth_connected")}</div>
               <p className="token-ticker" style={{ fontSize: '14px', marginBottom: '8px' }}>
                 {session.walletAddress.slice(0, 10)}…{session.walletAddress.slice(-6)}
@@ -221,16 +220,16 @@ export default function AuthPage() {
               <button className="filter-btn" style={{ width: '100%', marginTop: '12px' }} onClick={handleLogout}>{t("auth_disconnect")}</button>
             </div>
           ) : (
-            <div className="animate-fade-in">
-              <div className="step-badge">Scan to Connect</div>
+            <div className={styles['animate-fade-in']}>
+              <div className={styles['step-badge']}>Scan to Connect</div>
               
-              <div className="qr-container" style={{ margin: '24px 0', display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '200px' }}>
+              <div className={styles['qr-container']} style={{ margin: '24px 0', display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '200px' }}>
                 {loading ? (
                   <p className="token-time">Generating secure connection...</p>
                 ) : qrData ? (
                   <div style={{ background: '#fff', padding: '16px', borderRadius: '12px' }}>
                     <QRCodeSVG 
-                      value={qrData.deepLink} 
+                      value={qrData.authUrl} 
                       size={220}
                       bgColor={"#ffffff"}
                       fgColor={"#000000"}
@@ -242,15 +241,15 @@ export default function AuthPage() {
               </div>
 
               {error ? (
-                <p className="error-msg" style={{ marginBottom: '16px', fontSize: '12px', textAlign: 'center' }}>{error}</p>
+                <p className={styles['error-msg']} style={{ marginBottom: '16px', fontSize: '12px', textAlign: 'center' }}>{error}</p>
               ) : (
                 <div style={{ textAlign: 'center', marginBottom: '24px' }}>
                   <p className="token-time" style={{ marginBottom: '8px' }}>
                     Open your <b>Acki Nacki Wallet</b> app<br/>and scan this QR Code to log in.
                   </p>
-                  {qrData?.deepLink && (
-                    <p className="token-time" style={{ fontSize: '14px' }}>
-                      Or <a href={qrData.deepLink} target="_blank" rel="noopener noreferrer" style={{ color: 'var(--accent)', textDecoration: 'underline' }}>click here to open Telegram</a>
+                  {qrData?.authUrl && (
+                    <p style={{ marginTop: '16px', fontSize: '13px' }}>
+                      Or <a href={qrData.authUrl} target="_blank" rel="noopener noreferrer" style={{ color: 'var(--accent)', textDecoration: 'underline' }}>click here to open Telegram</a>
                     </p>
                   )}
                 </div>
@@ -278,11 +277,7 @@ export default function AuthPage() {
         </div>
       </main>
 
-      <style jsx>{`
-        .animate-fade-in { animation: fadeInUp 0.4s ease both; }
-        .error-msg { color: var(--red); text-align: center; }
-        .qr-container { transition: all 0.3s ease; }
-      `}</style>
+      <style jsx>{``}</style>
     </>
   );
 }

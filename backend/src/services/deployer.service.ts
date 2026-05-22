@@ -300,7 +300,7 @@ export function getDeployerReadiness(): DeployerReadiness {
     sdkAvailable: Boolean(sdkAvailable && client),
     privateKeyConfigured: Boolean(keyConfig.usable),
     keyPairConfigured: Boolean(keyConfig.usable),
-    keyPairReason: keyConfig.usable ? "" : (keyConfig.reason || ""),
+    keyPairReason: keyConfig.usable ? "" : (keyConfig.reason || "Deployer secret key missing or invalid"),
     fundingWalletConfigured,
     contractsCompiled:
       contractFilesExist("TokenRoot") &&

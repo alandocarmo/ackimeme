@@ -1,0 +1,347 @@
+.tokenDetailLayout {
+  display: grid;
+  grid-template-columns: 1fr 360px;
+  gap: 32px;
+  align-items: start;
+}
+
+.detailMain {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.detailSidebar {
+  position: sticky;
+  top: 100px;
+}
+
+@media (max-width: 1024px) {
+  .tokenDetailLayout {
+    grid-template-columns: 1fr;
+  }
+  
+  .detailSidebar {
+    position: static;
+    order: -1;
+  }
+}
+
+.tokenHeaderSection {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  margin-bottom: 32px;
+  flex-wrap: wrap;
+}
+
+.tokenTitleInfo {
+  flex: 1;
+}
+
+.tokenMainTitle {
+  font-size: 32px;
+  font-weight: 800;
+  margin: 0;
+  color: var(--ink);
+}
+
+.statusBadge {
+  background: var(--accent-glow);
+  color: var(--accent);
+  border: 1px solid rgba(0, 255, 136, 0.2);
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  font-family: var(--font-mono);
+}
+
+.infoCardGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px;
+}
+
+.infoCard {
+  background: var(--bg-card);
+  border: 1px solid var(--line);
+  padding: 20px;
+  border-radius: var(--radius-lg);
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.infoLabel {
+  font-size: 10px;
+  color: var(--ink-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+.infoValue {
+  font-size: 16px;
+  color: var(--ink);
+  font-weight: 700;
+}
+
+.tradeWidget {
+  background: var(--bg-card);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  box-shadow: var(--shadow);
+}
+
+.tradeTabs {
+  display: flex;
+  border-bottom: 1px solid var(--line);
+}
+
+.tradeTab {
+  flex: 1;
+  padding: 16px;
+  background: transparent;
+  border: none;
+  font-size: 12px;
+  font-weight: 800;
+  color: var(--ink-muted);
+  cursor: pointer;
+  transition: all 0.2s;
+  letter-spacing: 0.05em;
+}
+
+.activeBuy {
+  color: var(--accent);
+  background: var(--accent-glow);
+  border-bottom: 2px solid var(--accent);
+}
+
+.activeSell {
+  color: var(--red);
+  background: var(--red-glow);
+  border-bottom: 2px solid var(--red);
+}
+
+.tradePanel {
+  padding: 24px;
+}
+
+.tradeFieldWrap {
+  margin-bottom: 20px;
+}
+
+.inputContainer {
+  display: flex;
+  align-items: center;
+  background: var(--bg-deep);
+  border: 1px solid var(--line-soft);
+  border-radius: var(--radius);
+  padding: 8px 16px;
+  margin-top: 8px;
+}
+
+.inputContainer input {
+  flex: 1;
+  background: transparent;
+  border: none;
+  color: var(--ink);
+  font-size: 20px;
+  font-family: var(--font-mono);
+}
+
+.inputUnit {
+  color: var(--ink-muted);
+  font-weight: 700;
+  font-family: var(--font-mono);
+}
+
+.slippageRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.slippageBtns {
+  display: flex;
+  gap: 6px;
+}
+
+.slipBtn {
+  background: var(--bg-deep);
+  border: 1px solid var(--line);
+  color: var(--ink-soft);
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-size: 11px;
+  cursor: pointer;
+}
+
+.slipBtnActive {
+  border-color: var(--accent);
+  background: var(--accent-glow);
+  color: var(--accent);
+}
+
+.estimateBox {
+  background: var(--bg-deep);
+  border: 1px dashed var(--line);
+  border-radius: var(--radius);
+  padding: 12px 16px;
+  margin-bottom: 24px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.estimateLabel {
+  font-size: 12px;
+  color: var(--ink-muted);
+}
+
+.estimateVal {
+  font-size: 14px;
+  color: var(--accent);
+  font-weight: 700;
+  font-family: var(--font-mono);
+}
+
+.tradeButton {
+  width: 100%;
+  padding: 16px;
+  border-radius: var(--radius);
+  font-weight: 800;
+  font-size: 15px;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btnBuy {
+  background: linear-gradient(135deg, var(--accent), var(--accent-dim));
+  color: #000;
+}
+
+.btnSell {
+  background: linear-gradient(135deg, var(--red), #cc3645);
+  color: #fff;
+}
+
+.tradeLocked {
+  opacity: 0.5;
+  cursor: not-allowed;
+  filter: grayscale(1);
+}
+
+.onchainInfoGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 12px;
+  margin-top: 12px;
+}
+
+.onchainItem {
+  background: var(--bg-deep);
+  border: 1px solid var(--line-soft);
+  padding: 12px;
+  border-radius: var(--radius);
+  font-size: 11px;
+}
+
+.onchainLink {
+  color: var(--accent);
+  word-break: break-all;
+  display: block;
+  margin-top: 4px;
+}
+
+.chartCard {
+  height: 240px;
+  padding: 0;
+  position: relative;
+  overflow: hidden;
+  border: 1px solid var(--ink-faint);
+  background: linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(0,255,136,0.02) 100%);
+}
+
+.tokenAvatar {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  border: 2px solid var(--accent);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  font-weight: bold;
+}
+
+.tokenTicker {
+  font-size: 16px;
+  color: var(--ink-muted);
+  background: var(--bg-deep);
+  padding: 4px 12px;
+  border-radius: 12px;
+  border: 1px solid var(--line);
+}
+
+.progressHeader {
+  margin-bottom: 12px;
+}
+
+.tokenTime {
+  font-size: 12px;
+  color: var(--ink-muted);
+}
+
+.progressTrack {
+  background: var(--bg-deep);
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.progressFill {
+  background: var(--accent);
+  height: 100%;
+  border-radius: 6px;
+}
+
+.tokenStats {
+  display: flex;
+  justify-content: space-between;
+}
+
+.statBox {
+  display: flex;
+  flex-direction: column;
+}
+
+.statLabel {
+  font-size: 11px;
+  color: var(--ink-muted);
+  text-transform: uppercase;
+}
+
+.statValue {
+  font-size: 14px;
+  color: var(--ink);
+  font-weight: 700;
+}
+
+.tokenSubtitle {
+  font-size: 12px;
+  color: var(--ink-soft);
+}
+
+.activityTicker {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px;
+  background: var(--bg-deep);
+  border-top: 1px solid var(--line);
+  overflow-x: auto;
+}

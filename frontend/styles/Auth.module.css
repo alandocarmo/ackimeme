@@ -1,0 +1,85 @@
+.auth-layout {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+}
+
+.auth-card {
+  width: 100%;
+  max-width: 440px;
+  background: var(--bg-card);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  padding: 40px;
+  box-shadow: 0 24px 80px -20px rgba(0,0,0,0.6);
+  -webkit-backdrop-filter: blur(20px);
+  backdrop-filter: blur(20px);
+  animation: fadeInUp 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.auth-logo {
+  font-size: 32px;
+  color: var(--accent);
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.challenge-box {
+  background: var(--bg-deep);
+  border: 1px solid var(--line);
+  padding: 20px;
+  border-radius: var(--radius);
+  margin-bottom: 20px;
+}
+
+.challenge-msg {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--accent);
+  word-break: break-all;
+  line-height: 1.6;
+}
+
+.step-badge {
+  display: inline-block;
+  font-size: 10px;
+  background: var(--accent-warm-glow);
+  color: var(--accent-warm);
+  padding: 4px 10px;
+  border-radius: 4px;
+  margin-bottom: 20px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+.auth-title {
+  font-size: 24px;
+  font-weight: 800;
+  margin-bottom: 8px;
+  color: var(--ink);
+  text-align: center;
+}
+
+.auth-subtitle {
+  color: var(--ink-muted);
+  font-size: 14px;
+  margin-bottom: 32px;
+  text-align: center;
+}
+
+.animate-fade-in { 
+  animation: fadeInUp 0.4s ease both; 
+}
+
+.error-msg { 
+  color: var(--red); 
+  text-align: center; 
+}
+
+.qr-container { 
+  transition: all 0.3s ease; 
+}

@@ -215,8 +215,8 @@ export function normalizeLaunchRequest(body: any = {}, session: any = null): any
       launchMode: process.env.ENABLE_ONCHAIN_DEPLOY === "true" ? "bonding_curve_active" : "bonding_curve_pending",
       bondingCurveStatus: process.env.ENABLE_ONCHAIN_DEPLOY === "true" ? "deployed" : "not_implemented",
       poolAutomationStatus: "not_implemented",
-      pumpForever: Boolean(body.pumpForever),
-      isBoosted: Boolean(body.isBoosted),
+      pumpForever: String(body.pumpForever) === "true" || body.pumpForever === true,
+      isBoosted: String(body.isBoosted) === "true" || body.isBoosted === true,
       slopeDivisor: parseSlopeDivisor(body.slopeDivisor),
     },
     coin: {
