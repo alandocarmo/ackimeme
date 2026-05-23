@@ -40,6 +40,7 @@ import {
   listFavorites,
   getPriceHistoryByLaunchId,
   getGlobalStats,
+  updateLaunchOnchainState,
 } from "./storage";
 import { createTreasuryPaymentRecord } from "./treasury";
 import {
@@ -58,6 +59,8 @@ import * as jwt from "jsonwebtoken";
 import cookieParser from "cookie-parser";
 import { startSyncJob, stopSyncJob, setSocketIo } from "./services/sync.service";
 import securityEngine from "./security";
+import { validate } from "./validations/validate";
+import { CreateLaunchSchema, AuthChallengeSchema, AuthVerifySchema, VerifyPaymentSchema, CommentSchema } from "./validations/schemas";
 
 declare global {
   namespace Express {
@@ -236,9 +239,9 @@ app.use((req: Request, res: Response, next: NextFunction) => {
 app.use(helmet({
   contentSecurityPolicy: {
     directives: {
-      defaultSrc: ["'none'"],
-      baseUri: ["'none'"],
-      formAction: ["'none'"],
+      defaultSrc: ["'self'"],
+      baseUri: ["'self'"],
+      formAction: ["'self'"],
       frameAncestors: ["'none'"],
     },
   },
@@ -309,8 +312,6 @@ app.use((req: Request, res: Response, next: NextFunction) => {
     if (origin && config.allowedOrigins.includes(origin)) {
       res.setHeader("Access-Control-Allow-Origin", origin);
       res.setHeader("Vary", "Origin");
-    } else if (config.allowedOrigins.length === 0) {
-      res.setHeader("Access-Control-Allow-Origin", "null");
     }
   }
 
@@ -354,14 +355,15 @@ function extractSessionToken(req: Request): string {
   if (authHeader && authHeader.startsWith("Bearer ")) {
     return authHeader.split(" ")[1];
   }
-  return req.cookies?.sessionToken || "";
+  return req.cookies?.["__Host-sessionToken"] || req.cookies?.sessionToken || "";
 }
 
 function setSessionCookie(res: Response, sessionToken: string): void {
-  res.cookie("sessionToken", sessionToken, {
+  const cookieName = config.isProduction ? "__Host-sessionToken" : "sessionToken";
+  res.cookie(cookieName, sessionToken, {
     httpOnly: true,
     secure: config.isProduction,
-    sameSite: config.isProduction ? "none" : "lax",
+    sameSite: config.isProduction ? "strict" : "lax",
     path: "/",
     maxAge: config.sessionTtlHours * 60 * 60 * 1000,
   });
@@ -468,7 +470,6 @@ app.get("/healthz", (_, res) => {
   res.json({
     ok: true,
     service: config.appName,
-    timestamp: new Date().toISOString(),
   });
 });
 
@@ -517,7 +518,7 @@ app.get("/config", (_, res) => {
   res.json(buildPublicConfig());
 });
 
-app.post("/auth/challenge", authLimiter, async (req: Request, res: Response) => {
+app.post("/auth/challenge", authLimiter, validate(AuthChallengeSchema), async (req: Request, res: Response) => {
   try {
     const challenge = await createWalletChallenge({
       walletAddress: req.body?.walletAddress,
@@ -533,7 +534,7 @@ app.post("/auth/challenge", authLimiter, async (req: Request, res: Response) => 
   }
 });
 
-app.post("/auth/verify", authLimiter, async (req: Request, res: Response) => {
+app.post("/auth/verify", authLimiter, validate(AuthVerifySchema), async (req: Request, res: Response) => {
   try {
     const session = await verifyWalletChallenge({
       challengeId: req.body?.challengeId,
@@ -632,9 +633,10 @@ app.post("/auth/logout", async (req: Request, res: Response) => {
     const sessionToken = extractSessionToken(req);
     const revoked = await revokeSession(sessionToken);
 
-    res.clearCookie("sessionToken", {
+    const cookieName = config.isProduction ? "__Host-sessionToken" : "sessionToken";
+    res.clearCookie(cookieName, {
       path: "/",
-      sameSite: config.isProduction ? "none" : "lax",
+      sameSite: config.isProduction ? "strict" : "lax",
       secure: config.isProduction,
     });
 
@@ -668,7 +670,7 @@ app.get("/tokens/viral", async (req: Request, res: Response) => {
   }
 });
 
-app.post("/verify-payment", paymentLimiter, requireSession, async (req: Request, res: Response) => {
+app.post("/verify-payment", paymentLimiter, requireSession, validate(VerifyPaymentSchema), async (req: Request, res: Response) => {
   try {
     const walletFromBody =
       typeof req.body?.walletAddress === "string"
@@ -734,7 +736,7 @@ app.post("/verify-payment", paymentLimiter, requireSession, async (req: Request,
 
 
 
-app.post("/launch-request", requireSession, async (req: Request, res: Response) => {
+app.post("/launch-request", requireSession, validate(CreateLaunchSchema), async (req: Request, res: Response) => {
   let txHashReserved = false;
   let reservedTxHash = "";
   let chainDeployAttempted = false;
@@ -885,17 +887,18 @@ app.post("/launch-request", requireSession, async (req: Request, res: Response) 
       throw new Error(`Falha no deploy on-chain: ${deployResult.status} - ${deployResult.reason}`);
     }
 
-    await updateLaunchOnchainState(launchTicket.id, {
-       reserveBalance: "0",
-       tokenSupply: launchRequest.coin.totalSupply,
-       lockedLiquidity: false,
-       status: launchTicket.status,
-       deployStatus: deployResult.status,
-       deployReason: deployResult.reason || "",
-       ipfsHash,
-       tokenRootAddress: deployResult.tokenRoot,
-       bondingCurveAddress: deployResult.bondingCurve,
-    });
+    try {
+      await updateLaunchOnchainState(launchTicket.id, {
+        reserveBalance: "0",
+        tokenSupply: launchRequest.coin.totalSupply,
+        lockedLiquidity: false,
+        status: launchTicket.status,
+        deployStatus: deployResult.status,
+        deployReason: deployResult.reason || "",
+        ipfsHash,
+        tokenRootAddress: deployResult.tokenRoot,
+        bondingCurveAddress: deployResult.bondingCurve,
+      });
     } catch (bundleErr: any) {
       if (bundleErr && bundleErr.code === "23505") {
         throw new Error(
@@ -1146,7 +1149,7 @@ app.get("/launches/:id/comments", requireValidUUID, async (req: Request, res: Re
   }
 });
 
-app.post("/launches/:id/comments", requireSession, requireValidUUID, async (req: Request, res: Response) => {
+app.post("/launches/:id/comments", requireSession, requireValidUUID, validate(CommentSchema), async (req: Request, res: Response) => {
   try {
     const launchExists = await query(`SELECT id FROM launches WHERE id=$1`, [req.params.id]);
     if ((launchExists.rowCount ?? 0) === 0) {

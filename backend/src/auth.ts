@@ -154,7 +154,7 @@ export async function createWalletChallenge({ walletAddress, telegramInitData }:
 
   const telegram = verifyTelegramInitData(telegramInitData);
   
-  if (config.telegramBindingRequired && !telegram.user?.id) {
+  if ((config as any).telegramBindingRequired && !telegram.user?.id) {
     throw new Error("A vinculação com o Telegram é obrigatória para usar este aplicativo.");
   }
   const challengeId = crypto.randomUUID();
