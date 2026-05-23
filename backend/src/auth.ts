@@ -153,9 +153,16 @@ export async function createWalletChallenge({ walletAddress, telegramInitData }:
   }
 
   const telegram = verifyTelegramInitData(telegramInitData);
-  
-  if ((config as any).telegramBindingRequired && !telegram.user?.id) {
-    throw new Error("A vinculação com o Telegram é obrigatória para usar este aplicativo.");
+  const initDataProvided =
+    typeof telegramInitData === "string" && telegramInitData.trim().length > 0;
+
+  if (initDataProvided && config.telegramBotToken) {
+    if (!telegram.isVerified) {
+      throw new Error("Falha ao validar o Telegram Mini App.");
+    }
+    if (!telegram.user?.id) {
+      throw new Error("A vinculação com o Telegram é obrigatória para usar este aplicativo.");
+    }
   }
   const challengeId = crypto.randomUUID();
   const nonce = crypto.randomBytes(16).toString("hex");
@@ -240,44 +247,46 @@ export async function verifyWalletChallenge({
     throw new Error("Sessão Telegram divergente do challenge original.");
   }
 
-  // PROVA FORTE DA WALLET (Acki Nacki): Consulta on-chain para garantir consistência
-  const walletProof = await getAccountPublicKey(normalizedWallet);
-  if (!walletProof.isDeployed) {
-    const reason = walletProof.reason || "Conta não encontrada ou não ativa.";
-    throw new Error(`Carteira não encontrada na blockchain (Acki Nacki): ${reason}`);
-  }
+  const isDevWallet =
+    !config.isProduction && normalizedWallet.toLowerCase() === "dev-wallet-local";
 
-  // VINCULAÇÃO PUBLIC KEY ↔ WALLET (Segurança Crítica)
-  // Compara a public key informada pelo usuário com a real da wallet na blockchain.
-  // Sem isso, qualquer keypair Ed25519 pode se autenticar como qualquer wallet deployada.
   const normalizedInputKey = trimString(publicKey).toLowerCase();
   let proofLevel = "signature_only_until_wallet_contract_binding";
 
-  if (walletProof.publicKey) {
-    const normalizedOnChainKey = String(walletProof.publicKey).toLowerCase();
-    if (normalizedInputKey !== normalizedOnChainKey) {
-      throw new Error(
-        "A public key informada não corresponde à public key da wallet na blockchain. " +
-        "Certifique-se de usar a mesma chave que controla a carteira."
+  if (isDevWallet) {
+    proofLevel = "dev_wallet_local_signature";
+  } else {
+    // PROVA FORTE DA WALLET (Acki Nacki): Consulta on-chain para garantir consistência
+    const walletProof = await getAccountPublicKey(normalizedWallet);
+    if (!walletProof.isDeployed) {
+      const reason = walletProof.reason || "Conta não encontrada ou não ativa.";
+      throw new Error(`Carteira não encontrada na blockchain (Acki Nacki): ${reason}`);
+    }
+
+    // VINCULAÇÃO PUBLIC KEY ↔ WALLET (Segurança Crítica)
+    if (walletProof.publicKey) {
+      const normalizedOnChainKey = String(walletProof.publicKey).toLowerCase();
+      if (normalizedInputKey !== normalizedOnChainKey) {
+        throw new Error(
+          "A public key informada não corresponde à public key da wallet na blockchain. " +
+          "Certifique-se de usar a mesma chave que controla a carteira."
+        );
+      }
+      proofLevel = "strong_tvm_contract_binding";
+    } else {
+      console.warn(
+        `[Auth] Não foi possível extrair public key on-chain para ${normalizedWallet}. ` +
+        `Proof level degradado para "signature_only_until_wallet_contract_binding". ` +
+        `Verifique se nekoton-wasm está instalado corretamente.`
       );
     }
-    proofLevel = "strong_tvm_contract_binding";
-  } else {
-    // Public key não pôde ser extraída da BOC — registrar aviso
-    // A assinatura ainda será verificada, mas sem binding forte
-    console.warn(
-      `[Auth] Não foi possível extrair public key on-chain para ${normalizedWallet}. ` +
-      `Proof level degradado para "signature_only_until_wallet_contract_binding". ` +
-      `Verifique se nekoton-wasm está instalado corretamente.`
-    );
-  }
 
-  // A-01: Bloqueia autenticação fraca (sem binding de publicKey) em produção.
-  if (config.isProduction && proofLevel !== "strong_tvm_contract_binding") {
-    throw new Error(
-      "Em produção, a extração de chave pública on-chain é obrigatória " +
-      "para prevenir impersonation. Instale nekoton-wasm ou @tvmsdk/core."
-    );
+    if (config.isProduction && proofLevel !== "strong_tvm_contract_binding") {
+      throw new Error(
+        "Em produção, a extração de chave pública on-chain é obrigatória " +
+        "para prevenir impersonation. Instale nekoton-wasm ou @tvmsdk/core."
+      );
+    }
   }
 
   // Verifica assinatura usando NodeJS Native Crypto para Ed25519 (Padrão TVM/Everscale)

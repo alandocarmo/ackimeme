@@ -685,7 +685,7 @@ app.post("/verify-payment", paymentLimiter, requireSession, validate(VerifyPayme
         ? req.body.tokenSymbol.trim()
         : typeof req.body?.paymentTokenSymbol === "string"
           ? req.body.paymentTokenSymbol.trim()
-          : "";
+          : "SHELL";
 
     if (!walletAddress) {
       throw new Error("Sessão inválida para validar pagamento.");
@@ -695,8 +695,8 @@ app.post("/verify-payment", paymentLimiter, requireSession, validate(VerifyPayme
       throw new Error("walletAddress no payload diverge da sessão autenticada.");
     }
 
-    if (!txHash || !tokenSymbol) {
-      throw new Error("txHash e tokenSymbol são obrigatórios.");
+    if (!txHash) {
+      throw new Error("txHash é obrigatório.");
     }
 
     const isBoosted = Boolean(req.body?.isBoosted);

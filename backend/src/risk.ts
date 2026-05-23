@@ -18,7 +18,7 @@ interface CreateInitialRiskProfileParams {
   session?: {
     proofLevel?: string;
     telegramBinding?: {
-      userId?: string;
+      telegramId?: number;
     };
   };
 }
@@ -40,7 +40,7 @@ export function createInitialRiskProfile({
   const signals: string[] = [];
   let score = 30; // L-04: Increased base score to +30 for new untrusted networks
 
-  if (!session?.telegramBinding?.userId) {
+  if (!session?.telegramBinding?.telegramId) {
     score += 15;
     signals.push("telegram_binding_missing");
   }

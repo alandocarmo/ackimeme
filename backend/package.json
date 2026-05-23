@@ -13,6 +13,7 @@
     "dev:wallet:init": "tsx scripts/dev-wallet.ts init",
     "dev:wallet:sign": "tsx scripts/dev-wallet.ts sign",
     "test:integration": "tsx scripts/test-integration.ts",
+    "test:validate": "tsx scripts/validate-schemas-smoke.ts && tsx scripts/launch-pipeline-smoke.ts",
     "generate:keys": "tsx scripts/generate-keys.ts"
   },
   "dependencies": {
