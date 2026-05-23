@@ -37,6 +37,22 @@ contract USDCShellRouter is IAcceptTokensTransferCallback {
     address public routerUsdcWallet;
     uint16 public feeBps = 100; // 1% = 100 bps
 
+    // H-03: Track pending swaps for bounce refund
+    mapping(address => uint128) public pendingSwapRefunds;
+
+    // M-07: Timelock for rescue operations
+    uint128 public constant RESCUE_TIMELOCK_THRESHOLD = 10_000_000; // 10 USDC
+    uint32 public constant RESCUE_TIMELOCK_DURATION = 24 hours;
+    struct RescueRequest {
+        uint128 amount;
+        address recipient;
+        uint32 requestedAt;
+    }
+    RescueRequest public pendingRescue;
+    event RescueRequested(uint128 amount, address recipient, uint32 executeAfter);
+    event RescueExecuted(uint128 amount, address recipient);
+    event RescueCancelled();
+
     // P1-3 FIX: Minimum 1 USDC (6 decimals) to prevent micro-spam
     uint128 public constant MIN_USDC_AMOUNT = 1_000_000;
 
@@ -92,6 +108,9 @@ contract USDCShellRouter is IAcceptTokensTransferCallback {
             );
         }
 
+        // H-03: Track pending swap for bounce recovery
+        pendingSwapRefunds[sender] += swapAmount;
+
         // 2. Send the rest to Accumulator
         if (swapAmount > 0) {
             ITIP3TokenWallet(routerUsdcWallet).transfer{value: 0, flag: 128}(
@@ -107,15 +126,17 @@ contract USDCShellRouter is IAcceptTokensTransferCallback {
         }
     }
 
-    // P1-3 FIX: onBounce handler to refund users if Accumulator rejects
-    onBounce(TvmSlice body) external pure {
-        // If a transfer bounces back, we should attempt to return funds
-        // The bounce will come from routerUsdcWallet if transfer failed
+    // H-03: onBounce handler to track failed transfers for admin recovery
+    onBounce(TvmSlice body) external {
         if (body.bits() < 32) {
             return;
         }
-        // Log the bounce for off-chain monitoring
-        // Funds remain in the Router's USDC wallet and can be recovered by admin
+        uint32 funcId = body.load(uint32);
+        // If a transfer to Accumulator bounced, funds remain in router wallet
+        // Emit event for off-chain monitoring and admin recovery via rescueTokens
+        if (funcId == abi.functionId(ITIP3TokenWallet.transfer)) {
+            emit BounceRefund(msg.sender, 0);
+        }
     }
 
     // ─── Admin functions ─────────────────────────────────────────────────────
@@ -137,19 +158,54 @@ contract USDCShellRouter is IAcceptTokensTransferCallback {
         emit FeeWalletUpdated(_feeWallet);
     }
 
-    // Emergency: allow admin to recover stuck tokens by transferring them out
-    function rescueTokens(uint128 amount, address recipient) external {
+    // M-07: Two-step rescue with timelock for large amounts
+    function requestRescue(uint128 amount, address recipient) external {
         require(msg.pubkey() == tvm.pubkey(), 103, "Not authorized");
         require(recipient != address(0), 107, "Recipient cannot be zero");
         tvm.accept();
+
+        if (amount < RESCUE_TIMELOCK_THRESHOLD) {
+            // Small amounts: immediate rescue
+            TvmCell emptyPayload;
+            ITIP3TokenWallet(routerUsdcWallet).transfer{value: 0.1 ever, flag: 0}(
+                amount,
+                recipient,
+                0.1 ever,
+                recipient,
+                false,
+                emptyPayload
+            );
+            emit RescueExecuted(amount, recipient);
+        } else {
+            // Large amounts: require timelock
+            pendingRescue = RescueRequest(amount, recipient, uint32(block.timestamp));
+            emit RescueRequested(amount, recipient, uint32(block.timestamp) + RESCUE_TIMELOCK_DURATION);
+        }
+    }
+
+    function executeRescue() external {
+        require(msg.pubkey() == tvm.pubkey(), 103, "Not authorized");
+        require(pendingRescue.amount > 0, 108, "No pending rescue");
+        require(block.timestamp >= pendingRescue.requestedAt + RESCUE_TIMELOCK_DURATION, 109, "Timelock not expired");
+        tvm.accept();
+
         TvmCell emptyPayload;
         ITIP3TokenWallet(routerUsdcWallet).transfer{value: 0.1 ever, flag: 0}(
-            amount,
-            recipient,
+            pendingRescue.amount,
+            pendingRescue.recipient,
             0.1 ever,
-            recipient,
+            pendingRescue.recipient,
             false,
             emptyPayload
         );
+        emit RescueExecuted(pendingRescue.amount, pendingRescue.recipient);
+        delete pendingRescue;
+    }
+
+    function cancelRescue() external {
+        require(msg.pubkey() == tvm.pubkey(), 103, "Not authorized");
+        tvm.accept();
+        delete pendingRescue;
+        emit RescueCancelled();
     }
 }

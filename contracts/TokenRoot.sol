@@ -45,6 +45,12 @@ contract TokenRoot {
     mapping(uint32 => uint32) private _pendingBurnWalletSeqnos;
     uint32 private _burnSeqno = 1;
 
+    // H-04: Rate limiting for gas auto-replenishment
+    uint32 private _lastGasMintTime;
+    uint32 private constant GAS_MINT_COOLDOWN = 10; // 10 seconds between gas mints
+    uint128 private _totalGasMinted;
+    uint128 private constant MAX_GAS_MINT_TOTAL = 100_000_000_000; // 100 VMSHELL lifetime cap
+
     // ─── Fix N1: tvm.accept() ANTES de gosh.cnvrtshellq() ────────────────────
     // Em mensagens externas, o contrato só pode gastar gas do próprio saldo
     // após tvm.accept(). Ordem correta: checks → tvm.accept() → side effects.
@@ -98,6 +104,11 @@ contract TokenRoot {
         if (address(this).balance > MIN_EXECUTION_GAS) {
             return;
         }
+        // H-04: Rate limit gas minting to prevent abuse
+        require(block.timestamp >= _lastGasMintTime + GAS_MINT_COOLDOWN, 123, "Gas mint cooldown active");
+        require(_totalGasMinted + GAS_TOP_UP <= MAX_GAS_MINT_TOTAL, 124, "Gas mint lifetime cap reached");
+        _lastGasMintTime = uint32(block.timestamp);
+        _totalGasMinted += uint128(GAS_TOP_UP);
         gosh.mintshell(GAS_TOP_UP);
     }
 
@@ -307,9 +318,12 @@ contract TokenRoot {
             if (body.bits() < 32) {
                 return;
             }
-            // Em caso de bounce no mint (falha de receiveTokens), revertemos o valor
-            // utilizando pendingMintsByNonce para garantir precisão e desinflar o saldo fantasma.
             uint32 nonce = body.load(uint32);
+            // H-05: Validate bounce came from expected wallet
+            address expectedWallet = _pendingMintWallets[nonce];
+            if (expectedWallet == address(0) || msg.sender != expectedWallet) {
+                return;
+            }
             uint256 failedAmount = pendingMintsByNonce[nonce];
             if (failedAmount > 0) {
                 totalSupply -= failedAmount;
@@ -326,6 +340,11 @@ contract TokenRoot {
                 return;
             }
             uint32 transferNonce = body.load(uint32);
+            // H-05: Validate bounce came from expected recipient wallet
+            address expectedRecipient = _pendingTransferRecipientWallets[transferNonce];
+            if (expectedRecipient == address(0) || msg.sender != expectedRecipient) {
+                return;
+            }
             address sourceWallet = _pendingTransferSourceWallets[transferNonce];
             uint32 walletSeqno = _pendingTransferWalletSeqnos[transferNonce];
             if (sourceWallet != address(0)) {
@@ -338,13 +357,17 @@ contract TokenRoot {
         // Bounce body has only 224 bits after funcId. We read uint32 burnNonce (32 bits)
         // which fits safely, then look up the amount from our mapping.
         if (funcId == abi.functionId(IBondingCurve.onTokenBurned)) {
+            // H-05: Validate bounce came from bonding curve
+            if (msg.sender != bondingCurve) {
+                return;
+            }
             if (body.bits() < 32) {
                 return;
             }
             uint32 burnNonce = body.load(uint32);
             uint256 amount = _pendingBurnAmounts[burnNonce];
             if (amount > 0) {
-                totalSupply += amount; // Revert the burn
+                totalSupply += amount;
 
                 address wallet = _pendingBurnWallets[burnNonce];
                 uint32 walletSeqno = _pendingBurnWalletSeqnos[burnNonce];

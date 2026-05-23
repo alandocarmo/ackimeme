@@ -22,7 +22,19 @@
 	CTOS
 	LDMSGADDR
 	LDU 16
+	LDDICT
+	LDU 128
+	LDREF
 	ENDS
+	CTOS
+	LDMSGADDR
+	LDU 32
+	ROLLREV 3
+	TRIPLE
+	SWAP
+	ENDS
+	SETGLOB 17
+	SETGLOB 16
 	SETGLOB 15
 	SETGLOB 14
 	SETGLOB 13
@@ -56,6 +68,8 @@
 }
 
 .fragment c7_to_c4, {
+	GETGLOB 17
+	GETGLOB 16
 	GETGLOB 15
 	GETGLOB 14
 	GETGLOB 13
@@ -69,25 +83,89 @@
 	STU 64
 	STONE
 	STSLICE
+	ROLLREV 7
+	NEWC
+	STSLICE
+	ROLLREV 6
+	NEWC
+	STSLICE
 	ROLLREV 5
 	NEWC
 	STSLICE
 	ROLLREV 4
 	NEWC
 	STSLICE
-	ROLLREV 3
-	NEWC
-	STSLICE
+	STU 16
+	STDICT
+	SWAP
+	UNTRIPLE
+	REVERSE 4, 0
+	STU 128
 	ROTREV
 	NEWC
 	STSLICE
-	STU 16
+	STU 32
+	STBREFR
 	STBREFR
 	STBREFR
 	STBREFR
 	STBREFR
 	ENDC
 	POPROOT
+}
+
+.fragment cancelRescue_441e13e2_internal, {
+	.loc USDCShellRouter.sol, 206
+	PUSHREF {
+		.blob x4e6f7420617574686f72697a6564
+	}
+	GETGLOB 5
+	DUP
+	ISNULL
+	PUSHCONT {
+		DROP
+		PUSHINT 0
+	}
+	IF
+	GETGLOB 2
+	EQUAL
+	THROWARGIFNOT 103
+	.loc USDCShellRouter.sol, 207
+	ACCEPT
+	.loc USDCShellRouter.sol, 208
+	PUSHINT 0
+	PUSHSLICE x2_
+	PUSHINT 0
+	TRIPLE
+	SETGLOB 17
+	.loc USDCShellRouter.sol, 209
+	PUSHREF {
+		.blob xc000000000000000000000000079a5be28
+	}
+	PUSHINT 0
+	SENDRAWMSG
+	.loc USDCShellRouter.sol, 0
+}
+
+.fragment cancelRescue, {
+	DROP
+	GETGLOB 6
+	THROWIFNOT 76
+	GETGLOB 2
+	ISNULL
+	IFREF {
+		.inline c4_to_c7
+	}
+	.loc USDCShellRouter.sol, 205
+	ENDS
+	.loc USDCShellRouter.sol, 0
+	CALLREF {
+		.inline cancelRescue_441e13e2_internal
+	}
+	CALLREF {
+		.inline c7_to_c4
+	}
+	THROW 0
 }
 
 .fragment constructor, {
@@ -114,7 +192,7 @@
 	CTOS
 	LDMSGADDR
 	ENDS
-	.loc USDCShellRouter.sol, 51
+	.loc USDCShellRouter.sol, 67
 	PUSHREF {
 		.blob x4f6e6c79206465706c6f796572207075626b6579
 	}
@@ -129,7 +207,7 @@
 	IF
 	EQUAL
 	THROWARGIFNOT 100
-	.loc USDCShellRouter.sol, 52
+	.loc USDCShellRouter.sol, 68
 	PUSHREF {
 		.blob x4665652077616c6c65742063616e6e6f74206265207a65726f
 	}
@@ -140,15 +218,15 @@
 	SDEQ
 	NOT
 	THROWARGIFNOT 105
-	.loc USDCShellRouter.sol, 53
+	.loc USDCShellRouter.sol, 69
 	ACCEPT
-	.loc USDCShellRouter.sol, 54
+	.loc USDCShellRouter.sol, 70
 	OVER
 	SETGLOB 14
-	.loc USDCShellRouter.sol, 55
+	.loc USDCShellRouter.sol, 71
 	DUP
 	SETGLOB 13
-	.loc USDCShellRouter.sol, 56
+	.loc USDCShellRouter.sol, 72
 	SWAP
 	PUSHSLICE xc0000000000000000000000001
 	NEWC
@@ -166,6 +244,121 @@
 	PUSHINT 0
 	SENDRAWMSG
 	.loc USDCShellRouter.sol, 0
+	CALLREF {
+		.inline c7_to_c4
+	}
+	THROW 0
+}
+
+.fragment executeRescue_94c12786_internal, {
+	.loc USDCShellRouter.sol, 187
+	PUSHREF {
+		.blob x4e6f7420617574686f72697a6564
+	}
+	GETGLOB 5
+	DUP
+	ISNULL
+	PUSHCONT {
+		DROP
+		PUSHINT 0
+	}
+	IF
+	GETGLOB 2
+	EQUAL
+	THROWARGIFNOT 103
+	.loc USDCShellRouter.sol, 188
+	PUSHREF {
+		.blob x4e6f2070656e64696e6720726573637565
+	}
+	GETGLOB 17
+	FIRST
+	GTINT 0
+	THROWARGIFNOT 108
+	.loc USDCShellRouter.sol, 189
+	PUSHREF {
+		.blob x54696d656c6f636b206e6f742065787069726564
+	}
+	NOW
+	GETGLOB 17
+	THIRD
+	PUSHINT 86400
+	ADD
+	UFITS 32
+	GEQ
+	THROWARGIFNOT 109
+	.loc USDCShellRouter.sol, 190
+	ACCEPT
+	.loc USDCShellRouter.sol, 192
+	PUSHREF {
+	}
+	.loc USDCShellRouter.sol, 193
+	FALSE
+	GETGLOB 17
+	SECOND
+	PUSHINT 100000000
+	GETGLOB 17
+	SECOND
+	GETGLOB 17
+	FIRST
+	GETGLOB 14
+	NEWC
+	STSLICECONST x62_
+	STSLICE
+	PUSHSLICE x405f5e1000000000000000000000000000003_
+	STSLICER
+	ROLLREV 6
+	NEWC
+	STSLICECONST x73e22143
+	STU 128
+	STSLICE
+	STU 128
+	ROLLREV 3
+	NEWC
+	STSLICE
+	STI 1
+	STREF
+	STBREFR
+	STBREFR
+	ENDC
+	PUSHINT 0
+	SENDRAWMSG
+	.loc USDCShellRouter.sol, 201
+	GETGLOB 17
+	SECOND
+	GETGLOB 17
+	FIRST
+	PUSHSLICE xc0000000000000000000000000626c34ff
+	NEWC
+	STSLICE
+	STU 128
+	STSLICE
+	ENDC
+	PUSHINT 0
+	SENDRAWMSG
+	.loc USDCShellRouter.sol, 202
+	PUSHINT 0
+	PUSHSLICE x2_
+	PUSHINT 0
+	TRIPLE
+	SETGLOB 17
+	.loc USDCShellRouter.sol, 0
+}
+
+.fragment executeRescue, {
+	DROP
+	GETGLOB 6
+	THROWIFNOT 76
+	GETGLOB 2
+	ISNULL
+	IFREF {
+		.inline c4_to_c7
+	}
+	.loc USDCShellRouter.sol, 186
+	ENDS
+	.loc USDCShellRouter.sol, 0
+	CALLREF {
+		.inline executeRescue_94c12786_internal
+	}
 	CALLREF {
 		.inline c7_to_c4
 	}
@@ -215,7 +408,7 @@
 }
 
 .fragment onAcceptTokensTransfer_e63f2284_internal, {
-	.loc USDCShellRouter.sol, 68
+	.loc USDCShellRouter.sol, 84
 	PUSHREF {
 		.blob x4f6e6c7920726f7574657220555344432077616c6c6574
 	}
@@ -223,7 +416,7 @@
 	GETGLOB 14
 	SDEQ
 	THROWARGIFNOT 101
-	.loc USDCShellRouter.sol, 69
+	.loc USDCShellRouter.sol, 85
 	PUSHREF {
 		.blob x496e76616c696420746f6b656e20726f6f74
 	}
@@ -231,7 +424,7 @@
 	GETGLOB 11
 	SDEQ
 	THROWARGIFNOT 102
-	.loc USDCShellRouter.sol, 72
+	.loc USDCShellRouter.sol, 88
 	PUSHREF {
 		.blob x416d6f756e742062656c6f77206d696e696d756d202831205553444329
 	}
@@ -239,24 +432,25 @@
 	PUSHINT 1000000
 	GEQ
 	THROWARGIFNOT 106
-	.loc USDCShellRouter.sol, 75
+	.loc USDCShellRouter.sol, 91
 	PUSHINT 0
 	PUSHINT 4
 	RAWRESERVE
-	.loc USDCShellRouter.sol, 77
+	.loc USDCShellRouter.sol, 93
 	PUSH S4
 	GETGLOB 15
 	MUL
 	UFITS 128
 	PUSHINT 10000
 	DIV
-	.loc USDCShellRouter.sol, 78
+	.loc USDCShellRouter.sol, 94
 	PUSH2 S5, S0
 	SUB
 	UFITS 128
-	.loc USDCShellRouter.sol, 80
+	.loc USDCShellRouter.sol, 96
 	PUSH2 S0, S1
-	BLKSWAP 2, 7
+	ROLL 8
+	PUSH S8
 	PUSHSLICE xc0000000000000000000000001
 	NEWC
 	STSLICE
@@ -271,14 +465,14 @@
 	ENDC
 	PUSHINT 0
 	SENDRAWMSG
-	.loc USDCShellRouter.sol, 83
+	.loc USDCShellRouter.sol, 99
 	OVER
 	GTINT 0
 	PUSHCONT {
-		.loc USDCShellRouter.sol, 84
+		.loc USDCShellRouter.sol, 100
 		PUSHREF {
 		}
-		.loc USDCShellRouter.sol, 85
+		.loc USDCShellRouter.sol, 101
 		FALSE
 		PUSH S5
 		PUSHINT 100000000
@@ -309,11 +503,32 @@
 		.loc USDCShellRouter.sol, 0
 	}
 	IF
-	.loc USDCShellRouter.sol, 96
+	.loc USDCShellRouter.sol, 112
+	DUP
+	GETGLOB 16
+	ROLL 7
+	XCPU2 S1, S1, S0
+	PUSHINT 267
+	DICTGET
+	ZEROSWAPIFNOT
+	PUSHCONT {
+		PLDU 128
+	}
+	IF
+	ROLL 3
+	ADD
+	UFITS 128
+	NEWC
+	STU 128
+	ROTREV
+	PUSHINT 267
+	DICTSETB
+	SETGLOB 16
+	.loc USDCShellRouter.sol, 115
 	DUP
 	GTINT 0
 	PUSHCONT {
-		.loc USDCShellRouter.sol, 97
+		.loc USDCShellRouter.sol, 116
 		PUSH S2
 		TRUE
 		PUSH S5
@@ -341,7 +556,7 @@
 		STBREFR
 	}
 	PUSHCONT {
-		.loc USDCShellRouter.sol, 106
+		.loc USDCShellRouter.sol, 125
 		PUSH S3
 		NEWC
 		STSLICECONST x62_
@@ -366,7 +581,7 @@
 	IFREF {
 		.inline c4_to_c7
 	}
-	.loc USDCShellRouter.sol, 59
+	.loc USDCShellRouter.sol, 75
 	OVER
 	PUSHCONT {
 		LDREF
@@ -421,8 +636,55 @@
 	THROW 0
 }
 
-.fragment rescueTokens_a98a0f9b_internal, {
-	.loc USDCShellRouter.sol, 142
+.fragment pendingRescue, {
+	DROP
+	ENDS
+	CALLREF {
+		.inline c4_to_c7
+	}
+	GETGLOB 17
+	OVER
+	PUSHCONT {
+		PUSHSLICE xc0000000000000000000000000b0649b4e
+		NEWC
+		STSLICE
+		SWAP
+		UNTRIPLE
+		REVERSE 4, 0
+		STU 128
+		STSLICE
+		STU 32
+		ENDC
+		PUSHINT 0
+		SENDRAWMSG
+	}
+	IF
+	THROW 0
+}
+
+.fragment pendingSwapRefunds, {
+	DROP
+	ENDS
+	CALLREF {
+		.inline c4_to_c7
+	}
+	GETGLOB 16
+	OVER
+	PUSHCONT {
+		PUSHSLICE xc0000000000000000000000000a35b5717
+		NEWC
+		STSLICE
+		STDICT
+		ENDC
+		PUSHINT 0
+		SENDRAWMSG
+	}
+	IF
+	THROW 0
+}
+
+.fragment requestRescue_ab51fa4f_internal, {
+	.loc USDCShellRouter.sol, 163
 	PUSHREF {
 		.blob x4e6f7420617574686f72697a6564
 	}
@@ -437,7 +699,7 @@
 	GETGLOB 2
 	EQUAL
 	THROWARGIFNOT 103
-	.loc USDCShellRouter.sol, 143
+	.loc USDCShellRouter.sol, 164
 	PUSHREF {
 		.blob x526563697069656e742063616e6e6f74206265207a65726f
 	}
@@ -448,43 +710,79 @@
 	SDEQ
 	NOT
 	THROWARGIFNOT 107
-	.loc USDCShellRouter.sol, 144
+	.loc USDCShellRouter.sol, 165
 	ACCEPT
-	.loc USDCShellRouter.sol, 145
-	PUSHREF {
+	.loc USDCShellRouter.sol, 167
+	OVER
+	PUSHINT 10000000
+	LESS
+	PUSHCONT {
+		.loc USDCShellRouter.sol, 169
+		PUSHREF {
+		}
+		.loc USDCShellRouter.sol, 170
+		FALSE
+		PUSH S2
+		PUSHINT 100000000
+		PUSH2 S4, S5
+		GETGLOB 14
+		NEWC
+		STSLICECONST x62_
+		STSLICE
+		PUSHSLICE x405f5e1000000000000000000000000000003_
+		STSLICER
+		ROLLREV 6
+		NEWC
+		STSLICECONST x73e22143
+		STU 128
+		STSLICE
+		STU 128
+		ROLLREV 3
+		NEWC
+		STSLICE
+		STI 1
+		STREF
+		STBREFR
+		STBREFR
+		ENDC
+		PUSHINT 0
+		SENDRAWMSG
+		.loc USDCShellRouter.sol, 178
+		PUSH2 S0, S1
+		PUSHSLICE xc0000000000000000000000000626c34ff
+		NEWC
+		STSLICE
+		STU 128
+		STSLICE
 	}
-	.loc USDCShellRouter.sol, 146
-	FALSE
-	PUSH S2
-	PUSHINT 100000000
-	BLKSWAP 2, 4
-	SWAP
-	GETGLOB 14
-	NEWC
-	STSLICECONST x62_
-	STSLICE
-	PUSHSLICE x405f5e1000000000000000000000000000003_
-	STSLICER
-	ROLLREV 6
-	NEWC
-	STSLICECONST x73e22143
-	STU 128
-	STSLICE
-	STU 128
-	ROLLREV 3
-	NEWC
-	STSLICE
-	STI 1
-	STREF
-	STBREFR
-	STBREFR
+	PUSHCONT {
+		.loc USDCShellRouter.sol, 181
+		DUP2
+		NOW
+		TRIPLE
+		SETGLOB 17
+		.loc USDCShellRouter.sol, 182
+		NOW
+		PUSHINT 86400
+		ADD
+		UFITS 32
+		PUSH2 S1, S2
+		PUSHSLICE xc00000000000000000000000004609fe9d
+		NEWC
+		STSLICE
+		STU 128
+		STSLICE
+		STU 32
+	}
+	IFELSE
 	ENDC
 	PUSHINT 0
 	SENDRAWMSG
 	.loc USDCShellRouter.sol, 0
+	DROP2
 }
 
-.fragment rescueTokens, {
+.fragment requestRescue, {
 	DROP
 	GETGLOB 6
 	THROWIFNOT 76
@@ -493,7 +791,7 @@
 	IFREF {
 		.inline c4_to_c7
 	}
-	.loc USDCShellRouter.sol, 141
+	.loc USDCShellRouter.sol, 162
 	OVER
 	PUSHCONT {
 		LDREF
@@ -506,7 +804,7 @@
 	ENDS
 	.loc USDCShellRouter.sol, 0
 	CALLREF {
-		.inline rescueTokens_a98a0f9b_internal
+		.inline requestRescue_ab51fa4f_internal
 	}
 	CALLREF {
 		.inline c7_to_c4
@@ -536,7 +834,7 @@
 }
 
 .fragment setFeeBps_023b1fc9_internal, {
-	.loc USDCShellRouter.sol, 124
+	.loc USDCShellRouter.sol, 145
 	PUSHREF {
 		.blob x4e6f7420617574686f72697a6564
 	}
@@ -551,9 +849,9 @@
 	GETGLOB 2
 	EQUAL
 	THROWARGIFNOT 103
-	.loc USDCShellRouter.sol, 125
+	.loc USDCShellRouter.sol, 146
 	ACCEPT
-	.loc USDCShellRouter.sol, 126
+	.loc USDCShellRouter.sol, 147
 	PUSHREF {
 		.blob x4d61782066656520697320313025
 	}
@@ -561,10 +859,10 @@
 	PUSHINT 1000
 	LEQ
 	THROWARGIFNOT 104
-	.loc USDCShellRouter.sol, 127
+	.loc USDCShellRouter.sol, 148
 	DUP
 	SETGLOB 15
-	.loc USDCShellRouter.sol, 128
+	.loc USDCShellRouter.sol, 149
 	PUSHSLICE xc000000000000000000000000013423345
 	NEWC
 	STSLICE
@@ -584,7 +882,7 @@
 	IFREF {
 		.inline c4_to_c7
 	}
-	.loc USDCShellRouter.sol, 123
+	.loc USDCShellRouter.sol, 144
 	LDU 16
 	ENDS
 	.loc USDCShellRouter.sol, 0
@@ -598,7 +896,7 @@
 }
 
 .fragment updateFeeWallet_66718524_internal, {
-	.loc USDCShellRouter.sol, 133
+	.loc USDCShellRouter.sol, 154
 	PUSHREF {
 		.blob x4e6f7420617574686f72697a6564
 	}
@@ -613,7 +911,7 @@
 	GETGLOB 2
 	EQUAL
 	THROWARGIFNOT 103
-	.loc USDCShellRouter.sol, 134
+	.loc USDCShellRouter.sol, 155
 	PUSHREF {
 		.blob x4665652077616c6c65742063616e6e6f74206265207a65726f
 	}
@@ -624,12 +922,12 @@
 	SDEQ
 	NOT
 	THROWARGIFNOT 105
-	.loc USDCShellRouter.sol, 135
+	.loc USDCShellRouter.sol, 156
 	ACCEPT
-	.loc USDCShellRouter.sol, 136
+	.loc USDCShellRouter.sol, 157
 	DUP
 	SETGLOB 13
-	.loc USDCShellRouter.sol, 137
+	.loc USDCShellRouter.sol, 158
 	PUSHSLICE xc0000000000000000000000000022aa9e2
 	NEWC
 	STSLICE
@@ -649,7 +947,7 @@
 	IFREF {
 		.inline c4_to_c7
 	}
-	.loc USDCShellRouter.sol, 132
+	.loc USDCShellRouter.sol, 153
 	OVER
 	PUSHCONT {
 		LDREF
@@ -692,7 +990,7 @@
 
 .fragment public_function_selector, {
 	DUP
-	PUSHINT 1099742667
+	PUSHINT 1075803870
 	LEQ
 	IFJMPREF {
 		DUP
@@ -705,11 +1003,23 @@
 				.inline constructor
 			}
 			DUP
+			PUSHINT 593188631
+			EQUAL
+			IFJMPREF {
+				.inline pendingSwapRefunds
+			}
+			DUP
 			PUSHINT 600225582
 			EQUAL
 			IFJMPREF {
 				.inline accumulatorAddress
 			}
+		}
+		DUP
+		PUSHINT 811899726
+		EQUAL
+		IFJMPREF {
+			.inline pendingRescue
 		}
 		DUP
 		PUSHINT 862624716
@@ -723,17 +1033,17 @@
 		IFJMPREF {
 			.inline feeWallet
 		}
+	}
+	DUP
+	PUSHINT 1594609630
+	LEQ
+	IFJMPREF {
 		DUP
 		PUSHINT 1099742667
 		EQUAL
 		IFJMPREF {
 			.inline usdcRoot
 		}
-	}
-	DUP
-	PUSHINT 1594609630
-	LEQ
-	IFJMPREF {
 		DUP
 		PUSHINT 1295996351
 		EQUAL
@@ -741,10 +1051,10 @@
 			.inline feeBps
 		}
 		DUP
-		PUSHINT 1584313804
+		PUSHINT 1306949485
 		EQUAL
 		IFJMPREF {
-			.inline rescueTokens
+			.inline requestRescue
 		}
 		DUP
 		PUSHINT 1594609630
@@ -757,6 +1067,12 @@
 	PUSHINT 1878579846
 	LEQ
 	IFJMPREF {
+		DUP
+		PUSHINT 1781535901
+		EQUAL
+		IFJMPREF {
+			.inline cancelRescue
+		}
 		DUP
 		PUSHINT 1848897773
 		EQUAL
@@ -771,10 +1087,21 @@
 		}
 	}
 	DUP
-	PUSHINT 1893244873
-	EQUAL
+	PUSHINT 1944130428
+	LEQ
 	IFJMPREF {
-		.inline onAcceptTokensTransfer
+		DUP
+		PUSHINT 1893244873
+		EQUAL
+		IFJMPREF {
+			.inline onAcceptTokensTransfer
+		}
+		DUP
+		PUSHINT 1944130428
+		EQUAL
+		IFJMPREF {
+			.inline executeRescue
+		}
 	}
 }
 
@@ -838,37 +1165,51 @@
 	THROW 60
 }
 
-.fragment upd_only_time_in_c4, {
-	PUSHROOT
-	CTOS
-	LDU 256
-	LDU 64
-	NIP
-	GETGLOB 3
-	ROT
-	NEWC
-	STU 256
-	STU 64
-	STSLICE
-	ENDC
-	POPROOT
-}
-
 .fragment on_bounce, {
 	GETGLOB 6
 	THROWIFNOT 76
+	GETGLOB 2
+	ISNULL
+	IFREF {
+		.inline c4_to_c7
+	}
 	PUSHCONT {
-		.loc USDCShellRouter.sol, 114
+		.loc USDCShellRouter.sol, 131
+		DUP
 		SBITS
 		LESSINT 32
-		IFRET
-		.loc USDCShellRouter.sol, 111
+		PUSHCONT {
+			.loc USDCShellRouter.sol, 132
+			DROP
+			.loc USDCShellRouter.sol, 0
+		}
+		IFJMP
+		.loc USDCShellRouter.sol, 134
+		PLDU 32
+		.loc USDCShellRouter.sol, 137
+		PUSHINT 1944199491
+		EQUAL
+		PUSHCONT {
+			.loc USDCShellRouter.sol, 138
+			PUSHINT 0
+			GETGLOB 9
+			PUSHSLICE xc00000000000000000000000005ccf5005
+			NEWC
+			STSLICE
+			STSLICE
+			STU 128
+			ENDC
+			PUSHINT 0
+			SENDRAWMSG
+			.loc USDCShellRouter.sol, 0
+		}
+		IF
+		.loc USDCShellRouter.sol, 130
 	}
 	CALLX
 	.loc USDCShellRouter.sol, 0
-	DUP
-	IFREF {
-		.inline upd_only_time_in_c4
+	CALLREF {
+		.inline c7_to_c4
 	}
 }
 
@@ -916,28 +1257,59 @@
 .fragment default_data_cell, {
 	PUSHINT 0
 	PUSHSLICE x2_
+	PUSHINT 0
+	TRIPLE
+	NULL
+	PUSHINT 0
+	PUSHSLICE x2_
 	BLKPUSH 3, 0
 	NEWC
 	PUSHINT 323
 	STZEROES
+	ROLLREV 7
+	NEWC
+	STSLICE
+	ROLLREV 6
+	NEWC
+	STSLICE
 	ROLLREV 5
 	NEWC
 	STSLICE
 	ROLLREV 4
 	NEWC
 	STSLICE
-	ROLLREV 3
-	NEWC
-	STSLICE
+	STU 16
+	STDICT
+	SWAP
+	UNTRIPLE
+	REVERSE 4, 0
+	STU 128
 	ROTREV
 	NEWC
 	STSLICE
-	STU 16
+	STU 32
+	STBREFR
 	STBREFR
 	STBREFR
 	STBREFR
 	STBREFR
 	ENDC
+}
+
+.fragment upd_only_time_in_c4, {
+	PUSHROOT
+	CTOS
+	LDU 256
+	LDU 64
+	NIP
+	GETGLOB 3
+	ROT
+	NEWC
+	STU 256
+	STU 64
+	STSLICE
+	ENDC
+	POPROOT
 }
 
 .fragment onTickTock, {

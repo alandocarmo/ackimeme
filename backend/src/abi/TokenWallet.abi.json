@@ -143,6 +143,8 @@
 		{"init":false,"name":"_burnSeqno","type":"uint32"},
 		{"init":false,"name":"_transferSeqno","type":"uint32"},
 		{"init":false,"name":"pendingBurns","type":"map(uint32,uint256)"},
-		{"init":false,"name":"pendingTransfers","type":"map(uint32,uint256)"}
+		{"init":false,"name":"pendingTransfers","type":"map(uint32,uint256)"},
+		{"init":false,"name":"_lastGasMintTime","type":"uint32"},
+		{"init":false,"name":"_totalGasMinted","type":"uint128"}
 	]
 }

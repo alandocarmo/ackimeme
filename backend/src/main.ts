@@ -189,7 +189,7 @@ async function ensureCreatorHasShellBalance(walletAddress: string): Promise<void
     throw new Error("Carteira do criador não encontrada na Acki Nacki.");
   }
 
-  const balance = Number(balanceInfo.balance || 0);
+  const balance = Number(balanceInfo.shellEccBalance || 0);
   if (!Number.isFinite(balance) || balance < config.minCreatorShellBalance) {
     throw new Error(
       `Saldo SHELL insuficiente para custos de blockchain. ` +
@@ -246,7 +246,7 @@ app.use(helmet({
 
 // Rate Limit Store
 const getRateLimitStore = () => {
-  if (redisClient && redisClient.isOpen) {
+  if (redisClient) {
     return new RedisStore({
       sendCommand: (...args: string[]) => redisClient.sendCommand(args),
     });
@@ -808,6 +808,27 @@ app.post("/launch-request", requireSession, async (req: Request, res: Response) 
       riskProfile,
     });
 
+    console.log(`[Launch] Salvando token preliminar no banco: ${launchTicket.id}`);
+    
+    try {
+      await createLaunchBundle({
+        launchTicket,
+        auditEvent: {
+          id: launchTicket.id,
+          type: "launch.created.pending",
+          createdAt: new Date().toISOString(),
+          walletAddress: launchRequest.creator.wallet,
+          launchId: launchTicket.id,
+          payload: { stage: "pre_deploy" },
+        },
+      });
+    } catch (bundleErr: any) {
+      if (bundleErr && bundleErr.code === "23505") {
+        throw new Error("Um token com este endereço on-chain já existe...");
+      }
+      throw bundleErr;
+    }
+
     console.log(`[Launch] Iniciando automação on-chain para ${launchTicket.id}`);
     
     const metadata = createTokenMetadata(launchRequest);
@@ -853,21 +874,28 @@ app.post("/launch-request", requireSession, async (req: Request, res: Response) 
         `Token registrado com metadata no IPFS (${ipfsHash}), ` +
         "aguardando ativação do deploy on-chain no backend.";
     } else {
+      await updateLaunchOnchainState(launchTicket.id, {
+         reserveBalance: "0",
+         tokenSupply: launchRequest.coin.totalSupply,
+         lockedLiquidity: false,
+         status: "deploy_failed",
+         deployStatus: deployResult.status,
+         deployReason: deployResult.reason || "",
+      });
       throw new Error(`Falha no deploy on-chain: ${deployResult.status} - ${deployResult.reason}`);
     }
 
-    try {
-      await createLaunchBundle({
-        launchTicket,
-        auditEvent: {
-          id: launchTicket.id,
-          type: "launch.created",
-          createdAt: new Date().toISOString(),
-          walletAddress: launchRequest.creator.wallet,
-          launchId: launchTicket.id,
-          payload: {},
-        },
-      });
+    await updateLaunchOnchainState(launchTicket.id, {
+       reserveBalance: "0",
+       tokenSupply: launchRequest.coin.totalSupply,
+       lockedLiquidity: false,
+       status: launchTicket.status,
+       deployStatus: deployResult.status,
+       deployReason: deployResult.reason || "",
+       ipfsHash,
+       tokenRootAddress: deployResult.tokenRoot,
+       bondingCurveAddress: deployResult.bondingCurve,
+    });
     } catch (bundleErr: any) {
       if (bundleErr && bundleErr.code === "23505") {
         throw new Error(
@@ -1043,7 +1071,7 @@ app.get("/launches/my", requireSession, (req: Request, res: Response) => {
     });
 });
 
-app.get("/launches/public", (req: Request, res: Response) => {
+app.get("/public/launches", (req: Request, res: Response) => {
   const limit = Math.min(Math.max(Number(req.query.limit) || 30, 1), 100);
   const offset = Math.max(Number(req.query.offset) || 0, 0);
   res.set("Cache-Control", "public, s-maxage=10, stale-while-revalidate=30");
@@ -1127,13 +1155,24 @@ app.post("/launches/:id/comments", requireSession, requireValidUUID, async (req:
 
     const wallet = req.session.walletAddress;
     
-    const { rows } = await query(
-      `SELECT last_comment_at FROM wallet_rate_limits WHERE wallet_address = $1`,
+    const result = await query(
+      `UPDATE wallet_rate_limits 
+       SET last_comment_at = NOW() 
+       WHERE wallet_address = $1 AND (last_comment_at IS NULL OR last_comment_at < NOW() - interval '30 seconds')
+       RETURNING *`,
       [wallet]
     );
-    const lastCommentAt = rows[0]?.last_comment_at;
-    if (lastCommentAt && Date.now() - new Date(lastCommentAt).getTime() < 30000) {
-      return res.status(429).json({ error: "Aguarde 30 segundos antes de postar outro comentário." });
+
+    if (result.rowCount === 0) {
+      const checkExists = await query(`SELECT last_comment_at FROM wallet_rate_limits WHERE wallet_address = $1`, [wallet]);
+      if (checkExists.rowCount! > 0) {
+        return res.status(429).json({ error: "Aguarde 30 segundos antes de postar outro comentário." });
+      }
+      // Se não existe, insere
+      await query(
+        `INSERT INTO wallet_rate_limits (wallet_address, last_comment_at) VALUES ($1, NOW()) ON CONFLICT (wallet_address) DO UPDATE SET last_comment_at = NOW()`,
+        [wallet]
+      );
     }
 
     const content = String(req.body.content || "").trim();
@@ -1147,11 +1186,7 @@ app.post("/launches/:id/comments", requireSession, requireValidUUID, async (req:
       return res.status(400).json({ error: "Links não são permitidos nos comentários por segurança." });
     }
 
-    await query(
-      `INSERT INTO wallet_rate_limits (wallet_address, last_comment_at) VALUES ($1, NOW())
-       ON CONFLICT (wallet_address) DO UPDATE SET last_comment_at = NOW()`,
-      [wallet]
-    );
+    // Insertion is already handled above in the rate limit check to prevent race conditions
 
     const comment = {
       id: crypto.randomUUID(),
@@ -1224,7 +1259,7 @@ app.get("/wallet/:address/balance", apiLimiter, requireValidAddress, async (req:
   try {
     const balance = await getAccountBalance(req.params.address);
     if (!balance) return res.status(404).json({ error: "Conta não encontrada na Acki Nacki." });
-    res.json({ success: true, balance });
+    res.json({ success: true, ...balance });
   } catch (err: any) {
     res.status(400).json({ error: err.message });
   }

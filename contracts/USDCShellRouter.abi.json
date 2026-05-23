@@ -42,10 +42,24 @@
 			]
 		},
 		{
-			"name": "rescueTokens",
+			"name": "requestRescue",
 			"inputs": [
 				{"name":"amount","type":"uint128"},
 				{"name":"recipient","type":"address"}
+			],
+			"outputs": [
+			]
+		},
+		{
+			"name": "executeRescue",
+			"inputs": [
+			],
+			"outputs": [
+			]
+		},
+		{
+			"name": "cancelRescue",
+			"inputs": [
 			],
 			"outputs": [
 			]
@@ -97,9 +111,51 @@
 			"outputs": [
 				{"name":"feeBps","type":"uint16"}
 			]
+		},
+		{
+			"name": "pendingSwapRefunds",
+			"inputs": [
+			],
+			"outputs": [
+				{"name":"pendingSwapRefunds","type":"map(address,uint128)"}
+			]
+		},
+		{
+			"name": "pendingRescue",
+			"inputs": [
+			],
+			"outputs": [
+				{"components":[{"name":"amount","type":"uint128"},{"name":"recipient","type":"address"},{"name":"requestedAt","type":"uint32"}],"name":"pendingRescue","type":"tuple"}
+			]
 		}
 	],
 	"events": [
+		{
+			"name": "RescueRequested",
+			"inputs": [
+				{"name":"amount","type":"uint128"},
+				{"name":"recipient","type":"address"},
+				{"name":"executeAfter","type":"uint32"}
+			],
+			"outputs": [
+			]
+		},
+		{
+			"name": "RescueExecuted",
+			"inputs": [
+				{"name":"amount","type":"uint128"},
+				{"name":"recipient","type":"address"}
+			],
+			"outputs": [
+			]
+		},
+		{
+			"name": "RescueCancelled",
+			"inputs": [
+			],
+			"outputs": [
+			]
+		},
 		{
 			"name": "RouterInitialized",
 			"inputs": [
@@ -155,6 +211,8 @@
 		{"init":true,"name":"accumulatorAddress","type":"address"},
 		{"init":false,"name":"feeWallet","type":"address"},
 		{"init":false,"name":"routerUsdcWallet","type":"address"},
-		{"init":false,"name":"feeBps","type":"uint16"}
+		{"init":false,"name":"feeBps","type":"uint16"},
+		{"init":false,"name":"pendingSwapRefunds","type":"map(address,uint128)"},
+		{"components":[{"name":"amount","type":"uint128"},{"name":"recipient","type":"address"},{"name":"requestedAt","type":"uint32"}],"init":false,"name":"pendingRescue","type":"tuple"}
 	]
 }

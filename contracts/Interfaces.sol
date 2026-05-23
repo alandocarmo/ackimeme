@@ -25,3 +25,13 @@ interface IBondingCurve {
     function onMintSuccess(uint32 mintNonce) external;
     function onMintFailed(uint32 mintNonce) external;
 }
+
+// ─── I-06: Shared gas constants ──────────────────────────────────────────────
+// Extracted from BondingCurve, TokenRoot, and TokenWallet to avoid duplication.
+// Contracts can reference these via GasConstants.GAS_TOP_UP etc.
+// NOTE: TVM-Solidity libraries with constants are inlined at compile time,
+// so there is no extra deployment cost or cross-contract call overhead.
+library GasConstants {
+    uint64 constant GAS_TOP_UP = 2_000_000_000;        // 2 VMSHELL in nano
+    uint128 constant MIN_EXECUTION_GAS = 1 ton;         // 1 VMSHELL threshold
+}

@@ -69,7 +69,7 @@ export function normalizeLaunchRow(row: any): LaunchTicket | null {
 
 export async function updateLaunchOnchainState(
   launchId: any,
-  { reserveBalance, tokenSupply, lockedLiquidity, status, deployStatus, deployReason }: any,
+  { reserveBalance, tokenSupply, lockedLiquidity, status, deployStatus, deployReason, ipfsHash, tokenRootAddress, bondingCurveAddress }: any,
 ) {
   const sets = [
     `reserve_balance = $1`,
@@ -92,6 +92,21 @@ export async function updateLaunchOnchainState(
   if (deployReason !== undefined) {
     params.push(deployReason);
     sets.push(`deploy_reason = $${params.length}`);
+  }
+  
+  if (ipfsHash !== undefined) {
+    params.push(ipfsHash);
+    sets.push(`ipfs_hash = $${params.length}`);
+  }
+  
+  if (tokenRootAddress !== undefined) {
+    params.push(tokenRootAddress);
+    sets.push(`token_root_address = $${params.length}`);
+  }
+  
+  if (bondingCurveAddress !== undefined) {
+    params.push(bondingCurveAddress);
+    sets.push(`bonding_curve_address = $${params.length}`);
   }
 
   params.push(launchId);

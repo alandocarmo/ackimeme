@@ -22,6 +22,12 @@ contract TokenWallet is ITokenWallet {
     mapping(uint32 => uint256) public pendingBurns;
     mapping(uint32 => uint256) public pendingTransfers;
 
+    // H-04: Rate limiting for gas auto-replenishment
+    uint32 private _lastGasMintTime;
+    uint32 private constant GAS_MINT_COOLDOWN = 10; // 10 seconds between gas mints
+    uint128 private _totalGasMinted;
+    uint128 private constant MAX_GAS_MINT_TOTAL = 50_000_000_000; // 50 VMSHELL lifetime cap
+
     event TransferInitiated(address owner, address recipient, uint256 amount);
     event BurnInitiated(address owner, uint256 amount);
 
@@ -36,6 +42,15 @@ contract TokenWallet is ITokenWallet {
         if (address(this).balance > MIN_EXECUTION_GAS) {
             return;
         }
+        // H-04: Rate limit gas minting to prevent abuse
+        if (block.timestamp < _lastGasMintTime + GAS_MINT_COOLDOWN) {
+            return; // Silently skip — wallet can retry
+        }
+        if (_totalGasMinted + uint128(GAS_TOP_UP) > MAX_GAS_MINT_TOTAL) {
+            return; // Lifetime cap reached
+        }
+        _lastGasMintTime = uint32(block.timestamp);
+        _totalGasMinted += uint128(GAS_TOP_UP);
         gosh.mintshell(GAS_TOP_UP);
     }
 

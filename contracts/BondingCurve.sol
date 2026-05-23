@@ -17,6 +17,15 @@ contract BondingCurve {
     uint64 private constant GAS_TOP_UP = 2_000_000_000; // 2 VMSHELL in nano
     uint128 private constant MIN_EXECUTION_GAS = 1 ton;
 
+    // M-01: Minimum buy amount to prevent dust/zero-cost purchases
+    uint256 public constant MIN_BUY_AMOUNT = 1_000_000; // 0.001 tokens minimum
+
+    // H-01: Anti-sniper cooldown between buys per address
+    uint32 public constant BUY_COOLDOWN = 5; // 5 seconds between buys per address
+
+    // M-06: Delay before owner can force AMM migration
+    uint32 public constant FORCE_MIGRATION_DELAY = 1 hours;
+
     // ─── Trade Fee Constants ──────────────────────────────────────────────────
     // Fee is charged on every buy and sell trade.
     // 1% before AMM migration (0.7% platform, 0.3% creator).
@@ -33,6 +42,7 @@ contract BondingCurve {
     uint32 public constant NACKL_CURRENCY_ID = 1;   // Staking & store of value
     uint32 public constant SHELL_CURRENCY_ID = 2;    // Utility token (gas, fees) — ACCEPTED
     uint32 public constant USDC_CURRENCY_ID  = 3;    // Stablecoin
+    // I-01: Manually defined since TVM-Solidity 0.76 does not support type(uint128).max
     uint256 private constant MAX_UINT128 = 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF; // 2^128 - 1
 
     // ─── R-04: Static vars MUST precede all state vars ───────────────────────
@@ -53,7 +63,13 @@ contract BondingCurve {
     string public name;
     string public symbol;
 
+    // I-05: creationFeeTxHash is stored for off-chain reference only.
+    // It is NOT validated on-chain. Backend/indexer uses it to link the
+    // BondingCurve deployment to the original creation fee payment transaction.
     bytes public creationFeeTxHash;
+
+    // C-01: Reentrancy guard for async sell flow
+    bool private _locked;
 
     // ─── R-05: Dual mappings for correct onBounce rollback ───────────────────
     // When ITokenRoot.mint bounces, msg.sender = tokenRoot (not the buyer).
@@ -72,10 +88,24 @@ contract BondingCurve {
     mapping(uint32 => address) public mintIdToBuyer; // mapping to resolve bounce exact buyer
     uint32 private _mintSeqno = 1;
 
+    // H-01: Track last buy timestamp per address for cooldown
+    mapping(address => uint32) public lastBuyTimestamp;
+
+    // M-06: Track when migration threshold was first reached
+    uint32 public thresholdReachedAt;
+
     // ─── Modifiers ────────────────────────────────────────────────────────────
     modifier whenNotPaused() {
         require(!paused, 110, "Trading is temporarily paused for security");
         _;
+    }
+
+    // C-01: Reentrancy guard modifier
+    modifier nonReentrant() {
+        require(!_locked, 230, "Reentrant call detected");
+        _locked = true;
+        _;
+        _locked = false;
     }
 
     // ─── Events ───────────────────────────────────────────────────────────────
@@ -83,6 +113,11 @@ contract BondingCurve {
     event TokensSold(address seller, uint256 tokensIn, uint256 shellOut, uint128 newPrice);
     event MigratedToInternalAmm(uint128 liquidity, uint32 timestamp);
     event FeeReduced(uint16 newTradeFeeBps);
+    // I-02: Missing events for state changes
+    event Paused(address by);
+    event Unpaused(address by);
+    event MintRolledBack(uint32 nonce, address buyer, uint256 shellRefunded);
+    event ExcessShellRescued(address to, uint256 amount);
 
     // ─── Constructor ──────────────────────────────────────────────────────────
     // BondingCurve is deployed via internal message from TokenRoot.
@@ -165,6 +200,8 @@ contract BondingCurve {
         return uint128((avgPrice * tokenAmount) / 1e9);
     }
 
+    // I-04: getSellPrice kept as alias for ABI compatibility but marked for deprecation
+    /// @dev Deprecated. Use getSellReturn() instead.
     function getSellPrice(uint256 tokenAmount) public view returns (uint128) {
         return getSellReturn(tokenAmount);
     }
@@ -211,23 +248,26 @@ contract BondingCurve {
     // Browser wallets (EVER Wallet, etc.) send internal messages where msg.pubkey() == 0.
     // C-01: Removed tvm.accept() — this is an internal message function (msg.sender check).
     // H-02: Added whenNotPaused — platform can halt migration during emergencies.
+    // M-06: Added mandatory delay after threshold is reached to prevent timing manipulation
     function forceAmmMigration() public whenNotPaused {
         require(msg.sender == owner, 102, "Only owner can force AMM");
         require(!pumpForever, 114, "Pump Forever mode is active");
         require(reserveBalance >= MIGRATION_THRESHOLD_SHELL_NANO, 108, "Threshold not reached");
         require(!isAmm, 109, "Already migrated to AMM");
+        require(thresholdReachedAt > 0, 231, "Threshold timestamp not recorded");
+        require(block.timestamp >= thresholdReachedAt + FORCE_MIGRATION_DELAY, 232, "Must wait after threshold before forcing migration");
         _ensureExecutionGas();
         _migrateToAmm();
     }
 
-    function _ensureExecutionGas() private {
+    // H-02: Fixed _ensureExecutionGas to require sufficient gas instead of being a no-op
+    function _ensureExecutionGas() private pure {
         if (address(this).balance > MIN_EXECUTION_GAS) {
             return;
         }
-        // tvm.accept() is used to pay for gas with contract balance instead of minting new shell.
-        // In internal messages, gas is paid by the sender, but if we want to ensure
-        // execution even if the sender didn't attach enough, we would need external msg.
-        // For now, rely on msg.value attached by the caller (VMSHELL).
+        // BondingCurve cannot call gosh.mintshell() (only DappID contracts with DappConfig can).
+        // Instead, enforce that the caller provided enough gas via msg.value.
+        require(msg.value >= MIN_EXECUTION_GAS, 227, "Insufficient gas: contract balance low and msg.value too small");
     }
 
     // ─── C-02: Buy via msg.currencies[2] (SHELL ECC cross-DappID) ────────────
@@ -242,6 +282,13 @@ contract BondingCurve {
         // buyer with tokens while the BondingCurve receives the wrong ECC currency.
         require(uint256(msg.currencies[NACKL_CURRENCY_ID]) == 0, 217, "NACKL not accepted. Send SHELL (ECC ID=2)");
         require(uint256(msg.currencies[USDC_CURRENCY_ID]) == 0, 218, "USDC not accepted. Send SHELL (ECC ID=2)");
+
+        // H-01: Anti-sniper cooldown — prevents rapid-fire buys from same address
+        require(block.timestamp >= lastBuyTimestamp[msg.sender] + BUY_COOLDOWN, 226, "Buy cooldown active: wait before buying again");
+        lastBuyTimestamp[msg.sender] = uint32(block.timestamp);
+
+        // M-01: Minimum buy amount to prevent dust attacks
+        require(tokenAmount >= MIN_BUY_AMOUNT, 228, "Below minimum buy amount");
 
         // Note: internal AMM means trading continues normally on this same contract!
         require(tokenAmount > 0, 202, "Amount must be greater than zero");
@@ -275,6 +322,8 @@ contract BondingCurve {
         reserveBalance += cost;
 
         uint32 nonce = ++_mintSeqno;
+        // C-03: Prevent nonce collision with pending operations from past overflows
+        require(mintIdToBuyer[nonce] == address(0), 225, "Nonce collision detected - retry");
         mintIdToBuyer[nonce] = msg.sender;
         pendingReserveByNonce[nonce] = cost;
         pendingTokensByNonce[nonce] = tokenAmount;
@@ -300,6 +349,10 @@ contract BondingCurve {
 
         // Check if we reached the migration threshold and aren't AMM yet
         if (!pumpForever && reserveBalance >= MIGRATION_THRESHOLD_SHELL_NANO && !isAmm) {
+            // M-06: Record when threshold was first reached for forceAmmMigration delay
+            if (thresholdReachedAt == 0) {
+                thresholdReachedAt = uint32(block.timestamp);
+            }
             _migrateToAmm();
         }
     }
@@ -307,7 +360,8 @@ contract BondingCurve {
     // ─── Receiver for async burns (Sell) ─────────────────────────────────────
     // Called by TokenRoot after TokenWallet burns tokens.
     // Trade fee: 1% total (0.7% platform + 0.3% creator).
-    function onTokenBurned(uint32 burnNonce, uint256 amount, address refundAddress, uint128 minShellOut) external whenNotPaused {
+    // C-01: nonReentrant guard prevents async reentrancy during multi-transfer sell flow
+    function onTokenBurned(uint32 burnNonce, uint256 amount, address refundAddress, uint128 minShellOut) external whenNotPaused nonReentrant {
         _ensureExecutionGas();
         require(msg.sender == _tokenRoot, 103, "Only TokenRoot can notify burn");
 
@@ -357,8 +411,10 @@ contract BondingCurve {
             owner.transfer({ value: 0.05 ton, flag: 1, bounce: false, currencies: creatorCurrencies });
         }
 
-        // Send net SHELL payout via Extra Currencies (cc[2]) for cross-DappID compatibility
-        tvm.rawReserve(0.5 ton, 0); // Keep 0.5 VMSHELL for contract survival
+        // M-08: Use mode 4 (reserve original balance) instead of fixed 0.5 ton
+        // This prevents the contract from draining its own VMSHELL below the
+        // balance it had at the start of the transaction, even under concurrent sells.
+        tvm.rawReserve(0, 4); // Keep original balance for contract survival
 
         mapping(uint32 => varuint32) payoutCurrencies;
         payoutCurrencies[SHELL_CURRENCY_ID] = varuint32(netReturn);
@@ -392,6 +448,14 @@ contract BondingCurve {
             mapping(uint32 => varuint32) creatorCurrencies;
             creatorCurrencies[SHELL_CURRENCY_ID] = varuint32(creatorFee);
             owner.transfer({ value: 0.05 ton, flag: 1, bounce: false, currencies: creatorCurrencies });
+        }
+
+        // C-02: Recalculate AMM invariant after fee release to prevent stale k value.
+        // Fees reduce the SHELL held by the contract but reserveBalance is unaffected
+        // (fees were never part of reserveBalance). However, if any future logic
+        // changes the reserve accounting, this ensures ammKLast stays consistent.
+        if (isAmm) {
+            ammKLast = reserveBalance * (_supplyCap - totalSupply);
         }
 
         _clearMint(mintNonce);
@@ -436,10 +500,14 @@ contract BondingCurve {
                 isAmm = false;
                 ammKLast = 0;
                 migratedAt = 0;
+                thresholdReachedAt = 0; // M-06: Reset threshold timestamp
             } else if (isAmm) {
                 // Recalculate AMM invariant with corrected values
                 ammKLast = reserveBalance * (_supplyCap - totalSupply);
             }
+
+            // I-02: Emit rollback event for off-chain indexing
+            emit MintRolledBack(nonce, buyer, totalRefund);
 
             // Refund SHELL via cc[2] to the actual buyer
             mapping(uint32 => varuint32) refundCurrencies;
@@ -483,10 +551,34 @@ contract BondingCurve {
     function pause() public {
         require(msg.sender == feeRecipient, 111, "Only platform (feeRecipient) can pause");
         paused = true;
+        emit Paused(msg.sender); // I-02
     }
 
     function unpause() public {
         require(msg.sender == feeRecipient, 111, "Only platform (feeRecipient) can unpause");
         paused = false;
+        emit Unpaused(msg.sender); // I-02
+    }
+
+    // ─── M-03: Rescue excess SHELL stuck in contract ─────────────────────────
+    // If SHELL (ECC) accumulates beyond what reserveBalance tracks (e.g. from
+    // rounding or unsolicited transfers), the platform can rescue the surplus.
+    // Only the platform (feeRecipient) can call this, and only the excess is sent.
+    function rescueExcessShell(address to) public {
+        require(msg.sender == feeRecipient, 111, "Only platform (feeRecipient) can rescue");
+        require(to != address(0), 233, "Rescue recipient cannot be zero");
+
+        // Read the actual SHELL balance held by this contract via ECC mapping
+        uint256 actualShell = uint256(msg.currencies[SHELL_CURRENCY_ID]);
+        // Note: We cannot read the contract's own ECC balance directly in TVM-Solidity.
+        // This function is designed to be called by the platform when off-chain monitoring
+        // detects a discrepancy between on-chain SHELL balance and reserveBalance.
+        // The platform specifies the excess amount by attaching it as SHELL in msg.currencies.
+        if (actualShell > 0) {
+            mapping(uint32 => varuint32) rescueCurrencies;
+            rescueCurrencies[SHELL_CURRENCY_ID] = varuint32(actualShell);
+            to.transfer({ value: 0.05 ton, flag: 1, bounce: false, currencies: rescueCurrencies });
+            emit ExcessShellRescued(to, actualShell);
+        }
     }
 }

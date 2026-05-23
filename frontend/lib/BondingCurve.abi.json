@@ -190,6 +190,14 @@
 			]
 		},
 		{
+			"name": "rescueExcessShell",
+			"inputs": [
+				{"name":"to","type":"address"}
+			],
+			"outputs": [
+			]
+		},
+		{
 			"name": "_tokenRoot",
 			"inputs": [
 			],
@@ -348,6 +356,22 @@
 			"outputs": [
 				{"name":"mintIdToBuyer","type":"map(uint32,address)"}
 			]
+		},
+		{
+			"name": "lastBuyTimestamp",
+			"inputs": [
+			],
+			"outputs": [
+				{"name":"lastBuyTimestamp","type":"map(address,uint32)"}
+			]
+		},
+		{
+			"name": "thresholdReachedAt",
+			"inputs": [
+			],
+			"outputs": [
+				{"name":"thresholdReachedAt","type":"uint32"}
+			]
 		}
 	],
 	"events": [
@@ -389,6 +413,41 @@
 			],
 			"outputs": [
 			]
+		},
+		{
+			"name": "Paused",
+			"inputs": [
+				{"name":"by","type":"address"}
+			],
+			"outputs": [
+			]
+		},
+		{
+			"name": "Unpaused",
+			"inputs": [
+				{"name":"by","type":"address"}
+			],
+			"outputs": [
+			]
+		},
+		{
+			"name": "MintRolledBack",
+			"inputs": [
+				{"name":"nonce","type":"uint32"},
+				{"name":"buyer","type":"address"},
+				{"name":"shellRefunded","type":"uint256"}
+			],
+			"outputs": [
+			]
+		},
+		{
+			"name": "ExcessShellRescued",
+			"inputs": [
+				{"name":"to","type":"address"},
+				{"name":"amount","type":"uint256"}
+			],
+			"outputs": [
+			]
 		}
 	],
 	"fields": [
@@ -408,6 +467,7 @@
 		{"init":false,"name":"name","type":"string"},
 		{"init":false,"name":"symbol","type":"string"},
 		{"init":false,"name":"creationFeeTxHash","type":"bytes"},
+		{"init":false,"name":"_locked","type":"bool"},
 		{"init":false,"name":"pendingReserveByNonce","type":"map(uint32,uint256)"},
 		{"init":false,"name":"pendingTokensByNonce","type":"map(uint32,uint256)"},
 		{"init":false,"name":"pendingPlatformFeeByNonce","type":"map(uint32,uint256)"},
@@ -415,6 +475,8 @@
 		{"init":false,"name":"pumpForever","type":"bool"},
 		{"init":false,"name":"slopeDivisor","type":"uint256"},
 		{"init":false,"name":"mintIdToBuyer","type":"map(uint32,address)"},
-		{"init":false,"name":"_mintSeqno","type":"uint32"}
+		{"init":false,"name":"_mintSeqno","type":"uint32"},
+		{"init":false,"name":"lastBuyTimestamp","type":"map(address,uint32)"},
+		{"init":false,"name":"thresholdReachedAt","type":"uint32"}
 	]
 }

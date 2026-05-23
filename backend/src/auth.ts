@@ -153,6 +153,10 @@ export async function createWalletChallenge({ walletAddress, telegramInitData }:
   }
 
   const telegram = verifyTelegramInitData(telegramInitData);
+  
+  if (config.telegramBindingRequired && !telegram.user?.id) {
+    throw new Error("A vinculação com o Telegram é obrigatória para usar este aplicativo.");
+  }
   const challengeId = crypto.randomUUID();
   const nonce = crypto.randomBytes(16).toString("hex");
   
@@ -325,7 +329,7 @@ export async function verifyWalletChallenge({
   return session;
 }
 
-export async function generateQrSession(): Promise<{ sessionId: string, deepLink: string, expiresAt: string }> {
+export async function generateQrSession(): Promise<{ sessionId: string, authUrl: string, expiresAt: string }> {
   const sessionId = crypto.randomUUID();
   const expiresAt = new Date(Date.now() + 5 * 60 * 1000).toISOString();
   
@@ -334,7 +338,7 @@ export async function generateQrSession(): Promise<{ sessionId: string, deepLink
 
   await query(`INSERT INTO qr_sessions (id, status, deep_link, expires_at) VALUES ($1, 'pending', $2, $3)`, [sessionId, deepLink, expiresAt]);
 
-  return { sessionId, deepLink, expiresAt };
+  return { sessionId, authUrl: deepLink, expiresAt };
 }
 
 export async function getQrSessionStatus(sessionId: string): Promise<{ status: string, sessionToken?: string }> {

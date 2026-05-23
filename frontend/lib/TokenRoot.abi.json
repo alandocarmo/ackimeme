@@ -223,6 +223,8 @@
 		{"init":false,"name":"_pendingBurnAmounts","type":"map(uint32,uint256)"},
 		{"init":false,"name":"_pendingBurnWallets","type":"map(uint32,address)"},
 		{"init":false,"name":"_pendingBurnWalletSeqnos","type":"map(uint32,uint32)"},
-		{"init":false,"name":"_burnSeqno","type":"uint32"}
+		{"init":false,"name":"_burnSeqno","type":"uint32"},
+		{"init":false,"name":"_lastGasMintTime","type":"uint32"},
+		{"init":false,"name":"_totalGasMinted","type":"uint128"}
 	]
 }

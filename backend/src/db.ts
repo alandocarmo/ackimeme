@@ -64,20 +64,30 @@ async function applyMigration(version: string, sql: string): Promise<void> {
 }
 
 export async function runMigrations(): Promise<void> {
-  await ensureMigrationsTable();
-  const appliedMigrations = await getAppliedMigrations();
-  const files = fs
-    .readdirSync(migrationsDir)
-    .filter((file: string) => file.endsWith(".sql"))
-    .sort();
+  const client = await pool.connect();
+  const MIGRATION_LOCK_ID = 123456789;
 
-  for (const file of files) {
-    if (appliedMigrations.has(file)) {
-      continue;
+  try {
+    await client.query("SELECT pg_advisory_lock($1)", [MIGRATION_LOCK_ID]);
+    
+    await ensureMigrationsTable();
+    const appliedMigrations = await getAppliedMigrations();
+    const files = fs
+      .readdirSync(migrationsDir)
+      .filter((file: string) => file.endsWith(".sql"))
+      .sort();
+
+    for (const file of files) {
+      if (appliedMigrations.has(file)) {
+        continue;
+      }
+
+      const sql = fs.readFileSync(path.join(migrationsDir, file), "utf8");
+      await applyMigration(file, sql);
     }
-
-    const sql = fs.readFileSync(path.join(migrationsDir, file), "utf8");
-    await applyMigration(file, sql);
+  } finally {
+    await client.query("SELECT pg_advisory_unlock($1)", [MIGRATION_LOCK_ID]);
+    client.release();
   }
 }
 
