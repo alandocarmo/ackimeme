@@ -2,6 +2,12 @@ import * as crypto from "crypto";
 import * as dotenv from "dotenv";
 dotenv.config();
 
+process.on("unhandledRejection", (reason, promise) => {
+  console.error("[Process] Unhandled Rejection at:", promise, "reason:", reason);
+});
+process.on("uncaughtException", (error) => {
+  console.error("[Process] Uncaught Exception:", error);
+});
 import express, { Request, Response, NextFunction } from "express";
 import { buildPublicConfig, config, validateConfig } from "./config";
 import { query, pool, pingDatabase, runMigrations } from "./db";
@@ -666,7 +672,7 @@ app.get("/tokens/viral", async (req: Request, res: Response) => {
       source: "database",
     });
   } catch (err: any) {
-    res.status(500).json({ error: err.message });
+    res.status(500).json({ error: 'Erro interno do servidor.' });
   }
 });
 
@@ -994,7 +1000,7 @@ app.get("/launches/search", (req: Request, res: Response) => {
       });
     })
     .catch((error) => {
-      res.status(500).json({ error: error.message });
+      res.status(500).json({ error: 'Erro interno do servidor.' });
     });
 });
 
@@ -1003,7 +1009,7 @@ app.post("/launches/:id/favorite", requireSession, requireValidUUID, async (req:
     const success = await addFavorite(req.session.walletAddress, req.params.id);
     res.json({ success });
   } catch (error: any) {
-    res.status(500).json({ error: error.message });
+    res.status(500).json({ error: 'Erro interno do servidor.' });
   }
 });
 
@@ -1012,7 +1018,7 @@ app.delete("/launches/:id/favorite", requireSession, requireValidUUID, async (re
     const success = await removeFavorite(req.session.walletAddress, req.params.id);
     res.json({ success });
   } catch (error: any) {
-    res.status(500).json({ error: error.message });
+    res.status(500).json({ error: 'Erro interno do servidor.' });
   }
 });
 
@@ -1024,7 +1030,7 @@ app.get("/launches/my/favorites", requireSession, async (req: Request, res: Resp
       launches: launches.map(mapPublicLaunch),
     });
   } catch (error: any) {
-    res.status(500).json({ error: error.message });
+    res.status(500).json({ error: 'Erro interno do servidor.' });
   }
 });
 
@@ -1037,7 +1043,7 @@ app.get("/launches/:id/price-history", requireValidUUID, async (req: Request, re
       history,
     });
   } catch (error: any) {
-    res.status(500).json({ error: error.message });
+    res.status(500).json({ error: 'Erro interno do servidor.' });
   }
 });
 
@@ -1057,7 +1063,7 @@ app.get("/stats", async (req: Request, res: Response) => {
       stats,
     });
   } catch (error: any) {
-    res.status(500).json({ error: error.message });
+    res.status(500).json({ error: 'Erro interno do servidor.' });
   }
 });
 
@@ -1070,7 +1076,7 @@ app.get("/launches/my", requireSession, (req: Request, res: Response) => {
       });
     })
     .catch((error) => {
-      res.status(500).json({ error: error.message });
+      res.status(500).json({ error: 'Erro interno do servidor.' });
     });
 });
 
@@ -1086,7 +1092,7 @@ app.get("/public/launches", (req: Request, res: Response) => {
       });
     })
     .catch((error) => {
-      res.status(500).json({ error: error.message });
+      res.status(500).json({ error: 'Erro interno do servidor.' });
     });
 });
 
@@ -1134,7 +1140,7 @@ app.get("/launches/:id", requireValidUUID, async (req: Request, res: Response) =
       },
     });
   } catch (err: any) {
-    res.status(500).json({ error: err.message });
+    res.status(500).json({ error: 'Erro interno do servidor.' });
   }
 });
 
@@ -1145,7 +1151,7 @@ app.get("/launches/:id/comments", requireValidUUID, async (req: Request, res: Re
     const comments = await getCommentsByLaunchId(req.params.id, limit);
     res.json({ success: true, comments });
   } catch (err: any) {
-    res.status(500).json({ error: err.message });
+    res.status(500).json({ error: 'Erro interno do servidor.' });
   }
 });
 
@@ -1212,7 +1218,7 @@ app.get("/launches/:id/trades", requireValidUUID, async (req: Request, res: Resp
     const trades = await getTradesByLaunchId(req.params.id, Math.min(100, limit));
     res.json({ success: true, trades });
   } catch (err: any) {
-    res.status(500).json({ error: err.message });
+    res.status(500).json({ error: 'Erro interno do servidor.' });
   }
 });
 
@@ -1223,7 +1229,7 @@ app.get("/launches/:id/holders", requireValidUUID, async (req: Request, res: Res
 
     const holders: any[] = await getTopHoldersByLaunchId(req.params.id, 20);
     
-    const rawSupply = launch.onchainData?.tokenSupply || "1000000000";
+    const rawSupply = launch.onchainData?.tokenSupply || launch.launchRequest?.coin?.totalSupply || "1000000000";
     const isNano = Boolean(launch.onchainData?.tokenSupply);
     const totalSupply = isNano ? BigInt(rawSupply) : BigInt(rawSupply) * 1000000000n;
     
@@ -1248,7 +1254,7 @@ app.get("/launches/:id/holders", requireValidUUID, async (req: Request, res: Res
 
     res.json({ success: true, holders, totalSupply: totalSupply.toString() });
   } catch (err: any) {
-    res.status(500).json({ error: err.message });
+    res.status(500).json({ error: 'Erro interno do servidor.' });
   }
 });
 
@@ -1312,6 +1318,14 @@ async function start() {
   });
 
   setSocketIo(io);
+
+  app.use((err: any, req: Request, res: Response, next: NextFunction) => {
+    console.error("[Express] Unhandled error:", err);
+    if (err instanceof SyntaxError && 'status' in err && err.status === 400 && 'body' in err) {
+      return res.status(400).json({ error: "JSON malformado." });
+    }
+    res.status(500).json({ error: "Erro interno do servidor." });
+  });
 
   server.listen(config.port, () => {
     console.log(`Backend running on port ${config.port} (Production: ${config.isProduction})`);

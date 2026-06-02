@@ -34,8 +34,6 @@ export function loadLibNode(): any {
 try {
   const tvmsdkCore = require("@tvmsdk/core");
   tvmCore = tvmsdkCore;
-  // Shim for backward compatibility with the rest of the app expecting TvmClient
-  tvmCore.TvmClient = tvmsdkCore.TvmClient;
 
   // lib-node é o binding C++ nativo para Node.js.
   const libNode = loadLibNode();
