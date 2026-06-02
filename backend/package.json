@@ -19,7 +19,7 @@
   "dependencies": {
     "@ackimeme/shared-types": "file:../shared-types",
     "@tvmsdk/core": "^2.2.0",
-    "@tvmsdk/lib-node": "^2.0.1",
+    "@tvmsdk/lib-node": "^2.0.2",
     "axios": "^1.6.0",
     "cookie-parser": "^1.4.7",
     "dotenv": "^16.0.0",

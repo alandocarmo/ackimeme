@@ -1,7 +1,12 @@
 import { query, withTransaction } from "./db";
 import { LaunchTicket, Session, Trade, Comment } from "./types";
+import * as crypto from "crypto";
 
 const USED_CHALLENGE_RETENTION_DAYS = 7;
+
+function hashToken(token: string): string {
+  return crypto.createHash("sha256").update(String(token || "")).digest("hex");
+}
 
 export function normalizeChallengeRow(row: any) {
   if (!row) {
@@ -116,43 +121,46 @@ export async function updateLaunchOnchainState(
 }
 
 export async function cleanupExpiredAuthData() {
-  await query(
-    `
-      DELETE FROM auth_challenges
-      WHERE used_at IS NULL
-        AND expires_at <= NOW()
-    `,
-  );
+  // M-10: Wrap in transaction for atomicity — prevent orphaned data on crash
+  await withTransaction(async (client: any) => {
+    await client.query(
+      `
+        DELETE FROM auth_challenges
+        WHERE used_at IS NULL
+          AND expires_at <= NOW()
+      `,
+    );
 
-  await query(
-    `
-      DELETE FROM auth_challenges
-      WHERE used_at IS NOT NULL
-        AND used_at <= NOW() - ($1::int * INTERVAL '1 day')
-    `,
-    [USED_CHALLENGE_RETENTION_DAYS],
-  );
+    await client.query(
+      `
+        DELETE FROM auth_challenges
+        WHERE used_at IS NOT NULL
+          AND used_at <= NOW() - ($1::int * INTERVAL '1 day')
+      `,
+      [USED_CHALLENGE_RETENTION_DAYS],
+    );
 
-  await query(
-    `
-      DELETE FROM wallet_sessions
-      WHERE expires_at <= NOW()
-    `,
-  );
+    await client.query(
+      `
+        DELETE FROM wallet_sessions
+        WHERE expires_at <= NOW()
+      `,
+    );
 
-  await query(
-    `
-      DELETE FROM qr_sessions
-      WHERE expires_at <= NOW()
-    `,
-  );
+    await client.query(
+      `
+        DELETE FROM qr_sessions
+        WHERE expires_at <= NOW()
+      `,
+    );
 
-  await query(
-    `
-      DELETE FROM used_tx_hashes
-      WHERE used_at <= NOW() - INTERVAL '30 days'
-    `
-  );
+    await client.query(
+      `
+        DELETE FROM used_tx_hashes
+        WHERE used_at <= NOW() - INTERVAL '30 days'
+      `
+    );
+  });
 }
 
 export async function createAuthChallenge(challenge: any, auditEvent: any) {
@@ -262,7 +270,7 @@ export async function consumeChallengeAndCreateSession({
       `,
       [
         session.id,
-        session.token,
+        hashToken(session.token),
         session.walletAddress,
         session.publicKey,
         session.proofLevel,
@@ -316,7 +324,7 @@ export async function createSessionOnly({ session, auditEvent }: any) {
       `,
       [
         session.id,
-        session.token,
+        hashToken(session.token),
         session.walletAddress,
         session.publicKey,
         session.proofLevel,
@@ -353,7 +361,7 @@ export async function createSessionOnly({ session, auditEvent }: any) {
 }
 
 export async function touchSession(token: any) {
-
+  const hashedToken = hashToken(token);
   const result = await query(
     `
       UPDATE wallet_sessions
@@ -362,32 +370,36 @@ export async function touchSession(token: any) {
         AND expires_at > NOW()
       RETURNING *
     `,
-    [token],
+    [hashedToken],
   );
 
   return normalizeSessionRow(result.rows[0]);
 }
 
 export async function revokeSession(token: any) {
+  const hashedToken = hashToken(token);
   const result = await query(
     `
       DELETE FROM wallet_sessions
       WHERE token = $1
     `,
-    [token],
+    [hashedToken],
   );
 
   return (result.rowCount ?? 0) > 0;
 }
 
 export async function getSessionByToken(token: any) {
+  const hashedToken = hashToken(token);
+  // H-01: Filter expired sessions — match touchSession's behavior
   const result = await query(
     `
       SELECT *
       FROM wallet_sessions
       WHERE token = $1
+        AND expires_at > NOW()
     `,
-    [token],
+    [hashedToken],
   );
 
   return normalizeSessionRow(result.rows[0]);
@@ -548,15 +560,18 @@ export async function createLaunchBundle(params: { launchTicket: LaunchTicket; a
   });
 }
 
-export async function listLaunchesByWallet(walletAddress: any) {
+export async function listLaunchesByWallet(walletAddress: any, limit: any = 100) {
+  // H-04: Add LIMIT to prevent unbounded result sets
+  const safeLimit = Math.min(Math.max(1, parseInt(String(limit)) || 100), 500);
   const result = await query(
     `
       SELECT *
       FROM launches
       WHERE wallet_address = $1
       ORDER BY created_at DESC
+      LIMIT $2
     `,
-    [walletAddress],
+    [walletAddress, safeLimit],
   );
 
   return result.rows.map(normalizeLaunchRow);
@@ -685,6 +700,9 @@ export async function addComment(comment: Comment) {
 }
 
 export async function getCommentsByLaunchId(launchId: any, limit: any = 50, offset: any = 0) {
+  // M-09: Validate offset to prevent negative or non-numeric values
+  const safeOffset = Math.max(0, parseInt(String(offset)) || 0);
+  const safeLimit = Math.min(Math.max(1, parseInt(String(limit)) || 50), 100);
   const sql = `
     SELECT id, launch_id, wallet_address, content, created_at
     FROM token_comments
@@ -692,7 +710,7 @@ export async function getCommentsByLaunchId(launchId: any, limit: any = 50, offs
     ORDER BY created_at DESC
     LIMIT $2 OFFSET $3;
   `;
-  const result = await query(sql, [launchId, limit, offset]);
+  const result = await query(sql, [launchId, safeLimit, safeOffset]);
   return result.rows.map((row: any) => ({
     id: row.id,
     launchId: row.launch_id,
@@ -823,19 +841,23 @@ export async function removeFavorite(walletAddress: any, launchId: any) {
   return result.rows.length > 0;
 }
 
-export async function listFavorites(walletAddress: any) {
+export async function listFavorites(walletAddress: any, limit: any = 100) {
+  // H-04: Add LIMIT to prevent unbounded result sets
+  const safeLimit = Math.min(Math.max(1, parseInt(String(limit)) || 100), 500);
   const sql = `
     SELECT l.* FROM launches l
     JOIN user_favorites f ON l.id = f.launch_id
     WHERE f.wallet_address = $1
-    ORDER BY f.created_at DESC;
+    ORDER BY f.created_at DESC
+    LIMIT $2;
   `;
-  const result = await query(sql, [walletAddress.toLowerCase()]);
+  const result = await query(sql, [walletAddress.toLowerCase(), safeLimit]);
   return result.rows.map(normalizeLaunchRow);
 }
 
 export async function getPriceHistoryByLaunchId(launchId: any, intervalMinutes: any = 15) {
-  const minutes = parseInt(String(intervalMinutes)) || 15;
+  // H-10: Clamp to safe range — 0 would cause division by zero in PostgreSQL
+  const minutes = Math.min(Math.max(1, parseInt(String(intervalMinutes)) || 15), 1440);
   const sql = `
     SELECT
       time_bucket AS time,
@@ -871,7 +893,7 @@ export async function getGlobalStats() {
   const sql = `
     SELECT 
       (SELECT COUNT(*) FROM launches) AS total_tokens,
-      (SELECT COALESCE(SUM(reserve_balance), 0) FROM launches) AS total_reserve,
+      (SELECT COALESCE(SUM(reserve_balance::NUMERIC), 0) FROM launches) AS total_reserve,
       (SELECT COUNT(DISTINCT wallet_address) FROM trades) AS active_wallets,
       (SELECT COUNT(*) FROM trades) AS total_trades
     FROM (SELECT 1) dummy;

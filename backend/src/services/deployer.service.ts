@@ -19,7 +19,7 @@ const ENABLE_ONCHAIN_DEPLOY = process.env.ENABLE_ONCHAIN_DEPLOY === "true";
 const TOKEN_DECIMALS = 9;
 const SHELL_CURRENCY_ID = 2;
 const DEFAULT_DEPLOY_PREFUND_SHELL_NANO = "10000000000"; // 10 SHELL ECC
-const DEFAULT_DEPLOY_PREFUND_MESSAGE_VALUE_NANO = "500000000";
+const DEFAULT_DEPLOY_PREFUND_MESSAGE_VALUE_NANO = "12000000000"; // 12 VMSHELL (10 for BC + 2 for gas)
 const DEFAULT_DEPLOY_FUNDING_ATTEMPTS = 40;
 
 let client: any = null;
@@ -186,15 +186,21 @@ async function resolveDeployerKeyPair(): Promise<{ public: string; secret: strin
     throw new Error(keyConfig.reason || "Key config not usable");
   }
 
-  const keyPair =
-    keyConfig.secretFormat === "raw_secret"
-      ? await client.crypto.nacl_sign_keypair_from_secret_key({
-          secret: keyConfig.secretKey,
-        })
-      : {
-          public: keyConfig.secretKey.slice(64),
-          secret: keyConfig.secretKey,
-        };
+  let keyPair: { public: string; secret: string };
+  if (keyConfig.secretFormat === "raw_secret") {
+    const naclKeyPair = await client.crypto.nacl_sign_keypair_from_secret_key({
+      secret: keyConfig.secretKey,
+    });
+    keyPair = {
+      public: naclKeyPair.public,
+      secret: keyConfig.secretKey, // use original 64-char seed
+    };
+  } else {
+    keyPair = {
+      public: keyConfig.secretKey.slice(64),
+      secret: keyConfig.secretKey.slice(0, 64),
+    };
+  }
 
   if (
     keyConfig.publicKey &&
@@ -532,10 +538,8 @@ export async function deployTokenEcosystem({
     const keyPair = await resolveDeployerKeyPair();
 
     const signer = signerKeys({
-      keys: {
-        public: keyPair.public,
-        secret: keyPair.secret,
-      },
+      public: keyPair.public,
+      secret: keyPair.secret,
     });
 
     console.log(`[Deployer] Preparando deploy para: ${name} (${symbol})`);

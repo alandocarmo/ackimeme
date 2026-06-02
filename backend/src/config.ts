@@ -99,7 +99,11 @@ function readCreationFeeOptions(): CreationFeeOption[] {
 const creationFeeOptions = readCreationFeeOptions();
 const feeWallet = process.env.FEE_WALLET || "";
 const adminToken = process.env.ADMIN_TOKEN || "";
-const jwtSecret = process.env.JWT_SECRET || "";
+const jwtSecret = process.env.JWT_SECRET || (() => {
+  const generated = require("crypto").randomBytes(32).toString("hex");
+  console.warn("⚠️  JWT_SECRET não configurado — usando segredo aleatório (sessões admin não sobrevivem restart).");
+  return generated;
+})();
 const isProduction = process.env.NODE_ENV === "production";
 
 export interface AppConfig {

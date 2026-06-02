@@ -54,7 +54,7 @@ async function getAppliedMigrations(): Promise<Set<string>> {
 
 async function applyMigration(version: string, sql: string): Promise<void> {
   await withTransaction(async (client: PoolClient) => {
-    await client.query("SET LOCAL statement_timeout = 0");
+    await client.query("SET LOCAL statement_timeout = 300000"); // 5 min — generous but finite
     await client.query(sql);
     await client.query(
       "INSERT INTO schema_migrations (version) VALUES ($1) ON CONFLICT (version) DO NOTHING",

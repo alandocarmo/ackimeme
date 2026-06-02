@@ -63,9 +63,14 @@ function normalizeSymbol(value: any): string {
 }
 
 function normalizeSupply(value: any): string {
-  const digits = String(value ?? "")
-    .trim()
-    .replace(/[.,]/g, "");
+  const raw = String(value ?? "").trim();
+
+  // M-02: Reject decimals explicitly instead of silently stripping them
+  if (raw.includes(".") || raw.includes(",")) {
+    throw new Error("Supply deve ser um número inteiro (sem decimais). Exemplo: 1000000.");
+  }
+
+  const digits = raw.replace(/\s/g, "");
 
   if (!/^\d+$/.test(digits)) {
     throw new Error("Supply precisa ser um número inteiro positivo.");
@@ -96,10 +101,11 @@ export function parseSlopeDivisor(val: any): number {
     return divisors[String(val)];
   }
   
-  // 2. If it's already a valid nano value (>= 1T), return as is
+  // 2. If it's already a valid nano value (>= 1T), return as is (L-09: capped at 100T)
   const num = Number(val);
+  const MAX_SLOPE_DIVISOR = 100_000_000_000_000; // 100T — prevents effectively flat curves
   if (!isNaN(num) && num >= 1000000000000) {
-    return num;
+    return Math.min(num, MAX_SLOPE_DIVISOR);
   }
   
   // Default to Normal (1x)

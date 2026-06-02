@@ -550,7 +550,7 @@ export async function getRecentBondingCurveTrades(address: any) {
       for (const msg of outMsgs) {
         if (msg.msg_type_name === "extOut" && msg.body && isWasmDecoderAvailable()) {
           try {
-            const decodedBuy = tvmClient.decodeEvent(msg.body, JSON.stringify(BONDING_CURVE_ABI), "TokensPurchaseInitiated");
+            const decodedBuy = tvmClient.decodeEvent(msg.body, BONDING_CURVE_ABI, "TokensPurchaseInitiated");
             if (decodedBuy) {
               trades.push({
                 txHash: `${tx.id}_${msg.id}`,
@@ -568,7 +568,7 @@ export async function getRecentBondingCurveTrades(address: any) {
           }
           
           try {
-            const decodedSell = tvmClient.decodeEvent(msg.body, JSON.stringify(BONDING_CURVE_ABI), "TokensSold");
+            const decodedSell = tvmClient.decodeEvent(msg.body, BONDING_CURVE_ABI, "TokensSold");
             if (decodedSell) {
               trades.push({
                 txHash: `${tx.id}_${msg.id}`,

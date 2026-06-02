@@ -92,7 +92,12 @@ export function verifyTelegramInitData(initData: any): TelegramVerificationResul
     .update(dataCheckString)
     .digest("hex");
 
-  if (calculatedHash !== parsed.hash) {
+  const calculatedBuffer = Buffer.from(calculatedHash, "hex");
+  const providedBuffer = Buffer.from(parsed.hash, "hex");
+  if (
+    calculatedBuffer.length !== providedBuffer.length ||
+    !crypto.timingSafeEqual(calculatedBuffer, providedBuffer)
+  ) {
     throw new Error("Falha ao validar o Telegram Mini App.");
   }
 

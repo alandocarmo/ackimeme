@@ -161,7 +161,7 @@ function isCachedPaymentUsable(cached: any, { walletAddress, txHash, tokenSymbol
 }
 
 // Limpeza de pagamentos verificados não consumidos (L1 cache fallback)
-setInterval(() => {
+const paymentCacheCleanupTimer = setInterval(() => {
   const now = Date.now();
   for (const [key, entry] of verifiedPaymentsCache) {
     if (now - entry.timestamp > 15 * 60 * 1000) {
@@ -324,7 +324,7 @@ app.use((req: Request, res: Response, next: NextFunction) => {
   }
 
   // CSRF Protection
-  if (req.path.startsWith("/admin") && ["POST", "PATCH", "DELETE"].includes(req.method)) {
+  if (["POST", "PATCH", "DELETE"].includes(req.method)) {
     const referer = req.headers.referer;
     const originHeader = req.headers.origin;
     
@@ -447,7 +447,7 @@ app.post("/admin/unlock", authLimiter, requireSession, async (req: Request, res:
     res.cookie("adminJwt", token, {
        httpOnly: true,
        secure: config.isProduction,
-       sameSite: config.isProduction ? "none" : "lax",
+       sameSite: config.isProduction ? "strict" : "lax",
        path: "/",
        maxAge: 4 * 60 * 60 * 1000
     });
@@ -816,7 +816,7 @@ app.post("/launch-request", requireSession, validate(CreateLaunchSchema), async 
       await createLaunchBundle({
         launchTicket,
         auditEvent: {
-          id: launchTicket.id,
+          id: crypto.randomUUID(),
           type: "launch.created.pending",
           createdAt: new Date().toISOString(),
           walletAddress: launchRequest.creator.wallet,
@@ -1157,27 +1157,6 @@ app.post("/launches/:id/comments", requireSession, requireValidUUID, validate(Co
     }
 
     const wallet = req.session.walletAddress;
-    
-    const result = await query(
-      `UPDATE wallet_rate_limits 
-       SET last_comment_at = NOW() 
-       WHERE wallet_address = $1 AND (last_comment_at IS NULL OR last_comment_at < NOW() - interval '30 seconds')
-       RETURNING *`,
-      [wallet]
-    );
-
-    if (result.rowCount === 0) {
-      const checkExists = await query(`SELECT last_comment_at FROM wallet_rate_limits WHERE wallet_address = $1`, [wallet]);
-      if (checkExists.rowCount! > 0) {
-        return res.status(429).json({ error: "Aguarde 30 segundos antes de postar outro comentário." });
-      }
-      // Se não existe, insere
-      await query(
-        `INSERT INTO wallet_rate_limits (wallet_address, last_comment_at) VALUES ($1, NOW()) ON CONFLICT (wallet_address) DO UPDATE SET last_comment_at = NOW()`,
-        [wallet]
-      );
-    }
-
     const content = String(req.body.content || "").trim();
     
     if (!content || content.length > 500) {
@@ -1187,6 +1166,21 @@ app.post("/launches/:id/comments", requireSession, requireValidUUID, validate(Co
     const urlRegex = /(https?:\/\/[^\s]+)|(www\.[^\s]+)|([a-zA-Z0-9-]+\.[a-zA-Z]{2,}(\/[^\s]*)?)/i;
     if (urlRegex.test(content)) {
       return res.status(400).json({ error: "Links não são permitidos nos comentários por segurança." });
+    }
+    
+    const rl = await query(
+      `INSERT INTO wallet_rate_limits (wallet_address, last_comment_at)
+       VALUES ($1, NOW())
+       ON CONFLICT (wallet_address) DO UPDATE
+         SET last_comment_at = NOW()
+       WHERE wallet_rate_limits.last_comment_at IS NULL
+          OR wallet_rate_limits.last_comment_at < NOW() - interval '30 seconds'
+       RETURNING *`,
+      [wallet]
+    );
+
+    if ((rl.rowCount ?? 0) === 0) {
+      return res.status(429).json({ error: "Aguarde 30 segundos antes de postar outro comentário." });
     }
 
     // Insertion is already handled above in the rate limit check to prevent race conditions
@@ -1293,7 +1287,8 @@ async function start() {
   }, 60000);
 
   io.use((socket, next) => {
-    const ip = socket.handshake.address;
+    const rawIp = socket.handshake.headers["x-forwarded-for"] || socket.handshake.address;
+    const ip = Array.isArray(rawIp) ? rawIp[0] : (typeof rawIp === 'string' ? rawIp.split(',')[0].trim() : "unknown");
     const now = Date.now();
     const limit = socketRateLimit.get(ip);
     
@@ -1338,6 +1333,7 @@ async function start() {
     
     stopSyncJob();
     clearInterval(authCleanupTimer);
+    clearInterval(paymentCacheCleanupTimer);
 
     server.close(async () => {
       console.log("[Server] Active HTTP requests finished.");

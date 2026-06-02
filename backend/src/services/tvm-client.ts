@@ -41,6 +41,13 @@ try {
   const libNode = loadLibNode();
   tvmCore.TvmClient.useBinaryLibrary(libNode);
   sdkAvailable = true;
+  if (!process.env.TVM_SDK_NODE_BINARY && !process.env.SKIP_BINARY_CHECK) {
+    console.warn(
+      "[TvmClient] ⚠️  ATENÇÃO: Usando binário padrão do @tvmsdk/lib-node. " +
+      "Confirme que tvmsdk.node foi compilado para Acki Nacki conforme o Quick Start: " +
+      "https://dev.ackinacki.com/acki-nacki-sdk/quick-start-tvm-sdk-javascript"
+    );
+  }
   console.log("[TvmClient] SDK inicializado com lib-node (nativo).");
 } catch (e: any) {
   console.warn("[TvmClient] SDK TVM não carregou:", e.message);

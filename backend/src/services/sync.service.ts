@@ -60,8 +60,10 @@ async function runLocalGetter(boc: string, address: string, abiPath: string, fun
     });
     
     return result.decoded.output;
-  } catch (err) {
-    // Silently handle errors for specific token instances to not break the whole job
+  } catch (err: any) {
+    if (!err.message?.includes("account not found")) {
+      console.warn(`[SyncJob] runLocalGetter ${functionName} @ ${address}: ${err.message}`);
+    }
     return null;
   }
 }
