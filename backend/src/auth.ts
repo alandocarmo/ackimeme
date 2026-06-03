@@ -485,10 +485,11 @@ export async function processQrWebhook({ sessionId, walletAddress, publicKey, si
 
     return { success: true };
   } catch (error: unknown) {
-    // Rollback processing lock so a retry can happen before expiration.
+    // BUG-06 FIX: Do not revert back to 'pending'. Mark as 'failed' to prevent infinite brute-force signature retry loops.
+    // The user must generate a new QR session if their app fails the signature verification.
     await query(
       `UPDATE qr_sessions
-       SET status='pending'
+       SET status='failed'
        WHERE id=$1 AND status='processing' AND expires_at > NOW()`,
       [sessionId],
     ).catch(() => {});

@@ -208,10 +208,15 @@ export async function getTransaction(hash: any) {
  * 1 SHELL = 1_000_000_000 nanotokens (9 casas decimais, padrão TVM).
  */
 export function nanoToDecimal(nanoValue: any) {
-  const nano = BigInt(String(nanoValue || "0").replace(/\D/g, "") || "0");
-  const whole = nano / 1_000_000_000n;
-  const frac = nano % 1_000_000_000n;
-  return `${whole}.${String(frac).padStart(9, "0")}`;
+  const str = String(nanoValue || "0").replace(/[^\d-]/g, "");
+  if (!str || str === "-") return "0.000000000";
+  const nano = BigInt(str);
+  const isNegative = nano < 0n;
+  const absNano = isNegative ? -nano : nano;
+  const whole = absNano / 1_000_000_000n;
+  const frac = absNano % 1_000_000_000n;
+  const sign = isNegative ? "-" : "";
+  return `${sign}${whole}.${String(frac).padStart(9, "0")}`;
 }
 
 export function extractCurrencyNano(currencies: any, currencyId: any) {
@@ -440,18 +445,11 @@ export async function getAccountPublicKey(address: any) {
       try {
         const parsed = await sdkClient.boc.parse_account({ boc: info.boc });
         const parsedData = parsed.parsed;
-        // On TVM/Everscale, checking the code or data could give us the pubkey 
-        // But simply decoding the account data if we know the standard setcode multisig ABI
-        // For standard setcode multisig ABI, constructor has pubkey constraint.
-        // For general approach, the initial data of the contract stores the pubkey in the first 256 bits.
-        // We can just rely on the SDK internal methods.
         if (parsedData && parsedData.id) {
-            // We only need this as a fallback if the user used a wallet we don't know
-            // In Acki Nacki, the simplest way to verify Ed25519 is done in Auth flow.
+            // Fallback not fully implemented for standard multisig
         }
-        publicKey = "";
       } catch {
-        publicKey = "";
+        // preserve undefined or extracted pubkey, do not overwrite to ""
       }
     }
 
@@ -558,7 +556,7 @@ export async function getRecentBondingCurveTrades(address: any) {
                 type: "buy",
                 tokenAmount: String(decodedBuy.tokensOut),
                 shellAmount: String(decodedBuy.shellIn),
-                price: Number(decodedBuy.tokensOut) > 0 ? Number((BigInt(decodedBuy.shellIn) * 1_000_000_000n) / BigInt(decodedBuy.tokensOut)) / 1_000_000_000 : 0,
+                price: Number(decodedBuy.tokensOut) > 0 ? Number(decodedBuy.shellIn) / Number(decodedBuy.tokensOut) : 0,
                 createdAt: new Date(tx.now * 1000).toISOString()
               });
               continue;
@@ -576,7 +574,7 @@ export async function getRecentBondingCurveTrades(address: any) {
                 type: "sell",
                 tokenAmount: String(decodedSell.tokensIn),
                 shellAmount: String(decodedSell.shellOut),
-                price: Number(decodedSell.tokensIn) > 0 ? Number((BigInt(decodedSell.shellOut) * 1_000_000_000n) / BigInt(decodedSell.tokensIn)) / 1_000_000_000 : 0,
+                price: Number(decodedSell.tokensIn) > 0 ? Number(decodedSell.shellOut) / Number(decodedSell.tokensIn) : 0,
                 createdAt: new Date(tx.now * 1000).toISOString()
               });
             }

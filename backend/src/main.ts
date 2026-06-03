@@ -30,6 +30,7 @@ import {
   createLaunchBundle,
   getLaunchById,
   getWalletLastLaunch,
+  checkAndUpdateWalletRateLimit,
   updateWalletLastLaunch,
   listLaunchesByWallet,
   listPublicLaunches,
@@ -181,13 +182,10 @@ const RATE_LIMIT_WINDOW_MS = 60 * 60 * 1000; // 1 hour
 const hasWildcardOrigin = config.allowedOrigins.includes("*");
 
 async function checkWalletRateLimit(walletAddress: string): Promise<void> {
-  const lastTime = await getWalletLastLaunch(walletAddress);
-  if (lastTime) {
-    const lastTimeMs = new Date(lastTime).getTime();
-    if (Date.now() - lastTimeMs < RATE_LIMIT_WINDOW_MS) {
-      const waitMinutes = Math.ceil((RATE_LIMIT_WINDOW_MS - (Date.now() - lastTimeMs)) / 60000);
-      throw new Error(`Rate limit: aguarde ${waitMinutes} minuto(s) para criar outro token.`);
-    }
+  const result = await checkAndUpdateWalletRateLimit(walletAddress, RATE_LIMIT_WINDOW_MS);
+  if (!result.success && result.timeSinceLastLaunch !== undefined) {
+    const waitMinutes = Math.ceil((RATE_LIMIT_WINDOW_MS - result.timeSinceLastLaunch) / 60000);
+    throw new Error(`Rate limit: aguarde ${waitMinutes} minuto(s) para criar outro token.`);
   }
 }
 

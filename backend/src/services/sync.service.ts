@@ -157,6 +157,16 @@ export async function syncOnchainData(): Promise<void> {
           }
           
           updatedCount++;
+        } else {
+          // Token is not deployed yet. Bump the sync cursor so it doesn't starve the queue.
+          await updateLaunchOnchainState(launch.id, {
+            reserveBalance: launch.onchainData?.reserveBalance || "0",
+            tokenSupply: launch.onchainData?.tokenSupply,
+            lockedLiquidity: launch.onchainData?.lockedLiquidity || false,
+            status: launch.status,
+            deployStatus: launch.onchainData?.deployStatus || "pending",
+            deployReason: launch.onchainData?.deployReason || "",
+          });
         }
       })
     );

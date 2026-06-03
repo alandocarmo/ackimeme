@@ -670,6 +670,27 @@ export async function updateWalletLastLaunch(walletAddress: any) {
   );
 }
 
+export async function checkAndUpdateWalletRateLimit(walletAddress: string, cooldownMs: number): Promise<{ success: boolean; timeSinceLastLaunch?: number }> {
+  const result = await query(
+    `INSERT INTO wallet_rate_limits (wallet_address, last_launch_at) 
+     VALUES ($1, NOW())
+     ON CONFLICT (wallet_address) DO UPDATE 
+     SET last_launch_at = CASE 
+       WHEN EXTRACT(EPOCH FROM (NOW() - wallet_rate_limits.last_launch_at)) * 1000 > $2 
+       THEN NOW() 
+       ELSE wallet_rate_limits.last_launch_at 
+     END
+     RETURNING EXTRACT(EPOCH FROM (NOW() - last_launch_at)) * 1000 AS time_since_last_launch`,
+    [String(walletAddress || "").toLowerCase(), cooldownMs]
+  );
+  
+  const timeSince = Number(result.rows[0].time_since_last_launch);
+  return {
+    success: timeSince === 0,
+    timeSinceLastLaunch: timeSince
+  };
+}
+
 // ─── Token Comments (Feature: Chat) ──────────────────────────────────────────
 
 export async function addComment(comment: Comment) {
