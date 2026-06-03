@@ -639,10 +639,15 @@ export async function listAllLaunches(limit: any = 500) {
 
 // ── Persistent rate limit & txHash dedup ─────────────────────────────────────
 
+export function canonicalTxHash(txHash: any): string {
+  const hash = String(txHash || "").toLowerCase().trim();
+  return hash.startsWith("0x") ? hash.slice(2) : hash;
+}
+
 export async function reserveTxHash(txHash: any, walletAddress: any) {
   const result = await query(
     `INSERT INTO used_tx_hashes (tx_hash, wallet_address) VALUES ($1, $2) ON CONFLICT (tx_hash) DO NOTHING RETURNING tx_hash`,
-    [String(txHash || "").toLowerCase(), String(walletAddress || "").toLowerCase()],
+    [canonicalTxHash(txHash), String(walletAddress || "").toLowerCase()],
   );
   return (result.rowCount ?? 0) > 0;
 }
@@ -650,7 +655,7 @@ export async function reserveTxHash(txHash: any, walletAddress: any) {
 export async function releaseTxHashReservation(txHash: any) {
   await query(
     `DELETE FROM used_tx_hashes WHERE tx_hash = $1`,
-    [String(txHash || "").toLowerCase()],
+    [canonicalTxHash(txHash)],
   );
 }
 

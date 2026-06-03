@@ -48,6 +48,14 @@ try {
   }
   console.log("[TvmClient] SDK inicializado com lib-node (nativo).");
 } catch (e: any) {
+  if (process.env.NODE_ENV === "production" && process.env.ENABLE_ONCHAIN_DEPLOY === "true") {
+    console.error("[TvmClient] 🚨 Erro Fatal: SDK TVM não carregou.", e.message);
+    throw new Error(
+      "[TvmClient] 🚨 CRÍTICO: ENABLE_ONCHAIN_DEPLOY=true em produção, mas SDK TVM falhou. " +
+      "Isso quebra os contratos inteligentes. Forneça o TVM_SDK_NODE_BINARY compatível com Acki Nacki ou defina ENABLE_ONCHAIN_DEPLOY=false. " + 
+      "Erro original: " + e.message
+    );
+  }
   console.warn("[TvmClient] SDK TVM não carregou:", e.message);
   console.error(
     "[TvmClient] ⚠️ Deploy on-chain e sync ficarão indisponíveis. " +

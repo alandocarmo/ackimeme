@@ -7,6 +7,7 @@ process.on("unhandledRejection", (reason, promise) => {
 });
 process.on("uncaughtException", (error) => {
   console.error("[Process] Uncaught Exception:", error);
+  process.exit(1);
 });
 import express, { Request, Response, NextFunction } from "express";
 import { buildPublicConfig, config, validateConfig } from "./config";
@@ -346,8 +347,10 @@ app.use((req: Request, res: Response, next: NextFunction) => {
     };
 
     if (isProduction && !isValidOrigin(originHeader) && !isValidOrigin(referer)) {
-      console.warn(`[Security] Potential CSRF blocked on ${req.path} from ${originHeader || referer}`);
-      return res.status(403).json({ error: "Acesso negado: Origem não autorizada (CSRF Protection)." });
+      if (!req.path.startsWith("/auth/qr/webhook")) {
+        console.warn(`[Security] Potential CSRF blocked on ${req.path} from ${originHeader || referer}`);
+        return res.status(403).json({ error: "Acesso negado: Origem não autorizada (CSRF Protection)." });
+      }
     }
   }
 
@@ -703,7 +706,7 @@ app.post("/verify-payment", paymentLimiter, requireSession, validate(VerifyPayme
       throw new Error("txHash é obrigatório.");
     }
 
-    const isBoosted = Boolean(req.body?.isBoosted);
+    const isBoosted = req.body?.isBoosted === "true" || req.body?.isBoosted === true;
 
     const payment = await verifyPayment({
       walletAddress,
@@ -814,6 +817,10 @@ app.post("/launch-request", requireSession, validate(CreateLaunchSchema), async 
       riskProfile,
     });
 
+    console.log(`[Launch] Iniciando upload IPFS do token: ${launchTicket.id}`);
+    const metadata = createTokenMetadata(launchRequest);
+    const ipfsHash = await uploadToIPFS(metadata);
+
     console.log(`[Launch] Salvando token preliminar no banco: ${launchTicket.id}`);
     
     try {
@@ -836,9 +843,6 @@ app.post("/launch-request", requireSession, validate(CreateLaunchSchema), async 
     }
 
     console.log(`[Launch] Iniciando automação on-chain para ${launchTicket.id}`);
-    
-    const metadata = createTokenMetadata(launchRequest);
-    const ipfsHash = await uploadToIPFS(metadata);
     
     const deployResult = await deployTokenEcosystem({
       name: launchRequest.coin.name,
@@ -985,7 +989,7 @@ function mapPublicLaunch(launch: any): any {
 
 app.get("/launches/search", (req: Request, res: Response) => {
   const queryParam = String(req.query.q || "").trim();
-  const limit = Math.min(100, parseInt(req.query.limit as string) || 30);
+  const limit = Math.max(1, Math.min(100, parseInt(req.query.limit as string) || 30));
   const offset = Math.max(0, parseInt(req.query.offset as string) || 0);
   if (!queryParam) {
     return res.json({ success: true, launches: [] });
@@ -1212,8 +1216,8 @@ app.post("/launches/:id/comments", requireSession, requireValidUUID, validate(Co
 
 app.get("/launches/:id/trades", requireValidUUID, async (req: Request, res: Response) => {
   try {
-    const limit = parseInt(req.query.limit as string) || 50;
-    const trades = await getTradesByLaunchId(req.params.id, Math.min(100, limit));
+    const limit = Math.max(1, Math.min(100, parseInt(req.query.limit as string) || 50));
+    const trades = await getTradesByLaunchId(req.params.id, limit);
     res.json({ success: true, trades });
   } catch (err: any) {
     res.status(500).json({ error: 'Erro interno do servidor.' });

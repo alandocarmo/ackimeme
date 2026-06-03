@@ -134,6 +134,7 @@ export interface AppConfig {
     type: string;
     fairLaunch: boolean;
   };
+  shellBuy: boolean;
 }
 
 export const config: AppConfig = {
@@ -177,12 +178,14 @@ export const config: AppConfig = {
     type: "pump_fun_bonding_curve",
     fairLaunch: true,
   },
+  shellBuy: String(process.env.ENABLE_SHELL_BUY || "false").toLowerCase() === "true",
 };
 
 export function buildPublicConfig() {
   return {
     appName: config.appName,
     network: config.network,
+    shellBuy: config.shellBuy,
     payment: {
       feeWallet: config.feeWalletConfigured ? config.feeWallet : "Configure backend/.env",
       creationFees: config.creationFeeOptions,

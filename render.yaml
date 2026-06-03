@@ -2,7 +2,7 @@ services:
   - type: web
     name: ackimeme-api
     env: docker
-    dockerContext: ./backend
+    dockerContext: .
     dockerfilePath: ./backend/Dockerfile
     plan: free # Change to standard/pro if needed
     healthCheckPath: /readyz
