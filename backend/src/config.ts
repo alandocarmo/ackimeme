@@ -98,7 +98,6 @@ function readCreationFeeOptions(): CreationFeeOption[] {
 
 const creationFeeOptions = readCreationFeeOptions();
 const feeWallet = process.env.FEE_WALLET || "";
-const adminToken = process.env.ADMIN_TOKEN || "";
 const jwtSecret = process.env.JWT_SECRET || (() => {
   const generated = require("crypto").randomBytes(32).toString("hex");
   console.warn("⚠️  JWT_SECRET não configurado — usando segredo aleatório (sessões admin não sobrevivem restart).");
@@ -124,8 +123,6 @@ export interface AppConfig {
   telegramBotToken: string;
   telegramAuthMaxAgeSeconds: number;
   telegramBotUsername: string;
-  adminToken: string;
-  adminTokenStrong: boolean;
   jwtSecret: string;
   jwtSecretConfigured: boolean;
   adminWallets: string[];
@@ -168,10 +165,8 @@ export const config: AppConfig = {
     DEFAULT_TELEGRAM_AUTH_MAX_AGE_SECONDS,
   ),
   telegramBotUsername: process.env.TELEGRAM_BOT_USERNAME || "ackinacki_bot",
-  adminToken,
-  adminTokenStrong: isStrongSecret(adminToken, 32),
   jwtSecret,
-  jwtSecretConfigured: isStrongSecret(jwtSecret, 32) && jwtSecret !== adminToken,
+  jwtSecretConfigured: isStrongSecret(jwtSecret, 32),
   adminWallets: readCsv(process.env.ADMIN_WALLETS).map((item) => item.toLowerCase()),
   appFeeSharePercent: readPositiveInteger(process.env.APP_FEE_SHARE_PERCENT, 100),
   launchDistribution: {
@@ -213,7 +208,7 @@ export function buildPublicConfig() {
       distribution: config.launchDistribution,
     },
     admin: {
-      authMode: config.adminWallets.length > 0 ? "wallet_or_token" : "token_only",
+      authMode: "wallet_only",
     },
   };
 }
@@ -225,11 +220,8 @@ export function validateConfig(): void {
     if (!config.feeWalletConfigured) {
       errors.push("FEE_WALLET não está configurada corretamente (requer formato 0:abc...)");
     }
-    if (!config.adminTokenStrong) {
-      errors.push("ADMIN_TOKEN precisa ter pelo menos 32 caracteres em produção.");
-    }
     if (!config.jwtSecretConfigured) {
-      errors.push("JWT_SECRET precisa ser forte (32+ caracteres) e diferente do ADMIN_TOKEN em produção.");
+      errors.push("JWT_SECRET precisa ser forte (32+ caracteres) em produção.");
     }
     if (!config.databaseUrl) {
       errors.push("DATABASE_URL é obrigatória em produção.");

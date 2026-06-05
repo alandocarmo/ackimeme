@@ -401,7 +401,6 @@ async function requireSession(req: Request, res: Response, next: NextFunction) {
 }
 
 // ─── Admin Security Layer ──────────────────────────────────────────────────
-const ADMIN_MASTER_PASSWORD = config.adminToken; // Senha para login admin
 const JWT_SIGNING_SECRET = config.jwtSecret;     // Segredo separado para assinar JWTs
 
 function signAdminJwt(walletAddress: string): string {
@@ -431,23 +430,18 @@ async function requireSecurityAdmin(req: Request, res: Response, next: NextFunct
 
 app.post("/admin/unlock", authLimiter, requireSession, async (req: Request, res: Response) => {
   try {
-    const { password, walletAddress } = req.body || {};
-    if (!config.adminTokenStrong) return res.status(503).json({ error: "ADMIN_TOKEN não configurado com segurança no backend." });
+    const { walletAddress } = req.body || {};
     
     if (req.session.walletAddress.toLowerCase() !== String(walletAddress || "").toLowerCase()) {
       return res.status(403).json({ error: "Acesso negado: carteira não corresponde à sessão autenticada." });
     }
 
-    if (config.adminWallets.length > 0) {
-      if (!config.adminWallets.includes(String(walletAddress).toLowerCase())) {
-         return res.status(403).json({ error: "Acesso negado: carteira não autorizada no whitelist." });
-      }
+    if (config.adminWallets.length === 0) {
+      return res.status(503).json({ error: "ADMIN_WALLETS não configurado no servidor." });
     }
 
-    const passwordBuffer = Buffer.from(String(password || ""));
-    const masterBuffer = Buffer.from(ADMIN_MASTER_PASSWORD);
-    if (!password || passwordBuffer.length !== masterBuffer.length || !crypto.timingSafeEqual(passwordBuffer, masterBuffer)) {
-      return res.status(401).json({ error: "Senha incorreta." });
+    if (!config.adminWallets.includes(String(walletAddress).toLowerCase())) {
+      return res.status(403).json({ error: "Acesso negado: carteira não autorizada no whitelist." });
     }
     
     const token = signAdminJwt(req.session.walletAddress);
@@ -491,7 +485,6 @@ app.get("/readyz", async (_, res) => {
       !config.isProduction ||
       (checks.graphqlConfigured &&
         checks.feeWalletConfigured &&
-        checks.adminTokenConfigured &&
         checks.allowedOriginsConfigured);
 
     if (config.isProduction) {
