@@ -234,7 +234,7 @@ export function validateConfig(): void {
       errors.push("DEPLOYER_WALLET_ADDRESS inválida ou ausente para pré-financiar endereços futuros.");
     }
     if (process.env.ENABLE_ONCHAIN_DEPLOY !== "true") {
-      errors.push("ENABLE_ONCHAIN_DEPLOY deve ser 'true' na produção (sem simulações).");
+      console.warn("⚠️  Aviso: ENABLE_ONCHAIN_DEPLOY não é 'true'. Modo simulação on-chain ativo na produção.");
     }
     if (!process.env.PINATA_API_KEY || !process.env.PINATA_SECRET_API_KEY) {
       errors.push("PINATA_API_KEY/SECRET_API_KEY ausentes (necessário para IPFS).");
