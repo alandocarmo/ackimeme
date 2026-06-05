@@ -9,6 +9,7 @@ import ErrorBoundary from "../lib/ErrorBoundary";
 import { I18nProvider, useI18n, SUPPORTED_LANGS } from "../lib/i18n";
 import type { AppProps } from "next/app";
 import type { Session } from "../types";
+import "../styles/globals.css";
 import styles from "../styles/GlobalNav.module.css";
 
 function LanguageSwitcher() {
