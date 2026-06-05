@@ -221,7 +221,7 @@ async function buildReadinessChecks(databaseReachable: boolean): Promise<any> {
     databaseReachable,
     graphqlConfigured: Boolean(config.graphqlUrl),
     feeWalletConfigured: config.feeWalletConfigured,
-    adminTokenConfigured: config.adminTokenStrong,
+    adminWalletsConfigured: config.adminWallets.length > 0,
     allowedOriginsConfigured:
       config.allowedOrigins.length > 0 && !hasWildcardOrigin,
     storageProvider: "postgres",
