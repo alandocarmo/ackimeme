@@ -16,7 +16,7 @@ const translations: Record<string, Record<string, string>> = {
     // Hero
     hero_title_1: "the memecoin launchpad",
     hero_title_2: "on Acki Nacki",
-    hero_subtitle: "fair launch · bonding curve · optional auto-migrate to AMM at 15K SHELL",
+    hero_subtitle: "fair launch · bonding curve · migrates to AMM at 69K SHELL",
     hero_cta: "🚀 Launch your coin",
 
     // Stats
@@ -110,7 +110,7 @@ const translations: Record<string, Record<string, string>> = {
     create_launching: "Launching…",
     create_eco_model: "Economic Model",
     create_eco_auto: "⚖️ Automatic Graduation (Classic)",
-    create_eco_auto_desc: "Migrates to an internal AMM (x*y=k) automatically when it reaches 15K SHELL, stabilizing the price for community growth.",
+    create_eco_auto_desc: "Migrates to an internal AMM (x*y=k) when it reaches 69K SHELL, stabilizing the price for community growth.",
     create_eco_pump: "🚀 Pump Forever (Infinite Curve)",
     create_eco_pump_desc: "Never graduates. The price continues to climb exponentially on the bonding curve forever. High risk, high volatility.",
     create_pump_title: "🚀 Pump Aggressiveness",
@@ -184,7 +184,7 @@ const translations: Record<string, Record<string, string>> = {
 
     hero_title_1: "o launchpad de memecoins",
     hero_title_2: "na Acki Nacki",
-    hero_subtitle: "lançamento justo · curva de ligação · migração automática para AMM a 15K SHELL",
+    hero_subtitle: "lançamento justo · curva de ligação · migração para AMM a 69K SHELL",
     hero_cta: "🚀 Lance sua moeda",
 
     stats_tokens_launched: "Tokens Lançados",
@@ -269,7 +269,7 @@ const translations: Record<string, Record<string, string>> = {
     create_launching: "Lançando…",
     create_eco_model: "Modelo Econômico",
     create_eco_auto: "⚖️ Graduação Automática (Clássico)",
-    create_eco_auto_desc: "Migra automaticamente para um AMM interno (x*y=k) ao alcançar 15K SHELL, estabilizando o preço para crescimento da comunidade.",
+    create_eco_auto_desc: "Migra para um AMM interno (x*y=k) ao alcançar 69K SHELL, estabilizando o preço para crescimento da comunidade.",
     create_eco_pump: "🚀 Pump Eterno (Curva Infinita)",
     create_eco_pump_desc: "Nunca gradua. O preço continua a subir exponencialmente na curva de ligação para sempre. Alto risco, alta volatilidade.",
     create_pump_title: "🚀 Agressividade do Pump",
@@ -338,7 +338,7 @@ const translations: Record<string, Record<string, string>> = {
 
     hero_title_1: "лаунчпад мемкоинов",
     hero_title_2: "на Acki Nacki",
-    hero_subtitle: "честный запуск · кривая связи · автоматическая миграция в AMM при 15K SHELL",
+    hero_subtitle: "честный запуск · кривая связи · миграция в AMM при 69K SHELL",
     hero_cta: "🚀 Запустить монету",
 
     stats_tokens_launched: "Токенов запущено",
@@ -423,7 +423,7 @@ const translations: Record<string, Record<string, string>> = {
     create_launching: "Запуск…",
     create_eco_model: "Экономическая модель",
     create_eco_auto: "⚖️ Автоматический выпуск (Классика)",
-    create_eco_auto_desc: "Автоматически мигрирует в AMM (x*y=k) при достижении 15K SHELL, стабилизируя цену.",
+    create_eco_auto_desc: "Мигрирует в AMM (x*y=k) при достижении 69K SHELL, стабилизируя цену.",
     create_eco_pump: "🚀 Вечный памп (Бесконечная кривая)",
     create_eco_pump_desc: "Никогда не выпускается. Цена продолжает экспоненциально расти на кривой навсегда. Высокий риск.",
     create_pump_title: "🚀 Агрессивность пампа",

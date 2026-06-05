@@ -709,13 +709,13 @@ export default function TokenPage(): React.JSX.Element {
                     </div>
                     <div className={styles.statBox}>
                       <span className={styles.statLabel}>Threshold</span>
-                      <span className={styles.statValue} style={{ fontSize: '18px' }}>15K {t("common_shell")}</span>
+                      <span className={styles.statValue} style={{ fontSize: '18px' }}>69K {t("common_shell")}</span>
                     </div>
                   </div>
                   
                   <p className={styles.tokenSubtitle} style={{ fontSize: '11px', margin: 0, opacity: 0.8 }}>
                     {stats!.hasOnchainReserve
-                      ? "Liquidity auto-migrates to internal AMM at 15K SHELL reserve."
+                      ? "Liquidity migrates to internal AMM at 69K SHELL reserve."
                       : "Progress requires reserveBalance indexed from blockchain. Values stay as awaiting until first trade."}
                   </p>
                 </div>
