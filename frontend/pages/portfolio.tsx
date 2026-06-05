@@ -75,14 +75,41 @@ export default function PortfolioPage() {
 
           if (!userWalletAddress) {
             const rootContract = new ever.Contract(TokenRootAbi, new Address((launch.onchainData?.tokenRootAddress || "")));
-            const walletResult = await (rootContract.methods as any).walletOf({
-              answerId: 0,
-              walletOwner: address
+            const walletResult = await (rootContract.methods as any).getWalletAddress({
+              ownerAddress: address
             }).call();
             userWalletAddress = walletResult.value0.toString();
             
             if (userWalletAddress && userWalletAddress !== "0:0000000000000000000000000000000000000000000000000000000000000000") {
-               localStorage.setItem(cacheKey, userWalletAddress);
+               localStorage.setItem(cacheKey, JSON.stringify({ address: userWalletAddress, timestamp: Date.now() }));
+            }
+          } else {
+            try {
+              const parsedCache = JSON.parse(userWalletAddress);
+              const CACHE_TTL_MS = 24 * 60 * 60 * 1000;
+              if (parsedCache.address && Date.now() - parsedCache.timestamp < CACHE_TTL_MS) {
+                userWalletAddress = parsedCache.address;
+              } else {
+                userWalletAddress = null; // Expired, will re-fetch next time or if we structured the loop differently. Actually, let's just re-fetch right away.
+                const rootContract = new ever.Contract(TokenRootAbi, new Address((launch.onchainData?.tokenRootAddress || "")));
+                const walletResult = await (rootContract.methods as any).getWalletAddress({
+                  ownerAddress: address
+                }).call();
+                userWalletAddress = walletResult.value0.toString();
+                if (userWalletAddress && userWalletAddress !== "0:0000000000000000000000000000000000000000000000000000000000000000") {
+                   localStorage.setItem(cacheKey, JSON.stringify({ address: userWalletAddress, timestamp: Date.now() }));
+                }
+              }
+            } catch (e) {
+               // Old format (just the address string) or corrupted
+               const rootContract = new ever.Contract(TokenRootAbi, new Address((launch.onchainData?.tokenRootAddress || "")));
+               const walletResult = await (rootContract.methods as any).getWalletAddress({
+                 ownerAddress: address
+               }).call();
+               userWalletAddress = walletResult.value0.toString();
+               if (userWalletAddress && userWalletAddress !== "0:0000000000000000000000000000000000000000000000000000000000000000") {
+                  localStorage.setItem(cacheKey, JSON.stringify({ address: userWalletAddress, timestamp: Date.now() }));
+               }
             }
           }
 
@@ -91,8 +118,8 @@ export default function PortfolioPage() {
           }
 
           const walletContract = new ever.Contract(TokenWalletAbi, new Address(userWalletAddress));
-          const balanceResult = await (walletContract.methods as any).balance({ answerId: 0 }).call();
-          const balanceNano = balanceResult.value0;
+          const balanceResult = await (walletContract.methods as any).balance({}).call();
+          const balanceNano = balanceResult.balance;
           
           if (BigInt(String(balanceNano || "0")) > 0n) {
             return {

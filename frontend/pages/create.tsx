@@ -8,7 +8,7 @@ import {
   getSession,
   verifyPayment,
 } from "../lib/api";
-import { formatNum, getSlopeLabel, sliderToSlopeDivisor, slopeDivisorToSlider } from "../lib/utils";
+import { formatNum, getSlopeLabel, sliderToSlopeDivisor, slopeDivisorToSlider, isSafeUrl } from "../lib/utils";
 import { useI18n } from "../lib/i18n";
 import { Session } from "../types";
 import styles from "../styles/Create.module.css";
@@ -55,6 +55,10 @@ export default function CreatePage() {
       v = sanitizeSymbol(value as string);
     } else if (field === "totalSupply") {
       v = String(value || "").replace(/[^\d]/g, "");
+    } else if (field === "logoUrl") {
+      // Allow empty or valid https URLs only
+      const url = String(value || "").trim();
+      v = url && !isSafeUrl(url) && url.length > 8 ? v : url;
     }
     setForm((prev) => ({ ...prev, [field]: v }));
   }
@@ -215,10 +219,11 @@ export default function CreatePage() {
                     </div>
                   </div>
                   <div className="card" style={{ background: 'var(--bg-deep)', padding: '16px', marginBottom: '24px', borderRadius: '12px', border: '1px solid var(--accent)' }}>
-                    <h3 className={styles['input-label']} style={{ marginTop: 0, marginBottom: '12px', color: 'var(--accent)' }}>{t("create_pump_title")}</h3>
+                    <label htmlFor="pump-range" className={styles['input-label']} style={{ display: 'block', marginTop: 0, marginBottom: '12px', color: 'var(--accent)', fontSize: '1.17em', fontWeight: 'bold' }}>{t("create_pump_title")}</label>
                     <p style={{ fontSize: '13px', color: 'var(--ink-soft)', marginBottom: '16px' }}>{t("create_pump_subtitle")}</p>
                     <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
                       <input 
+                        id="pump-range"
                         type="range" 
                         min="1" max="5" step="1"
                         value={slopeDivisorToSlider(form.slopeDivisor)}
@@ -265,6 +270,9 @@ export default function CreatePage() {
                       <span className={styles['input-label']}>{t("create_logo")}</span>
                       <input className={styles['text-input']} value={form.logoUrl}
                         onChange={(e) => updateField("logoUrl", e.target.value)} placeholder="https://..." />
+                      {form.logoUrl && !isSafeUrl(form.logoUrl) && form.logoUrl.length > 8 && (
+                        <span className={styles['input-hint']} style={{ color: 'var(--red)' }}>⚠ Only HTTPS URLs are accepted</span>
+                      )}
                     </label>
                   </div>
 

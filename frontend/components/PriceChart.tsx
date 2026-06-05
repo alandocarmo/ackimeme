@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useId } from "react";
 import { useI18n } from "../lib/i18n";
 import styles from "../styles/Token.module.css";
 
@@ -22,6 +22,10 @@ export function PriceChart({ currentPrice, progressPct, slopeDivisor }: { curren
   const currentX = pct;
   const currentY = 70 - (Math.pow(pct / 100, exponent) * 50);
 
+  const chartId = useId().replace(/:/g, '');
+  const gradientId = `chartGradient-${chartId}`;
+  const glowId = `glow-${chartId}`;
+
   return (
     <div className={`card ${styles.chartCard}`} style={{ height: '240px', padding: '0', position: 'relative', overflow: 'hidden', border: '1px solid var(--ink-faint)', background: 'linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(0,255,136,0.02) 100%)' }}>
        <div style={{ position: 'absolute', top: '20px', left: '20px', zIndex: 10 }}>
@@ -33,11 +37,11 @@ export function PriceChart({ currentPrice, progressPct, slopeDivisor }: { curren
        
        <svg viewBox="0 0 100 80" preserveAspectRatio="none" style={{ width: '100%', height: '100%', position: 'absolute', bottom: 0, left: 0 }}>
           <defs>
-            <linearGradient id="chartGradient" x1="0" y1="0" x2="0" y2="1">
+            <linearGradient id={gradientId} x1="0" y1="0" x2="0" y2="1">
               <stop offset="0%" stopColor="var(--accent)" stopOpacity="0.15" />
               <stop offset="100%" stopColor="var(--accent)" stopOpacity="0" />
             </linearGradient>
-            <filter id="glow">
+            <filter id={glowId}>
               <feGaussianBlur stdDeviation="1.5" result="coloredBlur"/>
               <feMerge>
                 <feMergeNode in="coloredBlur"/><feMergeNode in="SourceGraphic"/>
@@ -56,11 +60,11 @@ export function PriceChart({ currentPrice, progressPct, slopeDivisor }: { curren
             strokeLinecap="round"
             strokeLinejoin="round"
             points={points.join(' ')}
-            style={{ filter: 'url(#glow)' }}
+            style={{ filter: `url(#${glowId})` }}
           />
           <path
             d={`M 0 80 L ${points.join(' L ')} L 100 80 Z`}
-            fill="url(#chartGradient)"
+            fill={`url(#${gradientId})`}
           />
           
           <circle 

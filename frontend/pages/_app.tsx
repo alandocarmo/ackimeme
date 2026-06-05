@@ -55,21 +55,27 @@ function GlobalNav({ session }: { session: Session | null }) {
         <span className={styles.navNetworkTag}>Acki Nacki</span>
       </div>
       <div className={styles.navRight}>
-        <Link href="/" className={styles.navLink}>
+        <Link href="/" className={styles.navLink} aria-current={router.pathname === "/" ? "page" : undefined}>
           {t("nav_board")}
         </Link>
-        <Link href="/portfolio" className={styles.navLink}>
+        <Link href="/portfolio" className={styles.navLink} aria-current={router.pathname === "/portfolio" ? "page" : undefined}>
           {t("nav_portfolio")}
         </Link>
-        <Link href="/create" className="btn-primary" style={{ fontSize: '12px', padding: '8px 16px' }}>
+        <Link href="/create" className="btn-primary" style={{ fontSize: '12px', padding: '8px 16px' }} aria-current={router.pathname === "/create" ? "page" : undefined}>
           {t("nav_create")}
         </Link>
         <LanguageSwitcher />
         {session ? (
-          <Link href="/auth" className={styles.walletBadge}>
-            <span className={styles.walletDot} />
-            {session.walletAddress.slice(0, 6)}…{session.walletAddress.slice(-4)}
-          </Link>
+          <>
+            <div className="badge-verifier" title="Bee Engine Verifier Status">
+              <span className="badge-verifier-icon">🐝</span>
+              Novice Node
+            </div>
+            <Link href="/auth" className={styles.walletBadge}>
+              <span className={styles.walletDot} />
+              {session.walletAddress.slice(0, 6)}…{session.walletAddress.slice(-4)}
+            </Link>
+          </>
         ) : !isAuth ? (
           <Link href="/auth" className="btn-primary" style={{ fontSize: '12px', padding: '8px 16px', background: 'transparent', color: 'var(--accent)', border: '1px solid var(--accent-glow)' }}>
             {t("nav_connect")}

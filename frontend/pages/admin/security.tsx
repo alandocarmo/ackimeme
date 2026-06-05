@@ -190,10 +190,10 @@ export default function SecurityAdmin() {
       </div>
     </main>
 
-    <style dangerouslySetInnerHTML={{ __html: `
+    <style jsx>{`
       .animate-fade-in { animation: fadeInUp 0.4s ease both; }
       .error-msg { color: var(--red); text-align: center; }
-    `}} />
+    `}</style>
     </>
   );
 }

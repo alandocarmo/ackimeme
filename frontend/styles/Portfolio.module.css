@@ -3,15 +3,3 @@
   border-color: var(--accent-glow);
 }
 
-.stat-label { 
-  font-size: 11px; 
-  color: var(--ink-soft); 
-  text-transform: uppercase; 
-  letter-spacing: 1px; 
-  margin-bottom: 4px; 
-}
-
-.stat-value { 
-  font-weight: 800; 
-  color: var(--accent); 
-}

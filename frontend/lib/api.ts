@@ -106,15 +106,15 @@ export function logout(token?: string): Promise<{ success: boolean }> {
   });
 }
 
-export function verifyPayment(payload: unknown): Promise<Record<string, unknown>> {
-  return request<Record<string, unknown>>("/verify-payment", {
+export function verifyPayment(payload: { txHash: string; launchId?: string; walletAddress?: string; tokenSymbol?: string; isBoosted?: boolean }): Promise<{ success: boolean }> {
+  return request<{ success: boolean }>("/verify-payment", {
     method: "POST",
     body: payload,
   });
 }
 
-export function createLaunchRequest(payload: unknown, token?: string): Promise<Record<string, unknown>> {
-  return request<Record<string, unknown>>("/launch-request", {
+export function createLaunchRequest(payload: Record<string, any>, token?: string): Promise<{ success: boolean; launchId?: string; launchRequest?: any }> {
+  return request<{ success: boolean; launchId?: string; launchRequest?: any }>("/launch-request", {
     method: "POST",
     body: payload,
     token,
@@ -134,15 +134,15 @@ export function getLaunchById(id: string): Promise<Launch> {
   return request<Launch>(`/launches/${encodeURIComponent(id)}`);
 }
 
-export function unlockAdmin(password: string, walletAddress: string): Promise<Record<string, unknown>> {
-  return request<Record<string, unknown>>("/admin/unlock", {
+export function unlockAdmin(password: string, walletAddress: string): Promise<{ success: boolean; token: string }> {
+  return request<{ success: boolean; token: string }>("/admin/unlock", {
     method: "POST",
     body: { password, walletAddress },
   });
 }
 
-export function getSecurityAnomalies(): Promise<Record<string, unknown>> {
-  return request<Record<string, unknown>>("/admin/security/anomalies");
+export function getSecurityAnomalies(): Promise<{ anomalies: Array<{ id: string; type: string; severity: string; details: string }> }> {
+  return request<{ anomalies: Array<{ id: string; type: string; severity: string; details: string }> }>("/admin/security/anomalies");
 }
 
 // ─── QR Code Auth Endpoints ──────────────────────────────────────────────────
@@ -172,8 +172,8 @@ export function postComment(launchId: string, content: string): Promise<{ commen
 
 // ─── Wallet API ──────────────────────────────────────────────────────────────
 
-export function getWalletBalance(address: string): Promise<{ balance: string }> {
-  return request<{ balance: string }>(`/wallet/${encodeURIComponent(address)}/balance`);
+export function getWalletBalance(address: string): Promise<{ success: boolean; shellEccBalance: number }> {
+  return request<{ success: boolean; shellEccBalance: number }>(`/wallet/${encodeURIComponent(address)}/balance`);
 }
 
 export function getTrades(launchId: string, limit = 50): Promise<{ trades: Trade[] }> {
@@ -190,14 +190,14 @@ export function searchLaunches(q: string): Promise<{ launches: Launch[] }> {
   return request<{ launches: Launch[] }>(`/launches/search?q=${encodeURIComponent(q)}`);
 }
 
-export function addFavorite(launchId: string): Promise<Record<string, unknown>> {
-  return request<Record<string, unknown>>(`/launches/${encodeURIComponent(launchId)}/favorite`, {
+export function addFavorite(launchId: string): Promise<{ success: boolean }> {
+  return request<{ success: boolean }>(`/launches/${encodeURIComponent(launchId)}/favorite`, {
     method: "POST",
   });
 }
 
-export function removeFavorite(launchId: string): Promise<Record<string, unknown>> {
-  return request<Record<string, unknown>>(`/launches/${encodeURIComponent(launchId)}/favorite`, {
+export function removeFavorite(launchId: string): Promise<{ success: boolean }> {
+  return request<{ success: boolean }>(`/launches/${encodeURIComponent(launchId)}/favorite`, {
     method: "DELETE",
   });
 }
@@ -210,6 +210,6 @@ export function getPriceHistory(launchId: string, interval = 15): Promise<{ hist
   return request<{ history: Record<string, unknown>[] }>(`/launches/${encodeURIComponent(launchId)}/price-history?interval=${interval}`);
 }
 
-export function getGlobalStats(): Promise<Record<string, unknown>> {
-  return request<Record<string, unknown>>("/stats");
+export function getGlobalStats(): Promise<{ stats: { volume24h: number; activeTraders: number; totalLaunches: number } }> {
+  return request<{ stats: { volume24h: number; activeTraders: number; totalLaunches: number } }>("/stats");
 }

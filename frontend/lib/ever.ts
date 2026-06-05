@@ -9,7 +9,18 @@ let initializationPromise: Promise<ProviderRpcClient> | null = null;
  */
 export async function getEver(): Promise<ProviderRpcClient> {
   if (everInstance) {
-    return everInstance;
+    try {
+      if (!(await everInstance.hasProvider())) {
+        everInstance = null;
+        initializationPromise = null;
+      }
+    } catch {
+      everInstance = null;
+      initializationPromise = null;
+    }
+    if (everInstance) {
+      return everInstance;
+    }
   }
 
   if (!initializationPromise) {
@@ -17,7 +28,7 @@ export async function getEver(): Promise<ProviderRpcClient> {
       try {
         const provider = new ProviderRpcClient();
         if (!(await provider.hasProvider())) {
-          throw new Error("Everscale provider not found. Please install the Acki Nacki wallet extension.");
+          throw new Error("error_install_wallet");
         }
         await provider.ensureInitialized();
         everInstance = provider;

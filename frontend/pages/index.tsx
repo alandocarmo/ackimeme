@@ -2,10 +2,12 @@ import Head from "next/head";
 import Link from "next/link";
 import { useDeferredValue, useEffect, useState } from "react";
 import { getPublicLaunches, getSocket, searchLaunches, getGlobalStats } from "../lib/api";
-import { formatSupply, compactWallet, isSafeUrl } from "../lib/utils";
+import { formatNum, formatSupply, compactWallet, isSafeUrl, calcBondingStats, hashColor, MIGRATION_THRESHOLD_NANO } from "../lib/utils";
 import { useI18n } from "../lib/i18n";
 import styles from "../styles/Home.module.css";
 import { Launch } from "../types";
+import { SEO } from "../components/SEO";
+import { Skeleton } from "../components/ui/Skeleton";
 
 function formatDate(date: string | number | Date): string {
   const d = new Date(date);
@@ -25,38 +27,10 @@ function formatTimeAgo(dateStr: string, t: (key: string) => string): string {
   return `${days}${t("time_d_ago")}`;
 }
 
-const MIGRATION_THRESHOLD_NANO = 15_000_000_000_000; // 15K SHELL in nano (contract uses nano)
-
-function readReserveBalance(onchainData: import("../types").OnchainData | undefined): number | null {
-  const parsed = Number(onchainData?.reserveBalance);
-  if (!Number.isFinite(parsed) || parsed < 0) {
-    return null;
-  }
-  return parsed; // returns nano-SHELL
-}
-
-function calcProgressFromReserve(reserveNano: number | null): string | null {
-  if (reserveNano === null || !Number.isFinite(reserveNano)) {
-    return null;
-  }
-  return Math.min((reserveNano / MIGRATION_THRESHOLD_NANO) * 100, 100).toFixed(1);
-}
-
 function matchesSearch(launch: Launch, q: string): boolean {
   if (!q) return true;
   const hay = [launch.coin?.name, launch.coin?.symbol, launch.coin?.tagline, launch.creatorWallet].join(" ").toLowerCase();
   return hay.includes(q.toLowerCase());
-}
-
-// Generate a consistent color from a string
-function hashColor(str: string | undefined): string {
-  let hash = 0;
-  const safeStr = str || "";
-  for (let i = 0; i < safeStr.length; i++) {
-    hash = safeStr.charCodeAt(i) + ((hash << 5) - hash);
-  }
-  const h = Math.abs(hash) % 360;
-  return `hsl(${h}, 65%, 55%)`;
 }
 
 
@@ -85,14 +59,15 @@ export default function Home() {
   const [searchResults, setSearchResults] = useState<Launch[] | null>(null);
   const [stats, setStats] = useState<any>(null);
   const [error, setError] = useState<string>("");
+  const [isLoading, setIsLoading] = useState<boolean>(true);
   const [search, setSearch] = useState<string>("");
   const [filter, setFilter] = useState<string>("new"); // new | trending | finishing | hall_of_fame
   const deferredSearch = useDeferredValue(search);
 
   useEffect(() => {
     getPublicLaunches()
-      .then((r) => { setLaunches(r.launches || []); setError(""); })
-      .catch((e) => setError(e.message));
+      .then((r) => { setLaunches(r.launches || []); setError(""); setIsLoading(false); })
+      .catch((e) => { setError(e.message); setIsLoading(false); });
 
     const socket = getSocket();
     if (!socket) return;
@@ -151,12 +126,12 @@ export default function Home() {
       });
   }, [deferredSearch]);
 
-  // Global stats fetch
+  // Global stats fetch — runs once on mount, not on every launch update
   useEffect(() => {
     getGlobalStats()
       .then((r) => setStats(r.stats))
       .catch((e) => console.error("Global stats error", e));
-  }, [launches]);
+  }, []);
 
   let filtered = searchResults !== null
     ? searchResults
@@ -175,8 +150,8 @@ export default function Home() {
     if (filter === "trending" || filter === "hall_of_fame") {
       return Number(b.onchainData?.reserveBalance || 0) - Number(a.onchainData?.reserveBalance || 0);
     } else if (filter === "finishing") {
-      const pa = parseFloat(calcProgressFromReserve(readReserveBalance(a.onchainData)) || "0");
-      const pb = parseFloat(calcProgressFromReserve(readReserveBalance(b.onchainData)) || "0");
+      const pa = calcBondingStats(a.onchainData).progress;
+      const pb = calcBondingStats(b.onchainData).progress;
       return pb - pa;
     }
     
@@ -186,10 +161,7 @@ export default function Home() {
 
   return (
     <>
-      <Head>
-        <title>AckiMeme — Memecoin Launchpad on Acki Nacki</title>
-        <meta name="description" content="Create and trade memecoins with bonding curves on Acki Nacki blockchain. Fair launch, creator sell lock, transparent fees." />
-      </Head>
+      <SEO />
 
       <main className="page-wrapper">
         {/* Hero */}
@@ -281,7 +253,7 @@ export default function Home() {
 
           {/* Feed */}
           {error && <p className={styles['error-msg']}>{error}</p>}
-          {!error && filtered.length === 0 && (
+          {!error && !isLoading && filtered.length === 0 && (
             <div className={styles['empty-state']}>
               <p className={styles['empty-icon']}>⬡</p>
               <p className={styles['empty-text']}>{t("card_no_tokens")}</p>
@@ -290,13 +262,29 @@ export default function Home() {
           )}
 
           <div className={styles['token-grid']}>
-            {filtered.map((launch, i) => {
-              const reserveBalance = readReserveBalance(launch.onchainData);
-              const progress = calcProgressFromReserve(reserveBalance);
+            {isLoading && launches.length === 0 ? (
+              Array.from({ length: 8 }).map((_, i) => (
+                <article key={`skel-${i}`} className={`neon-card ${styles['token-card']}`}>
+                  <div className={styles['token-card-header']}>
+                    <Skeleton width="48px" height="48px" borderRadius="12px" />
+                    <div className={styles['token-meta']} style={{ flex: 1, gap: '8px', display: 'flex', flexDirection: 'column' }}>
+                      <Skeleton width="60%" height="20px" />
+                      <Skeleton width="40%" height="14px" />
+                    </div>
+                  </div>
+                  <div className={styles['token-body']} style={{ marginTop: '16px', display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                    <Skeleton width="100%" height="14px" />
+                    <Skeleton width="80%" height="14px" />
+                  </div>
+                </article>
+              ))
+            ) : filtered.map((launch, i) => {
+              const stats = calcBondingStats(launch.onchainData);
+              const progress = stats.progress ? stats.progress.toFixed(1) : null;
               const color = hashColor(launch.coin?.symbol);
               return (
                 <Link href={`/token/${launch.id}`} key={launch.id} style={{ textDecoration: "none" }}>
-                  <article className={`${styles['token-card']} ${isBoostedActive(launch) ? styles['card-boosted'] : ''}`} style={{ animationDelay: `${i * 40}ms` }}>
+                  <article className={`neon-card ${styles['token-card']} ${isBoostedActive(launch) ? styles['card-boosted'] : ''}`} style={{ animationDelay: `${i * 40}ms` }}>
                     <div className={styles['token-card-header']}>
                       <div className={styles['token-avatar']} style={{ background: `linear-gradient(135deg, ${color}, ${color}44)` }}>
                         {isSafeUrl(launch.coin?.logoUrl) ? (
@@ -314,7 +302,7 @@ export default function Home() {
                           {isBoostedActive(launch) && (
                             <span className={styles['badge-boosted']}>🚀 {t("card_boosted")}</span>
                           )}
-                          {launch.protocol?.pumpForever && reserveBalance && reserveBalance >= MIGRATION_THRESHOLD_NANO && (
+                          {launch.protocol?.pumpForever && stats.reserveBalance && stats.reserveBalance >= MIGRATION_THRESHOLD_NANO && (
                             <span className={styles['king-badge']}>👑 {t("card_pump_forever")}</span>
                           )}
                           {launch.status === 'on_chain_deployed' && (
@@ -373,7 +361,7 @@ export default function Home() {
                       <div className={styles['stat-box']}>
                         <span className="info-value">{new Date(launch.createdAt || Date.now()).toLocaleDateString()}</span>
                         <span className={styles['stat-value']}>
-                          {reserveBalance === null ? "on-chain pending" : `${(reserveBalance / 1e9).toFixed(2)} ${t("common_shell")}`}
+                          {stats.reserveBalance === null ? "on-chain pending" : `${(stats.reserveBalance / 1e9).toFixed(2)} ${t("common_shell")}`}
                         </span>
                       </div>
                       <div className={styles['stat-box']}>

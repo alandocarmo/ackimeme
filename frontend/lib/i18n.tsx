@@ -169,12 +169,14 @@ const translations: Record<string, Record<string, string>> = {
     time_m_ago: "m ago",
     time_h_ago: "h ago",
     time_d_ago: "d ago",
+    chart_no_history: "No price history available yet. Start trading to generate candles!",
   },
 
   // ═══════════════════════════════════════════════════════════════════════════
   // PORTUGUÊS BRASILEIRO
   // ═══════════════════════════════════════════════════════════════════════════
   pt: {
+    chart_no_history: "Nenhum histórico de preço disponível ainda. Comece a negociar!",
     nav_board: "◈ Painel",
     nav_portfolio: "👜 Portfólio",
     nav_create: "🚀 Criar",
@@ -328,6 +330,7 @@ const translations: Record<string, Record<string, string>> = {
   // РУССКИЙ (Russian)
   // ═══════════════════════════════════════════════════════════════════════════
   ru: {
+    chart_no_history: "История цен пока недоступна. Начните торговать, чтобы сгенерировать свечи!",
     nav_board: "◈ Доска",
     nav_portfolio: "👜 Портфель",
     nav_create: "🚀 Создать",
@@ -518,9 +521,11 @@ const I18nContext = createContext<I18nContextType>({ t: (k) => k, lang: "en", se
 
 export function I18nProvider({ children }: { children: ReactNode }) {
   const [lang, setLangState] = useState("en");
+  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
     setLangState(detectLanguage());
+    setMounted(true);
   }, []);
 
   const setLang = useCallback((newLang: string) => {
@@ -535,6 +540,10 @@ export function I18nProvider({ children }: { children: ReactNode }) {
   const t = useCallback((key: string): string => {
     return translations[lang]?.[key] || translations.en[key] || key;
   }, [lang]);
+
+  if (!mounted) {
+    return null;
+  }
 
   return (
     <I18nContext.Provider value={{ t, lang, setLang }}>

@@ -91,22 +91,63 @@ export function slopeDivisorToSlider(divisor: string | number): number {
   return 5;
 }
 
+export function hashColor(str: string | undefined): string {
+  if (!str) return "#555";
+  let hash = 0;
+  for (let i = 0; i < str.length; i++) {
+    hash = str.charCodeAt(i) + ((hash << 5) - hash);
+  }
+  const h = Math.abs(hash) % 360;
+  return `hsl(${h}, 70%, 60%)`;
+}
+
+export function readReserveBalance(onchainData: import("@ackimeme/shared-types").OnchainData | undefined): number | null {
+  const parsed = Number(onchainData?.reserveBalance);
+  if (!Number.isFinite(parsed) || parsed < 0) {
+    return null;
+  }
+  return parsed; // returns nano-SHELL
+}
+
+export const MIGRATION_THRESHOLD_NANO = 69_000_000_000_000;
+
+export function calcBondingStats(onchainData: import("@ackimeme/shared-types").OnchainData | undefined) {
+  const reserveNano = readReserveBalance(onchainData);
+  const hasOnchainReserve = reserveNano !== null;
+  
+  const progress = hasOnchainReserve 
+    ? Math.min((reserveNano / MIGRATION_THRESHOLD_NANO) * 100, 100)
+    : 0;
+    
+  return {
+    reserveBalance: reserveNano, // nano
+    reserveShell: hasOnchainReserve ? reserveNano / 1e9 : null, // decimal
+    hasOnchainReserve,
+    progress: progress, // number
+    progressPct: hasOnchainReserve ? progress.toFixed(1) : null // formatted string
+  };
+}
+
 /** Nano to decimal (9 decimals standard in TVM/SHELL) */
 export function nanoToDecimal(nano: string | number | bigint | null | undefined): number {
-  const val = BigInt(String(nano || "0").replace(/\D/g, "") || "0");
+  const raw = String(nano || "0");
+  const isNeg = raw.startsWith("-");
+  const digits = raw.replace(/[^\d]/g, "") || "0";
+  const val = BigInt(digits);
   const whole = val / 1_000_000_000n;
   const frac = val % 1_000_000_000n;
-  return Number(`${whole}.${String(frac).padStart(9, "0")}`);
+  const result = Number(`${whole}.${String(frac).padStart(9, "0")}`);
+  return isNeg ? -result : result;
 }
 
 /** Helper to convert decimal string to BigInt nano (9 decimals) avoiding float imprecision */
 export function toNano(valStr: string | number | null | undefined): bigint {
   if (valStr === null || valStr === undefined || valStr === "") return 0n;
-  const num = typeof valStr === "string" ? parseFloat(valStr) : valStr;
-  if (!Number.isFinite(num) || num < 0) return 0n;
-  // Use toFixed to normalize scientific notation to decimal string
-  const fixed = num.toFixed(9);
-  const [whole = "0", frac = ""] = fixed.split(".");
+  // If number, convert to string with enough precision first
+  const str = typeof valStr === "number" ? valStr.toFixed(9) : valStr.trim();
+  // Reject non-numeric input
+  if (!/^\d+(\.\d+)?$/.test(str)) return 0n;
+  const [whole = "0", frac = ""] = str.split(".");
   const fracPad = frac.padEnd(9, "0").slice(0, 9);
   return BigInt(whole) * 1_000_000_000n + BigInt(fracPad || "0");
 }
@@ -142,7 +183,7 @@ export async function calculateExactBuyAmount(
       if (mid === 0n) break;
       
       try {
-          const res = await (bcContract as { methods: { calculateBuyAmount: (args: { amount: string }) => { call: () => Promise<{ value0: string }> } } }).methods.calculateBuyAmount({ amount: mid.toString() }).call();
+          const res = await (bcContract as { methods: { getBuyPrice: (args: { tokenAmount: string }) => { call: () => Promise<{ value0: string }> } } }).methods.getBuyPrice({ tokenAmount: mid.toString() }).call();
           const cost = BigInt(res.value0);
           
           if (cost <= maxBaseCostNano) {

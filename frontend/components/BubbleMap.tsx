@@ -1,15 +1,6 @@
 import React, { useMemo } from "react";
 import type { Holder } from "../types";
-import { compactWallet } from "../lib/utils";
-
-function hashColor(str: string | undefined): string {
-  let hash = 0;
-  for (let i = 0; i < (str || "").length; i++) {
-    hash = (str as string).charCodeAt(i) + ((hash << 5) - hash);
-  }
-  const h = Math.abs(hash) % 360;
-  return `hsl(${h}, 65%, 55%)`;
-}
+import { compactWallet, hashColor } from "../lib/utils";
 
 // BubbleMap: SVG-based Sunflower Spiral packing for top holders
 export function BubbleMap({ holders, totalSupply }: { holders: Holder[], totalSupply: number }): React.JSX.Element | null {

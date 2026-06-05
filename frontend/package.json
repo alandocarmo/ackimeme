@@ -9,11 +9,13 @@
   },
   "dependencies": {
     "@ackimeme/shared-types": "file:../shared-types",
+    "@sentry/nextjs": "^10.56.0",
     "@tvmsdk/core": "^2.2.0",
     "@tvmsdk/lib-web": "^2.0.1",
     "@vercel/analytics": "^2.0.1",
     "everscale-inpage-provider": "^0.6.6",
     "everscale-standalone-client": "^3.0.3",
+    "lightweight-charts": "^5.2.0",
     "next": "14.2.35",
     "qrcode.react": "^4.2.0",
     "react": "18.2.0",

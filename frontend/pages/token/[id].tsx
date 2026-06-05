@@ -5,7 +5,7 @@ import { useEffect, useState, useCallback, useMemo } from "react";
 import { getLaunchById, getSession, getComments, postComment, getSocket } from "../../lib/api";
 import { BondingCurveAbi, TokenWalletAbi, TokenRootAbi } from "../../lib/abi";
 import { useToast } from "../../lib/useToast";
-import { formatNum, getSlopeLabel, formatSupply, compactWallet, isSafeUrl, formatDate, toNano, nanoToDecimal, calculateExactBuyAmount } from "../../lib/utils";
+import { formatNum, getSlopeLabel, formatSupply, compactWallet, isSafeUrl, formatDate, toNano, nanoToDecimal, calculateExactBuyAmount, hashColor, calcBondingStats } from "../../lib/utils";
 import { useI18n } from "../../lib/i18n";
 import styles from "../../styles/Token.module.css";
 import type { Session, Launch, CommentType, Trade, Holder, OnchainData } from "../../types";
@@ -14,42 +14,15 @@ import type { Session, Launch, CommentType, Trade, Holder, OnchainData } from ".
 
 import { PriceChart } from "../../components/PriceChart";
 import { BubbleMap } from "../../components/BubbleMap";
-import { CandlestickChart } from "../../components/CandlestickChart";
+import { TradingChart } from "../../components/TradingChart";
+import { TokenHeader } from "../../components/token/TokenHeader";
+import { TokenChat } from "../../components/token/TokenChat";
+import { TokenTradingPanel } from "../../components/token/TokenTradingPanel";
+import { SEO } from "../../components/SEO";
+import { Skeleton } from "../../components/ui/Skeleton";
 
 
-
-const MIGRATION_THRESHOLD_NANO = 15_000_000_000_000; // 15K SHELL in nano
 const TRADE_FEE_BPS = 100; // 1% total fee — matches BondingCurve.sol constant
-
-function readReserveBalance(onchainData: OnchainData | undefined): number | null {
-  const parsed = Number(onchainData?.reserveBalance);
-  if (!Number.isFinite(parsed) || parsed < 0) {
-    return null;
-  }
-  return parsed;
-}
-
-function calcBondingStats(onchainData: OnchainData | undefined) {
-  const reserveBalance = readReserveBalance(onchainData);
-  const hasOnchainReserve = Number.isFinite(reserveBalance);
-  const progressPct = hasOnchainReserve
-    ? Math.min(((reserveBalance as number) / MIGRATION_THRESHOLD_NANO) * 100, 100).toFixed(1)
-    : null;
-  const reserveShell = hasOnchainReserve ? (reserveBalance as number) / 1e9 : null;
-
-  return { reserveBalance, reserveShell, hasOnchainReserve, progressPct };
-}
-
-function hashColor(str: string | undefined): string {
-  let hash = 0;
-  for (let i = 0; i < (str || "").length; i++) {
-    hash = (str as string).charCodeAt(i) + ((hash << 5) - hash);
-  }
-  const h = Math.abs(hash) % 360;
-  return `hsl(${h}, 65%, 55%)`;
-}
-
-// C4 FIX: Removed local isSafeUrl — using the more secure version imported from lib/utils
 
 // Local getSlopeLabel removed, using shared utility
 
@@ -130,8 +103,6 @@ export default function TokenPage(): React.JSX.Element {
 
   // Chat/Comments state
   const [comments, setComments] = useState<CommentType[]>([]);
-  const [newComment, setNewComment] = useState<string>("");
-  const [isPosting, setIsPosting] = useState<boolean>(false);
   const [trades, setTrades] = useState<Trade[]>([]);
   const [holders, setHolders] = useState<Holder[]>([]);
   const [totalSupply, setTotalSupply] = useState<number>(1000000000);
@@ -152,7 +123,7 @@ export default function TokenPage(): React.JSX.Element {
         })
         .catch(() => {});
     });
-  }, [session, id]);
+  }, [session, idStr]);
 
   const handleToggleFavorite = useCallback(async () => {
     if (!session) return router.push(`/auth?from=/token/${idStr}`);
@@ -252,10 +223,10 @@ export default function TokenPage(): React.JSX.Element {
         const { Address } = await import('everscale-inpage-provider');
         if (ever) {
           const rootContract = new ever.Contract(TokenRootAbi, new Address(token!.onchainData!.tokenRootAddress as string));
-          const walletResult = await (rootContract.methods as any).getWalletAddress({ ownerAddress: session.walletAddress, answerId: 0 }).call();
+          const walletResult = await (rootContract.methods as any).getWalletAddress({ ownerAddress: session.walletAddress }).call();
           const tokenWallet = new ever.Contract(TokenWalletAbi, (walletResult as any).value0);
-          const balRes = await (tokenWallet.methods as any).balance({ answerId: 0 }).call();
-          const nanoBal = BigInt((balRes as any).value0);
+          const balRes = await (tokenWallet.methods as any).balance({}).call();
+          const nanoBal = BigInt((balRes as any).balance);
           const whole = nanoBal / BigInt("1000000000");
           const frac = nanoBal % BigInt("1000000000");
           setUserTokenBalance(Number(`${whole}.${String(frac).padStart(9, "0")}`));
@@ -412,35 +383,27 @@ export default function TokenPage(): React.JSX.Element {
       }, 5000);
     };
 
+    const handleConnect = () => {
+      socket.emit("join_token", idStr);
+    };
+
+    socket.on("connect", handleConnect);
     socket.on("token_updated", handleTokenUpdated);
     socket.on("new_comment", handleNewComment);
     socket.on("new_trade", handleNewTrade);
 
     return () => {
       if (holdersTimeoutId) clearTimeout(holdersTimeoutId);
+      socket.off("connect", handleConnect);
       socket.off("token_updated", handleTokenUpdated);
       socket.off("new_comment", handleNewComment);
       socket.off("new_trade", handleNewTrade);
     };
   }, [idStr, fetchPrice]);
 
-  async function handlePostComment(e: React.FormEvent) {
-    e.preventDefault();
-    if (!session) return router.push(`/auth?from=/token/${idStr}`);
-    if (!newComment.trim() || isPosting) return;
-
-    setIsPosting(true);
-    try {
-      const res = await postComment(idStr, newComment);
-      setComments((prev) => [(res as any).comment, ...prev]);
-      setNewComment("");
-      toast.success("Success", "Comentário postado com sucesso!");
-    } catch (err: any) {
-      toast.error("Erro", err.message || "Erro ao postar comentário.");
-    } finally {
-      setIsPosting(false);
-    }
-  }
+  const handleCommentPosted = (comment: import("../../types").CommentType) => {
+    setComments((prev) => [comment, ...prev]);
+  };
 
   // fetchPrice moved to useCallback above
 
@@ -459,11 +422,9 @@ export default function TokenPage(): React.JSX.Element {
       }
       
       // Load the Provider Extension
-      const { ProviderRpcClient, Address } = await import('everscale-inpage-provider');
-      const ever = new ProviderRpcClient();
-      if (!(await ever.hasProvider())) throw new Error(t("error_install_wallet"));
-      
-      await ever.ensureInitialized();
+      const { getEver } = await import('../../lib/ever');
+      const { Address } = await import('everscale-inpage-provider');
+      const ever = await getEver();
       const { accountInteraction } = await ever.requestPermissions({ permissions: ['basic', 'accountInteraction'] });
       if (!accountInteraction) throw new Error(t("error_denied"));
 
@@ -615,14 +576,15 @@ export default function TokenPage(): React.JSX.Element {
   return (
     <>
       <ToastContainer />
-      <Head>
-        <title>{token ? `$${token!.coin.symbol} — ${token!.coin.name}` : "Token"} | AckiMeme</title>
-        <meta name="description" content={token?.coin?.tagline || "Memecoin on Acki Nacki"} />
-      </Head>
+      <SEO 
+        title={token ? `$${token.coin.symbol} — ${token.coin.name} | AckiMeme` : "Token | AckiMeme"}
+        description={token?.coin?.tagline || "Memecoin on Acki Nacki"}
+        image={token?.coin?.logoUrl || "/og-image.jpg"}
+      />
 
       <main className={`page-wrapper container`} style={{ paddingTop: '40px' }}>
         {loading && (
-          <div className={`skeleton-loader`} style={{ width: '100%', height: '400px', borderRadius: '16px', marginBottom: '24px' }}></div>
+          <Skeleton width="100%" height="400px" borderRadius="16px" style={{ marginBottom: '24px' }} />
         )}
         
         {showMissingTokenCta ? (
@@ -639,79 +601,7 @@ export default function TokenPage(): React.JSX.Element {
             {/* Left Column: Info */}
             <div className={styles.detailMain}>
               {/* Header */}
-              <div className={styles.tokenHeaderSection}>
-                <div className={styles.tokenAvatar} style={{
-                  width: '80px',
-                  height: '80px',
-                  background: `linear-gradient(135deg, ${color}, ${color}44)`,
-                  fontSize: '32px',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  borderRadius: '16px'
-                }}>
-                  {isSafeUrl(token!.coin?.logoUrl) ? (
-                    <img src={token!.coin.logoUrl} alt="" referrerPolicy="no-referrer" style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '16px' }} />
-                  ) : (
-                    <span style={{ color: '#fff', fontWeight: 700 }}>
-                      {(token!.coin?.symbol || "?")[0]}
-                    </span>
-                  )}
-                </div>
-                <div className={styles.tokenTitleInfo}>
-                  <h1 className={styles.tokenMainTitle}>{token!.coin.name}</h1>
-                  <span className={styles.tokenTicker}>${token!.coin.symbol}</span>
-                </div>
-                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: '8px' }}>
-                  <div className={styles.statusBadge}>{token!.status.replace(/_/g, " ")}</div>
-                  <div style={{ display: 'flex', gap: '8px' }}>
-                    <button
-                      onClick={handleToggleFavorite}
-                      style={{
-                        background: isFavorite ? 'rgba(250, 204, 21, 0.15)' : 'rgba(255, 255, 255, 0.05)',
-                        color: isFavorite ? '#eab308' : 'var(--ink-soft)',
-                        border: isFavorite ? '1px solid rgba(250, 204, 21, 0.3)' : '1px solid var(--ink-faint)',
-                        padding: '4px 12px',
-                        borderRadius: '12px',
-                        fontSize: '12px',
-                        fontWeight: 600,
-                        cursor: 'pointer',
-                        display: 'flex',
-                        alignItems: 'center',
-                        gap: '4px',
-                        transition: 'all 0.2s'
-                      }}
-                    >
-                      <span style={{ fontSize: '14px' }}>{isFavorite ? "★" : "☆"}</span>
-                      {isFavorite ? "Favorited" : "Favorite"}
-                    </button>
-
-                    <button 
-                      onClick={() => {
-                        const shareText = `Check out $${token!.coin.symbol} on AckiMeme! 🚀`;
-                        const shareUrl = typeof window !== 'undefined' ? window.location.href : '';
-                        window.open(`https://t.me/share/url?url=${encodeURIComponent(shareUrl)}&text=${encodeURIComponent(shareText)}`, '_blank');
-                      }}
-                      style={{
-                        background: 'rgba(0, 136, 204, 0.1)',
-                        color: '#0088cc',
-                        border: '1px solid rgba(0, 136, 204, 0.2)',
-                        padding: '4px 12px',
-                        borderRadius: '12px',
-                        fontSize: '12px',
-                        fontWeight: 600,
-                        cursor: 'pointer',
-                        display: 'flex',
-                        alignItems: 'center',
-                        gap: '4px'
-                      }}
-                    >
-                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
-                      Share
-                    </button>
-                  </div>
-                </div>
-              </div>
+              <TokenHeader token={token!} isFavorite={isFavorite} onToggleFavorite={handleToggleFavorite} />
 
               {/* GAP-1: Price Chart with Theory / Candlestick Toggles */}
               <div style={{ marginBottom: '24px' }}>
@@ -787,7 +677,7 @@ export default function TokenPage(): React.JSX.Element {
                     slopeDivisor={token.protocol?.slopeDivisor || 50000} 
                   />
                 ) : (
-                  <CandlestickChart history={priceHistory} />
+                  <TradingChart history={priceHistory} />
                 )}
               </div>
 
@@ -1010,195 +900,33 @@ export default function TokenPage(): React.JSX.Element {
               </div>
 
               {/* Chat / Comments Section */}
-              <div className={`card`} style={{ marginTop: '24px' }}>
-                <p className={styles.infoLabel} style={{ marginBottom: '16px' }}>{t("chat_title")}</p>
-                
-                {/* Chat Feed */}
-                <div className={`chat-feed`} style={{ maxHeight: '400px', overflowY: 'auto', marginBottom: '16px', display: 'flex', flexDirection: 'column', gap: '12px' }}>
-                  {comments.length === 0 ? (
-                    <p className={styles.tokenTime} style={{ textAlign: 'center', padding: '20px' }}>{t("chat_empty")}</p>
-                  ) : (
-                    comments.map(c => (
-                      <div key={c.id} style={{ background: 'var(--bg-deep)', padding: '12px', borderRadius: '8px', borderLeft: `2px solid ${hashColor(c.walletAddress)}` }}>
-                        <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '4px' }}>
-                          <span style={{ fontSize: '12px', color: hashColor(c.walletAddress), fontWeight: 600 }}>
-                            {compactWallet(c.walletAddress)}
-                          </span>
-                          <span style={{ fontSize: '10px', color: 'var(--ink-soft)' }}>
-                            {formatDate(c.createdAt)}
-                          </span>
-                        </div>
-                        <p style={{ margin: 0, fontSize: '13px', color: 'var(--ink)', lineHeight: 1.5, wordBreak: 'break-word' }}>
-                          {c.content}
-                        </p>
-                      </div>
-                    ))
-                  )}
-                </div>
-
-                {/* Comment Input */}
-                <form onSubmit={handlePostComment} style={{ display: 'flex', gap: '8px' }}>
-                  <input
-                    type="text"
-                    className={`text-input`}
-                    style={{ flex: 1 }}
-                    placeholder={session ? t("chat_placeholder") : t("chat_signin")}
-                    value={newComment}
-                    onChange={e => setNewComment(e.target.value)}
-                    disabled={!session || isPosting}
-                    maxLength={500}
-                  />
-                  <button 
-                    type="submit" 
-                    className={`btn-primary`} 
-                    disabled={!session || !newComment.trim() || isPosting}
-                    style={{ padding: '0 20px', fontSize: '13px' }}
-                  >
-                    {isPosting ? "..." : t("chat_send")}
-                  </button>
-                </form>
-              </div>
+              <TokenChat 
+                launchId={idStr} 
+                comments={comments} 
+                session={session} 
+                onCommentPosted={handleCommentPosted} 
+              />
             </div>
 
             {/* Right Column: Trade Widget */}
-            <aside className={styles.detailSidebar}>
-              <div className={styles.tradeWidget}>
-                <div className={styles.tradeTabs}>
-                  <button className={`trade-tab ${tradeMode === "buy" ? "active-buy" : ""}`} onClick={() => setTradeMode("buy")}>{t("detail_buy")}</button>
-                  <button className={`trade-tab ${tradeMode === "sell" ? "active-sell" : ""}`} onClick={() => setTradeMode("sell")}>{t("detail_sell")}</button>
-                </div>
+            <TokenTradingPanel
+              token={token!}
+              session={session}
+              tradeMode={tradeMode}
+              setTradeMode={setTradeMode}
+              tradeAmount={tradeAmount}
+              setTradeAmount={setTradeAmount}
+              slippage={slippage}
+              setSlippage={setSlippage}
+              isTrading={isTrading}
+              onTrade={handleTrade}
+              tradeSuccess={tradeSuccess}
+              userShellEccBalance={userShellEccBalance}
+              userTokenBalance={userTokenBalance}
+              onchainPrice={onchainPrice}
+              estimate={memoizedEstimate as any}
+            />
 
-                <div className={styles.tradePanel}>
-                  <div className={styles.tradeFieldWrap}>
-                    <p className={styles.infoLabel} style={{ display: 'flex', justifyContent: 'space-between' }}>
-                      <span>{tradeMode === "buy" ? t("detail_amount_shell") : t("detail_amount_tokens")}</span>
-                      <span style={{ fontSize: '10px', color: 'var(--ink-soft)' }}>
-                        {tradeMode === "buy" && userShellEccBalance !== null && `Bal: ${userShellEccBalance.toFixed(2)} SHELL`}
-                        {tradeMode === "sell" && userTokenBalance !== null && `Bal: ${userTokenBalance.toFixed(2)} ${token?.coin?.symbol || ''}`}
-                      </span>
-                    </p>
-                    <div className={styles.inputContainer}>
-                      <input type="number" placeholder="0.0" value={tradeAmount} onChange={(e) => setTradeAmount(e.target.value)} />
-                      <span className={styles.inputUnit}>{tradeMode === "buy" ? "SHELL" : token!.coin.symbol}</span>
-                    </div>
-
-                    {/* Quick Trade Percentages */}
-                    <div style={{ display: 'flex', gap: '4px', marginTop: '8px' }}>
-                      {[0.25, 0.50, 0.75, 1.0].map((pct) => (
-                        <button 
-                          key={pct}
-                          type="button"
-                          className={styles.slipBtn}
-                          style={{ flex: 1, padding: '4px 0' }}
-                          onClick={() => {
-                            if (tradeMode === "buy") {
-                              if (userShellEccBalance !== null) {
-                                // Reserve 0.2 SHELL for VMSHELL gas if MAX
-                                const amount = userShellEccBalance * pct;
-                                const maxSafe = Math.max(0, amount - (pct === 1.0 ? 0.2 : 0));
-                                setTradeAmount(maxSafe > 0 ? maxSafe.toFixed(2) : "");
-                              }
-                            } else {
-                              if (userTokenBalance !== null) {
-                                setTradeAmount((userTokenBalance * pct).toFixed(2));
-                              }
-                            }
-                          }}
-                        >
-                          {pct === 1.0 ? "MAX" : `${pct * 100}%`}
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-
-                  <div className={styles.slippageRow}>
-                    <span className={styles.infoLabel} style={{ fontSize: '9px' }}>{t("detail_slippage")}</span>
-                    <div className={styles.slippageBtns}>
-                      {["1", "2", "5"].map(p => (
-                        <button key={p} className={`slip-btn ${slippage === p ? "active" : ""}`} onClick={() => setSlippage(p)}>{p}%</button>
-                      ))}
-                    </div>
-                  </div>
-
-                  {/* A6 FIX: Use memoized estimate instead of IIFE that recalculates every render */}
-                  {(() => {
-                    const estimate = memoizedEstimate;
-                    return (
-                      <>
-                        <div className={styles.estimateBox}>
-                          <span className={styles.estimateLabel}>{t("detail_estimated_return")} ≈</span>
-                          <span className={styles.estimateVal}>
-                            {estimate.value} {tradeMode === "buy" ? token!.coin.symbol : "SHELL"}
-                          </span>
-                        </div>
-
-                        {estimate.fee && (
-                          <div style={{ textAlign: 'center', marginBottom: '8px' }}>
-                            <span className={styles.tokenTime} style={{ fontSize: '10px', color: 'var(--accent-warm)' }}>
-                              Fee: {estimate.fee} SHELL (1% — 0.7% platform + 0.3% creator)
-                            </span>
-                          </div>
-                        )}
-                        
-                        {estimate.impact !== null && estimate.impact > 0.01 && (
-                          <div style={{ textAlign: 'center', marginBottom: '8px' }}>
-                            <span style={{ 
-                               fontSize: '11px', 
-                               fontWeight: 600,
-                               color: estimate.impact > 5 ? '#ef4444' : (estimate.impact > 2 ? '#f97316' : '#10b981')
-                            }}>
-                              {t("detail_price_impact")}: {estimate.impact.toFixed(2)}%
-                            </span>
-                          </div>
-                        )}
-                      </>
-                    );
-                  })()}
-
-                  {onchainPrice && (
-                    <p className={styles.tokenTime} style={{ textAlign: 'center', fontSize: '10px', marginBottom: '8px' }}>
-                      Current price: {onchainPrice.toFixed(9)} SHELL per token
-                    </p>
-                  )}
-
-                  <button 
-                    className={`trade-button ${tradeMode === 'buy' ? 'btn-buy' : 'btn-sell'}`}
-                    onClick={handleTrade}
-                    disabled={isTrading || token?.onchainData?.deployStatus !== 'deployed'}
-                  >
-                    {isTrading 
-                      ? t("detail_processing") 
-                      : token?.onchainData?.deployStatus !== 'deployed'
-                        ? t("info_pending")
-                        : (tradeMode === "buy" ? t("detail_execute_buy") : t("detail_execute_sell"))
-                    }
-                  </button>
-                  
-                  {tradeSuccess && (
-                    <p className={`hero-accent`} style={{ textAlign: 'center', marginTop: '12px', fontSize: '13px', fontWeight: 600 }}>
-                      {tradeSuccess}
-                    </p>
-                  )}
-                  
-                  {tradeMode === "sell" && (
-                    <p className={styles.tokenTime} style={{ textAlign: 'center', marginTop: '8px', fontSize: '10px' }}>
-                      Sell burns your tokens via TokenWallet → BondingCurve refund.
-                    </p>
-                  )}
-
-                  <p className={styles.tokenTime} style={{ textAlign: 'center', marginTop: '12px', fontSize: '11px' }}>
-                    Need SHELL? <Link href={`/buy-shell?from=/token/${idStr}`} style={{ color: 'var(--accent)', textDecoration: 'underline' }}>Buy with card or crypto →</Link>
-                  </p>
-                </div>
-              </div>
-
-              {!session && (
-                <div className={`card`} style={{ marginTop: '16px', textAlign: 'center', padding: '16px' }}>
-                  <p className={styles.tokenTime} style={{ marginBottom: '12px' }}>{t("detail_connect_wallet")}</p>
-                  <Link href={`/auth?from=/token/${idStr}`} className={`filter-btn`} style={{ display: 'block' }}>{t("nav_connect")}</Link>
-                </div>
-              )}
-            </aside>
           </div>
         )}
       </main>

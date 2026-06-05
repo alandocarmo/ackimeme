@@ -1,50 +1,52 @@
 .navbar {
+  backdrop-filter: blur(0.75rem);
+  -webkit-backdrop-filter: blur(0.75rem);
+  background: rgba(17, 17, 19, 0.7);
+  border: 1px solid rgba(255, 255, 255, 0.05);
   position: sticky;
   top: 0;
   z-index: 1000;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 0 24px;
-  height: 64px;
-  background: rgba(9, 9, 11, 0.8);
-  border-bottom: 1px solid var(--line);
-  -webkit-backdrop-filter: blur(20px);
-  backdrop-filter: blur(20px);
+  padding: 0 1.5rem;
+  height: 4rem;
+
+
 }
 
 .navLeft {
   display: flex;
   align-items: center;
-  gap: 16px;
+  gap: 1rem;
 }
 
 .navBrand {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 0.625rem;
   text-decoration: none;
 }
 
 .navBrandIcon {
   color: var(--accent);
-  font-size: 22px;
-  filter: drop-shadow(0 0 8px var(--accent-glow));
+  font-size: 1.375rem;
+  filter: drop-shadow(0 0 0.5rem var(--accent-glow));
 }
 
 .navBrandText {
   color: var(--ink);
   font-weight: 800;
-  font-size: 18px;
+  font-size: 1.125rem;
   letter-spacing: -0.02em;
 }
 
 .navNetworkTag {
-  font-size: 10px;
+  font-size: 0.625rem;
   color: var(--ink-muted);
   text-transform: uppercase;
   letter-spacing: 0.12em;
-  padding-left: 16px;
+  padding-left: 1rem;
   border-left: 1px solid var(--line);
   font-family: var(--font-mono);
 }
@@ -52,19 +54,19 @@
 .navRight {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 0.75rem;
 }
 
 .navLink {
   color: var(--ink-soft);
-  font-size: 14px;
+  font-size: 0.875rem;
   text-decoration: none;
-  padding: 8px 12px;
+  padding: 0.5rem 0.75rem;
   border-radius: var(--radius);
   transition: all 0.2s;
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 0.375rem;
   font-weight: 500;
 }
 
@@ -75,14 +77,14 @@
 
 .walletBadge {
   color: var(--ink-soft);
-  font-size: 12px;
+  font-size: 0.75rem;
   background: var(--bg-deep);
-  padding: 6px 12px;
-  border-radius: 8px;
+  padding: 0.375rem 0.75rem;
+  border-radius: 0.5rem;
   font-family: var(--font-mono);
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 0.5rem;
   text-decoration: none;
   border: 1px solid var(--line);
   transition: all 0.2s;
@@ -94,19 +96,23 @@
 }
 
 .walletDot {
-  width: 8px;
-  height: 8px;
+  width: 0.5rem;
+  height: 0.5rem;
   border-radius: 50%;
   background: var(--accent);
-  box-shadow: 0 0 8px var(--accent-glow);
+  box-shadow: 0 0 0.5rem var(--accent-glow);
 }
 
-@media (max-width: 640px) {
+@media (max-width: 40rem) {
   .navNetworkTag, .navBrandText {
     display: none;
   }
   
   .navbar {
-    padding: 0 16px;
+  backdrop-filter: blur(0.75rem);
+  -webkit-backdrop-filter: blur(0.75rem);
+  background: rgba(17, 17, 19, 0.7);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+    padding: 0 1rem;
   }
 }

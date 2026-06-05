@@ -63,4 +63,19 @@ const nextConfig = {
   },
 };
 
-module.exports = nextConfig;
+const { withSentryConfig } = require("@sentry/nextjs");
+
+module.exports = withSentryConfig(
+  nextConfig,
+  {
+    silent: true,
+    org: "ackimeme",
+    project: "frontend",
+    widenClientFileUpload: true,
+    transpileClientSDK: true,
+    tunnelRoute: "/monitoring",
+    hideSourceMaps: true,
+    disableLogger: true,
+    automaticVercelMonitors: true,
+  }
+);
