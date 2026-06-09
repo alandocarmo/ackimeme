@@ -64,21 +64,42 @@ export function TokenChat({ launchId, comments, session, onCommentPosted }: Toke
         {comments.length === 0 ? (
           <p className={styles.tokenTime} style={{ textAlign: 'center', padding: '20px' }}>{t("chat_empty")}</p>
         ) : (
-          comments.map(c => (
-            <div key={c.id} style={{ background: 'var(--bg-deep)', padding: '12px', borderRadius: '8px', borderLeft: `2px solid ${hashColor(c.walletAddress)}` }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '4px' }}>
-                <span style={{ fontSize: '12px', color: hashColor(c.walletAddress), fontWeight: 600 }}>
-                  {compactWallet(c.walletAddress)}
-                </span>
-                <span style={{ fontSize: '10px', color: 'var(--ink-soft)' }}>
-                  {formatDate(c.createdAt)}
-                </span>
+          comments.map(c => {
+            const isWhale = c.walletAddress.endsWith("f") || c.walletAddress.endsWith("0"); // Gamified Mock logic for VIP
+            const isSystem = c.walletAddress === "SYSTEM";
+
+            if (isSystem) {
+              return (
+                <div key={c.id} style={{ background: 'linear-gradient(90deg, rgba(16,185,129,0.1), transparent)', padding: '12px', borderRadius: '8px', borderLeft: `2px solid #10b981` }}>
+                   <span style={{ fontSize: '13px', color: '#10b981', fontWeight: 700 }}>🚨 SYSTEM WHALE ALERT:</span>
+                   <span style={{ fontSize: '13px', color: '#fff', marginLeft: '8px' }}>{sanitizeText(c.content)}</span>
+                </div>
+              );
+            }
+
+            return (
+              <div key={c.id} style={{ 
+                background: isWhale ? 'linear-gradient(135deg, rgba(251, 191, 36, 0.05), rgba(245, 158, 11, 0.05))' : 'var(--bg-deep)', 
+                padding: '12px', 
+                borderRadius: '8px', 
+                borderLeft: `2px solid ${isWhale ? '#fbbf24' : hashColor(c.walletAddress)}`,
+                boxShadow: isWhale ? '0 0 10px rgba(251, 191, 36, 0.1)' : 'none'
+              }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '4px' }}>
+                  <span style={{ fontSize: '12px', color: isWhale ? '#fbbf24' : hashColor(c.walletAddress), fontWeight: 700, display: 'flex', alignItems: 'center', gap: '4px' }}>
+                    {isWhale && <span title="Top Holder">🐳</span>}
+                    {compactWallet(c.walletAddress)}
+                  </span>
+                  <span style={{ fontSize: '10px', color: 'var(--ink-soft)' }}>
+                    {formatDate(c.createdAt)}
+                  </span>
+                </div>
+                <p style={{ margin: 0, fontSize: '13px', color: isWhale ? '#fef3c7' : 'var(--ink)', lineHeight: 1.5, wordBreak: 'break-word' }}>
+                  {sanitizeText(c.content)}
+                </p>
               </div>
-              <p style={{ margin: 0, fontSize: '13px', color: 'var(--ink)', lineHeight: 1.5, wordBreak: 'break-word' }}>
-                {sanitizeText(c.content)}
-              </p>
-            </div>
-          ))
+            );
+          })
         )}
       </div>
 

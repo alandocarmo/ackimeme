@@ -1,0 +1,67 @@
+{
+	"ABI version": 2,
+	"version": "2.3",
+	"header": ["pubkey", "time", "expire"],
+	"functions": [
+		{
+			"name": "constructor",
+			"inputs": [
+			],
+			"outputs": [
+			]
+		},
+		{
+			"name": "mintCreatorBadge",
+			"inputs": [
+				{"name":"creator","type":"address"},
+				{"name":"tokenTicker","type":"string"},
+				{"name":"tokenImage","type":"string"}
+			],
+			"outputs": [
+			]
+		},
+		{
+			"name": "resolveNft",
+			"inputs": [
+				{"name":"id","type":"uint256"}
+			],
+			"outputs": [
+				{"name":"value0","type":"address"}
+			]
+		},
+		{
+			"name": "totalSupply",
+			"inputs": [
+			],
+			"outputs": [
+				{"name":"totalSupply","type":"uint256"}
+			]
+		}
+	],
+	"getters": [
+	],
+	"data": [
+		{"key":1,"name":"_owner","type":"address"},
+		{"key":2,"name":"_nftItemCode","type":"cell"}
+	],
+	"events": [
+		{
+			"name": "NftMinted",
+			"inputs": [
+				{"name":"id","type":"uint256"},
+				{"name":"owner","type":"address"},
+				{"name":"metadata","type":"string"}
+			],
+			"outputs": [
+			]
+		}
+	],
+	"fields": [
+		{"name":"_pubkey","type":"uint256"},
+		{"name":"_timestamp","type":"uint64"},
+		{"name":"_constructorFlag","type":"bool"},
+		{"name":"_owner","type":"address"},
+		{"name":"_nftItemCode","type":"cell"},
+		{"name":"totalSupply","type":"uint256"}
+	]
+}

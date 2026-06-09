@@ -1,0 +1,75 @@
+{
+	"ABI version": 2,
+	"version": "2.3",
+	"header": ["pubkey", "time", "expire"],
+	"functions": [
+		{
+			"name": "constructor",
+			"inputs": [
+				{"name":"_feeRecipient","type":"address"}
+			],
+			"outputs": [
+			]
+		},
+		{
+			"name": "setFeeRecipient",
+			"inputs": [
+				{"name":"_feeRecipient","type":"address"}
+			],
+			"outputs": [
+			]
+		},
+		{
+			"name": "deployPair",
+			"inputs": [
+				{"name":"tokenRoot","type":"address"},
+				{"name":"callbackTarget","type":"address"}
+			],
+			"outputs": [
+			]
+		},
+		{
+			"name": "getPairAddress",
+			"inputs": [
+				{"name":"tokenRoot","type":"address"}
+			],
+			"outputs": [
+				{"name":"value0","type":"address"}
+			]
+		},
+		{
+			"name": "feeRecipient",
+			"inputs": [
+			],
+			"outputs": [
+				{"name":"feeRecipient","type":"address"}
+			]
+		}
+	],
+	"getters": [
+	],
+	"data": [
+		{"key":1,"name":"_owner","type":"address"},
+		{"key":2,"name":"_pairCode","type":"cell"}
+	],
+	"events": [
+		{
+			"name": "PairCreated",
+			"inputs": [
+				{"name":"tokenRoot","type":"address"},
+				{"name":"pairAddress","type":"address"},
+				{"name":"timestamp","type":"uint64"}
+			],
+			"outputs": [
+			]
+		}
+	],
+	"fields": [
+		{"name":"_pubkey","type":"uint256"},
+		{"name":"_timestamp","type":"uint64"},
+		{"name":"_constructorFlag","type":"bool"},
+		{"name":"_owner","type":"address"},
+		{"name":"_pairCode","type":"cell"},
+		{"name":"feeRecipient","type":"address"}
+	]
+}

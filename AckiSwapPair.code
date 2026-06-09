@@ -1,0 +1,1017 @@
+.fragment _refundTokens_dcf72b0a_internal, {
+	.loc contracts/amm/AckiSwapPair.sol, 159
+	PUSHREF {
+	}
+	.loc contracts/amm/AckiSwapPair.sol, 160
+	PUSHINT 0
+	XCHG3 S0, S0, S3
+	MYADDR
+	BLKSWAP 2, 5
+	SWAP
+	PUSHINT 0
+	GETGLOB 9
+	NEWC
+	STSLICECONST x62_
+	STSLICE
+	SWAP
+	STGRAMS
+	PUSHINT 1
+	STUR 107
+	ROLLREV 7
+	NEWC
+	STSLICECONST x178d4519
+	STU 64
+	STU 128
+	STSLICE
+	ROLLREV 4
+	NEWC
+	STSLICE
+	ROLLREV 3
+	NEWC
+	STSLICE
+	STU 128
+	STREF
+	STBREFR
+	STBREFR
+	STBREFR
+	ENDC
+	PUSHINT 64
+	SENDRAWMSG
+	.loc contracts/amm/AckiSwapPair.sol, 0
+}
+
+.fragment _swapTokenForShell_17108e67_internal, {
+	.loc contracts/amm/AckiSwapPair.sol, 124
+	PUSH S3
+	MULCONST 5
+	UFITS 128
+	PUSHINT 10000
+	DIV
+	.loc contracts/amm/AckiSwapPair.sol, 125
+	PUSH2 S4, S0
+	SUB
+	UFITS 128
+	.loc contracts/amm/AckiSwapPair.sol, 128
+	DUP
+	PUSHINT 9975
+	MUL
+	UFITS 128
+	.loc contracts/amm/AckiSwapPair.sol, 129
+	DUP
+	GETGLOB 13
+	MUL
+	UFITS 128
+	.loc contracts/amm/AckiSwapPair.sol, 130
+	GETGLOB 14
+	PUSHINT 10000
+	MUL
+	UFITS 128
+	ROT
+	ADD
+	UFITS 128
+	.loc contracts/amm/AckiSwapPair.sol, 131
+	DIV
+	.loc contracts/amm/AckiSwapPair.sol, 133
+	DUP
+	ROLL 5
+	GEQ
+	THROWIFNOT 105
+	.loc contracts/amm/AckiSwapPair.sol, 134
+	DUP
+	GETGLOB 13
+	LESS
+	THROWIFNOT 106
+	.loc contracts/amm/AckiSwapPair.sol, 136
+	GETGLOB 14
+	ROT
+	ADD
+	UFITS 128
+	SETGLOB 14
+	.loc contracts/amm/AckiSwapPair.sol, 137
+	GETGLOB 13
+	OVER
+	SUB
+	UFITS 128
+	SETGLOB 13
+	.loc contracts/amm/AckiSwapPair.sol, 139
+	DUP
+	ROLL 5
+	PUSHINT 0
+	ROLL 6
+	PUSHSLICE xc0000000000000000000000001
+	NEWC
+	STSLICE
+	ROLLREV 4
+	NEWC
+	STSLICECONST x78c2dfb5
+	STSLICE
+	STU 128
+	STU 128
+	STU 128
+	PUSHREF {
+		.blob x00000000000000000000000000000000
+	}
+	STREFR
+	STBREFR
+	ENDC
+	PUSHINT 0
+	SENDRAWMSG
+	.loc contracts/amm/AckiSwapPair.sol, 142
+	PUSHREF {
+	}
+	.loc contracts/amm/AckiSwapPair.sol, 143
+	PUSHINT 0
+	GETGLOB 12
+	DUP
+	MYADDR
+	ROLL 6
+	PUSHINT 0
+	GETGLOB 15
+	NEWC
+	STSLICECONST x62_
+	STSLICE
+	PUSHSLICE x402faf080000000000000000000000000003_
+	STSLICER
+	ROLLREV 7
+	NEWC
+	STSLICECONST x178d4519
+	STU 64
+	STU 128
+	STSLICE
+	ROLLREV 4
+	NEWC
+	STSLICE
+	ROLLREV 3
+	NEWC
+	STSLICE
+	STU 128
+	STREF
+	STBREFR
+	STBREFR
+	STBREFR
+	ENDC
+	PUSHINT 0
+	SENDRAWMSG
+	.loc contracts/amm/AckiSwapPair.sol, 154
+	PUSHINT 2
+	NULL
+	NEWC
+	ROLL 3
+	STVARUINT32
+	ROTREV
+	PUSHINT 32
+	DICTUSETB
+	.loc contracts/amm/AckiSwapPair.sol, 155
+	PUSHINT 0
+	ROT
+	NEWC
+	STSLICECONST x42_
+	STSLICE
+	SWAP
+	STGRAMS
+	STDICT
+	PUSHINT 106
+	STZEROES
+	ENDC
+	PUSHINT 64
+	SENDRAWMSG
+	.loc contracts/amm/AckiSwapPair.sol, 0
+}
+
+.fragment c4_to_c7, {
+	PUSHROOT
+	CTOS
+	LDU 256 ; pubkey c4
+	LDU 64 ; pubkey timestamp c4
+	LDU 1 ; ctor flag
+	LDMSGADDR
+	LDREF
+	ENDS
+	CTOS
+	LDMSGADDR
+	LDREF
+	ENDS
+	CTOS
+	LDMSGADDR
+	LDU 128
+	LDU 128
+	LDREF
+	ENDS
+	CTOS
+	LDMSGADDR
+	LDI 1
+	ENDS
+	SETGLOB 16
+	SETGLOB 15
+	SETGLOB 14
+	SETGLOB 13
+	SETGLOB 12
+	SETGLOB 11
+	SETGLOB 10
+	SETGLOB 6
+	SETGLOB 3
+	SETGLOB 2
+}
+
+.fragment c4_to_c7_with_init_storage, {
+	PUSHROOT
+	CTOS
+	SBITS
+	GTINT 1
+	PUSHCONT {
+		PUSHINT 0
+		PUSHROOT
+		CTOS
+		PLDDICT ; D
+		PUSHINT 1
+		OVER
+		PUSHINT 64
+		DICTUGET
+		PUSHCONT {
+			PUSHREFSLICE {
+				.blob x8000000000000000000000000000000000000000000000000000000000000000001_
+			}
+		}
+		IFNOT
+		PUSHINT 2
+		PUSH S2
+		PUSHINT 64
+		DICTUGET
+		PUSHCONT {
+			PUSHREFSLICE {
+				.blob x8000000000000000000000000000000000000000000000000000000000000000001_
+			}
+		}
+		IFNOT
+		PUSHINT 3
+		PUSH S3
+		PUSHINT 64
+		DICTUGET
+		PUSHCONT {
+			PUSHREFSLICE {
+				.blob x8000000000000000000000000000000000000000000000000000000000000000001_
+			}
+		}
+		IFNOT
+		PUSHINT 0
+		DUP
+		PUSHREFSLICE {
+			.blob x8000000000000000000000000000000000000000000000000000000000000000001_
+		}
+		PUSHINT 0
+		SETGLOB 16
+		SETGLOB 15
+		SETGLOB 14
+		SETGLOB 13
+		SETGLOB 12
+		SETGLOB 11
+		SETGLOB 10
+		PUSHINT 64
+		DICTUGET
+		THROWIFNOT 61
+		PLDU 256
+		SETGLOB 2
+		PUSHINT 0 ; timestamp
+		SETGLOB 3
+		FALSE
+		SETGLOB 16
+	}
+	IFREFELSE {
+		.inline c4_to_c7
+	}
+}
+
+.fragment c7_to_c4, {
+	GETGLOB 16
+	GETGLOB 15
+	GETGLOB 14
+	GETGLOB 13
+	GETGLOB 12
+	GETGLOB 11
+	GETGLOB 10
+	GETGLOB 3
+	GETGLOB 2
+	NEWC
+	STU 256
+	STU 64
+	STONE
+	STSLICE
+	ROLLREV 6
+	NEWC
+	STSLICE
+	ROLLREV 5
+	NEWC
+	STSLICE
+	STU 128
+	STU 128
+	ROTREV
+	NEWC
+	STSLICE
+	STI 1
+	STBREFR
+	STBREFR
+	STBREFR
+	ENDC
+	POPROOT
+}
+
+.fragment constructor, {
+	DROP
+	GETGLOB 2
+	ISNULL
+	IFREF {
+		.inline c4_to_c7_with_init_storage
+	}
+	GETGLOB 6
+	THROWIF 51
+	ENDS
+	.loc contracts/amm/AckiSwapPair.sol, 22
+	GETGLOB 9
+	GETGLOB 10
+	SDEQ
+	THROWIFNOT 101
+	.loc contracts/amm/AckiSwapPair.sol, 23
+	ACCEPT
+	.loc contracts/amm/AckiSwapPair.sol, 0
+	CALLREF {
+		.inline c7_to_c4
+	}
+	THROW 0
+}
+
+.fragment initialized, {
+	DROP
+	ENDS
+	CALLREF {
+		.inline c4_to_c7_with_init_storage
+	}
+	GETGLOB 16
+	OVER
+	PUSHCONT {
+		PUSHSLICE xc0000000000000000000000000d9ae6083
+		NEWC
+		STSLICE
+		STI 1
+		ENDC
+		PUSHINT 0
+		SENDRAWMSG
+	}
+	IF
+	THROW 0
+}
+
+.fragment onAFTTransfer_7475637a_internal, {
+	.loc contracts/amm/AckiSwapPair.sol, 42
+	GETGLOB 15
+	PUSHREFSLICE {
+		.blob x8000000000000000000000000000000000000000000000000000000000000000001_
+	}
+	SDEQ
+	PUSHCONT {
+		.loc contracts/amm/AckiSwapPair.sol, 43
+		GETGLOB 9
+		SETGLOB 15
+	}
+	PUSHCONT {
+		.loc contracts/amm/AckiSwapPair.sol, 45
+		GETGLOB 9
+		GETGLOB 15
+		SDEQ
+		THROWIFNOT 102
+	}
+	IFELSE
+	.loc contracts/amm/AckiSwapPair.sol, 48
+	ACCEPT
+	.loc contracts/amm/AckiSwapPair.sol, 50
+	CTOS
+	.loc contracts/amm/AckiSwapPair.sol, 51
+	PUSHINT 0
+	.loc contracts/amm/AckiSwapPair.sol, 52
+	OVER
+	SBITS
+	GTINT 31
+	PUSHCONT {
+		.loc contracts/amm/AckiSwapPair.sol, 53
+		OVER
+		LDU 32
+		POP S3
+		NIP
+		.loc contracts/amm/AckiSwapPair.sol, 0
+	}
+	IF
+	.loc contracts/amm/AckiSwapPair.sol, 56
+	GETGLOB 16
+	NOT
+	OVER
+	EQINT 1
+	AND
+	PUSHCONT {
+		.loc contracts/amm/AckiSwapPair.sol, 58
+		GETPARAM 7
+		FIRST
+		PUSHINT 1000000000
+		SUB
+		UFITS 120
+		.loc contracts/amm/AckiSwapPair.sol, 59
+		SETGLOB 13
+		.loc contracts/amm/AckiSwapPair.sol, 60
+		PUSH S3
+		SETGLOB 14
+		.loc contracts/amm/AckiSwapPair.sol, 61
+		TRUE
+		SETGLOB 16
+		.loc contracts/amm/AckiSwapPair.sol, 63
+		PUSHINT 0
+		GETGLOB 14
+		GETGLOB 13
+		PUSHSLICE xc00000000000000000000000003adecfcc
+		NEWC
+		STSLICE
+		STU 128
+		STU 128
+		STU 128
+		ENDC
+		PUSHINT 0
+		SENDRAWMSG
+		.loc contracts/amm/AckiSwapPair.sol, 65
+		PUSH S2
+		PUSHREFSLICE {
+			.blob x8000000000000000000000000000000000000000000000000000000000000000001_
+		}
+		SDEQ
+		PUSHCONT {
+			.loc contracts/amm/AckiSwapPair.sol, 66
+			NULL
+			.loc contracts/amm/AckiSwapPair.sol, 67
+			PUSHINT 0
+			PUSH S4
+			NEWC
+			STSLICECONST x42_
+			STSLICE
+			SWAP
+			STGRAMS
+			STDICT
+			PUSHINT 106
+			STZEROES
+			ENDC
+			PUSHINT 64
+			SENDRAWMSG
+			.loc contracts/amm/AckiSwapPair.sol, 0
+		}
+		IFNOT
+	}
+	PUSHCONT {
+		GETGLOB 16
+		OVER
+		EQINT 2
+		AND
+		PUSHCONT {
+			.loc contracts/amm/AckiSwapPair.sol, 71
+			OVER
+			SBITS
+			GTINT 127
+			ZEROSWAPIFNOT
+			PUSHCONT {
+				OVER
+				LDU 128
+				POP S3
+			}
+			IF
+			.loc contracts/amm/AckiSwapPair.sol, 72
+			PU2XC S4, S3, S-2
+			PUSH S5
+			CALLREF {
+				.inline _swapTokenForShell_17108e67_internal
+			}
+		}
+		PUSHCONT {
+			.loc contracts/amm/AckiSwapPair.sol, 75
+			BLKPUSH 3, 4
+			PUSH S5
+			CALLREF {
+				.inline _refundTokens_dcf72b0a_internal
+			}
+		}
+		IFELSE
+	}
+	IFELSE
+	.loc contracts/amm/AckiSwapPair.sol, 0
+	BLKDROP 5
+}
+
+.fragment onAFTTransfer, {
+	DROP
+	GETGLOB 6
+	THROWIFNOT 76
+	GETGLOB 2
+	ISNULL
+	IFREF {
+		.inline c4_to_c7
+	}
+	.loc contracts/amm/AckiSwapPair.sol, 35
+	OVER
+	PUSHCONT {
+		LDREF
+		ENDS
+		CTOS
+	}
+	IF
+	LDU 64
+	LDU 128
+	LDMSGADDR
+	LDREF
+	ENDS
+	.loc contracts/amm/AckiSwapPair.sol, 0
+	CALLREF {
+		.inline onAFTTransfer_7475637a_internal
+	}
+	CALLREF {
+		.inline c7_to_c4
+	}
+	THROW 0
+}
+
+.fragment provideInitialShell_e07dec79_internal, {
+	.loc contracts/amm/AckiSwapPair.sol, 0
+}
+
+.fragment provideInitialShell, {
+	DROP
+	GETGLOB 6
+	THROWIFNOT 76
+	GETGLOB 2
+	ISNULL
+	IFREF {
+		.inline c4_to_c7
+	}
+	.loc contracts/amm/AckiSwapPair.sol, 30
+	ENDS
+	.loc contracts/amm/AckiSwapPair.sol, 0
+	CALLREF {
+		.inline provideInitialShell_e07dec79_internal
+	}
+	IFREF {
+		.inline c7_to_c4
+	}
+	THROW 0
+}
+
+.fragment reserveShell, {
+	DROP
+	ENDS
+	CALLREF {
+		.inline c4_to_c7_with_init_storage
+	}
+	GETGLOB 13
+	OVER
+	PUSHCONT {
+		PUSHSLICE xc0000000000000000000000000cb18b6c4
+		NEWC
+		STSLICE
+		STU 128
+		ENDC
+		PUSHINT 0
+		SENDRAWMSG
+	}
+	IF
+	THROW 0
+}
+
+.fragment reserveToken, {
+	DROP
+	ENDS
+	CALLREF {
+		.inline c4_to_c7_with_init_storage
+	}
+	GETGLOB 14
+	OVER
+	PUSHCONT {
+		PUSHSLICE xc00000000000000000000000008afa854b
+		NEWC
+		STSLICE
+		STU 128
+		ENDC
+		PUSHINT 0
+		SENDRAWMSG
+	}
+	IF
+	THROW 0
+}
+
+.fragment swapShellForToken_27e8a222_internal, {
+	.loc contracts/amm/AckiSwapPair.sol, 81
+	GETGLOB 16
+	THROWIFNOT 103
+	.loc contracts/amm/AckiSwapPair.sol, 82
+	DEPTH
+	ADDCONST -2
+	PICK
+	PUSHINT 1000000000
+	SUB
+	UFITS 128
+	.loc contracts/amm/AckiSwapPair.sol, 83
+	DUP
+	GTINT 0
+	THROWIFNOT 104
+	.loc contracts/amm/AckiSwapPair.sol, 85
+	ACCEPT
+	.loc contracts/amm/AckiSwapPair.sol, 88
+	DUP
+	MULCONST 5
+	UFITS 128
+	PUSHINT 10000
+	DIV
+	.loc contracts/amm/AckiSwapPair.sol, 89
+	DUP2
+	SUB
+	UFITS 128
+	.loc contracts/amm/AckiSwapPair.sol, 92
+	DUP
+	PUSHINT 9975
+	MUL
+	UFITS 128
+	.loc contracts/amm/AckiSwapPair.sol, 93
+	DUP
+	GETGLOB 14
+	MUL
+	UFITS 128
+	.loc contracts/amm/AckiSwapPair.sol, 94
+	GETGLOB 13
+	PUSHINT 10000
+	MUL
+	UFITS 128
+	ROT
+	ADD
+	UFITS 128
+	.loc contracts/amm/AckiSwapPair.sol, 95
+	DIV
+	.loc contracts/amm/AckiSwapPair.sol, 97
+	DUP
+	ROLL 6
+	GEQ
+	THROWIFNOT 105
+	.loc contracts/amm/AckiSwapPair.sol, 98
+	DUP
+	GETGLOB 14
+	LESS
+	THROWIFNOT 106
+	.loc contracts/amm/AckiSwapPair.sol, 100
+	GETGLOB 13
+	ROT
+	ADD
+	UFITS 128
+	SETGLOB 13
+	.loc contracts/amm/AckiSwapPair.sol, 101
+	GETGLOB 14
+	OVER
+	SUB
+	UFITS 128
+	SETGLOB 14
+	.loc contracts/amm/AckiSwapPair.sol, 103
+	DUP
+	PUSHINT 0
+	DUP
+	ROLL 5
+	GETGLOB 9
+	PUSHSLICE xc0000000000000000000000001
+	NEWC
+	STSLICE
+	ROLLREV 5
+	NEWC
+	STSLICECONST x78c2dfb5
+	STSLICE
+	STU 128
+	STU 128
+	STU 128
+	SWAP
+	NEWC
+	STU 128
+	STBREFR
+	STBREFR
+	ENDC
+	PUSHINT 0
+	SENDRAWMSG
+	.loc contracts/amm/AckiSwapPair.sol, 107
+	SWAP
+	PUSHINT 2
+	NULL
+	NEWC
+	ROLL 3
+	STVARUINT32
+	ROTREV
+	PUSHINT 32
+	DICTUSETB
+	.loc contracts/amm/AckiSwapPair.sol, 108
+	GETGLOB 12
+	NEWC
+	STSLICECONST x42_
+	STSLICE
+	STSLICECONST x402faf080
+	STDICT
+	PUSHINT 106
+	STZEROES
+	ENDC
+	PUSHINT 0
+	SENDRAWMSG
+	.loc contracts/amm/AckiSwapPair.sol, 110
+	PUSHREF {
+	}
+	.loc contracts/amm/AckiSwapPair.sol, 111
+	PUSHINT 0
+	ROLL 3
+	GETGLOB 9
+	MYADDR
+	ROLL 5
+	PUSHINT 0
+	DUP
+	GETGLOB 15
+	NEWC
+	STSLICECONST x62_
+	STSLICE
+	SWAP
+	STGRAMS
+	PUSHINT 1
+	STUR 107
+	ROLLREV 7
+	NEWC
+	STSLICECONST x178d4519
+	STU 64
+	STU 128
+	STSLICE
+	ROLLREV 4
+	NEWC
+	STSLICE
+	ROLLREV 3
+	NEWC
+	STSLICE
+	STU 128
+	STREF
+	STBREFR
+	STBREFR
+	STBREFR
+	ENDC
+	PUSHINT 64
+	SENDRAWMSG
+	.loc contracts/amm/AckiSwapPair.sol, 0
+}
+
+.fragment swapShellForToken, {
+	DROP
+	GETGLOB 6
+	THROWIFNOT 76
+	GETGLOB 2
+	ISNULL
+	IFREF {
+		.inline c4_to_c7
+	}
+	.loc contracts/amm/AckiSwapPair.sol, 80
+	OVER
+	PUSHCONT {
+		LDREF
+		ENDS
+		CTOS
+	}
+	IF
+	LDU 128
+	LDMSGADDR
+	ENDS
+	.loc contracts/amm/AckiSwapPair.sol, 0
+	CALLREF {
+		.inline swapShellForToken_27e8a222_internal
+	}
+	CALLREF {
+		.inline c7_to_c4
+	}
+	THROW 0
+}
+
+.fragment tokenWallet, {
+	DROP
+	ENDS
+	CALLREF {
+		.inline c4_to_c7_with_init_storage
+	}
+	GETGLOB 15
+	OVER
+	PUSHCONT {
+		PUSHSLICE xc0000000000000000000000000f1030b6b
+		NEWC
+		STSLICE
+		STSLICE
+		ENDC
+		PUSHINT 0
+		SENDRAWMSG
+	}
+	IF
+	THROW 0
+}
+
+.fragment public_function_selector, {
+	DUP
+	PUSHINT 1259910852
+	LEQ
+	IFJMPREF {
+		DUP
+		PUSHINT 184190283
+		EQUAL
+		IFJMPREF {
+			.inline reserveToken
+		}
+		DUP
+		PUSHINT 621546355
+		EQUAL
+		IFJMPREF {
+			.inline provideInitialShell
+		}
+		DUP
+		PUSHINT 729713869
+		EQUAL
+		IFJMPREF {
+			.inline swapShellForToken
+		}
+		DUP
+		PUSHINT 1259910852
+		EQUAL
+		IFJMPREF {
+			.inline reserveShell
+		}
+	}
+	DUP
+	PUSHINT 1504600195
+	LEQ
+	IFJMPREF {
+		DUP
+		PUSHINT 1294452757
+		EQUAL
+		IFJMPREF {
+			.inline onAFTTransfer
+		}
+		DUP
+		PUSHINT 1504600195
+		EQUAL
+		IFJMPREF {
+			.inline initialized
+		}
+	}
+	DUP
+	PUSHINT 1756716863
+	EQUAL
+	IFJMPREF {
+		.inline constructor
+	}
+	DUP
+	PUSHINT 1896024939
+	EQUAL
+	IFJMPREF {
+		.inline tokenWallet
+	}
+}
+
+.fragment main_external, {
+	PUSHINT -1
+	PUSHROOT
+	CTOS
+	SBITS
+	NEQINT 1
+	SETGLOB 6
+	PUSHREFSLICE {
+		.blob x8000000000000000000000000000000000000000000000000000000000000000001_
+	}
+	SETGLOB 9
+	OVER
+	CALLREF {
+		.inline c4_to_c7_with_init_storage
+	}
+	LDU 1 ; haveSign msgSlice
+	SWAP
+	PUSHCONT {
+		PUSHPOW2 9
+		LDSLICEX
+		DUP
+		MYADDR
+		NEWC
+		STSLICE
+		STSLICE
+		ENDC
+		HASHCU
+		SWAP
+		LDU 1 ; signatureSlice hashMsgSlice hasPubkey msgSlice
+		SWAP
+		PUSHCONT {
+			LDU 256 ; signatureSlice hashMsgSlice pubkey msgSlice
+			XCHG2 S3, S3
+		}
+		PUSHCONT {
+			XCHG S2
+			GETGLOB 2
+		}
+		IFELSE
+		CHKSIGNU
+		THROWIFNOT 40
+	}
+	PUSHCONT {
+		LDU 1 ; hasPubkey msgSlice
+		SWAP
+		THROWIF 58
+	}
+	IFELSE
+	LDU 64 ; timestamp msgSlice
+	SWAP
+	.inline __replayProtection
+	LDU 32 ; expireAt msgSlice
+	SWAP
+	NOW ; msgSlice expireAt now
+	GREATER ; msgSlice expireAt>now
+	THROWIFNOT 57
+	LDU 32 ; funcId body
+	SWAP
+	CALLREF {
+		.inline public_function_selector
+	}
+	THROW 60
+}
+
+.fragment main_internal, {
+	PUSHINT 0
+	PUSHROOT
+	CTOS
+	SBITS
+	NEQINT 1
+	SETGLOB 6
+	PUSH S2
+	CTOS
+	LDU 4 ; bounced tail
+	LDMSGADDR ; bounced src tail
+	DROP
+	SETGLOB 9
+	MODPOW2 1
+	IFRET
+	OVER
+	SEMPTY ; isEmpty
+	IFJMPREF {
+		GETGLOB 6
+		THROWIFNOT 76
+	}
+	OVER
+	LDUQ 32  ; [funcId] body' ok
+	THROWIFNOT 60
+	OVER
+	IFNOTJMPREF {
+		GETGLOB 6
+		THROWIFNOT 76
+	}
+	SWAP
+	CALLREF {
+		.inline public_function_selector
+	}
+	THROW 60
+}
+
+.fragment upd_only_time_in_c4, {
+	PUSHROOT
+	CTOS
+	LDU 256
+	LDU 64
+	NIP
+	GETGLOB 3
+	ROT
+	NEWC
+	STU 256
+	STU 64
+	STSLICE
+	ENDC
+	POPROOT
+}
+
+.fragment default_data_dict_cell, {
+	PUSHINT 0
+	NEWC
+	STU 256
+	PUSHINT 0
+	NEWDICT
+	PUSHINT 64
+	DICTUSETB
+}
+
+; The code below forms a value of the StateInit type.
+.blob x4_ ; split_depth = nothing
+.blob x4_ ; special = nothing
+.blob xc_ ; code = just
+.cell { ; code cell
+	SETCP0
+	DICTPUSHCONST 19
+	DICTIGETJMPZ
+	THROW 11
+	.code-dict-cell 19, {
+		x00001_ = main_internal,
+		xfffff_ = main_external,
+	}
+}
+.blob xc_ ; data = just
+.cell { 
+	.blob xc_
+	.cell { 
+		.inline-computed-cell default_data_dict_cell, 0
+	}
+}
+.blob x4_ ; library = hme_empty

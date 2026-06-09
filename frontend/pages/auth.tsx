@@ -276,8 +276,6 @@ export default function AuthPage() {
           )}
         </div>
       </main>
-
-      <style jsx>{``}</style>
     </>
   );
 }

@@ -27,7 +27,7 @@ export function PriceChart({ currentPrice, progressPct, slopeDivisor }: { curren
   const glowId = `glow-${chartId}`;
 
   return (
-    <div className={`card ${styles.chartCard}`} style={{ height: '240px', padding: '0', position: 'relative', overflow: 'hidden', border: '1px solid var(--ink-faint)', background: 'linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(0,255,136,0.02) 100%)' }}>
+    <div className={`card ${styles.chartCard}`} style={{ background: 'linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(0,255,136,0.02) 100%)' }}>
        <div style={{ position: 'absolute', top: '20px', left: '20px', zIndex: 10 }}>
           <p className={styles.infoLabel} style={{ margin: 0, fontSize: '10px' }}>{t("detail_bonding_curve")}</p>
           <p style={{ margin: 0, fontSize: '22px', fontWeight: 900, color: 'var(--accent)', letterSpacing: '-0.5px' }}>

@@ -1,0 +1,116 @@
+{
+	"ABI version": 2,
+	"version": "2.3",
+	"header": ["pubkey", "time", "expire"],
+	"functions": [
+		{
+			"name": "constructor",
+			"inputs": [
+			],
+			"outputs": [
+			]
+		},
+		{
+			"name": "provideInitialShell",
+			"inputs": [
+			],
+			"outputs": [
+			]
+		},
+		{
+			"name": "onAFTTransfer",
+			"inputs": [
+				{"name":"queryId","type":"uint64"},
+				{"name":"amount","type":"uint128"},
+				{"name":"sender","type":"address"},
+				{"name":"forwardPayload","type":"cell"}
+			],
+			"outputs": [
+			]
+		},
+		{
+			"name": "swapShellForToken",
+			"inputs": [
+				{"name":"minAmountOut","type":"uint128"},
+				{"name":"responseDestination","type":"address"}
+			],
+			"outputs": [
+			]
+		},
+		{
+			"name": "reserveShell",
+			"inputs": [
+			],
+			"outputs": [
+				{"name":"reserveShell","type":"uint128"}
+			]
+		},
+		{
+			"name": "reserveToken",
+			"inputs": [
+			],
+			"outputs": [
+				{"name":"reserveToken","type":"uint128"}
+			]
+		},
+		{
+			"name": "tokenWallet",
+			"inputs": [
+			],
+			"outputs": [
+				{"name":"tokenWallet","type":"address"}
+			]
+		},
+		{
+			"name": "initialized",
+			"inputs": [
+			],
+			"outputs": [
+				{"name":"initialized","type":"bool"}
+			]
+		}
+	],
+	"getters": [
+	],
+	"data": [
+		{"key":1,"name":"_factory","type":"address"},
+		{"key":2,"name":"_tokenRoot","type":"address"},
+		{"key":3,"name":"_feeRecipient","type":"address"}
+	],
+	"events": [
+		{
+			"name": "LiquidityAdded",
+			"inputs": [
+				{"name":"amountShell","type":"uint128"},
+				{"name":"amountToken","type":"uint128"},
+				{"name":"liquidity","type":"uint128"}
+			],
+			"outputs": [
+			]
+		},
+		{
+			"name": "Swap",
+			"inputs": [
+				{"name":"user","type":"address"},
+				{"name":"amountInShell","type":"uint128"},
+				{"name":"amountInToken","type":"uint128"},
+				{"name":"amountOutShell","type":"uint128"},
+				{"name":"amountOutToken","type":"uint128"}
+			],
+			"outputs": [
+			]
+		}
+	],
+	"fields": [
+		{"name":"_pubkey","type":"uint256"},
+		{"name":"_timestamp","type":"uint64"},
+		{"name":"_constructorFlag","type":"bool"},
+		{"name":"_factory","type":"address"},
+		{"name":"_tokenRoot","type":"address"},
+		{"name":"_feeRecipient","type":"address"},
+		{"name":"reserveShell","type":"uint128"},
+		{"name":"reserveToken","type":"uint128"},
+		{"name":"tokenWallet","type":"address"},
+		{"name":"initialized","type":"bool"}
+	]
+}

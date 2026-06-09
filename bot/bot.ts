@@ -1,5 +1,6 @@
 import "dotenv/config";
 import { Telegraf, Context } from "telegraf";
+import { createClient } from "redis";
 
 if (!process.env.BOT_TOKEN) {
   throw new Error("BOT_TOKEN não definido no .env");
@@ -12,43 +13,49 @@ const welcomeText =
 
 const bot = new Telegraf(process.env.BOT_TOKEN);
 
-// ─── M-05: Rate limiting middleware to prevent spam ──────────────────────────
-const rateLimitMap = new Map<number, number>();
-const RATE_LIMIT_MS = 3000; // 3 seconds between interactions per user
+// ─── M-05: Rate limiting middleware to prevent spam (Redis-backed) ─────────────
+let redisClient: any = null;
+if (process.env.REDIS_URL) {
+  redisClient = createClient({ url: process.env.REDIS_URL });
+  redisClient.on("error", (err: any) => console.error("[Redis] Client error:", err.message));
+  redisClient.connect()
+    .then(() => console.log("[Redis] Conectado para rate limiting no Bot"))
+    .catch((err: any) => console.error("[Redis] Falha na conexão inicial:", err.message));
+}
 
-bot.use((ctx: Context, next: () => Promise<void>) => {
+const RATE_LIMIT_SEC = 3; // 3 seconds between interactions per user
+
+bot.use(async (ctx: Context, next: () => Promise<void>) => {
   const userId = ctx.from?.id;
   if (!userId) return next();
 
-  const now = Date.now();
-  const lastSeen = rateLimitMap.get(userId);
-
-  if (lastSeen && now - lastSeen < RATE_LIMIT_MS) {
-    return; // Silently ignore rapid-fire messages
+  if (redisClient) {
+    try {
+      const key = `bot_rate_limit:${userId}`;
+      const setSuccess = await redisClient.set(key, "1", {
+        NX: true,
+        EX: RATE_LIMIT_SEC
+      });
+      if (!setSuccess) {
+        return; // Silently ignore rapid-fire messages
+      }
+    } catch (err) {
+      console.error("[Redis] Rate limit falhou, ignorando:", err);
+    }
   }
 
-  rateLimitMap.set(userId, now);
   return next();
 });
 
-// Clean up rate limit map every 5 minutes to prevent memory leak
-setInterval(() => {
-  const threshold = Date.now() - 60_000;
-  for (const [userId, timestamp] of rateLimitMap) {
-    if (timestamp < threshold) {
-      rateLimitMap.delete(userId);
-    }
-  }
-}, 5 * 60 * 1000);
-
-bot.start((ctx: Context) => {
+bot.start((ctx: any) => {
+  const startParam = ctx.payload ? `?startapp=${ctx.payload}` : "";
   ctx.reply(`🚀 AckiMeme\n\n${welcomeText}`, {
     reply_markup: {
       inline_keyboard: [
         [
           {
             text: "Abrir Mini App",
-            web_app: { url: webAppUrl },
+            web_app: { url: `${webAppUrl}${startParam}` },
           },
         ],
       ],

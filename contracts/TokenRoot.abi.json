@@ -6,14 +6,123 @@
 		{
 			"name": "constructor",
 			"inputs": [
-				{"name":"_name","type":"string"},
-				{"name":"_symbol","type":"string"},
-				{"name":"_decimals","type":"uint8"},
-				{"name":"_walletCode","type":"cell"},
-				{"name":"_owner","type":"address"},
-				{"name":"_shellToConvert","type":"uint64"}
+				{"name":"admin","type":"address"},
+				{"name":"mintable","type":"bool"},
+				{"name":"content","type":"cell"},
+				{"name":"walletCode","type":"cell"},
+				{"name":"initialOwner","type":"address"},
+				{"name":"initialSupply","type":"uint128"}
 			],
 			"outputs": [
+			]
+		},
+		{
+			"name": "mint",
+			"id": "0x2786D61D",
+			"inputs": [
+				{"name":"queryId","type":"uint64"},
+				{"name":"toOwner","type":"address"},
+				{"name":"amount","type":"uint128"},
+				{"name":"responseDestination","type":"address"},
+				{"name":"forwardShellAmount","type":"uint128"},
+				{"name":"forwardPayload","type":"cell"}
+			],
+			"outputs": [
+			]
+		},
+		{
+			"name": "closeMint",
+			"id": "0x58F5D4F2",
+			"inputs": [
+			],
+			"outputs": [
+			]
+		},
+		{
+			"name": "setPendingAdmin",
+			"id": "0x1B1064D7",
+			"inputs": [
+				{"name":"newAdmin","type":"address"}
+			],
+			"outputs": [
+			]
+		},
+		{
+			"name": "acceptAdmin",
+			"id": "0x726CAFDD",
+			"inputs": [
+			],
+			"outputs": [
+			]
+		},
+		{
+			"name": "setContent",
+			"id": "0xD7DC08A",
+			"inputs": [
+				{"name":"content","type":"cell"}
+			],
+			"outputs": [
+			]
+		},
+		{
+			"name": "provideWalletAddress",
+			"id": "0x2C76B973",
+			"inputs": [
+				{"name":"queryId","type":"uint64"},
+				{"name":"ownerAddress","type":"address"},
+				{"name":"includeAddress","type":"bool"}
+			],
+			"outputs": [
+			]
+		},
+		{
+			"name": "onAFTBurnNotification",
+			"id": "0x7BDD97DE",
+			"inputs": [
+				{"name":"queryId","type":"uint64"},
+				{"name":"amount","type":"uint128"},
+				{"name":"sender","type":"address"},
+				{"name":"responseDestination","type":"address"}
+			],
+			"outputs": [
+			]
+		},
+		{
+			"name": "recordTransfer",
+			"id": "0xAE71DA1A",
+			"inputs": [
+				{"name":"queryId","type":"uint64"},
+				{"name":"fromOwner","type":"address"},
+				{"name":"toOwner","type":"address"},
+				{"name":"amount","type":"uint128"},
+				{"name":"notifiedReceiver","type":"bool"},
+				{"name":"forwardPayloadHash","type":"uint256"}
+			],
+			"outputs": [
+			]
+		},
+		{
+			"name": "getAftData",
+			"inputs": [
+			],
+			"outputs": [
+				{"name":"totalSupply","type":"uint128"},
+				{"name":"mintable","type":"bool"},
+				{"name":"adminAddress","type":"address"},
+				{"name":"content","type":"cell"},
+				{"name":"walletCode","type":"cell"}
+			]
+		},
+		{
+			"name": "getJettonData",
+			"inputs": [
+			],
+			"outputs": [
+				{"name":"totalSupply","type":"uint128"},
+				{"name":"mintable","type":"bool"},
+				{"name":"adminAddress","type":"address"},
+				{"name":"content","type":"cell"},
+				{"name":"walletCode","type":"cell"}
 			]
 		},
 		{
@@ -22,209 +131,182 @@
 				{"name":"ownerAddress","type":"address"}
 			],
 			"outputs": [
-				{"name":"value0","type":"address"}
+				{"name":"walletAddress","type":"address"}
 			]
 		},
 		{
-			"name": "deployWallet",
+			"name": "getDetails",
 			"inputs": [
-				{"name":"ownerAddress","type":"address"},
-				{"name":"deployValue","type":"uint128"}
 			],
 			"outputs": [
-				{"name":"value0","type":"address"}
+				{"name":"name","type":"string"},
+				{"name":"symbol","type":"string"},
+				{"name":"decimals","type":"uint128"},
+				{"name":"deployer","type":"address"},
+				{"name":"admin","type":"address"},
+				{"name":"pendingAdmin","type":"address"},
+				{"name":"mintable","type":"bool"},
+				{"name":"totalSupply","type":"uint128"}
 			]
 		},
 		{
-			"name": "mint",
+			"name": "estimateFwdFee",
 			"inputs": [
-				{"name":"mintNonce","type":"uint32"},
-				{"name":"recipient","type":"address"},
-				{"name":"amount","type":"uint256"},
-				{"name":"deployWalletValue","type":"uint128"}
+				{"name":"dest","type":"address"},
+				{"name":"body","type":"cell"}
 			],
 			"outputs": [
+				{"name":"value0","type":"uint128"}
 			]
 		},
 		{
-			"name": "onMintDelivered",
+			"name": "getFwdPrices",
 			"inputs": [
-				{"name":"mintNonce","type":"uint32"}
 			],
 			"outputs": [
+				{"name":"lumpPrice","type":"uint64"},
+				{"name":"bitPrice","type":"uint64"},
+				{"name":"cellPrice","type":"uint64"}
 			]
 		},
 		{
-			"name": "transferFromWallet",
-			"inputs": [
-				{"name":"walletSeqno","type":"uint32"},
-				{"name":"fromOwner","type":"address"},
-				{"name":"recipientOwner","type":"address"},
-				{"name":"amount","type":"uint256"}
-			],
-			"outputs": [
-			]
-		},
-		{
-			"name": "onTransferDelivered",
-			"inputs": [
-				{"name":"transferNonce","type":"uint32"}
-			],
-			"outputs": [
-			]
-		},
-		{
-			"name": "transferOwnership",
-			"inputs": [
-				{"name":"newOwner","type":"address"}
-			],
-			"outputs": [
-			]
-		},
-		{
-			"name": "setBondingCurveCode",
-			"inputs": [
-				{"name":"_code","type":"cell"}
-			],
-			"outputs": [
-			]
-		},
-		{
-			"name": "deployBondingCurve",
-			"inputs": [
-				{"name":"_owner","type":"address"},
-				{"name":"_name","type":"string"},
-				{"name":"_symbol","type":"string"},
-				{"name":"_creationFeeTxHash","type":"bytes"},
-				{"name":"_supplyCap","type":"uint256"},
-				{"name":"_initialBalance","type":"uint128"},
-				{"name":"_feeRecipient","type":"address"},
-				{"name":"_pumpForever","type":"bool"},
-				{"name":"_slopeDivisor","type":"uint256"}
-			],
-			"outputs": [
-			]
-		},
-		{
-			"name": "notifyBurn",
-			"inputs": [
-				{"name":"seqno","type":"uint32"},
-				{"name":"amount","type":"uint256"},
-				{"name":"refundAddress","type":"address"},
-				{"name":"callbackTarget","type":"address"},
-				{"name":"minShellOut","type":"uint128"}
-			],
-			"outputs": [
-			]
-		},
-		{
-			"name": "deployNonce",
+			"name": "getGasPrice",
 			"inputs": [
 			],
 			"outputs": [
-				{"name":"deployNonce","type":"uint256"}
-			]
-		},
-		{
-			"name": "name",
-			"inputs": [
-			],
-			"outputs": [
-				{"name":"name","type":"string"}
-			]
-		},
-		{
-			"name": "symbol",
-			"inputs": [
-			],
-			"outputs": [
-				{"name":"symbol","type":"string"}
-			]
-		},
-		{
-			"name": "decimals",
-			"inputs": [
-			],
-			"outputs": [
-				{"name":"decimals","type":"uint8"}
-			]
-		},
-		{
-			"name": "totalSupply",
-			"inputs": [
-			],
-			"outputs": [
-				{"name":"totalSupply","type":"uint256"}
-			]
-		},
-		{
-			"name": "owner",
-			"inputs": [
-			],
-			"outputs": [
-				{"name":"owner","type":"address"}
-			]
-		},
-		{
-			"name": "walletCode",
-			"inputs": [
-			],
-			"outputs": [
-				{"name":"walletCode","type":"cell"}
-			]
-		},
-		{
-			"name": "bondingCurveCode",
-			"inputs": [
-			],
-			"outputs": [
-				{"name":"bondingCurveCode","type":"cell"}
-			]
-		},
-		{
-			"name": "bondingCurve",
-			"inputs": [
-			],
-			"outputs": [
-				{"name":"bondingCurve","type":"address"}
-			]
-		},
-		{
-			"name": "pendingMintsByNonce",
-			"inputs": [
-			],
-			"outputs": [
-				{"name":"pendingMintsByNonce","type":"map(uint32,uint256)"}
+				{"name":"gasPrice","type":"uint64"}
 			]
 		}
 	],
 	"events": [
+		{
+			"name": "AFTMinted",
+			"inputs": [
+				{"name":"queryId","type":"uint64"},
+				{"name":"owner","type":"address"},
+				{"name":"amount","type":"uint128"},
+				{"name":"totalSupplyAfter","type":"uint128"},
+				{"name":"forwardPayloadHash","type":"uint256"},
+				{"name":"mintedAt","type":"uint64"}
+			],
+			"outputs": [
+			]
+		},
+		{
+			"name": "AFTTransferred",
+			"inputs": [
+				{"name":"queryId","type":"uint64"},
+				{"name":"fromOwner","type":"address"},
+				{"name":"toOwner","type":"address"},
+				{"name":"amount","type":"uint128"},
+				{"name":"notifiedReceiver","type":"bool"},
+				{"name":"forwardPayloadHash","type":"uint256"},
+				{"name":"transferredAt","type":"uint64"}
+			],
+			"outputs": [
+			]
+		},
+		{
+			"name": "AFTBurned",
+			"inputs": [
+				{"name":"queryId","type":"uint64"},
+				{"name":"owner","type":"address"},
+				{"name":"amount","type":"uint128"},
+				{"name":"totalSupplyAfter","type":"uint128"},
+				{"name":"burnedAt","type":"uint64"}
+			],
+			"outputs": [
+			]
+		},
+		{
+			"name": "AFTMintRolledBack",
+			"inputs": [
+				{"name":"queryId","type":"uint64"},
+				{"name":"amount","type":"uint128"},
+				{"name":"totalSupplyAfter","type":"uint128"},
+				{"name":"rolledBackAt","type":"uint64"}
+			],
+			"outputs": [
+			]
+		},
+		{
+			"name": "RootConfigured",
+			"inputs": [
+				{"name":"name","type":"string"},
+				{"name":"symbol","type":"string"},
+				{"name":"decimals","type":"uint128"},
+				{"name":"admin","type":"address"},
+				{"name":"mintable","type":"bool"},
+				{"name":"configuredAt","type":"uint64"}
+			],
+			"outputs": [
+			]
+		},
+		{
+			"name": "WalletAddressProvided",
+			"inputs": [
+				{"name":"queryId","type":"uint64"},
+				{"name":"requester","type":"address"},
+				{"name":"owner","type":"address"},
+				{"name":"wallet","type":"address"},
+				{"name":"includeOwnerAddress","type":"bool"},
+				{"name":"providedAt","type":"uint64"}
+			],
+			"outputs": [
+			]
+		},
+		{
+			"name": "MintClosed",
+			"inputs": [
+				{"name":"admin","type":"address"},
+				{"name":"closedAt","type":"uint64"}
+			],
+			"outputs": [
+			]
+		},
+		{
+			"name": "PendingAdminSet",
+			"inputs": [
+				{"name":"admin","type":"address"},
+				{"name":"pendingAdmin","type":"address"},
+				{"name":"setAt","type":"uint64"}
+			],
+			"outputs": [
+			]
+		},
+		{
+			"name": "AdminAccepted",
+			"inputs": [
+				{"name":"oldAdmin","type":"address"},
+				{"name":"newAdmin","type":"address"},
+				{"name":"acceptedAt","type":"uint64"}
+			],
+			"outputs": [
+			]
+		},
+		{
+			"name": "ContentUpdated",
+			"inputs": [
+				{"name":"admin","type":"address"},
+				{"name":"contentHash","type":"uint256"},
+				{"name":"updatedAt","type":"uint64"}
+			],
+			"outputs": [
+			]
+		}
 	],
 	"fields": [
 		{"init":true,"name":"_pubkey","type":"uint256"},
-		{"init":false,"name":"_timestamp","type":"uint64"},
 		{"init":false,"name":"_constructorFlag","type":"bool"},
-		{"init":true,"name":"deployNonce","type":"uint256"},
-		{"init":false,"name":"name","type":"string"},
-		{"init":false,"name":"symbol","type":"string"},
-		{"init":false,"name":"decimals","type":"uint8"},
-		{"init":false,"name":"totalSupply","type":"uint256"},
-		{"init":false,"name":"owner","type":"address"},
-		{"init":false,"name":"walletCode","type":"cell"},
-		{"init":false,"name":"bondingCurveCode","type":"cell"},
-		{"init":false,"name":"bondingCurve","type":"address"},
-		{"init":false,"name":"pendingMintsByNonce","type":"map(uint32,uint256)"},
-		{"init":false,"name":"_pendingMintWallets","type":"map(uint32,address)"},
-		{"init":false,"name":"_pendingTransferAmounts","type":"map(uint32,uint256)"},
-		{"init":false,"name":"_pendingTransferSourceWallets","type":"map(uint32,address)"},
-		{"init":false,"name":"_pendingTransferRecipientWallets","type":"map(uint32,address)"},
-		{"init":false,"name":"_pendingTransferWalletSeqnos","type":"map(uint32,uint32)"},
-		{"init":false,"name":"_transferSeqno","type":"uint32"},
-		{"init":false,"name":"_pendingBurnAmounts","type":"map(uint32,uint256)"},
-		{"init":false,"name":"_pendingBurnWallets","type":"map(uint32,address)"},
-		{"init":false,"name":"_pendingBurnWalletSeqnos","type":"map(uint32,uint32)"},
-		{"init":false,"name":"_burnSeqno","type":"uint32"},
-		{"init":false,"name":"_lastGasMintTime","type":"uint32"},
-		{"init":false,"name":"_totalGasMinted","type":"uint128"}
+		{"init":true,"name":"_deployer","type":"address"},
+		{"init":true,"name":"_name","type":"string"},
+		{"init":true,"name":"_symbol","type":"string"},
+		{"init":true,"name":"_decimals","type":"uint128"},
+		{"init":false,"name":"_admin","type":"address"},
+		{"init":false,"name":"_pendingAdmin","type":"address"},
+		{"init":false,"name":"_mintable","type":"bool"},
+		{"init":false,"name":"_totalSupply","type":"uint128"},
+		{"init":false,"name":"_content","type":"cell"},
+		{"init":false,"name":"_walletCode","type":"cell"}
 	]
 }

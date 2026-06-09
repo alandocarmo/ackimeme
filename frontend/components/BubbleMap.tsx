@@ -53,8 +53,8 @@ export function BubbleMap({ holders, totalSupply }: { holders: Holder[], totalSu
   const SVG_SIZE = 320;
 
   return (
-    <div style={{ background: 'var(--bg-deep)', borderRadius: '8px', padding: '16px', display: 'flex', justifyContent: 'center', overflow: 'hidden', position: 'relative' }}>
-      <svg width={SVG_SIZE} height={SVG_SIZE} viewBox={`0 0 ${SVG_SIZE} ${SVG_SIZE}`}>
+    <div style={{ background: 'var(--bg-deep)', borderRadius: '8px', padding: '16px', display: 'flex', justifyContent: 'center', overflow: 'hidden', position: 'relative', width: '100%' }}>
+      <svg width="100%" height="100%" style={{ maxWidth: '320px', aspectRatio: '1/1' }} viewBox={`0 0 ${SVG_SIZE} ${SVG_SIZE}`}>
         {placedNodes.map(n => (
           <g key={n.id} transform={`translate(${(n as any).cx}, ${(n as any).cy})`} style={{ transition: 'transform 0.3s ease' }}>
             <circle 

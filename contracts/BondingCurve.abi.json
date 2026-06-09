@@ -43,6 +43,24 @@
 			]
 		},
 		{
+			"name": "initAftWallet",
+			"inputs": [
+			],
+			"outputs": [
+			]
+		},
+		{
+			"name": "takeWalletAddress",
+			"id": "0xD1735400",
+			"inputs": [
+				{"name":"queryId","type":"uint64"},
+				{"name":"walletAddress","type":"address"},
+				{"name":"ownerAddress","type":"optional(address)"}
+			],
+			"outputs": [
+			]
+		},
+		{
 			"name": "currentPrice",
 			"inputs": [
 			],
@@ -149,28 +167,38 @@
 			]
 		},
 		{
-			"name": "onTokenBurned",
+			"name": "onAFTTransfer",
+			"id": "0x7362D09C",
 			"inputs": [
-				{"name":"burnNonce","type":"uint32"},
-				{"name":"amount","type":"uint256"},
-				{"name":"refundAddress","type":"address"},
-				{"name":"minShellOut","type":"uint128"}
+				{"name":"queryId","type":"uint64"},
+				{"name":"amount","type":"uint128"},
+				{"name":"sender","type":"address"},
+				{"name":"forwardPayload","type":"cell"}
 			],
 			"outputs": [
 			]
 		},
 		{
-			"name": "onMintFailed",
+			"name": "onAFTExcesses",
+			"id": "0xD53276DB",
 			"inputs": [
-				{"name":"mintNonce","type":"uint32"}
+				{"name":"queryId","type":"uint64"}
 			],
 			"outputs": [
 			]
 		},
 		{
-			"name": "onMintSuccess",
+			"name": "setFactory",
 			"inputs": [
-				{"name":"mintNonce","type":"uint32"}
+				{"name":"_factory","type":"address"}
+			],
+			"outputs": [
+			]
+		},
+		{
+			"name": "onPairDeployed",
+			"inputs": [
+				{"name":"pair","type":"address"}
 			],
 			"outputs": [
 			]
@@ -192,7 +220,8 @@
 		{
 			"name": "rescueExcessShell",
 			"inputs": [
-				{"name":"to","type":"address"}
+				{"name":"to","type":"address"},
+				{"name":"amount","type":"uint256"}
 			],
 			"outputs": [
 			]
@@ -238,11 +267,19 @@
 			]
 		},
 		{
-			"name": "ammKLast",
+			"name": "ammPairAddress",
 			"inputs": [
 			],
 			"outputs": [
-				{"name":"ammKLast","type":"uint256"}
+				{"name":"ammPairAddress","type":"address"}
+			]
+		},
+		{
+			"name": "factoryAddress",
+			"inputs": [
+			],
+			"outputs": [
+				{"name":"factoryAddress","type":"address"}
 			]
 		},
 		{
@@ -358,6 +395,14 @@
 			]
 		},
 		{
+			"name": "myAftWallet",
+			"inputs": [
+			],
+			"outputs": [
+				{"name":"myAftWallet","type":"address"}
+			]
+		},
+		{
 			"name": "lastBuyTimestamp",
 			"inputs": [
 			],
@@ -448,6 +493,15 @@
 			],
 			"outputs": [
 			]
+		},
+		{
+			"name": "BurnFailed",
+			"inputs": [
+				{"name":"queryId","type":"uint64"},
+				{"name":"amount","type":"uint128"}
+			],
+			"outputs": [
+			]
 		}
 	],
 	"fields": [
@@ -459,7 +513,8 @@
 		{"init":false,"name":"reserveBalance","type":"uint256"},
 		{"init":false,"name":"totalSupply","type":"uint256"},
 		{"init":false,"name":"isAmm","type":"bool"},
-		{"init":false,"name":"ammKLast","type":"uint256"},
+		{"init":false,"name":"ammPairAddress","type":"address"},
+		{"init":false,"name":"factoryAddress","type":"address"},
 		{"init":false,"name":"migratedAt","type":"uint32"},
 		{"init":false,"name":"owner","type":"address"},
 		{"init":false,"name":"feeRecipient","type":"address"},
@@ -476,6 +531,7 @@
 		{"init":false,"name":"slopeDivisor","type":"uint256"},
 		{"init":false,"name":"mintIdToBuyer","type":"map(uint32,address)"},
 		{"init":false,"name":"_mintSeqno","type":"uint32"},
+		{"init":false,"name":"myAftWallet","type":"address"},
 		{"init":false,"name":"lastBuyTimestamp","type":"map(address,uint32)"},
 		{"init":false,"name":"thresholdReachedAt","type":"uint32"}
 	]

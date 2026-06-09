@@ -109,7 +109,7 @@ export function readReserveBalance(onchainData: import("@ackimeme/shared-types")
   return parsed; // returns nano-SHELL
 }
 
-export const MIGRATION_THRESHOLD_NANO = 69_000_000_000_000;
+export const MIGRATION_THRESHOLD_NANO = 6_900_000_000_000_000;
 
 export function calcBondingStats(onchainData: import("@ackimeme/shared-types").OnchainData | undefined) {
   const reserveNano = readReserveBalance(onchainData);

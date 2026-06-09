@@ -149,13 +149,6 @@ export async function cleanupExpiredAuthData() {
 
     await client.query(
       `
-        DELETE FROM qr_sessions
-        WHERE expires_at <= NOW()
-      `,
-    );
-
-    await client.query(
-      `
         DELETE FROM used_tx_hashes
         WHERE used_at <= NOW() - INTERVAL '30 days'
       `

@@ -7,6 +7,7 @@ import { useEffect, useState } from "react";
 import { getSession } from "../lib/api";
 import ErrorBoundary from "../lib/ErrorBoundary";
 import { I18nProvider, useI18n, SUPPORTED_LANGS } from "../lib/i18n";
+import { LiveTicker } from "../components/ui/LiveTicker";
 import type { AppProps } from "next/app";
 import type { Session } from "../types";
 import "../styles/globals.css";
@@ -125,7 +126,10 @@ export default function App({ Component, pageProps }: AppProps) {
       </Head>
       {/* Telegram WebApp SDK — deve ser carregado antes de qualquer interação */}
       <Script src="https://telegram.org/js/telegram-web-app.js" strategy="beforeInteractive" />
-      <GlobalNav session={session} />
+      <LiveTicker />
+      <div style={{ marginTop: "36px" }}>
+        <GlobalNav session={session} />
+      </div>
       <ErrorBoundary>
         <Component {...pageProps} />
       </ErrorBoundary>

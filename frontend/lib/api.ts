@@ -113,8 +113,29 @@ export function verifyPayment(payload: { txHash: string; launchId?: string; wall
   });
 }
 
-export function createLaunchRequest(payload: Record<string, any>, token?: string): Promise<{ success: boolean; launchId?: string; launchRequest?: any }> {
-  return request<{ success: boolean; launchId?: string; launchRequest?: any }>("/launch-request", {
+interface LaunchPayload {
+  name: string;
+  symbol: string;
+  description: string;
+  tagline: string;
+  logoUrl?: string;
+  website?: string;
+  xUrl?: string;
+  telegramUrl?: string;
+  totalSupply?: string;
+  creatorWallet?: string;
+  pumpForever?: boolean;
+  slopeDivisor?: number;
+  initialReserve?: string;
+  creatorFeeBps?: number;
+  paymentAmount?: string;
+  txHash: string;
+  tokenSymbol?: string;
+  isBoosted?: boolean;
+}
+
+export function createLaunchRequest(payload: LaunchPayload, token?: string): Promise<{ success: boolean; launchId?: string; launchRequest?: unknown }> {
+  return request<{ success: boolean; launchId?: string; launchRequest?: unknown }>("/launch-request", {
     method: "POST",
     body: payload,
     token,

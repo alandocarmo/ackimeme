@@ -12,6 +12,7 @@ import {
   getSessionByToken,
 } from "./storage";
 import { verifyTelegramInitData } from "./telegram";
+import { redisClient } from "./redis";
 
 const ED25519_SPKI_PREFIX = Buffer.from(
   "302a300506032b6570032100",
@@ -345,27 +346,35 @@ export async function generateQrSession(): Promise<{ sessionId: string, authUrl:
   // Padrão Acki Nacki para Telegram Bot
   const deepLink = `https://t.me/${config.telegramBotUsername}?start=${sessionId}`;
 
-  await query(`INSERT INTO qr_sessions (id, status, deep_link, expires_at) VALUES ($1, 'pending', $2, $3)`, [sessionId, deepLink, expiresAt]);
+  if (!redisClient) {
+    throw new Error("Redis connection is required for QR sessions.");
+  }
+
+  await redisClient.setEx(
+    `qr_session:${sessionId}`,
+    5 * 60,
+    JSON.stringify({ status: 'pending', deepLink, expiresAt })
+  );
 
   return { sessionId, authUrl: deepLink, expiresAt };
 }
 
 export async function getQrSessionStatus(sessionId: string): Promise<{ status: string, sessionToken?: string }> {
-  // N6 FIX: Filter expired sessions in SQL so they return 'expired' immediately
-  // instead of waiting for the cleanup cron (runs every 10 min)
-  const res = await query(`SELECT * FROM qr_sessions WHERE id=$1 AND expires_at > NOW()`, [sessionId]);
-  if ((res.rowCount ?? 0) === 0) {
+  if (!redisClient) {
+    throw new Error("Redis connection is required for QR sessions.");
+  }
+
+  const raw = await redisClient.get(`qr_session:${sessionId}`);
+  if (!raw) {
     return { status: 'expired' };
   }
-  const session = res.rows[0];
+
+  const session = JSON.parse(raw);
   
   if (session.status === 'done') {
     // Return the token atomically and remove from DB to prevent replay
-    const delRes = await query(`DELETE FROM qr_sessions WHERE id=$1 AND status='done' RETURNING session_token`, [sessionId]);
-    if ((delRes.rowCount ?? 0) === 0) {
-      return { status: 'expired' };
-    }
-    return { status: 'done', sessionToken: delRes.rows[0].session_token };
+    await redisClient.del(`qr_session:${sessionId}`);
+    return { status: 'done', sessionToken: session.sessionToken };
   }
   
   return { status: session.status };
@@ -379,22 +388,41 @@ interface ProcessQrWebhookParams {
 }
 
 export async function processQrWebhook({ sessionId, walletAddress, publicKey, signature }: ProcessQrWebhookParams): Promise<{ success: boolean }> {
-  // N7 FIX: Atomic claim — prevents race condition on webhook retries.
-  // Uses UPDATE ... WHERE status='pending' as optimistic lock instead of SELECT + UPDATE.
-  const claimRes = await query(
-    `UPDATE qr_sessions SET status='processing' WHERE id=$1 AND status='pending' AND expires_at > NOW() RETURNING *`,
-    [sessionId]
-  );
-  if ((claimRes.rowCount ?? 0) === 0) {
+  if (!redisClient) {
+    throw new Error("Redis connection is required for QR sessions.");
+  }
+
+  const sessionKey = `qr_session:${sessionId}`;
+  
+  await redisClient.watch(sessionKey);
+  const raw = await redisClient.get(sessionKey);
+  
+  if (!raw) {
+    await redisClient.unwatch();
     throw new Error("Sessão HTTP do QR Code expirada, já processada, ou inválida.");
   }
-  const sessionData = claimRes.rows[0];
+  
+  const sessionData = JSON.parse(raw);
+  if (sessionData.status !== 'pending') {
+    await redisClient.unwatch();
+    throw new Error("Sessão HTTP do QR Code expirada, já processada, ou inválida.");
+  }
+
+  sessionData.status = 'processing';
+  
+  const multi = redisClient.multi();
+  multi.setEx(sessionKey, 5 * 60, JSON.stringify(sessionData));
+  const results = await multi.exec();
+  
+  if (!results) {
+    throw new Error("Conflito de concorrência no QR Code. Tente novamente.");
+  }
 
   try {
     const normalizedWallet = trimString(walletAddress);
     const normalizedKey = trimString(publicKey);
     const normalizedSignature = trimString(signature);
-    const expiresAtIso = new Date(sessionData.expires_at).toISOString();
+    const expiresAtIso = new Date(sessionData.expiresAt).toISOString();
 
     if (!normalizedWallet) {
       throw new Error("walletAddress é obrigatório no webhook QR.");
@@ -481,18 +509,16 @@ export async function processQrWebhook({ sessionId, walletAddress, publicKey, si
     });
 
     // Mark as done so the frontend polling can pick it up
-    await query(`UPDATE qr_sessions SET status='done', session_token=$1 WHERE id=$2`, [session.token, sessionId]);
+    sessionData.status = 'done';
+    sessionData.sessionToken = session.token;
+    await redisClient.setEx(sessionKey, 5 * 60, JSON.stringify(sessionData));
 
     return { success: true };
   } catch (error: unknown) {
     // BUG-06 FIX: Do not revert back to 'pending'. Mark as 'failed' to prevent infinite brute-force signature retry loops.
     // The user must generate a new QR session if their app fails the signature verification.
-    await query(
-      `UPDATE qr_sessions
-       SET status='failed'
-       WHERE id=$1 AND status='processing' AND expires_at > NOW()`,
-      [sessionId],
-    ).catch(() => {});
+    sessionData.status = 'failed';
+    await redisClient.setEx(sessionKey, 5 * 60, JSON.stringify(sessionData)).catch(() => {});
     throw error;
   }
 }

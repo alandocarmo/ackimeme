@@ -3,12 +3,27 @@ pragma AbiHeader expire;
 pragma AbiHeader pubkey;
 
 import "./Interfaces.sol";
+import "./interfaces/IAFTReceiver.sol";
+import "./interfaces/IAFTExcesses.sol";
+import "./interfaces/IAFTWalletAddressReceiver.sol";
+import "./interfaces/IAFTWallet.sol";
 
-contract BondingCurve {
+interface IAckiSwapFactory {
+    function deployPair(address tokenRoot, address callbackTarget) external;
+}
+
+interface IAckiSwapPair {
+    function initAftWallet() external;
+    function provideInitialShell() external;
+}
+import "./interfaces/IAFTRoot.sol";
+
+contract BondingCurve is IAFTReceiver, IAFTExcesses, IAFTWalletAddressReceiver {
     // ─── Constants ────────────────────────────────────────────────────────────
     // H-05: In TVM-Solidity, `ton` = 10^9 nanotons. So 15_000 ton = 15_000 * 10^9 = 15T nano.
     // This represents 15,000 SHELL in nano-units (SHELL uses 9 decimals like VMSHELL).
-    uint128 public constant MIGRATION_THRESHOLD_SHELL_NANO = 15_000 * 1e9;
+    // AMM Migration thresholds
+    uint256 public constant MIGRATION_THRESHOLD_SHELL_NANO = 6_900_000 * 1e9; // 6.9M SHELL target
     uint32 public constant LOCK_PERIOD = 30 days;
     // R-03: Removed `bytes public constant DAPP_ID` — dynamic bytes cannot be constant
     // in TVM-Solidity (only value types: int, bool, address, bytesN). Not used in any function.
@@ -53,7 +68,8 @@ contract BondingCurve {
     uint256 public reserveBalance;       // tracked SHELL balance (nano)
     uint256 public totalSupply;
     bool public isAmm;                   // true after reaching threshold (x*y=k internal pool)
-    uint256 public ammKLast;             // AMM invariant
+    address public ammPairAddress;
+    address public factoryAddress;
     uint32 public migratedAt;            // timestamp of migration
     address public owner;                // token creator
     address public feeRecipient;         // platform fee wallet (receives 0.7% of each trade)
@@ -87,6 +103,7 @@ contract BondingCurve {
 
     mapping(uint32 => address) public mintIdToBuyer; // mapping to resolve bounce exact buyer
     uint32 private _mintSeqno = 1;
+    address public myAftWallet;
 
     // H-01: Track last buy timestamp per address for cooldown
     mapping(address => uint32) public lastBuyTimestamp;
@@ -95,6 +112,32 @@ contract BondingCurve {
     uint32 public thresholdReachedAt;
 
     // ─── Modifiers ────────────────────────────────────────────────────────────
+    // ─── AFT Wallet Discovery ─────────────────────────────────────────────────
+    function initAftWallet() public {
+        require(myAftWallet == address(0), 236, "Already initialized");
+        require(msg.value >= 0.5 ton, 212, "Insufficient VMSHELL execution gas");
+        uint256 shellReceived = uint256(msg.currencies[SHELL_CURRENCY_ID]);
+        require(shellReceived >= 2 * 1e9, 203, "Send 2 SHELL for discovery gas");
+        
+        mapping(uint32 => varuint32) cc;
+        cc[SHELL_CURRENCY_ID] = varuint32(shellReceived);
+        
+        IAFTRoot(_tokenRoot).provideWalletAddress{ value: 0.1 ton, currencies: cc, flag: 1 }(
+            0,
+            address(this),
+            false
+        );
+    }
+
+    function takeWalletAddress(
+        uint64 queryId,
+        address walletAddress,
+        optional(address) ownerAddress
+    ) external override functionID(0xd1735400) {
+        require(msg.sender == _tokenRoot, 103, "Only AFTRoot can answer");
+        myAftWallet = walletAddress;
+    }
+
     modifier whenNotPaused() {
         require(!paused, 110, "Trading is temporarily paused for security");
         _;
@@ -118,6 +161,7 @@ contract BondingCurve {
     event Unpaused(address by);
     event MintRolledBack(uint32 nonce, address buyer, uint256 shellRefunded);
     event ExcessShellRescued(address to, uint256 amount);
+    event BurnFailed(uint64 queryId, uint128 amount);
 
     // ─── Constructor ──────────────────────────────────────────────────────────
     // BondingCurve is deployed via internal message from TokenRoot.
@@ -167,13 +211,7 @@ contract BondingCurve {
     }
 
     function getBuyPrice(uint256 tokenAmount) public view returns (uint128) {
-        if (isAmm) {
-            uint256 tokenPool = _supplyCap - totalSupply;
-            require(ammKLast > 0, 219, "AMM invariant is zero - pool corrupted");
-            require(tokenPool > tokenAmount + 1, 215, "Not enough AMM liquidity");
-            uint256 newReserve = ammKLast / (tokenPool - tokenAmount);
-            return uint128(newReserve - reserveBalance);
-        }
+        require(!isAmm, 250, "Trading ended");
         uint256 base = 1_000; // 0.000001 SHELL base
         uint256 p1 = base + (totalSupply / slopeDivisor);
         uint256 p2 = base + ((totalSupply + tokenAmount) / slopeDivisor);
@@ -184,15 +222,7 @@ contract BondingCurve {
 
     function getSellReturn(uint256 tokenAmount) public view returns (uint128) {
         if (totalSupply == 0 || tokenAmount > totalSupply) return 0;
-        if (isAmm) {
-            uint256 tokenPool = _supplyCap - totalSupply;
-            require(ammKLast > 0, 219, "AMM invariant is zero - pool corrupted");
-            require(tokenPool > tokenAmount + 1, 215, "Not enough AMM liquidity");
-            uint256 newReserve = ammKLast / (tokenPool + tokenAmount);
-            // C-02: Prevent underflow when sell amount is too large for current reserve
-            require(reserveBalance >= newReserve, 220, "Sell too large for current reserve");
-            return uint128(reserveBalance - newReserve);
-        }
+        require(!isAmm, 250, "Trading ended");
         uint256 base = 1_000;
         uint256 p1 = base + ((totalSupply - tokenAmount) / slopeDivisor);
         uint256 p2 = base + (totalSupply / slopeDivisor);
@@ -276,6 +306,7 @@ contract BondingCurve {
     // msg.value (VMSHELL) is used ONLY for gas, not as payment.
     // Trade fee: 1% total (0.7% platform + 0.3% creator).
     function buy(uint256 tokenAmount, uint256 maxShellIn) public whenNotPaused {
+        require(!isAmm, 250, "BondingCurve trading ended. Use AckiSwap!");
         _ensureExecutionGas();
         // V-AM-01: Reject transactions that accidentally/maliciously include NACKL or USDC
         // instead of SHELL. Without this check, a confusion attack could credit the
@@ -307,10 +338,11 @@ contract BondingCurve {
         // ─── Trade Fee: Platform + Creator ─────────────────────────────────────────
         uint256 platformFee = cost * getPlatformFeeBps() / 10000;
         uint256 creatorFee = cost * getCreatorFeeBps() / 10000;
-        uint256 totalCostWithFee = cost + platformFee + creatorFee;
+        uint256 mintGasShell = 6 * 10**9; // 6 SHELL for AFT deploy
+        uint256 totalCostWithFeeAndGas = cost + platformFee + creatorFee + mintGasShell;
 
-        require(totalCostWithFee <= maxShellIn, 208, "Slippage protection triggered: cost+fee exceeds maxShellIn");
-        require(receivedShell >= totalCostWithFee, 203, "Insufficient SHELL sent (cost + 1% fee)");
+        require(totalCostWithFeeAndGas <= maxShellIn, 208, "Slippage protection triggered: cost+fee+gas exceeds maxShellIn");
+        require(receivedShell >= totalCostWithFeeAndGas, 203, "Insufficient SHELL sent (cost + fee + gas)");
 
         // Cross-Dapp calls arrive with msg.value/VMSHELL representing execution gas.
         // We ensure the buyer provides enough VMSHELL instead of paying from the contract.
@@ -331,25 +363,32 @@ contract BondingCurve {
         emit TokensPurchaseInitiated(msg.sender, cost, tokenAmount, currentPrice());
 
         // Mint memecoins to buyer via internal message
-        ITokenRoot(_tokenRoot).mint(nonce, msg.sender, tokenAmount, 0.1 ton); // sends 0.1 VMSHELL for wallet deployment
+        mapping(uint32 => varuint32) mintCc;
+        mintCc[SHELL_CURRENCY_ID] = varuint32(mintGasShell);
+        
+        IAFTRootAdmin(_tokenRoot).mint{ value: 0.1 ton, currencies: mintCc, flag: 1 }(
+            nonce,
+            msg.sender,
+            uint128(tokenAmount),
+            address(this), // responseDestination is BondingCurve
+            0,
+            TvmCell()
+        );
 
-        // H-33: Hold fees in escrow until minting is confirmed via onMintSuccess.
-        // This prevents "losing" fees if the transaction bounces or fails asynchronously.
+        // H-33: Hold fees in escrow until minting is confirmed via onAFTExcesses.
         pendingPlatformFeeByNonce[nonce] = platformFee;
         pendingCreatorFeeByNonce[nonce] = creatorFee;
 
-        // Refund excess SHELL (Extra Currency) back to buyer
-        uint256 excess = receivedShell > totalCostWithFee ? receivedShell - totalCostWithFee : 0;
-        if (excess > 0) {
-            // Build currency map with refund amount for cc[2]
+        // Refund immediate excess SHELL (Extra Currency) back to buyer
+        uint256 immediateExcess = receivedShell > totalCostWithFeeAndGas ? receivedShell - totalCostWithFeeAndGas : 0;
+        if (immediateExcess > 0) {
             mapping(uint32 => varuint32) refundCurrencies;
-            refundCurrencies[SHELL_CURRENCY_ID] = varuint32(excess);
+            refundCurrencies[SHELL_CURRENCY_ID] = varuint32(immediateExcess);
             msg.sender.transfer({ value: 0.05 ton, flag: 1, bounce: false, currencies: refundCurrencies });
         }
 
         // Check if we reached the migration threshold and aren't AMM yet
         if (!pumpForever && reserveBalance >= MIGRATION_THRESHOLD_SHELL_NANO && !isAmm) {
-            // M-06: Record when threshold was first reached for forceAmmMigration delay
             if (thresholdReachedAt == 0) {
                 thresholdReachedAt = uint32(block.timestamp);
             }
@@ -358,85 +397,94 @@ contract BondingCurve {
     }
 
     // ─── Receiver for async burns (Sell) ─────────────────────────────────────
-    // Called by TokenRoot after TokenWallet burns tokens.
+    // Called by our own AFTWallet after user transfers tokens to us.
     // Trade fee: 1% total (0.7% platform + 0.3% creator).
-    // C-01: nonReentrant guard prevents async reentrancy during multi-transfer sell flow
-    function onTokenBurned(uint32 burnNonce, uint256 amount, address refundAddress, uint128 minShellOut) external whenNotPaused nonReentrant {
+    function onAFTTransfer(
+        uint64 queryId,
+        uint128 amount,
+        address sender,
+        TvmCell forwardPayload
+    ) external override whenNotPaused nonReentrant functionID(0x7362d09c) {
+        require(!isAmm, 250, "BondingCurve trading ended. Use AckiSwap!");
         _ensureExecutionGas();
-        require(msg.sender == _tokenRoot, 103, "Only TokenRoot can notify burn");
+        require(myAftWallet != address(0), 235, "AFT Wallet not initialized yet");
+        require(msg.sender == myAftWallet, 103, "Only my AFT Wallet can notify transfer");
 
-        // Audit #3: Anti-rug Creator Lock. Creator cannot sell during the 30-day lock
-        // period after AMM migration to ensure stability.
-        if (isAmm && refundAddress == owner && migratedAt > 0) {
+        // Parse minShellOut from forwardPayload
+        TvmSlice s = forwardPayload.toSlice();
+        uint128 minShellOut = 0;
+        if (s.bits() >= 128) {
+            minShellOut = s.load(uint128);
+        }
+
+        // Audit #3: Anti-rug Creator Lock.
+        if (isAmm && sender == owner && migratedAt > 0) {
             require(block.timestamp >= migratedAt + LOCK_PERIOD, 223, "Creator tokens are locked for 30 days after AMM migration");
         }
 
-
-        // C-03: Ensure sufficient gas for fee transfer + payout execution
         require(msg.value >= 0.3 ton, 221, "Insufficient gas for sell execution");
         require(amount <= maxSellPerTx(), 222, "Amount exceeds max sell limit");
-        // Removed the "if (migrated)" block since AMM transition allows users
-        // to continue trading organically on this internal contract.
-        // It calculates returns via getSellReturn using x*y=k formula.
 
         uint256 grossReturn = getSellReturn(amount);
-        // Audit #8: Prevent silent zero-return sells where user burns tokens and gets nothing
         require(grossReturn > 0, 216, "Sell amount too small, return rounds to zero");
         require(reserveBalance >= grossReturn, 204, "Insufficient reserve for sell");
 
-        // ─── Trade Fee: Platform + Creator ─────────────────────────────────────────
         uint256 platformFee = grossReturn * getPlatformFeeBps() / 10000;
         uint256 creatorFee = grossReturn * getCreatorFeeBps() / 10000;
         uint256 netReturn = grossReturn - platformFee - creatorFee;
 
-        // Audit #12: Slippage protection on sell
         require(netReturn >= minShellOut, 208, "Slippage protection triggered: netReturn < minShellOut");
 
+        // Decrease local supply. We will burn the tokens on our AFTWallet.
         totalSupply -= amount;
         reserveBalance -= grossReturn;
 
-        emit TokensSold(refundAddress, amount, netReturn, currentPrice());
+        emit TokensSold(sender, amount, netReturn, currentPrice());
 
-        // Send platform fee (0.7%) to feeRecipient via cc[2]
+        // Send platform fee
         if (platformFee > 0) {
             mapping(uint32 => varuint32) feeCurrencies;
             feeCurrencies[SHELL_CURRENCY_ID] = varuint32(platformFee);
             feeRecipient.transfer({ value: 0.05 ton, flag: 1, bounce: false, currencies: feeCurrencies });
         }
         
-        // Send creator fee (0.3%) to token creator wallet via cc[2]
+        // Send creator fee
         if (creatorFee > 0 && owner != address(0)) {
             mapping(uint32 => varuint32) creatorCurrencies;
             creatorCurrencies[SHELL_CURRENCY_ID] = varuint32(creatorFee);
             owner.transfer({ value: 0.05 ton, flag: 1, bounce: false, currencies: creatorCurrencies });
         }
 
-        // M-08: Use mode 4 (reserve original balance) instead of fixed 0.5 ton
-        // This prevents the contract from draining its own VMSHELL below the
-        // balance it had at the start of the transaction, even under concurrent sells.
         tvm.rawReserve(0, 4); // Keep original balance for contract survival
 
+        uint256 burnGasShell = 2 * 10**9;
+        
+        // Payout to user
         mapping(uint32 => varuint32) payoutCurrencies;
         payoutCurrencies[SHELL_CURRENCY_ID] = varuint32(netReturn);
-        refundAddress.transfer({ value: 0, flag: 128, bounce: false, currencies: payoutCurrencies });
+        
+        // Call burn on our wallet to destroy the tokens (AFTRoot will decrease its totalSupply)
+        mapping(uint32 => varuint32) burnCc;
+        burnCc[SHELL_CURRENCY_ID] = varuint32(burnGasShell);
+        IAFTWallet(myAftWallet).burn{ value: 0.05 ton, currencies: burnCc, flag: 1 }(
+            queryId,
+            amount,
+            address(this), // responseDestination
+            TvmCell()
+        );
+
+        sender.transfer({ value: 0, flag: 128, bounce: false, currencies: payoutCurrencies });
     }
 
     // Called by TokenRoot when wallet deployment or receiveTokens fails after
     // TokenRoot.mint has already accepted the mint request.
-    function onMintFailed(uint32 mintNonce) external {
-        require(msg.sender == _tokenRoot, 151, "Only TokenRoot can report mint failure");
-        _rollbackMint(mintNonce);
-    }
+    function onAFTExcesses(uint64 queryId) external override functionID(0xd53276db) {
+        uint32 nonce = uint32(queryId);
+        address buyer = mintIdToBuyer[nonce];
+        if (buyer == address(0)) return; // not a tracked mint
 
-    // Called by TokenRoot after the target TokenWallet accepted receiveTokens().
-    // This is the positive async counterpart to onMintFailed/onBounce and prevents
-    // permanent growth of pending mint storage on every successful buy.
-    function onMintSuccess(uint32 mintNonce) external {
-        require(msg.sender == _tokenRoot, 152, "Only TokenRoot can confirm mint success");
-        
-        // H-33: Release pending fees to recipients now that minting is confirmed
-        uint256 platformFee = pendingPlatformFeeByNonce[mintNonce];
-        uint256 creatorFee = pendingCreatorFeeByNonce[mintNonce];
+        uint256 platformFee = pendingPlatformFeeByNonce[nonce];
+        uint256 creatorFee = pendingCreatorFeeByNonce[nonce];
         
         if (platformFee > 0) {
             mapping(uint32 => varuint32) feeCurrencies;
@@ -450,15 +498,22 @@ contract BondingCurve {
             owner.transfer({ value: 0.05 ton, flag: 1, bounce: false, currencies: creatorCurrencies });
         }
 
-        // C-02: Recalculate AMM invariant after fee release to prevent stale k value.
-        // Fees reduce the SHELL held by the contract but reserveBalance is unaffected
-        // (fees were never part of reserveBalance). However, if any future logic
-        // changes the reserve accounting, this ensures ammKLast stays consistent.
-        if (isAmm) {
-            ammKLast = reserveBalance * (_supplyCap - totalSupply);
+
+
+        // Forward excess SHELL received from AFTWallet back to the buyer
+        uint256 returnedShell = uint256(msg.currencies[SHELL_CURRENCY_ID]);
+        if (returnedShell > 0) {
+            mapping(uint32 => varuint32) refundCurrencies;
+            refundCurrencies[SHELL_CURRENCY_ID] = varuint32(returnedShell);
+            buyer.transfer({value: 0.05 ton, flag: 1, bounce: false, currencies: refundCurrencies});
         }
 
-        _clearMint(mintNonce);
+        _clearMint(nonce);
+    }
+
+    function setFactory(address _factory) external {
+        require(msg.sender == owner, 102);
+        factoryAddress = _factory;
     }
 
     // ─── AMM Migration ───────────────────────────────────────────────────────
@@ -472,10 +527,49 @@ contract BondingCurve {
         // Setup initial x*y=k invariant
         uint256 tokenPool = _supplyCap - totalSupply;
         require(reserveBalance == 0 || tokenPool <= MAX_UINT128 / reserveBalance, 224, "AMM invariant overflow");
-        ammKLast = reserveBalance * tokenPool;
         
+        require(factoryAddress != address(0), 225, "Factory not set");
+        IAckiSwapFactory(factoryAddress).deployPair{value: 2000000000, flag: 1}(
+            _tokenRoot, 
+            address(this)
+        );
+
         emit MigratedToInternalAmm(liquidityToMove, migratedAt);
         emit FeeReduced(getTradeFeeBps());
+    }
+
+    function onPairDeployed(address pair) external {
+        require(msg.sender == factoryAddress, 103, "Only factory");
+        ammPairAddress = pair;
+        
+        uint128 shellLiquidity = uint128(reserveBalance);
+        uint128 tokensToMove = uint128(_supplyCap - totalSupply);
+        
+        // 1. Initialize Pair's Wallet Discovery
+        mapping(uint32 => varuint32) ccInit;
+        ccInit[SHELL_CURRENCY_ID] = varuint32(2_500_000_000); // 2.5 SHELL
+        IAckiSwapPair(pair).initAftWallet{value: 0.5 ton, currencies: ccInit, flag: 1}();
+
+        // 2. Send SHELL liquidity
+        mapping(uint32 => varuint32) ccLiq;
+        ccLiq[SHELL_CURRENCY_ID] = varuint32(shellLiquidity);
+        IAckiSwapPair(pair).provideInitialShell{value: 0.1 ton, currencies: ccLiq, flag: 1}();
+
+        // 3. Send Tokens liquidity
+        TvmBuilder builder;
+        builder.store(uint32(1)); // op = 1 (Add Liquidity)
+        TvmCell payload = builder.toCell();
+        TvmCell empty;
+        
+        IAFTWallet(myAftWallet).transfer{value: 1 ton, flag: 1}(
+            0,
+            tokensToMove,
+            pair, // destinationOwner (Pair)
+            address(this), // responseDestination
+            empty, // customPayload
+            0.5 ton, // forwardShellAmount
+            payload // forwardPayload -> Add Liquidity
+        );
     }
 
     function _rollbackMint(uint32 nonce) private {
@@ -498,12 +592,10 @@ contract BondingCurve {
             // rollback AMM state to prevent corrupted x*y=k invariant
             if (isAmm && reserveBalance < MIGRATION_THRESHOLD_SHELL_NANO) {
                 isAmm = false;
-                ammKLast = 0;
                 migratedAt = 0;
                 thresholdReachedAt = 0; // M-06: Reset threshold timestamp
             } else if (isAmm) {
                 // Recalculate AMM invariant with corrected values
-                ammKLast = reserveBalance * (_supplyCap - totalSupply);
             }
 
             // I-02: Emit rollback event for off-chain indexing
@@ -531,18 +623,24 @@ contract BondingCurve {
     // Later wallet-level failures are reported through onMintFailed().
     onBounce(TvmSlice body) external {
         _ensureExecutionGas();
-        // SEC-2: Ensure the bounce actually came from our TokenRoot
         require(msg.sender == _tokenRoot, 150, "Bounce not from TokenRoot");
-        // H-08: We need exactly 64 bits minimum: 32 for funcId + 32 for nonce
-        if (body.bits() < 64) {
-            return;
-        }
+        if (body.bits() < 64) return;
         
         uint32 funcId = body.load(uint32);
         
-        if (funcId == abi.functionId(ITokenRoot.mint)) {
-            uint32 nonce = body.load(uint32);
-            _rollbackMint(nonce);
+        if (funcId == 0x2786d61d) { // IAFTRootAdmin.mint
+            uint64 nonce = body.load(uint64);
+            _rollbackMint(uint32(nonce));
+        } else if (funcId == 0x595f07bc) { // IAFTWallet.burn
+            uint64 queryId = body.load(uint64);
+            uint128 amount = body.load(uint128);
+            
+            // Note: We do not rollback totalSupply/reserveBalance here because
+            // the SHELL payout was already sent to the user in onAFTTransfer.
+            // Rolling back the state would make the contract insolvent.
+            // The tokens remain locked in the BondingCurve's AFTWallet, 
+            // effectively acting as burned from circulation.
+            emit BurnFailed(queryId, amount);
         }
     }
 
@@ -564,21 +662,15 @@ contract BondingCurve {
     // If SHELL (ECC) accumulates beyond what reserveBalance tracks (e.g. from
     // rounding or unsolicited transfers), the platform can rescue the surplus.
     // Only the platform (feeRecipient) can call this, and only the excess is sent.
-    function rescueExcessShell(address to) public {
+    function rescueExcessShell(address to, uint256 amount) public {
         require(msg.sender == feeRecipient, 111, "Only platform (feeRecipient) can rescue");
         require(to != address(0), 233, "Rescue recipient cannot be zero");
 
-        // Read the actual SHELL balance held by this contract via ECC mapping
-        uint256 actualShell = uint256(msg.currencies[SHELL_CURRENCY_ID]);
-        // Note: We cannot read the contract's own ECC balance directly in TVM-Solidity.
-        // This function is designed to be called by the platform when off-chain monitoring
-        // detects a discrepancy between on-chain SHELL balance and reserveBalance.
-        // The platform specifies the excess amount by attaching it as SHELL in msg.currencies.
-        if (actualShell > 0) {
+        if (amount > 0) {
             mapping(uint32 => varuint32) rescueCurrencies;
-            rescueCurrencies[SHELL_CURRENCY_ID] = varuint32(actualShell);
+            rescueCurrencies[SHELL_CURRENCY_ID] = varuint32(amount);
             to.transfer({ value: 0.05 ton, flag: 1, bounce: false, currencies: rescueCurrencies });
-            emit ExcessShellRescued(to, actualShell);
+            emit ExcessShellRescued(to, amount);
         }
     }
 }

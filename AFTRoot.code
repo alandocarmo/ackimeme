@@ -1,0 +1,2443 @@
+.fragment _activityChannel_0f93edf0_internal, {
+	.loc contracts/modifiers/modifiers.sol, 82
+	PUSHSLICE x60000000000000000000000000000000000000000000000000000000000000005c9_
+	.loc contracts/modifiers/modifiers.sol, 0
+}
+
+.fragment _adminChannel_802ebbda_internal, {
+	.loc contracts/modifiers/modifiers.sol, 86
+	PUSHSLICE x60000000000000000000000000000000000000000000000000000000000000006f5_
+	.loc contracts/modifiers/modifiers.sol, 0
+}
+
+.fragment _buildWalletInitData_b9a5b881_internal, {
+	.loc contracts/AFTRoot.sol, 395
+	NEWC
+	PUSHPOW2 8
+	STZEROES
+	PUSHINT 0
+	NULL
+	PUSHINT 64
+	DICTUSETB
+	MYADDR
+	PUSHINT 1
+	ROT
+	PUSHINT 64
+	DICTUSET
+	PUSHINT 2
+	SWAP
+	PUSHINT 64
+	DICTUSET
+	NEWC
+	STDICT
+	ENDC
+	GETGLOB 19
+	NEWC
+	STSLICECONST x2_
+	STDICT
+	STDICT
+	STZERO
+	ENDC
+	.loc contracts/AFTRoot.sol, 0
+}
+
+.fragment _currentShell_7cec2986_internal, {
+	.loc contracts/modifiers/modifiers.sol, 101
+	PUSHINT 2
+	GETPARAM 7
+	SECOND
+	PUSHINT 32
+	DICTUGET
+	ZEROSWAPIFNOT
+	PUSHCONT {
+		LDVARUINT32
+		DROP
+	}
+	IF
+	UFITS 128
+	.loc contracts/modifiers/modifiers.sol, 0
+}
+
+.fragment _loadFwdPrices_8a36dd22_internal, {
+	.loc contracts/modifiers/modifiers.sol, 110
+	PUSHINT 25
+	CONFIGOPTPARAM
+	.loc contracts/modifiers/modifiers.sol, 111
+	DUP
+	ISNULL
+	THROWIF 223
+	.loc contracts/modifiers/modifiers.sol, 112
+	DUP
+	ISNULL
+	THROWIF 63
+	CTOS
+	.loc contracts/modifiers/modifiers.sol, 113
+	LDU 8
+	NIP
+	.loc contracts/modifiers/modifiers.sol, 114
+	LDU 64
+	.loc contracts/modifiers/modifiers.sol, 115
+	LDU 64
+	.loc contracts/modifiers/modifiers.sol, 116
+	PLDU 64
+	.loc contracts/modifiers/modifiers.sol, 117
+	TRIPLE
+	.loc contracts/modifiers/modifiers.sol, 0
+}
+
+.fragment _estimateFwdFee_044bb1d1_internal, {
+	.loc contracts/modifiers/modifiers.sol, 136
+	CALLREF {
+		.inline _loadFwdPrices_8a36dd22_internal
+	}
+	.loc contracts/modifiers/modifiers.sol, 137
+	OVER
+	PUSHPOW2 8
+	CDATASIZE
+	DROP
+	OVER
+	.loc contracts/modifiers/modifiers.sol, 139
+	GTINT 0
+	PUSHCONT {
+		.loc contracts/modifiers/modifiers.sol, 140
+		OVER
+		DEC
+		UFITS 256
+		POP S2
+		.loc contracts/modifiers/modifiers.sol, 141
+		PUSH S3
+		CTOS
+		SBITS
+		.loc contracts/modifiers/modifiers.sol, 142
+		DUP2
+		GREATER
+		ZEROSWAPIFNOT
+		PUSHCONT {
+			DUP2
+			SUB
+			UFITS 256
+		}
+		IF
+		BLKDROP2 2, 1
+		.loc contracts/modifiers/modifiers.sol, 0
+	}
+	IF
+	.loc contracts/modifiers/modifiers.sol, 144
+	SWAP
+	UFITS 128
+	PUSH S2
+	THIRD
+	MUL
+	UFITS 128
+	SWAP
+	UFITS 128
+	PUSH S2
+	SECOND
+	MUL
+	UFITS 128
+	ADD
+	UFITS 128
+	.loc contracts/modifiers/modifiers.sol, 146
+	SWAP
+	FIRST
+	SWAP
+	PUSHPOW2DEC 16
+	ADD
+	UFITS 128
+	RSHIFT 16
+	ADD
+	UFITS 128
+	NIP
+	.loc contracts/modifiers/modifiers.sol, 0
+}
+
+.fragment _loadGasPrice_745b86c7_internal, {
+	.loc contracts/modifiers/modifiers.sol, 121
+	PUSHINT 21
+	CONFIGOPTPARAM
+	.loc contracts/modifiers/modifiers.sol, 122
+	DUP
+	ISNULL
+	THROWIF 223
+	.loc contracts/modifiers/modifiers.sol, 123
+	DUP
+	ISNULL
+	THROWIF 63
+	CTOS
+	.loc contracts/modifiers/modifiers.sol, 125
+	LDU 8
+	LDU 64
+	LDU 64
+	LDU 8
+	PLDU 64
+	BLKDROP2 4, 1
+	.loc contracts/modifiers/modifiers.sol, 0
+}
+
+.fragment _gasToNative_4335d70a_internal, {
+	.loc contracts/modifiers/modifiers.sol, 130
+	CALLREF {
+		.inline _loadGasPrice_745b86c7_internal
+	}
+	.loc contracts/modifiers/modifiers.sol, 131
+	PUSHPOW2 16
+	MULDIVC
+	UFITS 128
+	.loc contracts/modifiers/modifiers.sol, 0
+}
+
+.fragment _entryConversion_db20d709_internal, {
+	.loc contracts/modifiers/modifiers.sol, 153
+	PUSHINT 50000
+	CALLREF {
+		.inline _gasToNative_4335d70a_internal
+	}
+	.loc contracts/modifiers/modifiers.sol, 154
+	SWAP
+	CALLREF {
+		.inline _estimateFwdFee_044bb1d1_internal
+	}
+	.loc contracts/modifiers/modifiers.sol, 155
+	XCHG S2
+	ADD
+	UFITS 128
+	ADD
+	UFITS 64
+	.loc contracts/modifiers/modifiers.sol, 0
+}
+
+.fragment _getWalletAddress_ea565479_internal, {
+	.loc contracts/AFTRoot.sol, 406
+	CALLREF {
+		.inline _buildWalletInitData_b9a5b881_internal
+	}
+	HASHCU
+	NEWC
+	STSLICECONST x801_
+	STU 256
+	ENDC
+	CTOS
+	.loc contracts/AFTRoot.sol, 0
+}
+
+.fragment _inboundShell_1905817a_internal, {
+	.loc contracts/modifiers/modifiers.sol, 91
+	PUSHINT 2
+	CALLREF {
+		DEPTH
+		ADDCONST -5
+		PICK
+		PUSHCONT {
+			NULL
+		}
+		PUSHCONT {
+			DEPTH
+			ADDCONST -3
+			PICK
+			CTOS
+			LDU 4
+			LDMSGADDR
+			LDMSGADDR
+			LDGRAMS
+			PLDDICT
+			BLKDROP2 4, 1
+		}
+		IFELSE
+	}
+	PUSHINT 32
+	DICTUGET
+	ZEROSWAPIFNOT
+	PUSHCONT {
+		LDVARUINT32
+		DROP
+	}
+	IF
+	UFITS 128
+	.loc contracts/modifiers/modifiers.sol, 0
+}
+
+.fragment _mint_7ad67176_internal, {
+	.loc contracts/AFTRoot.sol, 354
+	PUSH S4
+	GTINT 0
+	THROWIFNOT 108
+	.loc contracts/AFTRoot.sol, 355
+	GETGLOB 16
+	THROWIFNOT 105
+	.loc contracts/AFTRoot.sol, 356
+	PUSH S5
+	PUSHREFSLICE {
+		.blob x8000000000000000000000000000000000000000000000000000000000000000001_
+	}
+	SDEQ
+	THROWIF 103
+	.loc contracts/AFTRoot.sol, 358
+	GETGLOB 17
+	PUSH S5
+	ADD
+	UFITS 128
+	SETGLOB 17
+	.loc contracts/AFTRoot.sol, 360
+	PUSH3 S0, S1, S2
+	PUSH S8
+	MYADDR
+	BLKPUSH 2, 9
+	NEWC
+	STSLICECONST x178d4519
+	STU 64
+	STU 128
+	STSLICE
+	ROLLREV 4
+	NEWC
+	STSLICE
+	ROLLREV 3
+	NEWC
+	STSLICE
+	STU 128
+	STREF
+	STBREFR
+	STBREFR
+	ENDC
+	.loc contracts/AFTRoot.sol, 365
+	PUSHINT 50000
+	CALLREF {
+		.inline _gasToNative_4335d70a_internal
+	}
+	PUSHINT 500000000
+	ADD
+	UFITS 128
+	SWAP
+	CALLREF {
+		.inline _estimateFwdFee_044bb1d1_internal
+	}
+	ADD
+	UFITS 64
+	.loc contracts/AFTRoot.sol, 370
+	CALLREF {
+		.inline _currentShell_7cec2986_internal
+	}
+	.loc contracts/AFTRoot.sol, 371
+	PUSH2 S0, S1
+	GREATER
+	ZEROSWAPIFNOT
+	PUSHCONT {
+		PUSH2 S0, S1
+		SUB
+		UFITS 128
+	}
+	IF
+	.loc contracts/AFTRoot.sol, 372
+	NULL
+	.loc contracts/AFTRoot.sol, 373
+	OVER
+	GTINT 0
+	PUSHCONT {
+		.loc contracts/AFTRoot.sol, 373
+		OVER
+		PUSHINT 2
+		ROTREV
+		NEWC
+		SWAP
+		STVARUINT32
+		ROTREV
+		PUSHINT 32
+		DICTUSETB
+		.loc contracts/AFTRoot.sol, 0
+	}
+	IF
+	.loc contracts/AFTRoot.sol, 376
+	PUSH S9
+	CALLREF {
+		.inline _getWalletAddress_ea565479_internal
+	}
+	.loc contracts/AFTRoot.sol, 377
+	PUSH S5
+	BLKSWAP 2, 7
+	XCPU S1, S11
+	MYADDR
+	BLKPUSH 2, 12
+	ROLL 8
+	PUSHINT 500000000
+	ROLL 9
+	TRUE
+	NEWC
+	STSLICECONST x6_
+	STI 1
+	STSLICECONST x1_
+	STSLICE
+	SWAP
+	STGRAMS
+	STDICT
+	PUSHINT 1
+	STUR 106
+	ROLLREV 7
+	NEWC
+	STSLICECONST x178d4519
+	STU 64
+	STU 128
+	STSLICE
+	ROLLREV 4
+	NEWC
+	STSLICE
+	ROLLREV 3
+	NEWC
+	STSLICE
+	STU 128
+	STREF
+	STBREFR
+	STBREFR
+	STBREFR
+	ENDC
+	PUSHINT 1
+	SENDRAWMSG
+	.loc contracts/AFTRoot.sol, 384
+	BLKDROP 3
+	NOW
+	SWAP
+	HASHCU
+	GETGLOB 17
+	BLKSWAP 3, 3
+	XCHG S1, S2
+	CALLREF {
+		.inline _activityChannel_0f93edf0_internal
+	}
+	NEWC
+	STSLICECONST xc
+	STSLICE
+	PUSHINT 1
+	STUR 98
+	ROLLREV 6
+	NEWC
+	STSLICECONST x4f22c569
+	STU 64
+	STSLICE
+	STU 128
+	STU 128
+	ROTREV
+	NEWC
+	STU 256
+	STU 64
+	STBREFR
+	STBREFR
+	ENDC
+	PUSHINT 0
+	SENDRAWMSG
+	.loc contracts/AFTRoot.sol, 0
+}
+
+.fragment _requireFuel_2c67a29b_internal, {
+	.loc contracts/modifiers/modifiers.sol, 96
+	CALLREF {
+		.inline _inboundShell_1905817a_internal
+	}
+	SWAP
+	GEQ
+	THROWIFNOT 109
+	.loc contracts/modifiers/modifiers.sol, 0
+}
+
+.fragment acceptAdmin_0e18b681_internal, {
+	.loc contracts/AFTRoot.sol, 95
+	DEPTH
+	ADDCONST -5
+	PICK
+	THROWIF 72
+	.loc contracts/modifiers/modifiers.sol, 77
+	GETGLOB 9
+	GETGLOB 15
+	SDEQ
+	THROWIFNOT 102
+	.loc contracts/modifiers/modifiers.sol, 62
+	ACCEPT
+	.loc contracts/AFTRoot.sol, 96
+	GETGLOB 14
+	.loc contracts/AFTRoot.sol, 97
+	GETGLOB 15
+	SETGLOB 14
+	.loc contracts/AFTRoot.sol, 98
+	PUSHREFSLICE {
+		.blob x8000000000000000000000000000000000000000000000000000000000000000001_
+	}
+	SETGLOB 15
+	.loc contracts/AFTRoot.sol, 99
+	NOW
+	GETGLOB 14
+	ROT
+	CALLREF {
+		.inline _adminChannel_802ebbda_internal
+	}
+	NEWC
+	STSLICECONST xc
+	STSLICE
+	PUSHINT 1
+	STUR 98
+	ROLLREV 3
+	NEWC
+	STSLICECONST x1e77263c
+	STSLICE
+	ROTREV
+	NEWC
+	STSLICE
+	STU 64
+	STBREFR
+	STBREFR
+	ENDC
+	PUSHINT 0
+	SENDRAWMSG
+	.loc contracts/AFTRoot.sol, 0
+}
+
+.fragment c4_to_c7, {
+	PUSHROOT
+	CTOS
+	LDU 256 ; pubkey c4
+	LDU 1 ; ctor flag
+	LDMSGADDR
+	LDREF
+	LDREF
+	LDU 128
+	LDREF
+	ENDS
+	CTOS
+	LDMSGADDR
+	LDREF
+	ENDS
+	CTOS
+	LDMSGADDR
+	LDI 1
+	LDU 128
+	LDREF
+	LDREF
+	ENDS
+	SETGLOB 19
+	SETGLOB 18
+	SETGLOB 17
+	SETGLOB 16
+	SETGLOB 15
+	SETGLOB 14
+	SETGLOB 13
+	SETGLOB 12
+	SETGLOB 11
+	SETGLOB 10
+	SETGLOB 6
+	SETGLOB 2
+}
+
+.fragment c7_to_c4, {
+	GETGLOB 19
+	GETGLOB 18
+	GETGLOB 17
+	GETGLOB 16
+	GETGLOB 15
+	GETGLOB 14
+	GETGLOB 13
+	GETGLOB 12
+	GETGLOB 11
+	GETGLOB 10
+	GETGLOB 2
+	NEWC
+	STU 256
+	STONE
+	STSLICE
+	STREF
+	STREF
+	STU 128
+	ROLLREV 6
+	NEWC
+	STSLICE
+	ROLLREV 5
+	NEWC
+	STSLICE
+	STI 1
+	STU 128
+	STREF
+	STREF
+	STBREFR
+	STBREFR
+	ENDC
+	POPROOT
+}
+
+.fragment acceptAdmin, {
+	DROP
+	GETGLOB 6
+	THROWIFNOT 76
+	GETGLOB 2
+	ISNULL
+	IFREF {
+		.inline c4_to_c7
+	}
+	.loc contracts/AFTRoot.sol, 95
+	ENDS
+	.loc contracts/AFTRoot.sol, 0
+	CALLREF {
+		.inline acceptAdmin_0e18b681_internal
+	}
+	CALLREF {
+		.inline c7_to_c4
+	}
+	THROW 0
+}
+
+.fragment c4_to_c7_with_init_storage, {
+	PUSHROOT
+	CTOS
+	SBITS
+	GTINT 1
+	PUSHCONT {
+		PUSHINT 0
+		PUSHROOT
+		CTOS
+		PLDDICT ; D
+		PUSHINT 1
+		OVER
+		PUSHINT 64
+		DICTUGET
+		PUSHCONT {
+			PUSHREFSLICE {
+				.blob x8000000000000000000000000000000000000000000000000000000000000000001_
+			}
+		}
+		IFNOT
+		PUSHINT 2
+		PUSH S2
+		PUSHINT 64
+		DICTUGETREF
+		PUSHCONT {
+			PUSHREF {
+			}
+		}
+		IFNOT
+		PUSHINT 3
+		PUSH S3
+		PUSHINT 64
+		DICTUGETREF
+		PUSHCONT {
+			PUSHREF {
+			}
+		}
+		IFNOT
+		PUSHINT 4
+		PUSH S4
+		PUSHINT 64
+		DICTUGET
+		ZEROSWAPIFNOT
+		PUSHCONT {
+			PLDU 128
+		}
+		IF
+		PUSHREFSLICE {
+			.blob x8000000000000000000000000000000000000000000000000000000000000000001_
+		}
+		DUP
+		PUSHINT 0
+		DUP
+		PUSHREF {
+		}
+		DUP
+		SETGLOB 19
+		SETGLOB 18
+		SETGLOB 17
+		SETGLOB 16
+		SETGLOB 15
+		SETGLOB 14
+		SETGLOB 13
+		SETGLOB 12
+		SETGLOB 11
+		SETGLOB 10
+		PUSHINT 64
+		DICTUGET
+		THROWIFNOT 61
+		PLDU 256
+		SETGLOB 2
+		PUSHINT 0 ; timestamp
+		SETGLOB 3
+	}
+	IFREFELSE {
+		.inline c4_to_c7
+	}
+}
+
+.fragment closeMint_64f101f0_internal, {
+	.loc contracts/AFTRoot.sol, 85
+	DEPTH
+	ADDCONST -5
+	PICK
+	THROWIF 72
+	.loc contracts/modifiers/modifiers.sol, 72
+	GETGLOB 9
+	GETGLOB 14
+	SDEQ
+	THROWIFNOT 101
+	.loc contracts/modifiers/modifiers.sol, 62
+	ACCEPT
+	.loc contracts/AFTRoot.sol, 86
+	FALSE
+	SETGLOB 16
+	.loc contracts/AFTRoot.sol, 87
+	NOW
+	GETGLOB 14
+	CALLREF {
+		.inline _adminChannel_802ebbda_internal
+	}
+	NEWC
+	STSLICECONST xc
+	STSLICE
+	PUSHINT 1
+	STUR 98
+	ROTREV
+	NEWC
+	STSLICECONST x126b2b7e
+	STSLICE
+	STU 64
+	STBREFR
+	ENDC
+	PUSHINT 0
+	SENDRAWMSG
+	.loc contracts/AFTRoot.sol, 0
+}
+
+.fragment closeMint, {
+	DROP
+	GETGLOB 6
+	THROWIFNOT 76
+	GETGLOB 2
+	ISNULL
+	IFREF {
+		.inline c4_to_c7
+	}
+	.loc contracts/AFTRoot.sol, 85
+	ENDS
+	.loc contracts/AFTRoot.sol, 0
+	CALLREF {
+		.inline closeMint_64f101f0_internal
+	}
+	CALLREF {
+		.inline c7_to_c4
+	}
+	THROW 0
+}
+
+.fragment constructor, {
+	DROP
+	GETGLOB 2
+	ISNULL
+	IFREF {
+		.inline c4_to_c7_with_init_storage
+	}
+	GETGLOB 6
+	THROWIF 51
+	OVER
+	PUSHCONT {
+		LDREF
+		ENDS
+		CTOS
+	}
+	IF
+	LDMSGADDR
+	LDI 1
+	LDREF
+	LDREF
+	LDREF
+	ENDS
+	CTOS
+	LDMSGADDR
+	LDU 128
+	ENDS
+	.loc contracts/AFTRoot.sol, 42
+	GETGLOB 10
+	PUSHREFSLICE {
+		.blob x8000000000000000000000000000000000000000000000000000000000000000001_
+	}
+	SDEQ
+	NOT
+	GETGLOB 9
+	GETGLOB 10
+	SDEQ
+	AND
+	.loc contracts/AFTRoot.sol, 43
+	GETGLOB 2
+	NEQINT 0
+	GETGLOB 5
+	DUP
+	ISNULL
+	PUSHCONT {
+		DROP
+		PUSHINT 0
+	}
+	IF
+	GETGLOB 2
+	EQUAL
+	AND
+	.loc contracts/AFTRoot.sol, 44
+	OR
+	THROWIFNOT 103
+	.loc contracts/AFTRoot.sol, 45
+	GETGLOB 13
+	LESSINT 19
+	THROWIFNOT 107
+	.loc contracts/AFTRoot.sol, 47
+	PUSH S5
+	PUSHREFSLICE {
+		.blob x8000000000000000000000000000000000000000000000000000000000000000001_
+	}
+	SDEQ
+	THROWIF 103
+	.loc contracts/AFTRoot.sol, 48
+	ACCEPT
+	.loc contracts/AFTRoot.sol, 50
+	PUSH S5
+	SETGLOB 14
+	.loc contracts/AFTRoot.sol, 51
+	ROLL 3
+	SETGLOB 18
+	.loc contracts/AFTRoot.sol, 52
+	ROT
+	SETGLOB 19
+	.loc contracts/AFTRoot.sol, 54
+	NOW
+	PUSH S3
+	ROLL 5
+	GETGLOB 13
+	GETGLOB 12
+	GETGLOB 11
+	CALLREF {
+		.inline _adminChannel_802ebbda_internal
+	}
+	NEWC
+	STSLICECONST xc
+	STSLICE
+	PUSHINT 1
+	STUR 98
+	ROLLREV 6
+	NEWC
+	STSLICECONST x2e770520
+	STREF
+	STREF
+	STU 128
+	STSLICE
+	STI 1
+	STU 64
+	STBREFR
+	ENDC
+	PUSHINT 0
+	SENDRAWMSG
+	.loc contracts/AFTRoot.sol, 64
+	TRUE
+	SETGLOB 16
+	.loc contracts/AFTRoot.sol, 65
+	DUP
+	GTINT 0
+	PUSHCONT {
+		.loc contracts/AFTRoot.sol, 66
+		DUP2
+		PUSHINT 0
+		PUSHREFSLICE {
+			.blob x8000000000000000000000000000000000000000000000000000000000000000001_
+		}
+		PUSHINT 0
+		PUSHREF {
+		}
+		CALLREF {
+			.inline _mint_7ad67176_internal
+		}
+		.loc contracts/AFTRoot.sol, 0
+	}
+	IF
+	.loc contracts/AFTRoot.sol, 68
+	DROP2
+	SETGLOB 16
+	.loc contracts/AFTRoot.sol, 0
+	CALLREF {
+		.inline c7_to_c4
+	}
+	THROW 0
+}
+
+.fragment estimateFwdFee_b0c3ff6a_internal, {
+	.loc contracts/AFTRoot.sol, 330
+	NIP
+	.loc contracts/AFTRoot.sol, 331
+	CALLREF {
+		.inline _estimateFwdFee_044bb1d1_internal
+	}
+	.loc contracts/AFTRoot.sol, 0
+}
+
+.fragment estimateFwdFee, {
+	DROP
+	GETGLOB 6
+	THROWIFNOT 76
+	.loc contracts/AFTRoot.sol, 329
+	OVER
+	PUSHCONT {
+		LDREF
+		ENDS
+		CTOS
+	}
+	IF
+	LDMSGADDR
+	LDREF
+	ENDS
+	.loc contracts/AFTRoot.sol, 0
+	CALLREF {
+		.inline estimateFwdFee_b0c3ff6a_internal
+	}
+	OVER
+	PUSHCONT {
+		PUSH S3
+		CTOS
+		LDU 2
+		LDMSGADDR
+		DROP
+		NIP
+		NEWC
+		STSLICECONST xc
+		STSLICE
+		PUSHINT 2354835399
+		STUR 130
+		STU 128
+		ENDC
+		PUSHINT 0
+		SENDRAWMSG
+	}
+	PUSHCONT {
+		DROP
+	}
+	IFELSE
+	IFREF {
+		.inline c7_to_c4
+	}
+	THROW 0
+}
+
+.fragment getAftData_5b2b8e75_internal, {
+	.loc contracts/AFTRoot.sol, 297
+	GETGLOB 17
+	GETGLOB 16
+	GETGLOB 14
+	GETGLOB 18
+	GETGLOB 19
+	.loc contracts/AFTRoot.sol, 0
+}
+
+.fragment getAftData, {
+	DROP
+	GETGLOB 6
+	THROWIFNOT 76
+	GETGLOB 2
+	ISNULL
+	IFREF {
+		.inline c4_to_c7
+	}
+	.loc contracts/AFTRoot.sol, 290
+	ENDS
+	.loc contracts/AFTRoot.sol, 0
+	CALLREF {
+		.inline getAftData_5b2b8e75_internal
+	}
+	PUSH S5
+	PUSHCONT {
+		PUSH S7
+		CTOS
+		LDU 2
+		LDMSGADDR
+		DROP
+		NIP
+		NEWC
+		STSLICECONST xc
+		STSLICE
+		PUSHINT 1
+		STUR 98
+		REVERSE 6, 0
+		NEWC
+		STSLICECONST x8cec6ff9
+		STU 128
+		STI 1
+		STSLICE
+		STREF
+		STREF
+		STBREFR
+		ENDC
+		PUSHINT 0
+		SENDRAWMSG
+	}
+	PUSHCONT {
+		BLKDROP 5
+	}
+	IFELSE
+	IFREF {
+		.inline c7_to_c4
+	}
+	THROW 0
+}
+
+.fragment getDetails_fbbf93a0_internal, {
+	.loc contracts/AFTRoot.sol, 325
+	GETGLOB 11
+	GETGLOB 12
+	GETGLOB 13
+	GETGLOB 10
+	GETGLOB 14
+	GETGLOB 15
+	GETGLOB 16
+	GETGLOB 17
+	.loc contracts/AFTRoot.sol, 0
+}
+
+.fragment getDetails, {
+	DROP
+	GETGLOB 6
+	THROWIFNOT 76
+	GETGLOB 2
+	ISNULL
+	IFREF {
+		.inline c4_to_c7
+	}
+	.loc contracts/AFTRoot.sol, 315
+	ENDS
+	.loc contracts/AFTRoot.sol, 0
+	CALLREF {
+		.inline getDetails_fbbf93a0_internal
+	}
+	PUSH S8
+	PUSHCONT {
+		PUSH S10
+		CTOS
+		LDU 2
+		LDMSGADDR
+		DROP
+		NIP
+		NEWC
+		STSLICECONST xc
+		STSLICE
+		PUSHINT 1
+		STUR 98
+		REVERSE 9, 0
+		NEWC
+		STSLICECONST xe7536fbc
+		STREF
+		STREF
+		STU 128
+		STSLICE
+		ROLLREV 4
+		NEWC
+		STSLICE
+		ROLLREV 3
+		NEWC
+		STSLICE
+		STI 1
+		STU 128
+		STBREFR
+		STBREFR
+		STBREFR
+		ENDC
+		PUSHINT 0
+		SENDRAWMSG
+	}
+	PUSHCONT {
+		BLKDROP 8
+	}
+	IFELSE
+	IFREF {
+		.inline c7_to_c4
+	}
+	THROW 0
+}
+
+.fragment getFwdPrices_6d1494f7_internal, {
+	.loc contracts/AFTRoot.sol, 335
+	CALLREF {
+		.inline _loadFwdPrices_8a36dd22_internal
+	}
+	.loc contracts/AFTRoot.sol, 336
+	DUP
+	FIRST
+	OVER
+	SECOND
+	ROT
+	THIRD
+	.loc contracts/AFTRoot.sol, 0
+}
+
+.fragment getFwdPrices, {
+	DROP
+	GETGLOB 6
+	THROWIFNOT 76
+	.loc contracts/AFTRoot.sol, 334
+	ENDS
+	.loc contracts/AFTRoot.sol, 0
+	CALLREF {
+		.inline getFwdPrices_6d1494f7_internal
+	}
+	PUSH S3
+	PUSHCONT {
+		PUSH S5
+		CTOS
+		LDU 2
+		LDMSGADDR
+		DROP
+		NIP
+		NEWC
+		STSLICECONST xc
+		STSLICE
+		PUSHINT 98
+		STZEROES
+		XCHG S1, S3
+		STSLICECONST xda497343
+		STU 64
+		STU 64
+		STU 64
+		ENDC
+		PUSHINT 0
+		SENDRAWMSG
+	}
+	PUSHCONT {
+		BLKDROP 3
+	}
+	IFELSE
+	IFREF {
+		.inline c7_to_c4
+	}
+	THROW 0
+}
+
+.fragment getGasPrice_455259cb_internal, {
+	.loc contracts/AFTRoot.sol, 340
+	CALLREF {
+		.inline _loadGasPrice_745b86c7_internal
+	}
+	.loc contracts/AFTRoot.sol, 0
+}
+
+.fragment getGasPrice, {
+	DROP
+	GETGLOB 6
+	THROWIFNOT 76
+	.loc contracts/AFTRoot.sol, 339
+	ENDS
+	.loc contracts/AFTRoot.sol, 0
+	CALLREF {
+		.inline getGasPrice_455259cb_internal
+	}
+	OVER
+	PUSHCONT {
+		PUSH S3
+		CTOS
+		LDU 2
+		LDMSGADDR
+		DROP
+		NIP
+		NEWC
+		STSLICECONST xc
+		STSLICE
+		PUSHINT 2496822551
+		STUR 130
+		STU 64
+		ENDC
+		PUSHINT 0
+		SENDRAWMSG
+	}
+	PUSHCONT {
+		DROP
+	}
+	IFELSE
+	IFREF {
+		.inline c7_to_c4
+	}
+	THROW 0
+}
+
+.fragment getJettonData_51cb15c6_internal, {
+	.loc contracts/AFTRoot.sol, 308
+	GETGLOB 17
+	GETGLOB 16
+	GETGLOB 14
+	GETGLOB 18
+	GETGLOB 19
+	.loc contracts/AFTRoot.sol, 0
+}
+
+.fragment getJettonData, {
+	DROP
+	GETGLOB 6
+	THROWIFNOT 76
+	GETGLOB 2
+	ISNULL
+	IFREF {
+		.inline c4_to_c7
+	}
+	.loc contracts/AFTRoot.sol, 301
+	ENDS
+	.loc contracts/AFTRoot.sol, 0
+	CALLREF {
+		.inline getJettonData_51cb15c6_internal
+	}
+	PUSH S5
+	PUSHCONT {
+		PUSH S7
+		CTOS
+		LDU 2
+		LDMSGADDR
+		DROP
+		NIP
+		NEWC
+		STSLICECONST xc
+		STSLICE
+		PUSHINT 1
+		STUR 98
+		REVERSE 6, 0
+		NEWC
+		STSLICECONST xca0f5445
+		STU 128
+		STI 1
+		STSLICE
+		STREF
+		STREF
+		STBREFR
+		ENDC
+		PUSHINT 0
+		SENDRAWMSG
+	}
+	PUSHCONT {
+		BLKDROP 5
+	}
+	IFELSE
+	IFREF {
+		.inline c7_to_c4
+	}
+	THROW 0
+}
+
+.fragment getWalletAddress_1fd9afa5_internal, {
+	.loc contracts/AFTRoot.sol, 312
+	CALLREF {
+		.inline _getWalletAddress_ea565479_internal
+	}
+	.loc contracts/AFTRoot.sol, 0
+}
+
+.fragment getWalletAddress, {
+	DROP
+	GETGLOB 6
+	THROWIFNOT 76
+	GETGLOB 2
+	ISNULL
+	IFREF {
+		.inline c4_to_c7
+	}
+	.loc contracts/AFTRoot.sol, 311
+	OVER
+	PUSHCONT {
+		LDREF
+		ENDS
+		CTOS
+	}
+	IF
+	LDMSGADDR
+	ENDS
+	.loc contracts/AFTRoot.sol, 0
+	CALLREF {
+		.inline getWalletAddress_1fd9afa5_internal
+	}
+	OVER
+	PUSHCONT {
+		PUSH S3
+		CTOS
+		LDU 2
+		LDMSGADDR
+		DROP
+		NIP
+		NEWC
+		STSLICECONST xc
+		STSLICE
+		PUSHINT 1
+		STUR 98
+		SWAP
+		NEWC
+		STSLICECONST xc631db75
+		STSLICE
+		STBREFR
+		ENDC
+		PUSHINT 0
+		SENDRAWMSG
+	}
+	PUSHCONT {
+		DROP
+	}
+	IFELSE
+	IFREF {
+		.inline c7_to_c4
+	}
+	THROW 0
+}
+
+.fragment mint_1251aa43_internal, {
+	.loc contracts/AFTRoot.sol, 73
+	DEPTH
+	ADDCONST -5
+	PICK
+	THROWIF 72
+	.loc contracts/modifiers/modifiers.sol, 72
+	GETGLOB 9
+	GETGLOB 14
+	SDEQ
+	THROWIFNOT 101
+	.loc contracts/AFTRoot.sol, 81
+	ACCEPT
+	.loc contracts/AFTRoot.sol, 82
+	XCHG S4, S5
+	XCHG S3, S4
+	CALLREF {
+		.inline _mint_7ad67176_internal
+	}
+	.loc contracts/AFTRoot.sol, 0
+}
+
+.fragment mint, {
+	DROP
+	GETGLOB 6
+	THROWIFNOT 76
+	GETGLOB 2
+	ISNULL
+	IFREF {
+		.inline c4_to_c7
+	}
+	.loc contracts/AFTRoot.sol, 73
+	LDU 64
+	LDMSGADDR
+	LDU 128
+	LDREF
+	ENDS
+	CTOS
+	LDMSGADDR
+	LDU 128
+	LDREF
+	ENDS
+	.loc contracts/AFTRoot.sol, 0
+	CALLREF {
+		.inline mint_1251aa43_internal
+	}
+	CALLREF {
+		.inline c7_to_c4
+	}
+	THROW 0
+}
+
+.fragment onAFTBurnNotification_52ab69e0_internal, {
+	.loc contracts/AFTRoot.sol, 157
+	DEPTH
+	ADDCONST -5
+	PICK
+	THROWIF 72
+	.loc contracts/AFTRoot.sol, 163
+	GETGLOB 9
+	PUSH S2
+	CALLREF {
+		.inline _getWalletAddress_ea565479_internal
+	}
+	SDEQ
+	THROWIFNOT 106
+	.loc contracts/AFTRoot.sol, 165
+	ACCEPT
+	.loc contracts/AFTRoot.sol, 166
+	GETGLOB 17
+	PUSH S3
+	SUB
+	UFITS 128
+	SETGLOB 17
+	.loc contracts/AFTRoot.sol, 168
+	NOW
+	GETGLOB 17
+	BLKSWAP 2, 3
+	PUSH S5
+	CALLREF {
+		.inline _activityChannel_0f93edf0_internal
+	}
+	NEWC
+	STSLICECONST xc
+	STSLICE
+	PUSHINT 1
+	STUR 98
+	ROLLREV 5
+	NEWC
+	STSLICECONST x511790eb
+	STU 64
+	STSLICE
+	STU 128
+	STU 128
+	STU 64
+	STBREFR
+	ENDC
+	PUSHINT 0
+	SENDRAWMSG
+	.loc contracts/AFTRoot.sol, 176
+	DUP
+	PUSHREFSLICE {
+		.blob x8000000000000000000000000000000000000000000000000000000000000000001_
+	}
+	SDEQ
+	PUSHCONT {
+		.loc contracts/AFTRoot.sol, 178
+		OVER
+		NEWC
+		STSLICECONST xd53276db
+		STU 64
+		ENDC
+		.loc contracts/AFTRoot.sol, 179
+		PUSHINT 50000
+		CALLREF {
+			.inline _gasToNative_4335d70a_internal
+		}
+		SWAP
+		CALLREF {
+			.inline _estimateFwdFee_044bb1d1_internal
+		}
+		ADD
+		UFITS 64
+		.loc contracts/AFTRoot.sol, 184
+		CALLREF {
+			.inline _currentShell_7cec2986_internal
+		}
+		.loc contracts/AFTRoot.sol, 185
+		PUSH2 S0, S1
+		GREATER
+		ZEROSWAPIFNOT
+		PUSHCONT {
+			PUSH2 S0, S1
+			SUB
+			UFITS 128
+		}
+		IF
+		.loc contracts/AFTRoot.sol, 186
+		DUP
+		PUSHINT 15000000000
+		GREATER
+		PUSHCONT {
+			.loc contracts/AFTRoot.sol, 186
+			DROP
+			PUSHINT 15000000000
+			.loc contracts/AFTRoot.sol, 0
+		}
+		IF
+		.loc contracts/AFTRoot.sol, 187
+		NULL
+		.loc contracts/AFTRoot.sol, 188
+		OVER
+		GTINT 0
+		PUSHCONT {
+			.loc contracts/AFTRoot.sol, 189
+			OVER
+			PUSHINT 2
+			ROTREV
+			NEWC
+			SWAP
+			STVARUINT32
+			ROTREV
+			PUSHINT 32
+			DICTUSETB
+			.loc contracts/AFTRoot.sol, 0
+		}
+		IF
+		.loc contracts/AFTRoot.sol, 191
+		PUXC S5, S-1
+		PUSHINT 0
+		PUSH S6
+		FALSE
+		NEWC
+		STSLICECONST x6_
+		STI 1
+		STSLICECONST x1_
+		STSLICE
+		SWAP
+		STGRAMS
+		STDICT
+		PUSHINT 3576854235
+		STUR 138
+		STU 64
+		ENDC
+		PUSHINT 1
+		SENDRAWMSG
+		.loc contracts/AFTRoot.sol, 0
+		BLKDROP 3
+	}
+	IFNOT
+	.loc contracts/AFTRoot.sol, 0
+	DROP2
+}
+
+.fragment onAFTBurnNotification, {
+	DROP
+	GETGLOB 6
+	THROWIFNOT 76
+	GETGLOB 2
+	ISNULL
+	IFREF {
+		.inline c4_to_c7
+	}
+	.loc contracts/AFTRoot.sol, 157
+	LDU 64
+	LDU 128
+	LDMSGADDR
+	LDREF
+	ENDS
+	CTOS
+	LDMSGADDR
+	ENDS
+	.loc contracts/AFTRoot.sol, 0
+	CALLREF {
+		.inline onAFTBurnNotification_52ab69e0_internal
+	}
+	CALLREF {
+		.inline c7_to_c4
+	}
+	THROW 0
+}
+
+.fragment provideWalletAddress_3272e4fa_internal, {
+	.loc contracts/AFTRoot.sol, 109
+	DEPTH
+	ADDCONST -5
+	PICK
+	THROWIF 72
+	.loc contracts/AFTRoot.sol, 114
+	ACCEPT
+	.loc contracts/AFTRoot.sol, 116
+	OVER
+	CALLREF {
+		.inline _getWalletAddress_ea565479_internal
+	}
+	.loc contracts/AFTRoot.sol, 117
+	NULL
+	.loc contracts/AFTRoot.sol, 118
+	PUSH S2
+	PUSHCONT {
+		.loc contracts/AFTRoot.sol, 119
+		DROP
+		PUSH S2
+		.loc contracts/AFTRoot.sol, 0
+	}
+	IF
+	.loc contracts/AFTRoot.sol, 122
+	NOW
+	SWAP2
+	PUXC S0, S4
+	GETGLOB 9
+	PUSH S7
+	CALLREF {
+		.inline _adminChannel_802ebbda_internal
+	}
+	NEWC
+	STSLICECONST xc
+	STSLICE
+	PUSHINT 1
+	STUR 98
+	ROLLREV 6
+	NEWC
+	STSLICECONST x68cf26eb
+	STU 64
+	STSLICE
+	ROLLREV 4
+	NEWC
+	STSLICE
+	ROLLREV 3
+	NEWC
+	STSLICE
+	STI 1
+	STU 64
+	STBREFR
+	STBREFR
+	STBREFR
+	ENDC
+	PUSHINT 0
+	SENDRAWMSG
+	.loc contracts/AFTRoot.sol, 131
+	PUSH3 S0, S1, S2
+	NEWC
+	STSLICECONST xd1735400
+	STU 64
+	STSLICE
+	NEWC
+	XC2PU S0, S2, S0
+	ISNULL
+	PUSHCONT {
+		DROP
+		STZERO
+	}
+	PUSHCONT {
+		SWAP
+		STONE
+		STSLICE
+	}
+	IFELSE
+	STBREFR
+	ENDC
+	.loc contracts/AFTRoot.sol, 135
+	PUSHINT 50000
+	CALLREF {
+		.inline _gasToNative_4335d70a_internal
+	}
+	PUSHINT 500000000
+	ADD
+	UFITS 128
+	SWAP
+	CALLREF {
+		.inline _estimateFwdFee_044bb1d1_internal
+	}
+	ADD
+	UFITS 64
+	.loc contracts/AFTRoot.sol, 138
+	CALLREF {
+		.inline _inboundShell_1905817a_internal
+	}
+	OVER
+	GEQ
+	THROWIFNOT 109
+	.loc contracts/AFTRoot.sol, 142
+	CALLREF {
+		.inline _inboundShell_1905817a_internal
+	}
+	SUBR
+	UFITS 128
+	.loc contracts/AFTRoot.sol, 143
+	NULL
+	.loc contracts/AFTRoot.sol, 144
+	OVER
+	GTINT 0
+	PUSHCONT {
+		.loc contracts/AFTRoot.sol, 144
+		OVER
+		PUSHINT 2
+		ROTREV
+		NEWC
+		SWAP
+		STVARUINT32
+		ROTREV
+		PUSHINT 32
+		DICTUSETB
+		.loc contracts/AFTRoot.sol, 0
+	}
+	IF
+	.loc contracts/AFTRoot.sol, 147
+	REVERSE 4, 1
+	PUSHINT 500000000
+	GETGLOB 9
+	FALSE
+	NEWC
+	STSLICECONST x6_
+	STI 1
+	STSLICECONST x1_
+	STSLICE
+	SWAP
+	STGRAMS
+	STDICT
+	PUSHINT 1
+	STUR 106
+	ROLLREV 3
+	NEWC
+	STSLICECONST xd1735400
+	STU 64
+	STSLICE
+	NEWC
+	XC2PU S0, S2, S0
+	ISNULL
+	PUSHCONT {
+		DROP
+		STZERO
+	}
+	PUSHCONT {
+		SWAP
+		STONE
+		STSLICE
+	}
+	IFELSE
+	STBREFR
+	STBREFR
+	ENDC
+	PUSHINT 1
+	SENDRAWMSG
+	.loc contracts/AFTRoot.sol, 0
+	DROP
+}
+
+.fragment provideWalletAddress, {
+	DROP
+	GETGLOB 6
+	THROWIFNOT 76
+	GETGLOB 2
+	ISNULL
+	IFREF {
+		.inline c4_to_c7
+	}
+	.loc contracts/AFTRoot.sol, 109
+	LDU 64
+	LDMSGADDR
+	LDI 1
+	ENDS
+	.loc contracts/AFTRoot.sol, 0
+	CALLREF {
+		.inline provideWalletAddress_3272e4fa_internal
+	}
+	CALLREF {
+		.inline c7_to_c4
+	}
+	THROW 0
+}
+
+.fragment recordTransfer_054a439a_internal, {
+	.loc contracts/AFTRoot.sol, 202
+	DEPTH
+	ADDCONST -5
+	PICK
+	THROWIF 72
+	.loc contracts/AFTRoot.sol, 211
+	GETGLOB 9
+	PUSH S4
+	CALLREF {
+		.inline _getWalletAddress_ea565479_internal
+	}
+	SDEQ
+	THROWIFNOT 106
+	.loc contracts/AFTRoot.sol, 212
+	ACCEPT
+	.loc contracts/AFTRoot.sol, 214
+	REVERSE 6, 0
+	CALLREF {
+		.inline _activityChannel_0f93edf0_internal
+	}
+	NEWC
+	STSLICECONST xc
+	STSLICE
+	PUSHINT 1
+	STUR 98
+	ROLLREV 6
+	NEWC
+	STSLICECONST x094c57f6
+	STU 64
+	STSLICE
+	ROLLREV 4
+	NEWC
+	STSLICE
+	STU 128
+	STI 1
+	STU 256
+	NOW
+	NEWC
+	STU 64
+	STBREFR
+	STBREFR
+	STBREFR
+	ENDC
+	PUSHINT 0
+	SENDRAWMSG
+	.loc contracts/AFTRoot.sol, 0
+}
+
+.fragment recordTransfer, {
+	DROP
+	GETGLOB 6
+	THROWIFNOT 76
+	GETGLOB 2
+	ISNULL
+	IFREF {
+		.inline c4_to_c7
+	}
+	.loc contracts/AFTRoot.sol, 202
+	LDU 64
+	LDMSGADDR
+	LDREF
+	ENDS
+	CTOS
+	LDMSGADDR
+	LDU 128
+	LDI 1
+	LDU 256
+	ENDS
+	.loc contracts/AFTRoot.sol, 0
+	CALLREF {
+		.inline recordTransfer_054a439a_internal
+	}
+	CALLREF {
+		.inline c7_to_c4
+	}
+	THROW 0
+}
+
+.fragment setContent_7f2235a5_internal, {
+	.loc contracts/AFTRoot.sol, 102
+	DEPTH
+	ADDCONST -5
+	PICK
+	THROWIF 72
+	.loc contracts/modifiers/modifiers.sol, 72
+	GETGLOB 9
+	GETGLOB 14
+	SDEQ
+	THROWIFNOT 101
+	.loc contracts/modifiers/modifiers.sol, 62
+	ACCEPT
+	.loc contracts/AFTRoot.sol, 103
+	DUP
+	SETGLOB 18
+	.loc contracts/AFTRoot.sol, 104
+	NOW
+	SWAP
+	HASHCU
+	GETGLOB 14
+	CALLREF {
+		.inline _adminChannel_802ebbda_internal
+	}
+	NEWC
+	STSLICECONST xc
+	STSLICE
+	PUSHINT 1
+	STUR 98
+	ROLLREV 3
+	NEWC
+	STSLICECONST x52d3cc7f
+	STSLICE
+	STU 256
+	STU 64
+	STBREFR
+	ENDC
+	PUSHINT 0
+	SENDRAWMSG
+	.loc contracts/AFTRoot.sol, 0
+}
+
+.fragment setContent, {
+	DROP
+	GETGLOB 6
+	THROWIFNOT 76
+	GETGLOB 2
+	ISNULL
+	IFREF {
+		.inline c4_to_c7
+	}
+	.loc contracts/AFTRoot.sol, 102
+	LDREF
+	ENDS
+	.loc contracts/AFTRoot.sol, 0
+	CALLREF {
+		.inline setContent_7f2235a5_internal
+	}
+	CALLREF {
+		.inline c7_to_c4
+	}
+	THROW 0
+}
+
+.fragment setPendingAdmin_4dd18bf5_internal, {
+	.loc contracts/AFTRoot.sol, 90
+	DEPTH
+	ADDCONST -5
+	PICK
+	THROWIF 72
+	.loc contracts/modifiers/modifiers.sol, 72
+	GETGLOB 9
+	GETGLOB 14
+	SDEQ
+	THROWIFNOT 101
+	.loc contracts/modifiers/modifiers.sol, 62
+	ACCEPT
+	.loc contracts/AFTRoot.sol, 91
+	DUP
+	SETGLOB 15
+	.loc contracts/AFTRoot.sol, 92
+	NOW
+	SWAP
+	GETGLOB 14
+	CALLREF {
+		.inline _adminChannel_802ebbda_internal
+	}
+	NEWC
+	STSLICECONST xc
+	STSLICE
+	PUSHINT 1
+	STUR 98
+	ROLLREV 3
+	NEWC
+	STSLICECONST x292f89b8
+	STSLICE
+	ROTREV
+	NEWC
+	STSLICE
+	STU 64
+	STBREFR
+	STBREFR
+	ENDC
+	PUSHINT 0
+	SENDRAWMSG
+	.loc contracts/AFTRoot.sol, 0
+}
+
+.fragment setPendingAdmin, {
+	DROP
+	GETGLOB 6
+	THROWIFNOT 76
+	GETGLOB 2
+	ISNULL
+	IFREF {
+		.inline c4_to_c7
+	}
+	.loc contracts/AFTRoot.sol, 90
+	LDMSGADDR
+	ENDS
+	.loc contracts/AFTRoot.sol, 0
+	CALLREF {
+		.inline setPendingAdmin_4dd18bf5_internal
+	}
+	CALLREF {
+		.inline c7_to_c4
+	}
+	THROW 0
+}
+
+.fragment public_function_selector, {
+	DUP
+	PUSHINT 745978227
+	LEQ
+	IFJMPREF {
+		DUP
+		PUSHINT 226345098
+		LEQ
+		IFJMPREF {
+			DUP
+			PUSHINT 207351751
+			EQUAL
+			IFJMPREF {
+				.inline estimateFwdFee
+			}
+			DUP
+			PUSHINT 216821753
+			EQUAL
+			IFJMPREF {
+				.inline getAftData
+			}
+			DUP
+			PUSHINT 226345098
+			EQUAL
+			IFJMPREF {
+				.inline setContent
+			}
+		}
+		DUP
+		PUSHINT 454059223
+		LEQ
+		IFJMPREF {
+			DUP
+			PUSHINT 349338903
+			EQUAL
+			IFJMPREF {
+				.inline getGasPrice
+			}
+			DUP
+			PUSHINT 454059223
+			EQUAL
+			IFJMPREF {
+				.inline setPendingAdmin
+			}
+		}
+		DUP
+		PUSHINT 663148061
+		EQUAL
+		IFJMPREF {
+			.inline mint
+		}
+		DUP
+		PUSHINT 745978227
+		EQUAL
+		IFJMPREF {
+			.inline provideWalletAddress
+		}
+	}
+	DUP
+	PUSHINT 1492505842
+	LEQ
+	IFJMPREF {
+		DUP
+		PUSHINT 1177672565
+		EQUAL
+		IFJMPREF {
+			.inline getWalletAddress
+		}
+		DUP
+		PUSHINT 1242518597
+		EQUAL
+		IFJMPREF {
+			.inline getJettonData
+		}
+		DUP
+		PUSHINT 1467528598
+		EQUAL
+		IFJMPREF {
+			.inline constructor
+		}
+		DUP
+		PUSHINT 1492505842
+		EQUAL
+		IFJMPREF {
+			.inline closeMint
+		}
+	}
+	DUP
+	PUSHINT 1919725533
+	LEQ
+	IFJMPREF {
+		DUP
+		PUSHINT 1514763075
+		EQUAL
+		IFJMPREF {
+			.inline getFwdPrices
+		}
+		DUP
+		PUSHINT 1733521340
+		EQUAL
+		IFJMPREF {
+			.inline getDetails
+		}
+		DUP
+		PUSHINT 1919725533
+		EQUAL
+		IFJMPREF {
+			.inline acceptAdmin
+		}
+	}
+	DUP
+	PUSHINT 2926696986
+	LEQ
+	IFJMPREF {
+		DUP
+		PUSHINT 2078119902
+		EQUAL
+		IFJMPREF {
+			.inline onAFTBurnNotification
+		}
+		DUP
+		PUSHINT 2926696986
+		EQUAL
+		IFJMPREF {
+			.inline recordTransfer
+		}
+	}
+}
+
+.fragment main_external, {
+	PUSHINT -1
+	PUSHROOT
+	CTOS
+	SBITS
+	NEQINT 1
+	SETGLOB 6
+	PUSHREFSLICE {
+		.blob x8000000000000000000000000000000000000000000000000000000000000000001_
+	}
+	SETGLOB 9
+	OVER
+	CALLREF {
+		.inline c4_to_c7_with_init_storage
+	}
+	LDU 1 ; haveSign msgSlice
+	SWAP
+	PUSHCONT {
+		PUSHPOW2 9
+		LDSLICEX
+		DUP
+		MYADDR
+		NEWC
+		STSLICE
+		STSLICE
+		ENDC
+		HASHCU
+		SWAP
+		LDU 1 ; signatureSlice hashMsgSlice hasPubkey msgSlice
+		SWAP
+		PUSHCONT {
+			LDU 256 ; signatureSlice hashMsgSlice pubkey msgSlice
+			XCHG2 S3, S3
+		}
+		PUSHCONT {
+			XCHG S2
+			GETGLOB 2
+		}
+		IFELSE
+		DUP
+		SETGLOB 5
+		CHKSIGNU
+		THROWIFNOT 40
+	}
+	PUSHCONT {
+		LDU 1 ; hasPubkey msgSlice
+		SWAP
+		THROWIF 58
+	}
+	IFELSE
+	PUSH2 S3, S0
+	.loc contracts/modifiers/modifiers.sol, 163
+	LDU 64
+	XCPU S3, S3
+	BLKDROP2 2, 1
+	.loc contracts/modifiers/modifiers.sol, 164
+	LDU 32
+	POP S3
+	.loc contracts/modifiers/modifiers.sol, 165
+	DUP
+	NOW
+	GREATER
+	THROWIFNOT 57
+	.loc contracts/modifiers/modifiers.sol, 166
+	DUP
+	NOW
+	PUSHINT 900
+	ADD
+	UFITS 32
+	LEQ
+	THROWIFNOT 222
+	.loc contracts/modifiers/modifiers.sol, 167
+	DROP2
+	.loc contracts/modifiers/modifiers.sol, 0
+	LDU 32 ; funcId body
+	SWAP
+	CALLREF {
+		.inline public_function_selector
+	}
+	THROW 60
+}
+
+.fragment on_bounce, {
+	GETGLOB 6
+	THROWIFNOT 76
+	GETGLOB 2
+	ISNULL
+	IFREF {
+		.inline c4_to_c7
+	}
+	.loc contracts/AFTRoot.sol, 228
+	ACCEPT
+	.loc contracts/AFTRoot.sol, 230
+	LDU 32
+	.loc contracts/AFTRoot.sol, 231
+	LDU 64
+	.loc contracts/AFTRoot.sol, 232
+	LDU 128
+	ROLLREV 3
+	.loc contracts/AFTRoot.sol, 234
+	PUSH S2
+	PUSHINT 395134233
+	EQUAL
+	PUSHCONT {
+		.loc contracts/AFTRoot.sol, 236
+		PUSH S3
+		LDREF
+		POP S5
+		.loc contracts/AFTRoot.sol, 237
+		CTOS
+		LDU 32
+		LDU 64
+		LDU 128
+		LDMSGADDR
+		LDREF
+		ENDS
+		CTOS
+		LDMSGADDR
+		LDREF
+		ENDS
+		CTOS
+		LDMSGADDR
+		LDU 128
+		LDREF
+		ENDS
+		BLKDROP2 4, 4
+		PUSH S3
+		.loc contracts/AFTRoot.sol, 251
+		CALLREF {
+			.inline _buildWalletInitData_b9a5b881_internal
+		}
+		.loc contracts/AFTRoot.sol, 252
+		PUSH3 S1, S2, S3
+		PUSH S7
+		MYADDR
+		PUSH2 S10, S11
+		NEWC
+		STSLICECONST x3ed6acef
+		STU 64
+		STU 128
+		STSLICE
+		ROLLREV 4
+		NEWC
+		STSLICE
+		ROLLREV 3
+		NEWC
+		STSLICE
+		STU 128
+		STREF
+		STBREFR
+		STBREFR
+		ENDC
+		.loc contracts/AFTRoot.sol, 257
+		CALLREF {
+			.inline _estimateFwdFee_044bb1d1_internal
+		}
+		OVER
+		CALLREF {
+			.inline _estimateFwdFee_044bb1d1_internal
+		}
+		ADD
+		UFITS 128
+		.loc contracts/AFTRoot.sol, 258
+		PUSHINT 50000
+		CALLREF {
+			.inline _gasToNative_4335d70a_internal
+		}
+		PUSHINT 5000000000
+		ADD
+		UFITS 128
+		ADD
+		UFITS 64
+		.loc contracts/AFTRoot.sol, 264
+		CALLREF {
+			.inline _currentShell_7cec2986_internal
+		}
+		.loc contracts/AFTRoot.sol, 265
+		PUSH2 S0, S1
+		GREATER
+		ZEROSWAPIFNOT
+		PUSHCONT {
+			PUSH2 S0, S1
+			SUB
+			UFITS 128
+		}
+		IF
+		NIP
+		.loc contracts/AFTRoot.sol, 266
+		NULL
+		.loc contracts/AFTRoot.sol, 267
+		OVER
+		GTINT 0
+		PUSHCONT {
+			.loc contracts/AFTRoot.sol, 267
+			OVER
+			PUSHINT 2
+			ROTREV
+			NEWC
+			SWAP
+			STVARUINT32
+			ROTREV
+			PUSHINT 32
+			DICTUSETB
+			.loc contracts/AFTRoot.sol, 0
+		}
+		IF
+		.loc contracts/AFTRoot.sol, 269
+		BLKSWAP 4, 4
+		REVERSE 4, 0
+		MYADDR
+		PUSH2 S9, S10
+		ROLL 10
+		DUP
+		HASHCU
+		NEWC
+		STSLICECONST x801_
+		STU 256
+		ROLLREV 8
+		ROLL 9
+		PUSHINT 5000000000
+		ROLL 10
+		NEWC
+		STSLICECONST x62_
+		STB
+		SWAP
+		STGRAMS
+		STDICT
+		PUSHINT 3
+		STUR 106
+		OVER
+		CALLREF {
+			CTOS
+			LDI 1
+			SWAP
+			PUSHCONT {
+				LDI 5
+				NIP
+			}
+			IF
+			LDI 1
+			SWAP
+			PUSHCONT {
+				LDI 2
+				NIP
+			}
+			IF
+			LDDICT
+			LDDICT
+			LDDICT
+			ENDS
+			BLKDROP 3
+		}
+		STREF
+		STONE
+		ROLLREV 7
+		NEWC
+		STSLICECONST x3ed6acef
+		STU 64
+		STU 128
+		STSLICE
+		ROLLREV 4
+		NEWC
+		STSLICE
+		ROLLREV 3
+		NEWC
+		STSLICE
+		STU 128
+		STREF
+		STBREFR
+		STBREFR
+		STBREFR
+		ENDC
+		PUSHINT 0
+		SENDRAWMSG
+		.loc contracts/AFTRoot.sol, 0
+		DROP2
+	}
+	PUSHCONT {
+		PUSH S2
+		EQINT 1
+		PUSHCONT {
+			.loc contracts/AFTRoot.sol, 278
+			GETGLOB 17
+			OVER
+			SUB
+			UFITS 128
+			SETGLOB 17
+			.loc contracts/AFTRoot.sol, 279
+			NOW
+			GETGLOB 17
+			PUSH2 S2, S3
+			CALLREF {
+				.inline _activityChannel_0f93edf0_internal
+			}
+			NEWC
+			STSLICECONST xc
+			STSLICE
+			PUSHINT 1
+			STUR 98
+			ROLLREV 4
+			NEWC
+			STSLICECONST x17122770
+			STU 64
+			STU 128
+			STU 128
+			STU 64
+			STBREFR
+			ENDC
+			PUSHINT 0
+			SENDRAWMSG
+			.loc contracts/AFTRoot.sol, 0
+		}
+		IF
+		.loc contracts/AFTRoot.sol, 0
+	}
+	IFELSE
+	BLKDROP 4
+	.loc contracts/AFTRoot.sol, 0
+	CALLREF {
+		.inline c7_to_c4
+	}
+}
+
+.fragment main_internal, {
+	PUSHINT 0
+	PUSHROOT
+	CTOS
+	SBITS
+	NEQINT 1
+	SETGLOB 6
+	PUSH S2
+	CTOS
+	LDU 4 ; bounced tail
+	LDMSGADDR ; bounced src tail
+	DROP
+	SETGLOB 9
+	MODPOW2 1
+	IFJMPREF {
+		OVER
+		LDSLICE 32
+		NIP
+		.inline on_bounce
+	}
+	OVER
+	SEMPTY ; isEmpty
+	IFJMPREF {
+		GETGLOB 6
+		THROWIFNOT 76
+	}
+	OVER
+	LDUQ 32  ; [funcId] body' ok
+	THROWIFNOT 60
+	OVER
+	IFNOTJMPREF {
+		GETGLOB 6
+		THROWIFNOT 76
+	}
+	SWAP
+	CALLREF {
+		.inline public_function_selector
+	}
+	THROW 60
+}
+
+.fragment _currentNative_9824c8c8_internal, {
+	.loc contracts/modifiers/modifiers.sol, 106
+	GETPARAM 7
+	FIRST
+	.loc contracts/modifiers/modifiers.sol, 0
+}
+
+.fragment upd_only_time_in_c4, {
+	PUSHROOT
+	CTOS
+	LDU 256
+	LDU 64
+	NIP
+	GETGLOB 3
+	ROT
+	NEWC
+	STU 256
+	STU 64
+	STSLICE
+	ENDC
+	POPROOT
+}
+
+.fragment default_data_dict_cell, {
+	PUSHINT 0
+	NEWC
+	STU 256
+	PUSHINT 0
+	NEWDICT
+	PUSHINT 64
+	DICTUSETB
+}
+
+; The code below forms a value of the StateInit type.
+.blob x4_ ; split_depth = nothing
+.blob x4_ ; special = nothing
+.blob xc_ ; code = just
+.cell { ; code cell
+	SETCP0
+	DICTPUSHCONST 19
+	DICTIGETJMPZ
+	THROW 11
+	.code-dict-cell 19, {
+		x00001_ = main_internal,
+		xfffff_ = main_external,
+	}
+}
+.blob xc_ ; data = just
+.cell { 
+	.blob xc_
+	.cell { 
+		.inline-computed-cell default_data_dict_cell, 0
+	}
+}
+.blob x4_ ; library = hme_empty

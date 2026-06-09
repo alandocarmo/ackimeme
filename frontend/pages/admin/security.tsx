@@ -7,7 +7,6 @@ import adminStyles from "../../styles/Admin.module.css";
 
 export default function SecurityAdmin() {
   const [anomalies, setAnomalies] = useState<Record<string, unknown>[]>([]);
-  const [password, setPassword] = useState<string>("");
   const [loggedIn, setLoggedIn] = useState<boolean>(false);
   const [error, setError] = useState<string>("");
   const [session, setSession] = useState<Session | null>(null);
@@ -24,7 +23,7 @@ export default function SecurityAdmin() {
         setError("Você precisa estar logado com uma carteira para acessar o painel admin. Faça login primeiro.");
         return;
       }
-      await unlockAdmin(password, session.walletAddress);
+      await unlockAdmin("", session.walletAddress);
       setLoggedIn(true);
       fetchAnomalies();
     } catch(err) {
@@ -57,14 +56,7 @@ export default function SecurityAdmin() {
           <h2 className={authStyles['auth-title']} style={{ color: 'var(--accent-warm)' }}>SECURITY OVERRIDE</h2>
           <p className={authStyles['auth-subtitle']}>Admin Mission Control</p>
           <form onSubmit={handleLogin}>
-            <input 
-              type="password" 
-              placeholder="Admin Master Token" 
-              className="text-input"
-              style={{ borderColor: 'var(--accent-warm)', color: 'var(--accent-warm)', fontWeight: 'bold' }}
-              value={password}
-              onChange={e => setPassword(e.target.value)}
-            />
+            <p style={{ color: 'var(--ink-soft)', marginBottom: '16px' }}>Your wallet ({session?.walletAddress ? session.walletAddress.slice(0,6) + '...' + session.walletAddress.slice(-4) : 'Not Connected'}) will be verified against the secure whitelist.</p>
             <button className="btn-primary" style={{ width: '100%', marginTop: '20px', background: 'var(--accent-warm)', color: '#000' }}>
               Access Feed
             </button>

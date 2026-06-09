@@ -83,7 +83,6 @@ export default function CreatePage() {
       });
       setPaymentStatus({ ok: true, msg: "Payment confirmed ✓", verifiedTx: form.txHash.trim() });
     } catch (err) {
-      setPaymentStatus({ ok: false, msg: "" });
       setPaymentStatus({ ok: false, msg: (err as Error).message });
     }
   }
@@ -399,8 +398,6 @@ export default function CreatePage() {
             </div>
         </div>
       </main>
-
-      <style jsx>{``}</style>
     </>
   );
 }

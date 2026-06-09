@@ -8,6 +8,7 @@ import styles from "../styles/Home.module.css";
 import { Launch } from "../types";
 import { SEO } from "../components/SEO";
 import { Skeleton } from "../components/ui/Skeleton";
+import { KingOfTheHill } from "../components/ui/KingOfTheHill";
 
 function formatDate(date: string | number | Date): string {
   const d = new Date(date);
@@ -178,6 +179,16 @@ export default function Home() {
             {t("hero_cta")}
           </Link>
         </section>
+
+        {/* King of the Hill */}
+        <div className="container">
+          <KingOfTheHill kingToken={
+            // Find the token with highest reserve that hasn't migrated
+            launches
+              .filter(l => (l.onchainData?.reserveBalance || 0) < 6900000)
+              .sort((a, b) => (b.onchainData?.reserveBalance || 0) - (a.onchainData?.reserveBalance || 0))[0] || null
+          } />
+        </div>
 
         {/* Live Stats Banner */}
         {(stats || launches.length > 0) && (() => {
@@ -396,8 +407,6 @@ export default function Home() {
           <Link href="/create" className="footer-link" style={{ color: 'var(--accent)' }}>Launch a Coin</Link>
         </div>
       </footer>
-      
-      <style jsx>{``}</style>
     </>
   );
 }

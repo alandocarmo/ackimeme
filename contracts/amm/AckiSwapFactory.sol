@@ -1,0 +1,72 @@
+pragma tvm-solidity >= 0.76.1;
+pragma AbiHeader expire;
+pragma AbiHeader pubkey;
+
+import "./AckiSwapPair.sol";
+
+interface IFactoryCallback {
+    function onPairDeployed(address pair) external;
+}
+
+contract AckiSwapFactory {
+    address static _owner;
+    TvmCell static _pairCode;
+    
+    address public feeRecipient;
+
+    event PairCreated(address tokenRoot, address pairAddress, uint64 timestamp);
+
+    constructor(address _feeRecipient) {
+        require(msg.pubkey() == tvm.pubkey(), 100);
+        require(_feeRecipient != address(0), 101, "Fee recipient cannot be zero");
+        tvm.accept();
+        feeRecipient = _feeRecipient;
+    }
+
+    function setFeeRecipient(address _feeRecipient) external {
+        require(msg.pubkey() == tvm.pubkey(), 100);
+        require(_feeRecipient != address(0), 101, "Fee recipient cannot be zero");
+        tvm.accept();
+        feeRecipient = _feeRecipient;
+    }
+
+    function deployPair(address tokenRoot, address callbackTarget) external {
+        require(msg.sender == _owner, 102, "Only owner can deploy pairs");
+        tvm.accept();
+        TvmCell stateInit = abi.encodeStateInit({
+            contr: AckiSwapPair,
+            varInit: {
+                _factory: address(this),
+                _tokenRoot: tokenRoot,
+                _feeRecipient: feeRecipient
+            },
+            code: _pairCode
+        });
+
+        address pair = new AckiSwapPair{
+            stateInit: stateInit,
+            value: 2000000000, // 2 SHELL
+            flag: 0,
+            bounce: false
+        }(callbackTarget);
+
+        emit PairCreated(tokenRoot, pair, uint64(block.timestamp));
+        
+        if (callbackTarget != address(0)) {
+            IFactoryCallback(callbackTarget).onPairDeployed{value: 0, flag: 64}(pair);
+        }
+    }
+
+    function getPairAddress(address tokenRoot) external view returns (address) {
+        TvmCell stateInit = abi.encodeStateInit({
+            contr: AckiSwapPair,
+            varInit: {
+                _factory: address(this),
+                _tokenRoot: tokenRoot,
+                _feeRecipient: feeRecipient
+            },
+            code: _pairCode
+        });
+        return address.makeAddrStd(0, tvm.hash(stateInit));
+    }
+}

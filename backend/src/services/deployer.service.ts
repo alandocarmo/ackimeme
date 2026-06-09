@@ -2,7 +2,7 @@ import * as fs from "fs";
 import * as path from "path";
 import * as crypto from "crypto";
 import { config } from "../config";
-import { getAccountPublicKey, getAccountBalanceNano, getAccountState } from "./graphql.service";
+import { getAccountPublicKey, getAccountBalanceNano, getAccountState, getAccountEccBalanceNano } from "./graphql.service";
 import { parseSlopeDivisor } from "../launches";
 import { getTvmClient, getTvmCore, sdkAvailable as isTvmSdkAvailable } from "./tvm-client";
 
@@ -218,7 +218,7 @@ async function resolveDeployerKeyPair(): Promise<{ public: string; secret: strin
 async function waitForFutureAddressFunding(address: string, minGasBalanceNano: string): Promise<boolean> {
   const attempts = Number(process.env.DEPLOY_FUNDING_CONFIRM_ATTEMPTS || DEFAULT_DEPLOY_FUNDING_ATTEMPTS);
   for (let i = 0; i < attempts; i += 1) {
-    const gasBalanceNano = await getAccountBalanceNano(address);
+    const gasBalanceNano = await getAccountEccBalanceNano(address, 2);
     if (gasBalanceNano >= BigInt(minGasBalanceNano)) {
       return true;
     }
@@ -551,12 +551,12 @@ export async function deployTokenEcosystem({
     tokenRootAddress = await deployContract({
       contractName: "TokenRoot",
       constructorInput: {
-        _name: name,
-        _symbol: symbol,
-        _decimals: TOKEN_DECIMALS,
-        _walletCode: walletCodeCell,
-        _owner: creatorWallet,
-        _shellToConvert: 10000000000 // M-02: 10 VMSHELL for gas
+        admin: creatorWallet,
+        mintable: true,
+        content: "",
+        walletCode: walletCodeCell,
+        initialOwner: creatorWallet,
+        initialSupply: 0
       },
       initialData: { deployNonce },
       signer,
@@ -635,6 +635,25 @@ export async function deployTokenEcosystem({
         },
         send_events: false
       });
+      const factoryAddress = process.env.ACKISWAP_FACTORY_ADDRESS;
+      if (factoryAddress && !isPlaceholder(factoryAddress)) {
+        console.log(`[Deployer] Vinculando Factory na BondingCurve...`);
+        await client.processing.process_message({
+          message_encode_params: {
+            address: bondingCurveAddress,
+            abi: abiContract(bcAbi),
+            call_set: {
+              function_name: "setFactory",
+              input: { _factory: factoryAddress }
+            },
+            signer
+          },
+          send_events: false
+        });
+      } else {
+        console.warn(`[Deployer] ACKISWAP_FACTORY_ADDRESS ausente, a curva de bonding vai falhar ao tentar migrar para AMM!`);
+      }
+
       console.log(`[Deployer] Mensagem interna disparada. Delegando monitoramento on-chain para o sync.service.ts...`);
     }
 

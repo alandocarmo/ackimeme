@@ -21,7 +21,7 @@ export default function PortfolioPage() {
   const [noProvider, setNoProvider] = useState<boolean>(false);
   const [error, setError] = useState<string>("");
 
-  const [activeTab, setActiveTab] = useState<string>("holdings"); // holdings | watchlist
+  const [activeTab, setActiveTab] = useState<string>("holdings"); // holdings | watchlist | ackipoints
   const [favorites, setFavorites] = useState<any[]>([]);
 
   useEffect(() => {
@@ -226,6 +226,22 @@ export default function PortfolioPage() {
           >
             ★ watchlist
           </button>
+          <button
+            onClick={() => setActiveTab("ackipoints")}
+            style={{
+              background: 'none',
+              border: 'none',
+              borderBottom: activeTab === "ackipoints" ? '2px solid var(--accent)' : 'none',
+              color: activeTab === "ackipoints" ? 'var(--ink)' : 'var(--ink-soft)',
+              paddingBottom: '8px',
+              fontSize: '14px',
+              fontWeight: 700,
+              cursor: 'pointer',
+              transition: 'all 0.2s'
+            }}
+          >
+            🏆 Acki Points
+          </button>
         </div>
 
         {activeTab === "holdings" ? (
@@ -271,7 +287,7 @@ export default function PortfolioPage() {
               </div>
             ) : null}
           </>
-        ) : (
+        ) : activeTab === "watchlist" ? (
           <>
             {favorites.length === 0 ? (
               <div className="card" style={{ textAlign: 'center', padding: '60px' }}>
@@ -302,10 +318,83 @@ export default function PortfolioPage() {
               </div>
             )}
           </>
-        )}
-      </main>
+        ) : activeTab === "ackipoints" ? (
+          <>
+            <div className="card" style={{ border: '1px solid #fbbf24', background: 'rgba(251, 191, 36, 0.05)', textAlign: 'center', padding: '40px' }}>
+              <p style={{ fontSize: '48px', margin: 0 }}>🏆</p>
+              <h2 style={{ color: '#fbbf24', marginTop: '16px', marginBottom: '8px' }}>15,400 Acki Points</h2>
+              <p className={createStyles['form-subtitle']}>Invite friends and earn points! Use points to launch coins or register .acki domains for free.</p>
+              
+              <div style={{ marginTop: '24px', background: 'rgba(0,0,0,0.4)', padding: '16px', borderRadius: '12px', display: 'inline-block' }}>
+                <p style={{ fontSize: '12px', color: 'var(--ink-soft)', marginBottom: '8px' }}>Your Referral Link</p>
+                <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+                  <code style={{ background: '#000', padding: '8px 12px', borderRadius: '8px', color: 'var(--ink)' }}>
+                    https://ackimeme.com/?ref={session.walletAddress.slice(0, 10)}...
+                  </code>
+                  <button className="btn-primary" style={{ padding: '8px 16px', fontSize: '12px' }}>Copy</button>
+                </div>
+              </div>
 
-      <style jsx>{``}</style>
+              <div style={{ display: 'flex', justifyContent: 'center', gap: '16px', marginTop: '32px' }}>
+                <button style={{ background: 'linear-gradient(90deg, #f97316, #ef4444)', border: 'none', color: '#fff', padding: '12px 24px', borderRadius: '12px', fontWeight: 700, cursor: 'pointer' }}>
+                  🎟️ Redeem Free Token Launch
+                </button>
+                <button style={{ background: 'transparent', border: '1px solid #fbbf24', color: '#fbbf24', padding: '12px 24px', borderRadius: '12px', fontWeight: 700, cursor: 'pointer' }}>
+                  🎟️ Redeem Free .acki Domain
+                </button>
+              </div>
+            </div>
+            
+            <div style={{ marginTop: '40px' }}>
+              <h3 style={{ marginBottom: '16px' }}>Your Creator NFTs</h3>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                {launches.filter(l => l.creatorWallet === session.walletAddress).length === 0 ? (
+                  <p className={createStyles['form-subtitle']}>You haven't launched any tokens yet. Launch a token to earn a Genesis Badge!</p>
+                ) : (
+                  launches.filter(l => l.creatorWallet === session.walletAddress).map((launch) => {
+                    const rBalance = launch.onchainData?.reserveBalance || 0;
+                    let badgeLevel = "Bronze";
+                    let badgeColor = "linear-gradient(135deg, #cd7f32, #8b5a2b)";
+                    let badgeText = "🥉 Bronze Badge (New Token)";
+                    let textColor = "#cd7f32";
+
+                    if (rBalance >= 6900000) {
+                      badgeLevel = "Gold";
+                      badgeColor = "linear-gradient(135deg, #fbbf24, #f59e0b)";
+                      badgeText = "🥇 Gold Badge (Token migrated to AckiSwap!)";
+                      textColor = "#fbbf24";
+                      
+                      // Mocking Diamond for tokens that have been live for a while (e.g. pumped forever or very high volume)
+                      if (launch.protocol?.pumpForever) {
+                        badgeLevel = "Diamond";
+                        badgeColor = "linear-gradient(135deg, #38bdf8, #818cf8, #c084fc)";
+                        badgeText = "💎 Diamond Badge ($1M+ Volume Hero)";
+                        textColor = "#38bdf8";
+                      }
+                    }
+
+                    return (
+                      <div key={`nft-${launch.id}`} className="card" style={{ border: `1px solid ${textColor}40`, display: 'flex', alignItems: 'center', gap: '16px', background: `rgba(0,0,0,0.2)` }}>
+                        <div style={{ width: '64px', height: '64px', borderRadius: '12px', background: badgeColor, display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: `0 0 15px ${textColor}40` }}>
+                          {isSafeUrl(launch.coin.logoUrl) ? (
+                            <img src={launch.coin.logoUrl} alt="" style={{ width: '48px', height: '48px', borderRadius: '8px' }} />
+                          ) : (
+                            <span style={{ fontSize: '24px' }}>{launch.coin.symbol[0]}</span>
+                          )}
+                        </div>
+                        <div>
+                          <h4 style={{ margin: 0, color: 'var(--ink)' }}>Genesis Creator: {launch.coin.symbol}</h4>
+                          <p style={{ margin: 0, fontSize: '12px', color: textColor, fontWeight: 700, marginTop: '4px' }}>{badgeText}</p>
+                        </div>
+                      </div>
+                    );
+                  })
+                )}
+              </div>
+            </div>
+          </>
+        ) : null}
+      </main>
     </>
   );
 }

@@ -1,16 +1,13 @@
 import Head from "next/head";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { useEffect, useState, useCallback, useMemo } from "react";
-import { getLaunchById, getSession, getComments, postComment, getSocket } from "../../lib/api";
-import { BondingCurveAbi, TokenWalletAbi, TokenRootAbi } from "../../lib/abi";
+import { useEffect, useState, useMemo } from "react";
+import { getSession } from "../../lib/api";
 import { useToast } from "../../lib/useToast";
-import { formatNum, getSlopeLabel, formatSupply, compactWallet, isSafeUrl, formatDate, toNano, nanoToDecimal, calculateExactBuyAmount, hashColor, calcBondingStats } from "../../lib/utils";
+import { formatNum, getSlopeLabel, formatSupply, compactWallet, isSafeUrl, formatDate, toNano, nanoToDecimal, hashColor, calcBondingStats } from "../../lib/utils";
 import { useI18n } from "../../lib/i18n";
 import styles from "../../styles/Token.module.css";
-import type { Session, Launch, CommentType, Trade, Holder, OnchainData } from "../../types";
-
-// Removed duplicated functions
+import type { Session, Launch } from "../../types";
 
 import { PriceChart } from "../../components/PriceChart";
 import { BubbleMap } from "../../components/BubbleMap";
@@ -21,48 +18,44 @@ import { TokenTradingPanel } from "../../components/token/TokenTradingPanel";
 import { SEO } from "../../components/SEO";
 import { Skeleton } from "../../components/ui/Skeleton";
 
+import { useTokenData } from "../../hooks/useTokenData";
+import { useOnchainPrice } from "../../hooks/useOnchainPrice";
+import { useTrading } from "../../hooks/useTrading";
+import { useBalances } from "../../hooks/useBalances";
+import { useFavorite } from "../../hooks/useFavorite";
 
-const TRADE_FEE_BPS = 100; // 1% total fee — matches BondingCurve.sol constant
-
-// Local getSlopeLabel removed, using shared utility
-
-export default function TokenPage(): React.JSX.Element {
+export default function TokenPage() {
   const { t } = useI18n();
   const router = useRouter();
   const { id } = router.query;
   const idStr = Array.isArray(id) ? id[0] : id as string;
-  const [token, setToken] = useState<Launch | null>(null);
+
   const [session, setSession] = useState<Session | null>(null);
-  const [loading, setLoading] = useState<boolean>(true);
-  const [error, setError] = useState<string>("");
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    getSession().then((r) => setSession(r.session)).catch(() => {});
+  }, []);
+
   const { toast, ToastContainer } = useToast();
 
-  const [isFavorite, setIsFavorite] = useState<boolean>(false);
-  const [chartTab, setChartTab] = useState<string>("theory"); // theory | live
-  const [priceHistory, setPriceHistory] = useState<any[]>([]);
+  const { token, loading, error, comments, trades, holders, totalSupply, priceHistory, handleCommentPosted } = useTokenData(idStr);
+  const { isFavorite, handleToggleFavorite } = useFavorite(session, idStr);
+  const { onchainPrice } = useOnchainPrice(token);
+  
+  const {
+    tradeMode, setTradeMode,
+    tradeAmount, setTradeAmount,
+    slippage, setSlippage,
+    isTrading, tradeSuccess, error: tradeError,
+    buyReturn, sellReturn,
+    handleTrade, TRADE_FEE_BPS
+  } = useTrading(session, token, onchainPrice, t);
+
+  const { userShellEccBalance, userTokenBalance } = useBalances(session, token, tradeSuccess);
+
+  const [chartTab, setChartTab] = useState<"theory" | "live">("theory");
   const [selectedInterval, setSelectedInterval] = useState<number>(15);
 
-  // M2 FIX: wrap setTradeMode to clear stale messages
-  const [tradeMode, _setTradeMode] = useState<string>("buy");
-  function setTradeMode(mode: string) {
-    _setTradeMode(mode);
-    setError("");
-    setTradeSuccess("");
-    setTradeAmount("");
-  }
-  const [tradeAmount, setTradeAmount] = useState<string>("");
-  const [slippage, setSlippage] = useState<string>("2");
-  const [isTrading, setIsTrading] = useState<boolean>(false);
-  const [tradeSuccess, setTradeSuccess] = useState<string>("");
-  const [onchainPrice, setOnchainPrice] = useState<number | null>(null); // from getter
-  const [sellReturn, setSellReturn] = useState<number | null>(null); // specific for tradeAmount
-  const [buyReturn, setBuyReturn] = useState<number | null>(null); // specific for tradeAmount
-
-  // Balances for quick trade %
-  const [userShellEccBalance, setUserShellEccBalance] = useState<number | null>(null);
-  const [userTokenBalance, setUserTokenBalance] = useState<number | null>(null);
-
-  // A6 FIX: Memoize estimate to prevent recalculation on every render
   const memoizedEstimate = useMemo(() => {
     if (!tradeAmount || parseFloat(tradeAmount) <= 0) {
       return { value: "0.00", fee: null, impact: null };
@@ -72,7 +65,6 @@ export default function TokenPage(): React.JSX.Element {
       const tokensOut = buyReturn !== null ? buyReturn : 0;
       let impact = null;
       if (onchainPrice && onchainPrice > 0) {
-         // spot value of tokens expected vs actual value
          const expectedTokensWithoutImpact = parseFloat(tradeAmount) / onchainPrice;
          if (expectedTokensWithoutImpact > 0) {
            impact = Math.max(0, ((expectedTokensWithoutImpact - tokensOut) / expectedTokensWithoutImpact) * 100);
@@ -80,14 +72,13 @@ export default function TokenPage(): React.JSX.Element {
       }
       return { 
         value: tokensOut > 0 ? tokensOut.toFixed(2) : "aguardando...", 
-        fee: (parseFloat(tradeAmount) * 0.01).toFixed(4),
+        fee: (parseFloat(tradeAmount) * (TRADE_FEE_BPS / 10000)).toFixed(4),
         impact 
       };
     } else {
       const shellOut = sellReturn !== null ? sellReturn : 0;
       let impact = null;
       if (onchainPrice && onchainPrice > 0) {
-         // spot value vs actual
          const expectedShellWithoutImpact = parseFloat(tradeAmount) * onchainPrice;
          if (expectedShellWithoutImpact > 0) {
            impact = Math.max(0, ((expectedShellWithoutImpact - shellOut) / expectedShellWithoutImpact) * 100);
@@ -95,483 +86,15 @@ export default function TokenPage(): React.JSX.Element {
       }
       return { 
         value: shellOut > 0 ? shellOut.toFixed(4) : "aguardando...", 
-        fee: (shellOut * 0.01).toFixed(4),
+        fee: (shellOut * (TRADE_FEE_BPS / 10000)).toFixed(4),
         impact 
       };
     }
-  }, [tradeAmount, tradeMode, buyReturn, sellReturn, onchainPrice]);
+  }, [tradeAmount, tradeMode, onchainPrice, buyReturn, sellReturn, TRADE_FEE_BPS]);
 
-  // Chat/Comments state
-  const [comments, setComments] = useState<CommentType[]>([]);
-  const [trades, setTrades] = useState<Trade[]>([]);
-  const [holders, setHolders] = useState<Holder[]>([]);
-  const [totalSupply, setTotalSupply] = useState<number>(1000000000);
-
-  useEffect(() => {
-    if (typeof window === "undefined") return;
-    getSession().then((r) => setSession(r.session)).catch(() => {});
-  }, []);
-
-  // Fetch Favorites status for this user
-  useEffect(() => {
-    if (!session || !idStr) return;
-    import("../../lib/api").then(({ getFavorites }) => {
-      (getFavorites as any)()
-        .then((r: { launches?: import("../../types").Launch[] }) => {
-          const favs = r.launches || [];
-          setIsFavorite(favs.some((f: import("../../types").Launch) => f.id === idStr));
-        })
-        .catch(() => {});
-    });
-  }, [session, idStr]);
-
-  const handleToggleFavorite = useCallback(async () => {
-    if (!session) return router.push(`/auth?from=/token/${idStr}`);
-    try {
-      const { addFavorite, removeFavorite } = await import("../../lib/api");
-      if (isFavorite) {
-        await removeFavorite(idStr);
-        setIsFavorite(false);
-        toast.success("Removed", "Removido dos favoritos!");
-      } else {
-        await addFavorite(idStr);
-        setIsFavorite(true);
-        toast.success("Added", "Adicionado aos favoritos!");
-      }
-    } catch (err) {
-      toast.error("Erro", (err as Error).message || "Erro ao atualizar favoritos.");
-    }
-  }, [session, id, isFavorite, toast, router]);
-
-  // Fetch Candlestick Price History
-  const fetchPriceHistory = useCallback(() => {
-    if (!idStr) return;
-    import("../../lib/api").then(({ getPriceHistory }) => {
-      getPriceHistory(idStr, selectedInterval)
-        .then((r) => {
-          setPriceHistory((r as any).history || []);
-        })
-        .catch((err) => console.error("Error fetching price history", err));
-    });
-  }, [idStr, selectedInterval]);
-
-  useEffect(() => {
-    fetchPriceHistory();
-  }, [fetchPriceHistory, trades]);
-
-  const fetchToken = useCallback(() => {
-    if (!idStr) return;
-    getLaunchById(idStr)
-      .then((data) => {
-        setToken((data as any).launch);
-        setError("");
-      })
-      .catch((err) => {
-        if (String(err.message || "").toLowerCase().includes("404")) {
-          setToken(null);
-          setError("Token não encontrado.");
-        } else {
-          setError(err.message || "Falha ao carregar token.");
-        }
-      })
-      .finally(() => setLoading(false));
-  }, [idStr]);
-
-  useEffect(() => {
-    if (!idStr) return;
-    setLoading(true);
-    fetchToken();
-  }, [idStr, fetchToken]);
-
-  // Fetch on-chain price — defined BEFORE socket effect to avoid temporal dead zone
-  const fetchPrice = useCallback(async () => {
-    if (!token?.onchainData?.bondingCurveAddress || token!.onchainData!.deployStatus !== "deployed") return;
-    
-    try {
-      const { getEver } = await import('../../lib/ever');
-      const ever = await getEver();
-      const { Address } = await import('everscale-inpage-provider');
-
-      const bc = new ever.Contract(BondingCurveAbi, new Address(token!.onchainData!.bondingCurveAddress as string));
-      
-      const buyPriceRes = await (bc.methods as any).getBuyPrice({ tokenAmount: "1000000000" }).call();
-      if ((buyPriceRes as any)?.value0) {
-        setOnchainPrice(nanoToDecimal(buyPriceRes.value0) || null);
-      }
-    } catch {
-      // Provider not available — use fallback
-    }
-  }, [token?.onchainData?.bondingCurveAddress, token?.onchainData?.deployStatus]);
-
-  const fetchUserBalances = useCallback(async () => {
-    if (!session?.walletAddress) return;
-    try {
-      // 1. Fetch SHELL ECC balance from backend
-      const { getWalletBalance } = await import('../../lib/api');
-      const res = await getWalletBalance(session.walletAddress);
-      if ((res as any)?.success) {
-        setUserShellEccBalance((res as any).shellEccBalance || 0);
-      }
-      
-      // 2. Fetch Token balance directly from contract
-      if (token?.onchainData?.tokenRootAddress && token!.onchainData!.deployStatus === "deployed") {
-        const { getEver } = await import('../../lib/ever');
-        let ever;
-        try {
-          ever = await getEver();
-        } catch(e) { return; }
-        const { Address } = await import('everscale-inpage-provider');
-        if (ever) {
-          const rootContract = new ever.Contract(TokenRootAbi, new Address(token!.onchainData!.tokenRootAddress as string));
-          const walletResult = await (rootContract.methods as any).getWalletAddress({ ownerAddress: session.walletAddress }).call();
-          const tokenWallet = new ever.Contract(TokenWalletAbi, (walletResult as any).value0);
-          const balRes = await (tokenWallet.methods as any).balance({}).call();
-          const nanoBal = BigInt((balRes as any).balance);
-          const whole = nanoBal / BigInt("1000000000");
-          const frac = nanoBal % BigInt("1000000000");
-          setUserTokenBalance(Number(`${whole}.${String(frac).padStart(9, "0")}`));
-        }
-      }
-    } catch (err) {
-      console.warn("Could not fetch user balances", err);
-    }
-  }, [session?.walletAddress, token?.onchainData?.tokenRootAddress, token?.onchainData?.deployStatus]);
-
-  useEffect(() => {
-    fetchUserBalances();
-  }, [fetchUserBalances, tradeSuccess]);
-
-  // C6 FIX: Removed duplicate useEffect for fetchUserBalances
-
-  // Separate effect for buy return (binary search) to provide exact amounts and calculate impact
-  useEffect(() => {
-    if (tradeMode !== "buy" || !tradeAmount || parseFloat(tradeAmount) <= 0) {
-      setBuyReturn(null);
-      return;
-    }
-    if (!token?.onchainData?.bondingCurveAddress || token!.onchainData!.deployStatus !== "deployed") return;
-    
-    if (!onchainPrice) return;
-
-    let cancelled = false;
-    const timeoutId = setTimeout(async () => {
-      try {
-        const { getEver } = await import('../../lib/ever');
-        const ever = await getEver();
-        const { Address } = await import('everscale-inpage-provider');
-        const bcContract = new ever.Contract(BondingCurveAbi, new Address(token!.onchainData!.bondingCurveAddress as string));
-        
-        const { expectedNanoTokens } = await calculateExactBuyAmount(tradeAmount, onchainPrice, null, bcContract);
-        
-        if (!cancelled && expectedNanoTokens > BigInt("0")) {
-            setBuyReturn(Number(expectedNanoTokens) / 1e9);
-        } else if (!cancelled) {
-            setBuyReturn(0);
-        }
-      } catch (err) {
-        console.warn("Buy estimate failed", err);
-      }
-    }, 400);
-
-    return () => { 
-      cancelled = true; 
-      clearTimeout(timeoutId);
-    };
-  }, [tradeAmount, tradeMode, token?.onchainData?.bondingCurveAddress, token?.onchainData?.deployStatus, onchainPrice]);
-
-  // Separate effect for sell return — avoids re-registering socket listeners on every keystroke
-  useEffect(() => {
-    if (tradeMode !== "sell" || !tradeAmount || parseFloat(tradeAmount) <= 0) {
-      setSellReturn(null);
-      return;
-    }
-    if (!token?.onchainData?.bondingCurveAddress || token!.onchainData!.deployStatus !== "deployed") return;
-
-    let cancelled = false;
-    const timeoutId = setTimeout(async () => {
-      try {
-        const { getEver } = await import('../../lib/ever');
-        const ever = await getEver();
-        const { Address } = await import('everscale-inpage-provider');
-        const bc = new ever.Contract(BondingCurveAbi, new Address(token!.onchainData!.bondingCurveAddress as string));
-        const tokensToSellNano = toNano(tradeAmount);
-        const sellReturnRes = await (bc.methods as any).getSellReturn({ tokenAmount: tokensToSellNano.toString() }).call();
-        if (!cancelled && (sellReturnRes as any)?.value0) {
-          setSellReturn(nanoToDecimal(sellReturnRes.value0) || null);
-        }
-      } catch {
-        // Provider not available
-      }
-    }, 400);
-    return () => { 
-      cancelled = true; 
-      clearTimeout(timeoutId);
-    };
-  }, [token?.onchainData?.bondingCurveAddress, token?.onchainData?.deployStatus, tradeMode, tradeAmount]);
-
-  useEffect(() => {
-    fetchPrice();
-  }, [fetchPrice]);
-
-  // FE-05: Real-time updates via WebSockets instead of polling
-  useEffect(() => {
-    if (!idStr) return;
-    
-    // Initial fetch for comments, trades, and holders
-    getComments(idStr).then((r) => setComments(r.comments || [])).catch(() => {});
-    import("../../lib/api").then(api => {
-      if (api.getTrades) {
-        api.getTrades(idStr).then((r) => setTrades(r.trades || [])).catch(() => {});
-      }
-      if (api.getHolders) {
-        api.getHolders(idStr).then((r) => {
-          setHolders((r as any).holders || []);
-          if ((r as any).totalSupply) setTotalSupply((r as any).totalSupply);
-        }).catch(() => {});
-      }
-    });
-    
-    const socket = getSocket();
-    if (!socket) return;
-
-    socket.emit("join_token", idStr);
-
-    const handleTokenUpdated = (update: Partial<import("../../types").Launch>) => {
-      setToken((prev) => {
-        if (!prev) return prev;
-        return {
-          ...prev,
-          status: update.status || prev.status,
-          onchainData: {
-            ...prev.onchainData,
-            reserveBalance: update.onchainData?.reserveBalance ?? prev.onchainData?.reserveBalance,
-            tokenSupply: update.onchainData?.tokenSupply ?? prev.onchainData?.tokenSupply,
-            lockedLiquidity: update.onchainData?.lockedLiquidity ?? prev.onchainData?.lockedLiquidity,
-            updatedAt: update.onchainData?.updatedAt ?? prev.onchainData?.updatedAt,
-          },
-        };
-      });
-      // Audit #8: Refresh price calculations after reserve update to prevent stale UI
-      fetchPrice();
-    };
-
-    const handleNewComment = (comment: import("../../types").CommentType) => {
-      setComments((prev) => {
-        if (prev.find((c) => c.id === comment.id)) return prev;
-        return [comment, ...prev];
-      });
-    };
-
-    let holdersTimeoutId: ReturnType<typeof setTimeout> | null = null;
-
-    const handleNewTrade = (trade: import("../../types").Trade) => {
-      setTrades((prev) => {
-        if (prev.find((t) => t.id === trade.id)) return prev;
-        return [trade, ...prev];
-      });
-      // Refresh holders when a trade happens to keep the leaderboard somewhat live
-      if (holdersTimeoutId) clearTimeout(holdersTimeoutId);
-      holdersTimeoutId = setTimeout(() => {
-        import("../../lib/api").then(api => {
-          if (api.getHolders) {
-            api.getHolders(idStr).then((r) => {
-              setHolders((r as any).holders || []);
-              if ((r as any).totalSupply) setTotalSupply((r as any).totalSupply);
-            }).catch(() => {});
-          }
-        });
-      }, 5000);
-    };
-
-    const handleConnect = () => {
-      socket.emit("join_token", idStr);
-    };
-
-    socket.on("connect", handleConnect);
-    socket.on("token_updated", handleTokenUpdated);
-    socket.on("new_comment", handleNewComment);
-    socket.on("new_trade", handleNewTrade);
-
-    return () => {
-      if (holdersTimeoutId) clearTimeout(holdersTimeoutId);
-      socket.off("connect", handleConnect);
-      socket.off("token_updated", handleTokenUpdated);
-      socket.off("new_comment", handleNewComment);
-      socket.off("new_trade", handleNewTrade);
-    };
-  }, [idStr, fetchPrice]);
-
-  const handleCommentPosted = (comment: import("../../types").CommentType) => {
-    setComments((prev) => [comment, ...prev]);
-  };
-
-  // fetchPrice moved to useCallback above
-
-  // M-06: Don't use misleading fallback price. If on-chain price isn't available,
-  // show "awaiting" instead of a 33-million-times-wrong estimate.
-  const currentPrice = onchainPrice;
-
-  async function handleTrade() {
-    if (!session) return router.push(`/auth?from=/token/${idStr}`);
-    setError("");
-    setIsTrading(true);
-    
-    try {
-      if (!token?.onchainData?.bondingCurveAddress) {
-        throw new Error("Contrato Bonding Curve não disponível. Aguarde o deploy on-chain.");
-      }
-      
-      // Load the Provider Extension
-      const { getEver } = await import('../../lib/ever');
-      const { Address } = await import('everscale-inpage-provider');
-      const ever = await getEver();
-      const { accountInteraction } = await ever.requestPermissions({ permissions: ['basic', 'accountInteraction'] });
-      if (!accountInteraction) throw new Error(t("error_denied"));
-
-      const rawAmount = parseFloat(tradeAmount);
-      // M4 FIX: NaN not caught by <= 0 comparison
-      if (!tradeAmount || !Number.isFinite(rawAmount) || rawAmount <= 0) throw new Error(t("error_invalid_value"));
-
-      const isBuy = tradeMode === "buy";
-      const rawAmountNano = toNano(tradeAmount);
-      const slippagePct = parseFloat(slippage);
-
-      if (isBuy) {
-        // R-02: Send SHELL as Extra Currency cc[2], NOT as msg.value (VMSHELL)
-        // The BondingCurve.buy() reads payment from msg.currencies[2].
-        // msg.value (amount) is used ONLY for gas.
-        if (!currentPrice) throw new Error(t("error_no_price"));
-
-        const bcContract = new ever.Contract(BondingCurveAbi, new Address(token!.onchainData!.bondingCurveAddress as string));
-
-        const { expectedNanoTokens, baseCostNano } = await calculateExactBuyAmount(tradeAmount, currentPrice, slippagePct, bcContract);
-        
-        if (expectedNanoTokens === BigInt("0")) throw new Error("Valor muito baixo para comprar ao menos uma fração do token.");
-
-        const finalBaseCostNano = baseCostNano;
-        const finalFeeNano = (finalBaseCostNano * BigInt(TRADE_FEE_BPS)) / BigInt("10000");
-        const maxShellNano = finalBaseCostNano + finalFeeNano;
-
-
-        const tx = await (bcContract.methods as any).buy({
-          tokenAmount: expectedNanoTokens.toString(),
-          maxShellIn: maxShellNano.toString()
-        }).send({
-          from: accountInteraction.address,
-          amount: "200000000",  // 0.2 SHELL VMSHELL for gas only
-          bounce: true,
-          // SHELL payment via Extra Currency cc[2] (Acki Nacki Standard)
-          currencies: { 2: maxShellNano.toString() }
-        });
-        setTradeSuccess(`${t("success_buy")} ${(tx as any)?.transaction?.id?.hash || 'confirmada'}`);
-        toast.success(t("common_success"), `${t("success_buy")} ${(tx as any)?.transaction?.id?.hash?.slice(0,8) || 'confirmada'}`);
-      } else {
-        // SELL: Burn tokens via TokenWallet → TokenRoot.notifyBurn → BondingCurve.onTokenBurned
-        if (!token?.onchainData?.tokenRootAddress) {
-          throw new Error("TokenRoot não disponível. Impossível executar sell.");
-        }
-
-        // 1. Resolve user's TokenWallet address
-        const rootContract = new ever.Contract(TokenRootAbi, new Address(token!.onchainData!.tokenRootAddress as string));
-        const walletResult = await (rootContract.methods as any).getWalletAddress({
-          ownerAddress: accountInteraction.address
-        }).call();
-        
-        const userWalletAddress = (walletResult as any).value0;
-        if (!userWalletAddress || userWalletAddress.toString() === "0:0000000000000000000000000000000000000000000000000000000000000000") {
-          throw new Error(t("error_no_wallet"));
-        }
-
-        // 2. M-07: Verify user has enough balance for gas before attempting sell
-        const balance = await ever.getBalance(accountInteraction.address);
-        const balanceNano = BigInt(balance || "0");
-        if (BigInt(balanceNano) < 500000000n) {
-          throw new Error(t("error_no_balance_gas"));
-        }
-
-        // C5 FIX: Block sell when price is not available (prevents zero slippage)
-        if (!currentPrice) {
-          throw new Error(t("error_no_price"));
-        }
-        // 3. Calculate minShellOut for slippage protection
-        const grossReturnForSlippage = sellReturn !== null ? toNano(String(sellReturn)) : BigInt("0");
-        if (grossReturnForSlippage === BigInt("0")) {
-          throw new Error(t("error_sell_return"));
-        }
-        const minShellOutNano = grossReturnForSlippage * BigInt(Math.round(100 - slippagePct)) / BigInt("100");
-
-        // 4. Call burn on user's TokenWallet, passing BondingCurve as callbackTarget
-        const walletContract = new ever.Contract(TokenWalletAbi, new Address(userWalletAddress.toString()));
-        
-        const tokensToSellNano = toNano(tradeAmount);
-        const tx = await (walletContract.methods as any).burn({
-          amount: tokensToSellNano.toString(),
-          callbackTarget: token!.onchainData!.bondingCurveAddress,
-          minShellOut: minShellOutNano.toString()
-        }).send({
-          from: accountInteraction.address,
-          amount: "500000000", // 0.5 SHELL for processing gas
-          bounce: true
-        });
-        setTradeSuccess(`Venda realizada com sucesso!`);
-        toast.success("Venda Realizada", "Tokens queimados e SHELL enviado!");
-      }
-      
-    } catch(err) {
-      setTradeSuccess("");
-      toast.error("Falha no Trade", (err as Error).message || "Ocorreu um erro na transação.");
-    } finally {
-      setIsTrading(false);
-    }
-  }
-
-  const stats = token ? calcBondingStats(token.onchainData) : null;
-  const color = token ? hashColor(token!.coin?.symbol) : "#888";
+  const stats = token && token.onchainData ? calcBondingStats(token.onchainData) : { progressPct: "0", hasOnchainReserve: false, reserveShell: 0, reserveRatio: 0, totalValueLocked: 0, tokenSupplyRaw: "0" };
+  const color = hashColor(token?.coin?.symbol || "");
   const showMissingTokenCta = Boolean(error) && !loading && !token;
-
-  // Estimate calculation using current price
-  // M-06: When price isn't available, show clear indication instead of wrong values
-  function getEstimate() {
-    const amt = parseFloat(tradeAmount) || 0;
-    if (amt <= 0) return { value: "0", fee: null, impact: null };
-    if (!currentPrice) return { value: "aguardando preço...", fee: null, impact: null };
-    
-    let impactPct = 0;
-    
-    if (tradeMode === "buy") {
-      const feeShell = amt * TRADE_FEE_BPS / 10000;
-      const expectedFullTokens = buyReturn !== null ? buyReturn : (amt / currentPrice);
-      
-      // Calculate Price Impact
-      if (expectedFullTokens > 0) {
-          const executionPrice = (amt - feeShell) / expectedFullTokens;
-          impactPct = ((executionPrice - currentPrice) / currentPrice) * 100;
-      }
-      
-      return { 
-          value: formatNum(expectedFullTokens.toFixed(2)), 
-          fee: feeShell.toFixed(4),
-          impact: impactPct
-      };
-    }
-    
-    // M-11: Use real sell return from contract if available, otherwise fallback to linear estimate
-    const grossReturn = sellReturn !== null ? sellReturn : (amt * currentPrice);
-    const fee = grossReturn * TRADE_FEE_BPS / 10000;
-    const netReturn = grossReturn - fee;
-    
-    // Calculate Price Impact
-    if (amt > 0) {
-        const executionPrice = grossReturn / amt;
-        impactPct = ((currentPrice - executionPrice) / currentPrice) * 100;
-    }
-    
-    return { 
-        value: formatNum(netReturn.toFixed(4), 4), 
-        fee: fee.toFixed(4),
-        impact: impactPct
-    };
-  }
 
   return (
     <>
@@ -589,11 +112,11 @@ export default function TokenPage(): React.JSX.Element {
         
         {showMissingTokenCta ? (
           <div className={`card`} style={{ maxWidth: '500px', margin: '80px auto', textAlign: 'center' }}>
-            <p style={{ color: 'var(--red)', marginBottom: '16px' }}>{error}</p>
+            <p className="text-danger mb-4">{error}</p>
             <Link href="/" className={`btn-primary`} style={{ padding: '10px 20px', fontSize: '13px' }}>Voltar para o feed</Link>
           </div>
         ) : error ? (
-          <p style={{ color: 'var(--red)', textAlign: 'center', padding: '40px' }}>{error}</p>
+          <p className="text-danger" style={{ textAlign: 'center', padding: '40px' }}>{error}</p>
         ) : null}
 
         {token && (
@@ -637,7 +160,7 @@ export default function TokenPage(): React.JSX.Element {
                         transition: 'all 0.2s'
                       }}
                     >
-                      📈 Price Candles
+                      📈 {t("nav_board") || "Price Candles"}
                     </button>
                   </div>
 
@@ -677,15 +200,15 @@ export default function TokenPage(): React.JSX.Element {
                     slopeDivisor={token.protocol?.slopeDivisor || 50000} 
                   />
                 ) : (
-                  <TradingChart history={priceHistory} />
+                  <TradingChart history={priceHistory as any[]} />
                 )}
               </div>
 
               {/* Bonding Curve Card */}
               {!token.protocol?.pumpForever ? (
-                <div className={`card`} style={{ border: '1px solid var(--accent-glow)', background: 'rgba(0, 255, 136, 0.02)' }}>
+                <div className={`card accent-card`}>
                   <div className={styles.progressHeader} style={{ marginBottom: '12px' }}>
-                    <span style={{ color: 'var(--accent)', fontWeight: 700 }}>⬡ Bonding Curve Progress</span>
+                    <span className="font-bold text-success">⬡ Bonding Curve Progress</span>
                     <span className={styles.tokenTime}>Acki Nacki · Fair Launch</span>
                   </div>
                   
@@ -720,18 +243,18 @@ export default function TokenPage(): React.JSX.Element {
                   </p>
                 </div>
               ) : (
-                <div className={`card`} style={{ border: '1px solid #ef4444', background: 'rgba(239, 68, 68, 0.05)' }}>
+                <div className={`card danger-card`}>
                   <div className={styles.progressHeader} style={{ marginBottom: '12px' }}>
-                    <span style={{ color: '#ef4444', fontWeight: 700 }}>🚀 PUMP FOREVER MODE</span>
-                    <span className={styles.tokenTime} style={{ color: '#ef4444' }}>High Risk</span>
+                    <span className="text-danger font-bold">🚀 {t("card_pump_forever")}</span>
+                    <span className={styles.tokenTime} style={{ color: 'var(--status-error)' }}>High Risk</span>
                   </div>
                   <p className={styles.tokenSubtitle} style={{ fontSize: '13px', margin: 0, color: 'var(--ink)' }}>
                     This token does <strong>not</strong> graduate to an AMM. Its price will continue to be discovered linearly via the bonding curve forever.
                   </p>
                   <div className={styles.tokenStats} style={{ borderTop: 'none', paddingTop: 0, marginTop: '20px', marginBottom: 0 }}>
                     <div className={styles.statBox} style={{ width: '100%', textAlign: 'center' }}>
-                      <span className={styles.statLabel}>Current Reserve</span>
-                      <span className={styles.statValue} style={{ fontSize: '24px', color: '#ef4444' }}>{stats!.hasOnchainReserve ? `${(stats!.reserveShell as number).toFixed(2)} SHELL` : "0.00 SHELL"}</span>
+                      <span className={styles.statLabel}>{t("card_reserve")}</span>
+                      <span className={`text-danger ${styles.statValue}`} style={{ fontSize: '24px' }}>{stats!.hasOnchainReserve ? `${(stats!.reserveShell as number).toFixed(2)} SHELL` : "0.00 SHELL"}</span>
                     </div>
                   </div>
                 </div>
@@ -913,13 +436,13 @@ export default function TokenPage(): React.JSX.Element {
               token={token!}
               session={session}
               tradeMode={tradeMode}
-              setTradeMode={setTradeMode}
+              setTradeMode={setTradeMode as any}
               tradeAmount={tradeAmount}
               setTradeAmount={setTradeAmount}
               slippage={slippage}
               setSlippage={setSlippage}
               isTrading={isTrading}
-              onTrade={handleTrade}
+              onTrade={handleTrade as any}
               tradeSuccess={tradeSuccess}
               userShellEccBalance={userShellEccBalance}
               userTokenBalance={userTokenBalance}

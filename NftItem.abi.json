@@ -1,0 +1,68 @@
+{
+	"ABI version": 2,
+	"version": "2.3",
+	"header": ["pubkey", "time", "expire"],
+	"functions": [
+		{
+			"name": "constructor",
+			"inputs": [
+				{"name":"_owner","type":"address"},
+				{"name":"_jsonMetadata","type":"string"}
+			],
+			"outputs": [
+			]
+		},
+		{
+			"name": "transfer",
+			"inputs": [
+				{"name":"to","type":"address"}
+			],
+			"outputs": [
+			]
+		},
+		{
+			"name": "getInfo",
+			"inputs": [
+			],
+			"outputs": [
+				{"name":"collection","type":"address"},
+				{"name":"id","type":"uint256"},
+				{"name":"itemOwner","type":"address"},
+				{"name":"metadata","type":"string"}
+			]
+		},
+		{
+			"name": "owner",
+			"inputs": [
+			],
+			"outputs": [
+				{"name":"owner","type":"address"}
+			]
+		},
+		{
+			"name": "jsonMetadata",
+			"inputs": [
+			],
+			"outputs": [
+				{"name":"jsonMetadata","type":"string"}
+			]
+		}
+	],
+	"getters": [
+	],
+	"data": [
+		{"key":1,"name":"_collection","type":"address"},
+		{"key":2,"name":"_id","type":"uint256"}
+	],
+	"events": [
+	],
+	"fields": [
+		{"name":"_pubkey","type":"uint256"},
+		{"name":"_timestamp","type":"uint64"},
+		{"name":"_constructorFlag","type":"bool"},
+		{"name":"_collection","type":"address"},
+		{"name":"_id","type":"uint256"},
+		{"name":"owner","type":"address"},
+		{"name":"jsonMetadata","type":"string"}
+	]
+}

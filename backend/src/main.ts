@@ -60,7 +60,7 @@ import { deployTokenEcosystem, assertOnchainDeployReady } from "./services/deplo
 import helmet from "helmet";
 import rateLimit from "express-rate-limit";
 import { RedisStore } from "rate-limit-redis";
-import { createClient } from "redis";
+import { redisClient } from "./redis";
 import { Server, Socket } from "socket.io";
 import * as http from "http";
 import * as jwt from "jsonwebtoken";
@@ -102,26 +102,9 @@ function requireValidAddress(req: Request, res: Response, next: NextFunction) {
 }
 
 // ─── Redis Setup ────────────────────────────────────────────────────────────
-let redisClient: any = null;
-if (process.env.REDIS_URL) {
-  redisClient = createClient({
-    url: process.env.REDIS_URL,
-    socket: {
-      tls: process.env.REDIS_URL.startsWith('rediss://'),
-      // PERF-05: Reconnect strategy with exponential backoff (max 30s)
-      reconnectStrategy: (retries: number) => {
-        if (retries > 20) {
-          console.error("[Redis] Max reconnection attempts exceeded. Rate limiting falls back to MemoryStore.");
-          return new Error("Redis max retries");
-        }
-        return Math.min(retries * 500, 30000);
-      }
-    } as any
-  });
-  redisClient.on("error", (err: any) => console.error("[Redis] Client error:", err.message));
-  redisClient.on("reconnecting", () => console.warn("[Redis] Reconnecting..."));
+if (redisClient) {
   redisClient.connect()
-    .then(() => console.log("[Redis] Conectado para rate limiting distribuído"))
+    .then(() => console.log("[Redis] Conectado para rate limiting e cache"))
     .catch((err: any) => console.error("[Redis] Falha na conexão inicial:", err.message));
 }
 
@@ -132,7 +115,7 @@ const authCleanupTimer = setInterval(() => {
   );
 }, 10 * 60 * 1000);
 
-const verifiedPaymentsCache = new Map<string, { payment: any; timestamp: number }>();
+// Removido cache em memória: const verifiedPaymentsCache = new Map<string, { payment: any; timestamp: number }>();
 
 function normalizeCachePart(value: any): string {
   return String(value || "").trim().toLowerCase();
@@ -168,15 +151,7 @@ function isCachedPaymentUsable(cached: any, { walletAddress, txHash, tokenSymbol
   );
 }
 
-// Limpeza de pagamentos verificados não consumidos (L1 cache fallback)
-const paymentCacheCleanupTimer = setInterval(() => {
-  const now = Date.now();
-  for (const [key, entry] of verifiedPaymentsCache) {
-    if (now - entry.timestamp > 15 * 60 * 1000) {
-      verifiedPaymentsCache.delete(key);
-    }
-  }
-}, 5 * 60 * 1000);
+// Cache agora é limpo automaticamente pelo TTL do Redis
 
 // ─── Rate Limit & txHash: now persistent in PostgreSQL ───────────────────────
 const RATE_LIMIT_WINDOW_MS = 60 * 60 * 1000; // 1 hour
@@ -256,7 +231,7 @@ app.use(helmet({
 const getRateLimitStore = () => {
   if (redisClient) {
     return new RedisStore({
-      sendCommand: (...args: string[]) => redisClient.sendCommand(args),
+      sendCommand: (...args: string[]) => redisClient!.sendCommand(args),
     });
   }
   return undefined; // fallback to MemoryStore
@@ -314,9 +289,24 @@ app.use((req: Request, res: Response, next: NextFunction) => {
       res.setHeader("Vary", "Origin");
     }
   } else {
-    if (origin && config.allowedOrigins.includes(origin)) {
-      res.setHeader("Access-Control-Allow-Origin", origin);
-      res.setHeader("Vary", "Origin");
+    if (origin) {
+      try {
+        const parsedOrigin = new URL(origin);
+        const isAllowed = config.allowedOrigins.some(o => {
+          try {
+            return new URL(o).origin === parsedOrigin.origin;
+          } catch { return o === origin; }
+        });
+        if (isAllowed) {
+          res.setHeader("Access-Control-Allow-Origin", origin);
+          res.setHeader("Vary", "Origin");
+        }
+      } catch {
+        if (config.allowedOrigins.includes(origin)) {
+          res.setHeader("Access-Control-Allow-Origin", origin);
+          res.setHeader("Vary", "Origin");
+        }
+      }
     }
   }
 
@@ -340,7 +330,7 @@ app.use((req: Request, res: Response, next: NextFunction) => {
         return config.allowedOrigins.some(o => {
           try {
             const allowed = new URL(o);
-            return allowed.host === parsed.host;
+            return allowed.host === parsed.host && allowed.protocol === parsed.protocol;
           } catch { return false; }
         });
       } catch { return false; }
@@ -580,7 +570,7 @@ app.get("/auth/qr/status/:sessionId", apiLimiter, requireValidUUID, async (req: 
   }
 });
 
-app.post("/auth/qr/webhook/:sessionId", requireValidUUID, async (req: Request, res: Response) => {
+app.post("/auth/qr/webhook/:sessionId", authLimiter, requireValidUUID, async (req: Request, res: Response) => {
   if (config.isProduction && !process.env.QR_WEBHOOK_SECRET) {
     return res.status(404).json({ error: "Not found." });
   }
@@ -708,21 +698,13 @@ app.post("/verify-payment", paymentLimiter, requireSession, validate(VerifyPayme
       isBoosted,
     });
 
-    if (verifiedPaymentsCache.size >= 1000) {
-      let oldestKey = null;
-      let oldestTime = Infinity;
-      for (const [key, entry] of verifiedPaymentsCache) {
-        if (entry.timestamp < oldestTime) {
-          oldestTime = entry.timestamp;
-          oldestKey = key;
-        }
-      }
-      if (oldestKey) verifiedPaymentsCache.delete(oldestKey);
+    if (redisClient) {
+      await redisClient.setEx(
+        buildVerifiedPaymentCacheKey({ walletAddress, txHash, tokenSymbol, isBoosted }),
+        15 * 60, // 15 minutes TTL
+        JSON.stringify({ payment, timestamp: Date.now() })
+      );
     }
-    verifiedPaymentsCache.set(
-      buildVerifiedPaymentCacheKey({ walletAddress, txHash, tokenSymbol, isBoosted }),
-      { payment, timestamp: Date.now() },
-    );
 
     res.json({
       success: true,
@@ -763,14 +745,20 @@ app.post("/launch-request", requireSession, validate(CreateLaunchSchema), async 
     reservedTxHash = launchRequest.payment.txHash;
 
     let payment;
-    const isBoosted = Boolean(launchRequest.protocol.isBoosted);
+    const isBoosted = Boolean(launchRequest.protocol?.isBoosted);
     const paymentCacheKey = buildVerifiedPaymentCacheKey({
       walletAddress: launchRequest.creator.wallet,
       txHash: launchRequest.payment.txHash,
       tokenSymbol: launchRequest.payment.tokenSymbol,
       isBoosted,
     });
-    const cached = verifiedPaymentsCache.get(paymentCacheKey);
+    
+    let cachedStr: string | null = null;
+    if (redisClient) {
+      cachedStr = await redisClient.get(paymentCacheKey);
+    }
+    const cached = cachedStr ? JSON.parse(cachedStr) : undefined;
+    
     if (
       isCachedPaymentUsable(cached, {
         walletAddress: launchRequest.creator.wallet,
@@ -779,9 +767,13 @@ app.post("/launch-request", requireSession, validate(CreateLaunchSchema), async 
       })
     ) {
       payment = cached!.payment;
-      verifiedPaymentsCache.delete(paymentCacheKey);
+      if (redisClient) {
+        await redisClient.del(paymentCacheKey);
+      }
     } else {
-      verifiedPaymentsCache.delete(paymentCacheKey);
+      if (redisClient) {
+        await redisClient.del(paymentCacheKey);
+      }
       payment = await verifyPayment({
         walletAddress: launchRequest.creator.wallet,
         txHash: launchRequest.payment.txHash,
@@ -1342,7 +1334,6 @@ async function start() {
     
     stopSyncJob();
     clearInterval(authCleanupTimer);
-    clearInterval(paymentCacheCleanupTimer);
 
     server.close(async () => {
       console.log("[Server] Active HTTP requests finished.");

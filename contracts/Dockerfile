@@ -17,11 +17,15 @@ COPY . .
 
 # Compile all contracts automatically
 CMD ["sh", "-c", "\
-echo '=== Compiling TokenWallet.sol ===' && \
-solc TokenWallet.sol --tvm-version gosh 2>&1 && \
+echo '=== Compiling AFTWallet.sol ===' && \
+solc AFTWallet.sol --tvm-version gosh 2>&1 && \
+mv AFTWallet.abi.json TokenWallet.abi.json && \
+mv AFTWallet.tvc TokenWallet.tvc && \
 echo '' && \
-echo '=== Compiling TokenRoot.sol ===' && \
-solc TokenRoot.sol --tvm-version gosh 2>&1 && \
+echo '=== Compiling AFTRoot.sol ===' && \
+solc AFTRoot.sol --tvm-version gosh 2>&1 && \
+mv AFTRoot.abi.json TokenRoot.abi.json && \
+mv AFTRoot.tvc TokenRoot.tvc && \
 echo '' && \
 echo '=== Compiling BondingCurve.sol ===' && \
 solc BondingCurve.sol --tvm-version gosh 2>&1 && \

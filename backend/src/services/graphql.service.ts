@@ -384,6 +384,35 @@ export async function getAccountBalanceNano(address: any) {
 }
 
 /**
+ * Busca o saldo em Nano ECC (Extra Currencies) da rede via GraphQL.
+ */
+export async function getAccountEccBalanceNano(address: any, currencyId: any) {
+  const query = `
+    query GetBalance($address: String!) {
+      blockchain {
+        account(address: $address) {
+          info { currencies acc_type }
+        }
+      }
+    }
+  `;
+
+  const data = await gql(query, { address });
+  const info = data?.blockchain?.account?.info;
+  if (!info) {
+    return 0n;
+  }
+
+  const accType = info.acc_type === undefined ? 0 : Number(info.acc_type);
+  if (accType !== 1) {
+    return 0n;
+  }
+
+  const eccNano = extractCurrencyNano(info.currencies, currencyId);
+  return BigInt(String(eccNano || "0"));
+}
+
+/**
  * Verifica se uma carteira está deployada na blockchain e extrai a public key.
  *
  * A Acki Nacki/TVM armazena a public key do contrato no campo `boc` (Bag of Cells).
