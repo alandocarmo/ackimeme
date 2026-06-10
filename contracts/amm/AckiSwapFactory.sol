@@ -14,6 +14,8 @@ contract AckiSwapFactory {
     
     address public feeRecipient;
 
+    mapping(address => bool) public approvedBondingCurves;
+
     event PairCreated(address tokenRoot, address pairAddress, uint64 timestamp);
 
     constructor(address _feeRecipient) {
@@ -30,8 +32,14 @@ contract AckiSwapFactory {
         feeRecipient = _feeRecipient;
     }
 
+    function approveBondingCurve(address bc) external {
+        require(msg.pubkey() == tvm.pubkey(), 100);
+        tvm.accept();
+        approvedBondingCurves[bc] = true;
+    }
+
     function deployPair(address tokenRoot, address callbackTarget) external {
-        require(msg.sender == _owner, 102, "Only owner can deploy pairs");
+        require(approvedBondingCurves[msg.sender], 102, "Only approved BondingCurves can deploy pairs");
         tvm.accept();
         TvmCell stateInit = abi.encodeStateInit({
             contr: AckiSwapPair,

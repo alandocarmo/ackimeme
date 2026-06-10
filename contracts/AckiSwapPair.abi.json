@@ -1,11 +1,12 @@
 {
 	"ABI version": 2,
-	"version": "2.3",
+	"version": "2.4",
 	"header": ["pubkey", "time", "expire"],
 	"functions": [
 		{
 			"name": "constructor",
 			"inputs": [
+				{"name":"_bondingCurve","type":"address"}
 			],
 			"outputs": [
 			]
@@ -13,6 +14,24 @@
 		{
 			"name": "provideInitialShell",
 			"inputs": [
+			],
+			"outputs": [
+			]
+		},
+		{
+			"name": "initAftWallet",
+			"inputs": [
+			],
+			"outputs": [
+			]
+		},
+		{
+			"name": "takeWalletAddress",
+			"id": "0xD1735400",
+			"inputs": [
+				{"name":"queryId","type":"uint64"},
+				{"name":"walletAddress","type":"address"},
+				{"name":"ownerAddress","type":"optional(address)"}
 			],
 			"outputs": [
 			]
@@ -62,6 +81,14 @@
 			]
 		},
 		{
+			"name": "bondingCurve",
+			"inputs": [
+			],
+			"outputs": [
+				{"name":"bondingCurve","type":"address"}
+			]
+		},
+		{
 			"name": "initialized",
 			"inputs": [
 			],
@@ -69,13 +96,6 @@
 				{"name":"initialized","type":"bool"}
 			]
 		}
-	],
-	"getters": [
-	],
-	"data": [
-		{"key":1,"name":"_factory","type":"address"},
-		{"key":2,"name":"_tokenRoot","type":"address"},
-		{"key":3,"name":"_feeRecipient","type":"address"}
 	],
 	"events": [
 		{
@@ -102,15 +122,16 @@
 		}
 	],
 	"fields": [
-		{"name":"_pubkey","type":"uint256"},
-		{"name":"_timestamp","type":"uint64"},
-		{"name":"_constructorFlag","type":"bool"},
-		{"name":"_factory","type":"address"},
-		{"name":"_tokenRoot","type":"address"},
-		{"name":"_feeRecipient","type":"address"},
-		{"name":"reserveShell","type":"uint128"},
-		{"name":"reserveToken","type":"uint128"},
-		{"name":"tokenWallet","type":"address"},
-		{"name":"initialized","type":"bool"}
+		{"init":true,"name":"_pubkey","type":"uint256"},
+		{"init":false,"name":"_timestamp","type":"uint64"},
+		{"init":false,"name":"_constructorFlag","type":"bool"},
+		{"init":true,"name":"_factory","type":"address"},
+		{"init":true,"name":"_tokenRoot","type":"address"},
+		{"init":true,"name":"_feeRecipient","type":"address"},
+		{"init":false,"name":"reserveShell","type":"uint128"},
+		{"init":false,"name":"reserveToken","type":"uint128"},
+		{"init":false,"name":"tokenWallet","type":"address"},
+		{"init":false,"name":"bondingCurve","type":"address"},
+		{"init":false,"name":"initialized","type":"bool"}
 	]
 }

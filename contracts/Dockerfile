@@ -33,6 +33,12 @@ echo '' && \
 echo '=== Compiling USDCShellRouter.sol ===' && \
 solc USDCShellRouter.sol --tvm-version gosh 2>&1 && \
 echo '' && \
+echo '=== Compiling AckiSwapFactory.sol ===' && \
+solc amm/AckiSwapFactory.sol --tvm-version gosh 2>&1 && \
+echo '' && \
+echo '=== Compiling AckiSwapPair.sol ===' && \
+solc amm/AckiSwapPair.sol --tvm-version gosh 2>&1 && \
+echo '' && \
 echo '=== Compilation complete ===' && \
 ls -la *.abi.json *.tvc 2>/dev/null \
 "]

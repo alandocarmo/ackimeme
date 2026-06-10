@@ -108,7 +108,7 @@ export async function syncOnchainData(): Promise<void> {
           if (launch.tokenRootAddress) {
             const rootState = await getAccountState(launch.tokenRootAddress);
             if (rootState.isDeployed && rootState.boc) {
-               const supplyOut = await runLocalGetter(rootState.boc, launch.tokenRootAddress, tokenRootAbiPath, "totalSupply");
+               const supplyOut = await runLocalGetter(rootState.boc, launch.tokenRootAddress, tokenRootAbiPath, "getAftData");
                if (supplyOut && supplyOut.totalSupply) {
                  tokenSupply = supplyOut.totalSupply;
                }

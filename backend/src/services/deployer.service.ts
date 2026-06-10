@@ -277,7 +277,7 @@ async function prefundFutureContractAddress(address: string, signer: any, onChai
   });
 
   // Audit #2: Wait for gas funding (VMSHELL), not ECC balance.
-  const funded = await waitForFutureAddressFunding(address, messageValueNano);
+  const funded = await waitForFutureAddressFunding(address, prefundShellNano);
   if (!funded) {
     throw new Error(
       `Timeout aguardando pré-financiamento do endereço futuro ${address}. ` +
@@ -555,7 +555,7 @@ export async function deployTokenEcosystem({
         mintable: true,
         content: "",
         walletCode: walletCodeCell,
-        initialOwner: creatorWallet,
+        initialOwner: "0:0000000000000000000000000000000000000000000000000000000000000000",
         initialSupply: 0
       },
       initialData: { deployNonce },
@@ -600,40 +600,27 @@ export async function deployTokenEcosystem({
       console.log(`[Deployer] Atualizando TokenRoot com BondingCurve code e deployando (DappID)...`);
       const trAbi = loadContractFiles("TokenRoot").abi;
 
-      const { code: bcCodeCell } = await client.boc.get_code_from_tvc({ tvc: bcTvc });
-
+      console.log(`[Deployer] Realizando deploy direto da BondingCurve (StateInit)...`);
       markChainAttempted();
-      await client.processing.process_message({
-        message_encode_params: {
-          address: tokenRootAddress,
-          abi: abiContract(trAbi),
-          call_set: { function_name: "setBondingCurveCode", input: { _code: bcCodeCell } },
-          signer
+      
+      await deployContract({
+        contractName: "BondingCurve",
+        constructorInput: {
+          _owner: creatorWallet,
+          _tokenRootAddr: tokenRootAddress,
+          _name: name,
+          _symbol: symbol,
+          _creationFeeTxHash: paymentTxHash || "genesis",
+          _feeRecipient: feeRecipient,
+          _pumpForever: Boolean(pumpForever),
+          _slopeDivisor: finalNanoDivisor
         },
-        send_events: false
-      });
-
-      await client.processing.process_message({
-        message_encode_params: {
-          address: tokenRootAddress,
-          abi: abiContract(trAbi),
-          call_set: {
-            function_name: "deployBondingCurve",
-            input: {
-              _owner: creatorWallet,
-              _name: name,
-              _symbol: symbol,
-              _creationFeeTxHash: paymentTxHash || "genesis",
-              _supplyCap: maxTokenSupply,
-              _initialBalance: 10000000000, // 10 VMSHELL to inner BondingCurve
-              _feeRecipient: feeRecipient,
-              _pumpForever: Boolean(pumpForever),
-              _slopeDivisor: finalNanoDivisor
-            }
-          },
-          signer
+        initialData: {
+          _tokenRoot: tokenRootAddress,
+          _supplyCap: maxTokenSupply,
         },
-        send_events: false
+        signer,
+        label: "BondingCurve"
       });
       const factoryAddress = process.env.ACKISWAP_FACTORY_ADDRESS;
       if (factoryAddress && !isPlaceholder(factoryAddress)) {
@@ -645,6 +632,21 @@ export async function deployTokenEcosystem({
             call_set: {
               function_name: "setFactory",
               input: { _factory: factoryAddress }
+            },
+            signer
+          },
+          send_events: false
+        });
+
+        console.log(`[Deployer] Aprovando BondingCurve na Factory...`);
+        const factoryAbi = loadContractFiles("AckiSwapFactory").abi;
+        await client.processing.process_message({
+          message_encode_params: {
+            address: factoryAddress,
+            abi: abiContract(factoryAbi),
+            call_set: {
+              function_name: "approveBondingCurve",
+              input: { bc: bondingCurveAddress }
             },
             signer
           },

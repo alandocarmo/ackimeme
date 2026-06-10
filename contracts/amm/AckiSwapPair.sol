@@ -7,6 +7,7 @@ import "../interfaces/IAFTRoot.sol";
 import "../interfaces/IAFTWalletAddressReceiver.sol";
 
 contract AckiSwapPair is IAFTWalletAddressReceiver {
+    uint32 constant SHELL_CURRENCY_ID = 2;
     address static _factory;
     address static _tokenRoot;
     address static _feeRecipient;
@@ -33,7 +34,7 @@ contract AckiSwapPair is IAFTWalletAddressReceiver {
     // Then it sends SHELL via a direct call to `provideInitialShell`.
     function provideInitialShell() external {
         require(msg.sender == bondingCurve, 105, "Only bonding curve");
-        uint256 shellReceived = uint256(msg.currencies[2]);
+        uint256 shellReceived = uint256(msg.currencies[SHELL_CURRENCY_ID]);
         reserveShell += uint128(shellReceived);
     }
 
@@ -41,11 +42,11 @@ contract AckiSwapPair is IAFTWalletAddressReceiver {
         require(msg.sender == bondingCurve, 105, "Only bonding curve");
         require(tokenWallet == address(0), 102);
         // We use the SHELL received from msg.currencies
-        uint256 shellReceived = uint256(msg.currencies[2]);
+        uint256 shellReceived = uint256(msg.currencies[SHELL_CURRENCY_ID]);
         require(shellReceived >= 2 * 1e9, 203);
         
         mapping(uint32 => varuint32) cc;
-        cc[2] = varuint32(shellReceived);
+        cc[SHELL_CURRENCY_ID] = varuint32(shellReceived);
         
         IAFTRoot(_tokenRoot).provideWalletAddress{ value: 0.1 ton, currencies: cc, flag: 1 }(
             0,
@@ -105,7 +106,7 @@ contract AckiSwapPair is IAFTWalletAddressReceiver {
     // Swap SHELL for Token
     function swapShellForToken(uint128 minAmountOut, address responseDestination) external {
         require(initialized, 103);
-        uint128 amountIn = uint128(msg.currencies[2]); // SHELL ECC
+        uint128 amountIn = uint128(msg.currencies[SHELL_CURRENCY_ID]); // SHELL ECC
         require(amountIn > 0, 104);
 
         tvm.accept();
@@ -130,16 +131,17 @@ contract AckiSwapPair is IAFTWalletAddressReceiver {
 
         // Send Protocol Fee to feeRecipient
         mapping(uint32 => varuint32) feeCc;
-        feeCc[2] = varuint32(protocolFee);
+        feeCc[SHELL_CURRENCY_ID] = varuint32(protocolFee);
         _feeRecipient.transfer({value: 50000000, flag: 0, bounce: false, currencies: feeCc});
 
+        optional(TvmCell) noPayload;
         TvmCell emptyPayload;
         IAFTWallet(tokenWallet).transfer{value: varuint16(0), flag: 64}(
             0,
             amountOut,
             msg.sender, // destinationOwner
             responseDestination, // responseDestination
-            emptyPayload, // customPayload
+            noPayload, // customPayload
             0, // forwardShellAmount
             emptyPayload // forwardPayload
         );
@@ -165,30 +167,32 @@ contract AckiSwapPair is IAFTWalletAddressReceiver {
         emit Swap(user, 0, amountIn, amountOut, 0);
 
         // Send Protocol Fee (Tokens) to feeRecipient
+        optional(TvmCell) noPayload;
         TvmCell emptyPayload;
         IAFTWallet(tokenWallet).transfer{value: 50000000, flag: 0}(
             0,
             protocolFee,
             _feeRecipient, // destinationOwner
             _feeRecipient, // responseDestination
-            emptyPayload,
+            noPayload,
             0,
             emptyPayload
         );
 
         mapping(uint32 => varuint32) payoutCurrencies;
-        payoutCurrencies[2] = varuint32(amountOut);
+        payoutCurrencies[SHELL_CURRENCY_ID] = varuint32(amountOut);
         responseDestination.transfer({value: varuint16(0), flag: 64, bounce: false, currencies: payoutCurrencies});
     }
 
     function _refundTokens(uint64 queryId, uint128 amount, address user, address responseDestination) private {
+        optional(TvmCell) noPayload;
         TvmCell emptyPayload;
         IAFTWallet(msg.sender).transfer{value: varuint16(0), flag: 64}(
             queryId,
             amount,
             user,
             responseDestination,
-            emptyPayload,
+            noPayload,
             0,
             emptyPayload
         );

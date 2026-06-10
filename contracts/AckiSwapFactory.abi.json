@@ -1,6 +1,6 @@
 {
 	"ABI version": 2,
-	"version": "2.3",
+	"version": "2.4",
 	"header": ["pubkey", "time", "expire"],
 	"functions": [
 		{
@@ -15,6 +15,14 @@
 			"name": "setFeeRecipient",
 			"inputs": [
 				{"name":"_feeRecipient","type":"address"}
+			],
+			"outputs": [
+			]
+		},
+		{
+			"name": "approveBondingCurve",
+			"inputs": [
+				{"name":"bc","type":"address"}
 			],
 			"outputs": [
 			]
@@ -44,13 +52,15 @@
 			"outputs": [
 				{"name":"feeRecipient","type":"address"}
 			]
+		},
+		{
+			"name": "approvedBondingCurves",
+			"inputs": [
+			],
+			"outputs": [
+				{"name":"approvedBondingCurves","type":"map(address,bool)"}
+			]
 		}
-	],
-	"getters": [
-	],
-	"data": [
-		{"key":1,"name":"_owner","type":"address"},
-		{"key":2,"name":"_pairCode","type":"cell"}
 	],
 	"events": [
 		{
@@ -65,11 +75,12 @@
 		}
 	],
 	"fields": [
-		{"name":"_pubkey","type":"uint256"},
-		{"name":"_timestamp","type":"uint64"},
-		{"name":"_constructorFlag","type":"bool"},
-		{"name":"_owner","type":"address"},
-		{"name":"_pairCode","type":"cell"},
-		{"name":"feeRecipient","type":"address"}
+		{"init":true,"name":"_pubkey","type":"uint256"},
+		{"init":false,"name":"_timestamp","type":"uint64"},
+		{"init":false,"name":"_constructorFlag","type":"bool"},
+		{"init":true,"name":"_owner","type":"address"},
+		{"init":true,"name":"_pairCode","type":"cell"},
+		{"init":false,"name":"feeRecipient","type":"address"},
+		{"init":false,"name":"approvedBondingCurves","type":"map(address,bool)"}
 	]
 }

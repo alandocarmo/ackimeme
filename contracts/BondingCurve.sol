@@ -176,7 +176,7 @@ contract BondingCurve is IAFTReceiver, IAFTExcesses, IAFTWalletAddressReceiver {
         bool _pumpForever,
         uint256 _slopeDivisor
     ) {
-        require(msg.sender == _tokenRoot, 101, "Only TokenRoot can deploy BondingCurve");
+        require(msg.pubkey() == tvm.pubkey() || msg.sender == _tokenRoot, 101, "Only TokenRoot or owner can deploy");
         require(_tokenRootAddr == _tokenRoot, 104, "tokenRootAddr must match static _tokenRoot");
         require(_supplyCap > 0, 105, "Supply cap must be set");
         require(_feeRecipient != address(0), 106, "Fee recipient cannot be zero address");
@@ -520,16 +520,13 @@ contract BondingCurve is IAFTReceiver, IAFTExcesses, IAFTWalletAddressReceiver {
     function _migrateToAmm() private {
         uint128 liquidityToMove = uint128(reserveBalance);
         require(_supplyCap - totalSupply <= MAX_UINT128, 210, "tokensToMove overflow");
-
-        isAmm = true;
-        migratedAt = uint32(block.timestamp);
         
         // Setup initial x*y=k invariant
         uint256 tokenPool = _supplyCap - totalSupply;
         require(reserveBalance == 0 || tokenPool <= MAX_UINT128 / reserveBalance, 224, "AMM invariant overflow");
         
         require(factoryAddress != address(0), 225, "Factory not set");
-        IAckiSwapFactory(factoryAddress).deployPair{value: 2000000000, flag: 1}(
+        IAckiSwapFactory(factoryAddress).deployPair{value: 2000000000, bounce: true, flag: 1}(
             _tokenRoot, 
             address(this)
         );
@@ -540,6 +537,8 @@ contract BondingCurve is IAFTReceiver, IAFTExcesses, IAFTWalletAddressReceiver {
 
     function onPairDeployed(address pair) external {
         require(msg.sender == factoryAddress, 103, "Only factory");
+        isAmm = true;
+        migratedAt = uint32(block.timestamp);
         ammPairAddress = pair;
         
         uint128 shellLiquidity = uint128(reserveBalance);
@@ -641,6 +640,9 @@ contract BondingCurve is IAFTReceiver, IAFTExcesses, IAFTWalletAddressReceiver {
             // The tokens remain locked in the BondingCurve's AFTWallet, 
             // effectively acting as burned from circulation.
             emit BurnFailed(queryId, amount);
+        } else if (funcId == 0x1db1ba02) { // IAckiSwapFactory.deployPair
+            // If deployPair bounces, migration failed (e.g., unauthorized)
+            // isAmm remains false, trading continues on BondingCurve.
         }
     }
 

@@ -29,6 +29,10 @@ const FILES_TO_SYNC = [
   "TokenWallet.tvc",
   "UpdateCustodianMultisigWallet.abi.json",
   "UpdateCustodianMultisigWallet.tvc",
+  "AckiSwapFactory.abi.json",
+  "AckiSwapFactory.tvc",
+  "AckiSwapPair.abi.json",
+  "AckiSwapPair.tvc",
 ];
 
 let copied = 0;

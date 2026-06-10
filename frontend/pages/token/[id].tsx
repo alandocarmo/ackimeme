@@ -4,7 +4,7 @@ import { useRouter } from "next/router";
 import { useEffect, useState, useMemo } from "react";
 import { getSession } from "../../lib/api";
 import { useToast } from "../../lib/useToast";
-import { formatNum, getSlopeLabel, formatSupply, compactWallet, isSafeUrl, formatDate, toNano, nanoToDecimal, hashColor, calcBondingStats } from "../../lib/utils";
+import { formatNum, getSlopeLabel, formatSupply, compactWallet, isSafeUrl, formatDate, toNano, nanoToDecimal, hashColor, calcBondingStats, MIGRATION_THRESHOLD_NANO } from "../../lib/utils";
 import { useI18n } from "../../lib/i18n";
 import styles from "../../styles/Token.module.css";
 import type { Session, Launch } from "../../types";
@@ -232,13 +232,13 @@ export default function TokenPage() {
                     </div>
                     <div className={styles.statBox}>
                       <span className={styles.statLabel}>Threshold</span>
-                      <span className={styles.statValue} style={{ fontSize: '18px' }}>69K {t("common_shell")}</span>
+                      <span className={styles.statValue} style={{ fontSize: '18px' }}>{(MIGRATION_THRESHOLD_NANO / 1e9 / 1e6).toFixed(1)}M {t("common_shell")}</span>
                     </div>
                   </div>
                   
                   <p className={styles.tokenSubtitle} style={{ fontSize: '11px', margin: 0, opacity: 0.8 }}>
                     {stats!.hasOnchainReserve
-                      ? "Liquidity migrates to internal AMM at 69K SHELL reserve."
+                      ? `Liquidity migrates to internal AMM at ${(MIGRATION_THRESHOLD_NANO / 1e9 / 1e6).toFixed(1)}M SHELL reserve.`
                       : "Progress requires reserveBalance indexed from blockchain. Values stay as awaiting until first trade."}
                   </p>
                 </div>
