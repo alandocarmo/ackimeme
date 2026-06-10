@@ -1,0 +1,218 @@
+{
+	"ABI version": 2,
+	"version": "2.4",
+	"header": ["pubkey", "time", "expire"],
+	"functions": [
+		{
+			"name": "constructor",
+			"inputs": [
+				{"name":"_routerUsdcWallet","type":"address"},
+				{"name":"_feeWallet","type":"address"}
+			],
+			"outputs": [
+			]
+		},
+		{
+			"name": "onAcceptTokensTransfer",
+			"inputs": [
+				{"name":"tokenRoot","type":"address"},
+				{"name":"amount","type":"uint128"},
+				{"name":"sender","type":"address"},
+				{"name":"value3","type":"address"},
+				{"name":"remainingGasTo","type":"address"},
+				{"name":"payload","type":"cell"}
+			],
+			"outputs": [
+			]
+		},
+		{
+			"name": "setFeeBps",
+			"inputs": [
+				{"name":"_feeBps","type":"uint16"}
+			],
+			"outputs": [
+			]
+		},
+		{
+			"name": "updateFeeWallet",
+			"inputs": [
+				{"name":"_feeWallet","type":"address"}
+			],
+			"outputs": [
+			]
+		},
+		{
+			"name": "requestRescue",
+			"inputs": [
+				{"name":"amount","type":"uint128"},
+				{"name":"recipient","type":"address"}
+			],
+			"outputs": [
+			]
+		},
+		{
+			"name": "executeRescue",
+			"inputs": [
+			],
+			"outputs": [
+			]
+		},
+		{
+			"name": "cancelRescue",
+			"inputs": [
+			],
+			"outputs": [
+			]
+		},
+		{
+			"name": "owner",
+			"inputs": [
+			],
+			"outputs": [
+				{"name":"owner","type":"address"}
+			]
+		},
+		{
+			"name": "usdcRoot",
+			"inputs": [
+			],
+			"outputs": [
+				{"name":"usdcRoot","type":"address"}
+			]
+		},
+		{
+			"name": "accumulatorAddress",
+			"inputs": [
+			],
+			"outputs": [
+				{"name":"accumulatorAddress","type":"address"}
+			]
+		},
+		{
+			"name": "feeWallet",
+			"inputs": [
+			],
+			"outputs": [
+				{"name":"feeWallet","type":"address"}
+			]
+		},
+		{
+			"name": "routerUsdcWallet",
+			"inputs": [
+			],
+			"outputs": [
+				{"name":"routerUsdcWallet","type":"address"}
+			]
+		},
+		{
+			"name": "feeBps",
+			"inputs": [
+			],
+			"outputs": [
+				{"name":"feeBps","type":"uint16"}
+			]
+		},
+		{
+			"name": "pendingSwapRefunds",
+			"inputs": [
+			],
+			"outputs": [
+				{"name":"pendingSwapRefunds","type":"map(address,uint128)"}
+			]
+		},
+		{
+			"name": "pendingRescue",
+			"inputs": [
+			],
+			"outputs": [
+				{"components":[{"name":"amount","type":"uint128"},{"name":"recipient","type":"address"},{"name":"requestedAt","type":"uint32"}],"name":"pendingRescue","type":"tuple"}
+			]
+		}
+	],
+	"events": [
+		{
+			"name": "RescueRequested",
+			"inputs": [
+				{"name":"amount","type":"uint128"},
+				{"name":"recipient","type":"address"},
+				{"name":"executeAfter","type":"uint32"}
+			],
+			"outputs": [
+			]
+		},
+		{
+			"name": "RescueExecuted",
+			"inputs": [
+				{"name":"amount","type":"uint128"},
+				{"name":"recipient","type":"address"}
+			],
+			"outputs": [
+			]
+		},
+		{
+			"name": "RescueCancelled",
+			"inputs": [
+			],
+			"outputs": [
+			]
+		},
+		{
+			"name": "RouterInitialized",
+			"inputs": [
+				{"name":"usdcWallet","type":"address"},
+				{"name":"feeWallet","type":"address"}
+			],
+			"outputs": [
+			]
+		},
+		{
+			"name": "SwapRouted",
+			"inputs": [
+				{"name":"sender","type":"address"},
+				{"name":"totalAmount","type":"uint128"},
+				{"name":"feeAmount","type":"uint128"},
+				{"name":"swapAmount","type":"uint128"}
+			],
+			"outputs": [
+			]
+		},
+		{
+			"name": "BounceRefund",
+			"inputs": [
+				{"name":"sender","type":"address"},
+				{"name":"amount","type":"uint128"}
+			],
+			"outputs": [
+			]
+		},
+		{
+			"name": "FeeUpdated",
+			"inputs": [
+				{"name":"newFeeBps","type":"uint16"}
+			],
+			"outputs": [
+			]
+		},
+		{
+			"name": "FeeWalletUpdated",
+			"inputs": [
+				{"name":"newFeeWallet","type":"address"}
+			],
+			"outputs": [
+			]
+		}
+	],
+	"fields": [
+		{"init":true,"name":"_pubkey","type":"uint256"},
+		{"init":false,"name":"_timestamp","type":"uint64"},
+		{"init":false,"name":"_constructorFlag","type":"bool"},
+		{"init":true,"name":"owner","type":"address"},
+		{"init":true,"name":"usdcRoot","type":"address"},
+		{"init":true,"name":"accumulatorAddress","type":"address"},
+		{"init":false,"name":"feeWallet","type":"address"},
+		{"init":false,"name":"routerUsdcWallet","type":"address"},
+		{"init":false,"name":"feeBps","type":"uint16"},
+		{"init":false,"name":"pendingSwapRefunds","type":"map(address,uint128)"},
+		{"components":[{"name":"amount","type":"uint128"},{"name":"recipient","type":"address"},{"name":"requestedAt","type":"uint32"}],"init":false,"name":"pendingRescue","type":"tuple"}
+	]
+}

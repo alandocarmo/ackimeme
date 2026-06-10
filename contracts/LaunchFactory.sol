@@ -13,6 +13,7 @@ contract LaunchFactory {
     address public owner;
     address public feeRecipient;
     uint32 public launchCount;
+    address public ackiSwapFactory;
 
     // TvmCells code of the contracts to be deployed
     TvmCell public tokenRootCode;
@@ -53,6 +54,12 @@ contract LaunchFactory {
         feeRecipient = _feeRecipient;
     }
 
+    function setAckiSwapFactory(address _ackiSwapFactory) external {
+        require(msg.sender == owner, 101, "Only owner");
+        tvm.accept();
+        ackiSwapFactory = _ackiSwapFactory;
+    }
+
     /// @notice Deploys the TokenRoot and BondingCurve via internal messages
     /// Because this is an internal message, both contracts inherit LaunchFactory's Dapp ID.
     function deployTokenAndCurve(
@@ -68,8 +75,8 @@ contract LaunchFactory {
         // This is a cross-dapp call from the user to the Factory. We accept the gas.
         tvm.accept();
 
-        // Assume gas is provided via prefunding (address(this).balance). We need enough VMSHELL for two deployments.
-        require(address(this).balance >= 2.5 ton, 102, "Insufficient gas for launch (Factory must be prefunded)");
+        // Assume gas is provided via prefunding (address(this).balance). We need enough VMSHELL for two deployments + messages.
+        require(address(this).balance >= 3 ton, 102, "Insufficient gas for launch (Factory must be prefunded)");
 
         launchCount++;
 
@@ -141,6 +148,18 @@ contract LaunchFactory {
         );
 
         emit TokenLaunched(tokenRootAddr, bondingCurveAddr, creator, name, symbol);
+
+        // 5. Post-Deploy Configuration
+        // M1: Set AckiSwapFactory on the curve so it knows where to migrate
+        if (ackiSwapFactory != address(0)) {
+            BondingCurve(bondingCurveAddr).setFactory{value: 0.1 ton, flag: 1}(ackiSwapFactory);
+        }
+
+        // A1: Initialize the AFT wallet for the curve so it can sell/burn
+        // Needs 2 SHELL for gas according to AFT rules.
+        mapping(uint32 => varuint32) initCc;
+        initCc[2] = varuint32(2_000_000_000); // 2 SHELL (assuming SHELL_CURRENCY_ID=2)
+        BondingCurve(bondingCurveAddr).initAftWallet{value: 0.2 ton, currencies: initCc, flag: 1}();
 
         // Return excess gas to sender
         msg.sender.transfer({ value: 0, flag: 128, bounce: false });

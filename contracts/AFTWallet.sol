@@ -85,7 +85,7 @@ contract AFTWallet is Modifiers {
                                  + uint128(SHELL_PER_HOP)
                                  + _estimateFwdFee(body));
         require(_inboundShell() >= conversion, ERR_INSUFFICIENT_FUEL);
-        // gosh.cnvrtshellq(conversion);
+        gosh.cnvrtshellq(conversion);
 
         // forward inbound SHELL net of our conversion
         uint128 forward = _inboundShell() - uint128(conversion);
@@ -127,7 +127,7 @@ contract AFTWallet is Modifiers {
                                  + uint128(SHELL_PER_HOP)
                                  + _estimateFwdFee(body));
         require(_inboundShell() >= conversion, ERR_INSUFFICIENT_FUEL);
-        // gosh.cnvrtshellq(conversion);
+        gosh.cnvrtshellq(conversion);
 
         uint128 forward = _inboundShell() - uint128(conversion);
         mapping(uint32 => varuint32) outCc;
@@ -208,7 +208,7 @@ contract AFTWallet is Modifiers {
             needed += uint128(EXCESS_SPLIT_COUNT) * _estimateFwdFee(excessBody);
         }
         uint64 conversion = uint64(needed);
-        // gosh.cnvrtshellq(conversion);
+        gosh.cnvrtshellq(conversion);
 
         // action phase applies cnvrtshellq before processing outbounds
         uint128 budget = _currentShell();
@@ -304,7 +304,7 @@ contract AFTWallet is Modifiers {
                 _balance += amount;
                 return;
             }
-            // gosh.cnvrtshellq(conversion);
+            gosh.cnvrtshellq(conversion);
 
             // forward all remaining SHELL — the new peer self-funds from it
             uint128 forward = _currentShell();

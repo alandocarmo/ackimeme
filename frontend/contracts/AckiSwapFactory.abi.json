@@ -1,0 +1,86 @@
+{
+	"ABI version": 2,
+	"version": "2.4",
+	"header": ["pubkey", "time", "expire"],
+	"functions": [
+		{
+			"name": "constructor",
+			"inputs": [
+				{"name":"_feeRecipient","type":"address"}
+			],
+			"outputs": [
+			]
+		},
+		{
+			"name": "setFeeRecipient",
+			"inputs": [
+				{"name":"_feeRecipient","type":"address"}
+			],
+			"outputs": [
+			]
+		},
+		{
+			"name": "approveBondingCurve",
+			"inputs": [
+				{"name":"bc","type":"address"}
+			],
+			"outputs": [
+			]
+		},
+		{
+			"name": "deployPair",
+			"inputs": [
+				{"name":"tokenRoot","type":"address"},
+				{"name":"callbackTarget","type":"address"}
+			],
+			"outputs": [
+			]
+		},
+		{
+			"name": "getPairAddress",
+			"inputs": [
+				{"name":"tokenRoot","type":"address"}
+			],
+			"outputs": [
+				{"name":"value0","type":"address"}
+			]
+		},
+		{
+			"name": "feeRecipient",
+			"inputs": [
+			],
+			"outputs": [
+				{"name":"feeRecipient","type":"address"}
+			]
+		},
+		{
+			"name": "approvedBondingCurves",
+			"inputs": [
+			],
+			"outputs": [
+				{"name":"approvedBondingCurves","type":"map(address,bool)"}
+			]
+		}
+	],
+	"events": [
+		{
+			"name": "PairCreated",
+			"inputs": [
+				{"name":"tokenRoot","type":"address"},
+				{"name":"pairAddress","type":"address"},
+				{"name":"timestamp","type":"uint64"}
+			],
+			"outputs": [
+			]
+		}
+	],
+	"fields": [
+		{"init":true,"name":"_pubkey","type":"uint256"},
+		{"init":false,"name":"_timestamp","type":"uint64"},
+		{"init":false,"name":"_constructorFlag","type":"bool"},
+		{"init":true,"name":"_owner","type":"address"},
+		{"init":true,"name":"_pairCode","type":"cell"},
+		{"init":false,"name":"feeRecipient","type":"address"},
+		{"init":false,"name":"approvedBondingCurves","type":"map(address,bool)"}
+	]
+}

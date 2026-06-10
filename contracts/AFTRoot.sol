@@ -136,7 +136,7 @@ contract AFTRoot is Modifiers {
                                  + uint128(SHELL_PER_HOP)
                                  + _estimateFwdFee(body));
         require(_inboundShell() >= conversion, ERR_INSUFFICIENT_FUEL);
-        // gosh.cnvrtshellq(conversion);
+        gosh.cnvrtshellq(conversion);
 
         // forward inbound SHELL net of conversion
         uint128 forward = _inboundShell() - uint128(conversion);
@@ -178,7 +178,7 @@ contract AFTRoot is Modifiers {
             TvmCell body = abi.encodeBody(IAFTExcesses.onAFTExcesses, queryId);
             uint64 conversion = uint64(_gasToNative(EST_GAS_ENTRY)
                                      + _estimateFwdFee(body));
-            // gosh.cnvrtshellq(conversion);
+            gosh.cnvrtshellq(conversion);
 
             // forward inbound SHELL net of conversion, capped per outbound
             uint128 currentSh = _currentShell();
@@ -258,7 +258,7 @@ contract AFTRoot is Modifiers {
             uint64 conversion = uint64(_gasToNative(EST_GAS_ENTRY)
                                      + uint128(SHELL_PER_DEPLOY)
                                      + deployFwd);
-            // gosh.cnvrtshellq(conversion);
+            gosh.cnvrtshellq(conversion);
 
             // forward all remaining SHELL — receiver re-caps its own refunds
             uint128 forward = _currentShell();
@@ -365,7 +365,7 @@ contract AFTRoot is Modifiers {
         uint64 conversion = uint64(_gasToNative(EST_GAS_ENTRY)
                                  + uint128(SHELL_PER_HOP)
                                  + _estimateFwdFee(body));
-        // gosh.cnvrtshellq(conversion);
+        gosh.cnvrtshellq(conversion);
 
         uint128 currentSh = _currentShell();
         uint128 forward = currentSh > uint128(conversion) ? currentSh - uint128(conversion) : 0;

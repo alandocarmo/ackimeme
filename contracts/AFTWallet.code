@@ -370,6 +370,9 @@
 	.loc AFTWallet.sol, 210
 	DUP
 	UFITS 64
+	.loc AFTWallet.sol, 211
+	DUP
+	CNVRTSHELLQ
 	.loc AFTWallet.sol, 214
 	CALLREF {
 		.inline _currentShell_7cec2986_internal
@@ -622,6 +625,9 @@
 	OVER
 	GEQ
 	THROWIFNOT 109
+	.loc AFTWallet.sol, 130
+	DUP
+	CNVRTSHELLQ
 	.loc AFTWallet.sol, 132
 	CALLREF {
 		.inline _inboundShell_1905817a_internal
@@ -1201,6 +1207,9 @@
 	OVER
 	GEQ
 	THROWIFNOT 109
+	.loc AFTWallet.sol, 88
+	DUP
+	CNVRTSHELLQ
 	.loc AFTWallet.sol, 91
 	CALLREF {
 		.inline _inboundShell_1905817a_internal
@@ -1573,6 +1582,9 @@
 				.loc AFTWallet.sol, 0
 			}
 			IFJMP
+			.loc AFTWallet.sol, 307
+			DUP
+			CNVRTSHELLQ
 			.loc AFTWallet.sol, 310
 			CALLREF {
 				.inline _currentShell_7cec2986_internal

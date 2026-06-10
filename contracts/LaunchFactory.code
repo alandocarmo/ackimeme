@@ -11,9 +11,14 @@
 	LDMSGADDR
 	LDU 32
 	LDREF
+	ENDS
+	CTOS
+	LDMSGADDR
+	LDREF
 	LDREF
 	LDREF
 	ENDS
+	SETGLOB 16
 	SETGLOB 15
 	SETGLOB 14
 	SETGLOB 13
@@ -25,13 +30,34 @@
 	SETGLOB 2
 }
 
+.fragment ackiSwapFactory, {
+	DROP
+	ENDS
+	CALLREF {
+		.inline c4_to_c7
+	}
+	GETGLOB 13
+	OVER
+	PUSHCONT {
+		PUSHSLICE xc00000000000000000000000009ba715ab
+		NEWC
+		STSLICE
+		STSLICE
+		ENDC
+		PUSHINT 0
+		SENDRAWMSG
+	}
+	IF
+	THROW 0
+}
+
 .fragment bondingCurveCode, {
 	DROP
 	ENDS
 	CALLREF {
 		.inline c4_to_c7
 	}
-	GETGLOB 14
+	GETGLOB 15
 	OVER
 	PUSHCONT {
 		PUSHSLICE xc0000000000000000000000000c369b29e
@@ -47,6 +73,7 @@
 }
 
 .fragment c7_to_c4, {
+	GETGLOB 16
 	GETGLOB 15
 	GETGLOB 14
 	GETGLOB 13
@@ -60,13 +87,17 @@
 	STU 64
 	STONE
 	STSLICE
-	ROLLREV 5
+	ROLLREV 6
 	NEWC
 	STSLICE
 	STU 32
+	ROLLREV 4
+	NEWC
+	STSLICE
 	STREF
 	STREF
 	STREF
+	STBREFR
 	STBREFR
 	ENDC
 	POPROOT
@@ -97,22 +128,22 @@
 	LDREF
 	LDREF
 	ENDS
-	.loc LaunchFactory.sol, 29
-	ACCEPT
 	.loc LaunchFactory.sol, 30
+	ACCEPT
+	.loc LaunchFactory.sol, 31
 	ROLL 4
 	SETGLOB 10
-	.loc LaunchFactory.sol, 31
+	.loc LaunchFactory.sol, 32
 	ROLL 3
 	SETGLOB 11
-	.loc LaunchFactory.sol, 32
-	ROT
-	SETGLOB 13
 	.loc LaunchFactory.sol, 33
-	SWAP
+	ROT
 	SETGLOB 14
 	.loc LaunchFactory.sol, 34
+	SWAP
 	SETGLOB 15
+	.loc LaunchFactory.sol, 35
+	SETGLOB 16
 	.loc LaunchFactory.sol, 0
 	CALLREF {
 		.inline c7_to_c4
@@ -121,23 +152,23 @@
 }
 
 .fragment deployTokenAndCurve_c5a0307c_internal, {
-	.loc LaunchFactory.sol, 69
+	.loc LaunchFactory.sol, 76
 	ACCEPT
-	.loc LaunchFactory.sol, 72
+	.loc LaunchFactory.sol, 79
 	PUSHREF {
 		.blob x496e73756666696369656e742067617320666f72206c61756e63682028466163746f7279206d7573742062652070726566756e64656429
 	}
 	GETPARAM 7
 	FIRST
-	PUSHINT 2500000000
+	PUSHINT 3000000000
 	GEQ
 	THROWARGIFNOT 102
-	.loc LaunchFactory.sol, 74
+	.loc LaunchFactory.sol, 81
 	GETGLOB 12
 	INC
 	UFITS 32
 	SETGLOB 12
-	.loc LaunchFactory.sol, 87
+	.loc LaunchFactory.sol, 94
 	PUSHREF {
 	}
 	DUP
@@ -168,14 +199,14 @@
 	STBREFR
 	STBREFR
 	ENDC
-	GETGLOB 13
+	GETGLOB 14
 	NEWC
 	STSLICECONST x2_
 	STDICT
 	STDICT
 	STZERO
 	ENDC
-	.loc LaunchFactory.sol, 98
+	.loc LaunchFactory.sol, 105
 	DUP
 	HASHCU
 	NEWC
@@ -183,7 +214,7 @@
 	STU 256
 	ENDC
 	CTOS
-	.loc LaunchFactory.sol, 101
+	.loc LaunchFactory.sol, 108
 	PUSHINT 0
 	NULL
 	PUSHSLICE x2_
@@ -264,14 +295,14 @@
 	STBREFR
 	STBREFR
 	ENDC
-	GETGLOB 14
+	GETGLOB 15
 	NEWC
 	STSLICECONST x2_
 	STDICT
 	STDICT
 	STZERO
 	ENDC
-	.loc LaunchFactory.sol, 110
+	.loc LaunchFactory.sol, 117
 	DUP
 	HASHCU
 	NEWC
@@ -279,7 +310,7 @@
 	STU 256
 	ENDC
 	CTOS
-	.loc LaunchFactory.sol, 113
+	.loc LaunchFactory.sol, 120
 	BLKSWAP 2, 4
 	SWAP
 	GETGLOB 11
@@ -343,12 +374,12 @@
 	ENDC
 	PUSHINT 1
 	SENDRAWMSG
-	.loc LaunchFactory.sol, 130
+	.loc LaunchFactory.sol, 137
 	PUSHINT 0
 	PUSHREFSLICE {
 		.blob x8000000000000000000000000000000000000000000000000000000000000000001_
 	}
-	GETGLOB 15
+	GETGLOB 16
 	PUSHREF {
 	}
 	TRUE
@@ -405,9 +436,9 @@
 	ENDC
 	PUSHINT 1
 	SENDRAWMSG
-	.loc LaunchFactory.sol, 143
-	SWAP
-	XCHG S3, S4
+	.loc LaunchFactory.sol, 150
+	XCHG S1, S4
+	XCPUXC S2, S0, S4
 	PUSHSLICE xc0000000000000000000000001
 	NEWC
 	STSLICE
@@ -429,7 +460,54 @@
 	ENDC
 	PUSHINT 0
 	SENDRAWMSG
-	.loc LaunchFactory.sol, 146
+	.loc LaunchFactory.sol, 154
+	GETGLOB 13
+	PUSHREFSLICE {
+		.blob x8000000000000000000000000000000000000000000000000000000000000000001_
+	}
+	SDEQ
+	PUSHCONT {
+		.loc LaunchFactory.sol, 155
+		DUP
+		NEWC
+		STSLICECONST x62_
+		STSLICE
+		PUSHSLICE x405f5e1000000000000000000000000000003_
+		STSLICER
+		GETGLOB 13
+		NEWC
+		STSLICECONST x0e8e5a50
+		STSLICE
+		STBREFR
+		ENDC
+		PUSHINT 1
+		SENDRAWMSG
+		.loc LaunchFactory.sol, 0
+	}
+	IFNOT
+	.loc LaunchFactory.sol, 160
+	PUSHINT 2
+	NULL
+	NEWC
+	PUSHINT 2000000000
+	.loc LaunchFactory.sol, 161
+	STVARUINT32
+	ROTREV
+	PUSHINT 32
+	DICTUSETB
+	.loc LaunchFactory.sol, 162
+	SWAP
+	NEWC
+	STSLICECONST x62_
+	STSLICE
+	STSLICECONST x40bebc200
+	STDICT
+	PUSHINT 1171441216
+	STUR 142
+	ENDC
+	PUSHINT 1
+	SENDRAWMSG
+	.loc LaunchFactory.sol, 165
 	GETGLOB 9
 	NEWC
 	STSLICECONST x42_
@@ -451,7 +529,7 @@
 	IFREF {
 		.inline c4_to_c7
 	}
-	.loc LaunchFactory.sol, 58
+	.loc LaunchFactory.sol, 65
 	OVER
 	PUSHCONT {
 		LDREF
@@ -549,8 +627,8 @@
 	THROW 0
 }
 
-.fragment setFeeRecipient_e74b981b_internal, {
-	.loc LaunchFactory.sol, 51
+.fragment setAckiSwapFactory_991e4b10_internal, {
+	.loc LaunchFactory.sol, 58
 	PUSHREF {
 		.blob x4f6e6c79206f776e6572
 	}
@@ -558,9 +636,54 @@
 	GETGLOB 10
 	SDEQ
 	THROWARGIFNOT 101
-	.loc LaunchFactory.sol, 52
+	.loc LaunchFactory.sol, 59
 	ACCEPT
+	.loc LaunchFactory.sol, 60
+	SETGLOB 13
+	.loc LaunchFactory.sol, 0
+}
+
+.fragment setAckiSwapFactory, {
+	DROP
+	GETGLOB 6
+	THROWIFNOT 76
+	GETGLOB 2
+	ISNULL
+	IFREF {
+		.inline c4_to_c7
+	}
+	.loc LaunchFactory.sol, 57
+	OVER
+	PUSHCONT {
+		LDREF
+		ENDS
+		CTOS
+	}
+	IF
+	LDMSGADDR
+	ENDS
+	.loc LaunchFactory.sol, 0
+	CALLREF {
+		.inline setAckiSwapFactory_991e4b10_internal
+	}
+	CALLREF {
+		.inline c7_to_c4
+	}
+	THROW 0
+}
+
+.fragment setFeeRecipient_e74b981b_internal, {
+	.loc LaunchFactory.sol, 52
+	PUSHREF {
+		.blob x4f6e6c79206f776e6572
+	}
+	GETGLOB 9
+	GETGLOB 10
+	SDEQ
+	THROWARGIFNOT 101
 	.loc LaunchFactory.sol, 53
+	ACCEPT
+	.loc LaunchFactory.sol, 54
 	SETGLOB 11
 	.loc LaunchFactory.sol, 0
 }
@@ -574,7 +697,7 @@
 	IFREF {
 		.inline c4_to_c7
 	}
-	.loc LaunchFactory.sol, 50
+	.loc LaunchFactory.sol, 51
 	OVER
 	PUSHCONT {
 		LDREF
@@ -600,7 +723,7 @@
 	CALLREF {
 		.inline c4_to_c7
 	}
-	GETGLOB 13
+	GETGLOB 14
 	OVER
 	PUSHCONT {
 		PUSHSLICE xc0000000000000000000000000d1691837
@@ -621,7 +744,7 @@
 	CALLREF {
 		.inline c4_to_c7
 	}
-	GETGLOB 15
+	GETGLOB 16
 	OVER
 	PUSHCONT {
 		PUSHSLICE xc0000000000000000000000000e544457a
@@ -637,7 +760,7 @@
 }
 
 .fragment updateCodes_ac636a9a_internal, {
-	.loc LaunchFactory.sol, 43
+	.loc LaunchFactory.sol, 44
 	PUSHREF {
 		.blob x4f6e6c79206f776e6572
 	}
@@ -645,16 +768,16 @@
 	GETGLOB 10
 	SDEQ
 	THROWARGIFNOT 101
-	.loc LaunchFactory.sol, 44
-	ACCEPT
 	.loc LaunchFactory.sol, 45
-	ROT
-	SETGLOB 13
+	ACCEPT
 	.loc LaunchFactory.sol, 46
-	SWAP
+	ROT
 	SETGLOB 14
 	.loc LaunchFactory.sol, 47
+	SWAP
 	SETGLOB 15
+	.loc LaunchFactory.sol, 48
+	SETGLOB 16
 	.loc LaunchFactory.sol, 0
 }
 
@@ -667,7 +790,7 @@
 	IFREF {
 		.inline c4_to_c7
 	}
-	.loc LaunchFactory.sol, 38
+	.loc LaunchFactory.sol, 39
 	LDREF
 	LDREF
 	LDREF
@@ -684,7 +807,7 @@
 
 .fragment public_function_selector, {
 	DUP
-	PUSHINT 939285705
+	PUSHINT 553621124
 	LEQ
 	IFJMPREF {
 		DUP
@@ -699,10 +822,27 @@
 			.inline setFeeRecipient
 		}
 		DUP
+		PUSHINT 463934891
+		EQUAL
+		IFJMPREF {
+			.inline ackiSwapFactory
+		}
+		DUP
 		PUSHINT 553621124
 		EQUAL
 		IFJMPREF {
 			.inline deployTokenAndCurve
+		}
+	}
+	DUP
+	PUSHINT 1151090212
+	LEQ
+	IFJMPREF {
+		DUP
+		PUSHINT 570515965
+		EQUAL
+		IFJMPREF {
+			.inline setAckiSwapFactory
 		}
 		DUP
 		PUSHINT 939285705
@@ -710,11 +850,6 @@
 		IFJMPREF {
 			.inline feeRecipient
 		}
-	}
-	DUP
-	PUSHINT 1365841975
-	LEQ
-	IFJMPREF {
 		DUP
 		PUSHINT 1131000478
 		EQUAL
@@ -727,17 +862,17 @@
 		IFJMPREF {
 			.inline launchCount
 		}
+	}
+	DUP
+	PUSHINT 1698973050
+	LEQ
+	IFJMPREF {
 		DUP
 		PUSHINT 1365841975
 		EQUAL
 		IFJMPREF {
 			.inline tokenRootCode
 		}
-	}
-	DUP
-	PUSHINT 1698973050
-	LEQ
-	IFJMPREF {
 		DUP
 		PUSHINT 1594609630
 		EQUAL
@@ -857,18 +992,23 @@
 	PUSHREF {
 	}
 	BLKPUSH 2, 0
+	PUSHSLICE x2_
 	PUSHINT 0
 	PUSHSLICE x2_
 	NEWC
 	PUSHINT 323
 	STZEROES
-	ROLLREV 5
+	ROLLREV 6
 	NEWC
 	STSLICE
 	STU 32
+	ROLLREV 4
+	NEWC
+	STSLICE
 	STREF
 	STREF
 	STREF
+	STBREFR
 	STBREFR
 	ENDC
 }

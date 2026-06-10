@@ -306,6 +306,9 @@
 	}
 	ADD
 	UFITS 64
+	.loc AFTRoot.sol, 368
+	DUP
+	CNVRTSHELLQ
 	.loc AFTRoot.sol, 370
 	CALLREF {
 		.inline _currentShell_7cec2986_internal
@@ -1317,6 +1320,9 @@
 		}
 		ADD
 		UFITS 64
+		.loc AFTRoot.sol, 181
+		DUP
+		CNVRTSHELLQ
 		.loc AFTRoot.sol, 184
 		CALLREF {
 			.inline _currentShell_7cec2986_internal
@@ -1522,6 +1528,9 @@
 	OVER
 	GEQ
 	THROWIFNOT 109
+	.loc AFTRoot.sol, 139
+	DUP
+	CNVRTSHELLQ
 	.loc AFTRoot.sol, 142
 	CALLREF {
 		.inline _inboundShell_1905817a_internal
@@ -2137,6 +2146,9 @@
 		UFITS 128
 		ADD
 		UFITS 64
+		.loc AFTRoot.sol, 261
+		DUP
+		CNVRTSHELLQ
 		.loc AFTRoot.sol, 264
 		CALLREF {
 			.inline _currentShell_7cec2986_internal

@@ -176,7 +176,7 @@ contract BondingCurve is IAFTReceiver, IAFTExcesses, IAFTWalletAddressReceiver {
         bool _pumpForever,
         uint256 _slopeDivisor
     ) {
-        require(msg.pubkey() == tvm.pubkey() || msg.sender == _tokenRoot, 101, "Only TokenRoot or owner can deploy");
+        require(msg.sender == _tokenRoot, 101, "Only TokenRoot can deploy");
         require(_tokenRootAddr == _tokenRoot, 104, "tokenRootAddr must match static _tokenRoot");
         require(_supplyCap > 0, 105, "Supply cap must be set");
         require(_feeRecipient != address(0), 106, "Fee recipient cannot be zero address");

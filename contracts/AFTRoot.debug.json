@@ -2,15 +2,15 @@
   "02d22c920723128c001ba808e8a90a015dca1ecf8532ffed9a0c95414049e4af": {
     "0": {
       "filename": "./AFTRoot.code",
-      "line": 783
+      "line": 786
     },
     "8": {
       "filename": "./AFTRoot.code",
-      "line": 784
+      "line": 787
     },
     "24": {
       "filename": "./AFTRoot.code",
-      "line": 785
+      "line": 788
     },
     "48": {
       "filename": "AFTRoot.sol",
@@ -50,95 +50,95 @@
     },
     "128": {
       "filename": "./AFTRoot.code",
-      "line": 798
+      "line": 801
     },
     "144": {
       "filename": "./AFTRoot.code",
-      "line": 801
+      "line": 804
     },
     "152": {
       "filename": "./AFTRoot.code",
-      "line": 802
+      "line": 805
     },
     "168": {
       "filename": "./AFTRoot.code",
-      "line": 803
+      "line": 806
     },
     "176": {
       "filename": "./AFTRoot.code",
-      "line": 804
+      "line": 807
     },
     "184": {
       "filename": "./AFTRoot.code",
-      "line": 805
+      "line": 808
     },
     "200": {
       "filename": "./AFTRoot.code",
-      "line": 806
+      "line": 809
     },
     "216": {
       "filename": "./AFTRoot.code",
-      "line": 807
+      "line": 810
     },
     "224": {
       "filename": "./AFTRoot.code",
-      "line": 808
+      "line": 811
     },
     "232": {
       "filename": "./AFTRoot.code",
-      "line": 809
+      "line": 812
     },
     "240": {
       "filename": "./AFTRoot.code",
-      "line": 810
+      "line": 813
     },
     "264": {
       "filename": "./AFTRoot.code",
-      "line": 811
+      "line": 814
     },
     "272": {
       "filename": "./AFTRoot.code",
-      "line": 812
+      "line": 815
     },
     "320": {
       "filename": "./AFTRoot.code",
-      "line": 813
+      "line": 816
     },
     "344": {
       "filename": "./AFTRoot.code",
-      "line": 814
+      "line": 817
     },
     "360": {
       "filename": "./AFTRoot.code",
-      "line": 815
+      "line": 818
     },
     "368": {
       "filename": "./AFTRoot.code",
-      "line": 816
+      "line": 819
     },
     "376": {
       "filename": "./AFTRoot.code",
-      "line": 817
+      "line": 820
     },
     "392": {
       "filename": "./AFTRoot.code",
-      "line": 819
+      "line": 822
     },
     "400": {
       "filename": "./AFTRoot.code",
-      "line": 820
+      "line": 823
     },
     "408": {
       "filename": "./AFTRoot.code",
-      "line": 822
+      "line": 825
     },
     "416": {
       "filename": "./AFTRoot.code",
-      "line": 823
+      "line": 826
     },
     "432": {
       "filename": "./AFTRoot.code",
-      "line": 826
+      "line": 829
     }
   },
   "080fa756df93ff1a60805574eb5b10aea98efafdae19daaeed55751883f8807c": {
@@ -159,101 +159,203 @@
       "line": 131
     }
   },
-  "0cd6153e0c3a548b2ed078297a4ab3c44b2e1169221e8c9d7e77020296515564": {
+  "1014c8545d6c4b0da5907da3320c7f3134244e5aa75bd3bd26b3149b833b78f1": {
     "0": {
-      "filename": "./AFTRoot.code",
-      "line": 1392
-    },
-    "8": {
-      "filename": "./AFTRoot.code",
-      "line": 1393
-    },
-    "24": {
-      "filename": "./AFTRoot.code",
-      "line": 1394
-    },
-    "48": {
-      "filename": "./AFTRoot.code",
-      "line": 1395
-    },
-    "64": {
-      "filename": "./AFTRoot.code",
-      "line": 1396
-    },
-    "72": {
-      "filename": "./AFTRoot.code",
-      "line": 1397
-    },
-    "88": {
       "filename": "AFTRoot.sol",
       "line": 157
+    },
+    "8": {
+      "filename": "AFTRoot.sol",
+      "line": 157
+    },
+    "24": {
+      "filename": "AFTRoot.sol",
+      "line": 157
+    },
+    "32": {
+      "filename": "AFTRoot.sol",
+      "line": 157
+    },
+    "56": {
+      "filename": "AFTRoot.sol",
+      "line": 163
+    },
+    "72": {
+      "filename": "AFTRoot.sol",
+      "line": 163
+    },
+    "80": {
+      "filename": "AFTRoot.sol",
+      "line": 163
     },
     "96": {
       "filename": "AFTRoot.sol",
-      "line": 157
-    },
-    "104": {
-      "filename": "AFTRoot.sol",
-      "line": 157
+      "line": 163
     },
     "112": {
       "filename": "AFTRoot.sol",
-      "line": 157
-    },
-    "120": {
-      "filename": "AFTRoot.sol",
-      "line": 157
-    },
-    "128": {
-      "filename": "AFTRoot.sol",
-      "line": 157
+      "line": 163
     },
     "136": {
       "filename": "AFTRoot.sol",
-      "line": 157
+      "line": 165
     },
     "152": {
       "filename": "AFTRoot.sol",
-      "line": 157
+      "line": 166
     },
     "168": {
       "filename": "AFTRoot.sol",
-      "line": 157
+      "line": 166
+    },
+    "176": {
+      "filename": "AFTRoot.sol",
+      "line": 166
     },
     "184": {
       "filename": "AFTRoot.sol",
-      "line": 157
-    },
-    "192": {
-      "filename": "AFTRoot.sol",
-      "line": 157
+      "line": 166
     },
     "200": {
       "filename": "AFTRoot.sol",
-      "line": 157
+      "line": 166
     },
-    "208": {
+    "216": {
       "filename": "AFTRoot.sol",
-      "line": 157
-    },
-    "224": {
-      "filename": "AFTRoot.sol",
-      "line": 157
+      "line": 168
     },
     "232": {
-      "filename": "./AFTRoot.code",
-      "line": 1417
+      "filename": "AFTRoot.sol",
+      "line": 168
     },
     "248": {
-      "filename": "./AFTRoot.code",
-      "line": 1420
+      "filename": "AFTRoot.sol",
+      "line": 168
     },
     "264": {
-      "filename": "./AFTRoot.code",
-      "line": 1423
+      "filename": "AFTRoot.sol",
+      "line": 168
+    },
+    "272": {
+      "filename": "AFTRoot.sol",
+      "line": 168
+    },
+    "288": {
+      "filename": "AFTRoot.sol",
+      "line": 168
+    },
+    "296": {
+      "filename": "AFTRoot.sol",
+      "line": 168
+    },
+    "320": {
+      "filename": "AFTRoot.sol",
+      "line": 168
+    },
+    "328": {
+      "filename": "AFTRoot.sol",
+      "line": 168
+    },
+    "336": {
+      "filename": "AFTRoot.sol",
+      "line": 168
+    },
+    "360": {
+      "filename": "AFTRoot.sol",
+      "line": 168
+    },
+    "376": {
+      "filename": "AFTRoot.sol",
+      "line": 168
+    },
+    "384": {
+      "filename": "AFTRoot.sol",
+      "line": 168
+    },
+    "432": {
+      "filename": "AFTRoot.sol",
+      "line": 168
+    },
+    "448": {
+      "filename": "AFTRoot.sol",
+      "line": 168
+    },
+    "456": {
+      "filename": "AFTRoot.sol",
+      "line": 168
+    },
+    "472": {
+      "filename": "AFTRoot.sol",
+      "line": 168
+    },
+    "488": {
+      "filename": "AFTRoot.sol",
+      "line": 168
+    },
+    "504": {
+      "filename": "AFTRoot.sol",
+      "line": 168
+    },
+    "512": {
+      "filename": "AFTRoot.sol",
+      "line": 168
+    },
+    "520": {
+      "filename": "AFTRoot.sol",
+      "line": 168
+    },
+    "528": {
+      "filename": "AFTRoot.sol",
+      "line": 168
+    },
+    "544": {
+      "filename": "AFTRoot.sol",
+      "line": 176
+    },
+    "552": {
+      "filename": "AFTRoot.sol",
+      "line": 176
+    },
+    "560": {
+      "filename": "AFTRoot.sol",
+      "line": 176
     }
   },
   "141c389906bf3339f9720665e47bb378b79ddea68200d245eaad555f282f5281": {},
+  "15cf74f76a092b70dd614389bdbe24e0420274477d5ba70a005818eb60043de3": {
+    "0": {
+      "filename": "./AFTRoot.code",
+      "line": 1968
+    },
+    "8": {
+      "filename": "./AFTRoot.code",
+      "line": 1969
+    },
+    "56": {
+      "filename": "./AFTRoot.code",
+      "line": 1970
+    },
+    "64": {
+      "filename": "./AFTRoot.code",
+      "line": 1971
+    },
+    "80": {
+      "filename": "./AFTRoot.code",
+      "line": 1974
+    },
+    "88": {
+      "filename": "./AFTRoot.code",
+      "line": 1975
+    },
+    "136": {
+      "filename": "./AFTRoot.code",
+      "line": 1976
+    },
+    "144": {
+      "filename": "./AFTRoot.code",
+      "line": 1977
+    }
+  },
   "167cbcddb50e29cce7c28a14df73bae947a561cc10d9c38c298a1e02278eb4e6": {
     "0": {
       "filename": "AFTRoot.sol",
@@ -529,231 +631,809 @@
   "18b1bfc4ee900759889e781d44f26be08b096fdc49c12817e3ecc781350874a2": {
     "0": {
       "filename": "./AFTRoot.code",
-      "line": 521
+      "line": 524
     },
     "16": {
       "filename": "./AFTRoot.code",
-      "line": 522
+      "line": 525
     },
     "32": {
       "filename": "./AFTRoot.code",
-      "line": 523
+      "line": 526
     },
     "48": {
       "filename": "./AFTRoot.code",
-      "line": 524
+      "line": 527
     },
     "64": {
       "filename": "./AFTRoot.code",
-      "line": 525
+      "line": 528
     },
     "80": {
       "filename": "./AFTRoot.code",
-      "line": 526
+      "line": 529
     },
     "96": {
       "filename": "./AFTRoot.code",
-      "line": 527
+      "line": 530
     },
     "112": {
       "filename": "./AFTRoot.code",
-      "line": 528
+      "line": 531
     },
     "128": {
       "filename": "./AFTRoot.code",
-      "line": 529
+      "line": 532
     },
     "144": {
       "filename": "./AFTRoot.code",
-      "line": 530
+      "line": 533
     },
     "160": {
       "filename": "./AFTRoot.code",
-      "line": 531
+      "line": 534
     },
     "176": {
       "filename": "./AFTRoot.code",
-      "line": 532
+      "line": 535
     },
     "184": {
       "filename": "./AFTRoot.code",
-      "line": 533
+      "line": 536
     },
     "200": {
       "filename": "./AFTRoot.code",
-      "line": 534
+      "line": 537
     },
     "216": {
       "filename": "./AFTRoot.code",
-      "line": 535
+      "line": 538
     },
     "224": {
       "filename": "./AFTRoot.code",
-      "line": 536
+      "line": 539
     },
     "232": {
       "filename": "./AFTRoot.code",
-      "line": 537
+      "line": 540
     },
     "240": {
       "filename": "./AFTRoot.code",
-      "line": 538
+      "line": 541
     },
     "256": {
       "filename": "./AFTRoot.code",
-      "line": 539
+      "line": 542
     },
     "272": {
       "filename": "./AFTRoot.code",
-      "line": 540
+      "line": 543
     },
     "280": {
       "filename": "./AFTRoot.code",
-      "line": 541
+      "line": 544
     },
     "288": {
       "filename": "./AFTRoot.code",
-      "line": 542
+      "line": 545
     },
     "304": {
       "filename": "./AFTRoot.code",
-      "line": 543
+      "line": 546
     },
     "312": {
       "filename": "./AFTRoot.code",
-      "line": 544
+      "line": 547
     },
     "320": {
       "filename": "./AFTRoot.code",
-      "line": 545
+      "line": 548
     },
     "336": {
       "filename": "./AFTRoot.code",
-      "line": 546
+      "line": 549
     },
     "352": {
       "filename": "./AFTRoot.code",
-      "line": 547
+      "line": 550
     },
     "360": {
       "filename": "./AFTRoot.code",
-      "line": 548
+      "line": 551
     },
     "368": {
       "filename": "./AFTRoot.code",
-      "line": 549
+      "line": 552
     },
     "376": {
       "filename": "./AFTRoot.code",
-      "line": 550
+      "line": 553
     },
     "384": {
       "filename": "./AFTRoot.code",
-      "line": 551
+      "line": 554
     },
     "392": {
       "filename": "./AFTRoot.code",
-      "line": 552
+      "line": 555
     }
   },
   "1c083c4cfbbd849740a89187ffe81ad0cf17479f480e1b1e0a6cb65db3b7bf33": {
     "0": {
       "filename": "./AFTRoot.code",
-      "line": 1936
+      "line": 1945
     },
     "8": {
       "filename": "./AFTRoot.code",
-      "line": 1937
+      "line": 1946
     },
     "56": {
       "filename": "./AFTRoot.code",
-      "line": 1938
+      "line": 1947
     },
     "64": {
       "filename": "./AFTRoot.code",
-      "line": 1939
+      "line": 1948
     },
     "80": {
       "filename": "./AFTRoot.code",
-      "line": 1942
+      "line": 1951
     },
     "88": {
       "filename": "./AFTRoot.code",
-      "line": 1943
+      "line": 1952
     },
     "136": {
       "filename": "./AFTRoot.code",
-      "line": 1944
+      "line": 1953
     },
     "144": {
       "filename": "./AFTRoot.code",
-      "line": 1945
+      "line": 1954
     },
     "160": {
       "filename": "./AFTRoot.code",
-      "line": 1948
+      "line": 1957
     },
     "168": {
       "filename": "./AFTRoot.code",
-      "line": 1949
+      "line": 1958
     },
     "216": {
       "filename": "./AFTRoot.code",
-      "line": 1950
+      "line": 1959
     },
     "224": {
       "filename": "./AFTRoot.code",
-      "line": 1951
+      "line": 1960
     }
   },
-  "20f1934994e9ad6799f59f54fd252ba3f7ffdaf0b418a60155b2905a75585dc4": {
+  "23e736f84b67691130636d61e18742118e9f8c11074d690650a3b6099266fe38": {
     "0": {
-      "filename": "AFTRoot.sol",
-      "line": 65
+      "filename": "./AFTRoot.code",
+      "line": 1216
     },
-    "16": {
-      "filename": "AFTRoot.sol",
-      "line": 66
+    "8": {
+      "filename": "./AFTRoot.code",
+      "line": 1217
     },
     "24": {
-      "filename": "AFTRoot.sol",
-      "line": 66
-    },
-    "32": {
-      "filename": "AFTRoot.sol",
-      "line": 66
-    },
-    "40": {
-      "filename": "AFTRoot.sol",
-      "line": 66
+      "filename": "./AFTRoot.code",
+      "line": 1218
     },
     "48": {
-      "filename": "AFTRoot.sol",
-      "line": 66
+      "filename": "./AFTRoot.code",
+      "line": 1219
     },
-    "56": {
-      "filename": "AFTRoot.sol",
-      "line": 66
+    "64": {
+      "filename": "./AFTRoot.code",
+      "line": 1220
     },
     "72": {
       "filename": "./AFTRoot.code",
-      "line": 761
-    },
-    "80": {
-      "filename": "AFTRoot.sol",
-      "line": 68
+      "line": 1221
     },
     "88": {
       "filename": "AFTRoot.sol",
-      "line": 68
+      "line": 73
+    },
+    "96": {
+      "filename": "AFTRoot.sol",
+      "line": 73
+    },
+    "104": {
+      "filename": "AFTRoot.sol",
+      "line": 73
+    },
+    "112": {
+      "filename": "AFTRoot.sol",
+      "line": 73
+    },
+    "120": {
+      "filename": "AFTRoot.sol",
+      "line": 73
+    },
+    "128": {
+      "filename": "AFTRoot.sol",
+      "line": 73
+    },
+    "136": {
+      "filename": "AFTRoot.sol",
+      "line": 73
+    },
+    "152": {
+      "filename": "AFTRoot.sol",
+      "line": 73
+    },
+    "168": {
+      "filename": "AFTRoot.sol",
+      "line": 73
+    },
+    "184": {
+      "filename": "AFTRoot.sol",
+      "line": 73
+    },
+    "192": {
+      "filename": "AFTRoot.sol",
+      "line": 73
+    },
+    "200": {
+      "filename": "AFTRoot.sol",
+      "line": 73
+    },
+    "208": {
+      "filename": "AFTRoot.sol",
+      "line": 73
+    },
+    "224": {
+      "filename": "AFTRoot.sol",
+      "line": 73
+    },
+    "240": {
+      "filename": "AFTRoot.sol",
+      "line": 73
+    },
+    "248": {
+      "filename": "AFTRoot.sol",
+      "line": 73
+    },
+    "256": {
+      "filename": "./AFTRoot.code",
+      "line": 1243
+    },
+    "272": {
+      "filename": "./AFTRoot.code",
+      "line": 1246
+    },
+    "288": {
+      "filename": "./AFTRoot.code",
+      "line": 1249
+    }
+  },
+  "276d0105dd46a0505f16518c06f60110a6eb55c5115f6a802a0b7d337ceaba27": {
+    "0": {
+      "filename": "./AFTRoot.code",
+      "line": 640
+    },
+    "8": {
+      "filename": "./AFTRoot.code",
+      "line": 641
+    },
+    "24": {
+      "filename": "./AFTRoot.code",
+      "line": 642
+    },
+    "32": {
+      "filename": "./AFTRoot.code",
+      "line": 643
+    },
+    "48": {
+      "filename": "./AFTRoot.code",
+      "line": 646
+    },
+    "64": {
+      "filename": "./AFTRoot.code",
+      "line": 647
+    },
+    "80": {
+      "filename": "./AFTRoot.code",
+      "line": 648
+    },
+    "88": {
+      "filename": "./AFTRoot.code",
+      "line": 649
+    },
+    "96": {
+      "filename": "./AFTRoot.code",
+      "line": 650
     },
     "104": {
       "filename": "./AFTRoot.code",
-      "line": 766
+      "line": 651
+    },
+    "112": {
+      "filename": "./AFTRoot.code",
+      "line": 652
     },
     "120": {
       "filename": "./AFTRoot.code",
-      "line": 769
+      "line": 654
+    },
+    "128": {
+      "filename": "./AFTRoot.code",
+      "line": 655
+    },
+    "144": {
+      "filename": "./AFTRoot.code",
+      "line": 656
+    },
+    "160": {
+      "filename": "./AFTRoot.code",
+      "line": 657
+    },
+    "168": {
+      "filename": "./AFTRoot.code",
+      "line": 658
+    },
+    "176": {
+      "filename": "./AFTRoot.code",
+      "line": 659
+    },
+    "184": {
+      "filename": "./AFTRoot.code",
+      "line": 660
+    },
+    "192": {
+      "filename": "./AFTRoot.code",
+      "line": 661
+    },
+    "200": {
+      "filename": "./AFTRoot.code",
+      "line": 662
+    },
+    "216": {
+      "filename": "./AFTRoot.code",
+      "line": 663
+    },
+    "232": {
+      "filename": "./AFTRoot.code",
+      "line": 664
+    },
+    "240": {
+      "filename": "AFTRoot.sol",
+      "line": 42
+    },
+    "256": {
+      "filename": "AFTRoot.sol",
+      "line": 42
+    },
+    "264": {
+      "filename": "AFTRoot.sol",
+      "line": 42
+    },
+    "280": {
+      "filename": "AFTRoot.sol",
+      "line": 42
+    },
+    "288": {
+      "filename": "AFTRoot.sol",
+      "line": 42
+    },
+    "304": {
+      "filename": "AFTRoot.sol",
+      "line": 42
+    },
+    "320": {
+      "filename": "AFTRoot.sol",
+      "line": 42
+    },
+    "336": {
+      "filename": "AFTRoot.sol",
+      "line": 42
+    },
+    "344": {
+      "filename": "AFTRoot.sol",
+      "line": 43
+    },
+    "360": {
+      "filename": "AFTRoot.sol",
+      "line": 43
+    },
+    "376": {
+      "filename": "AFTRoot.sol",
+      "line": 43
+    },
+    "392": {
+      "filename": "AFTRoot.sol",
+      "line": 43
+    },
+    "400": {
+      "filename": "AFTRoot.sol",
+      "line": 43
+    },
+    "408": {
+      "filename": "AFTRoot.sol",
+      "line": 43
+    },
+    "416": {
+      "filename": "AFTRoot.sol",
+      "line": 43
+    },
+    "424": {
+      "filename": "AFTRoot.sol",
+      "line": 43
+    },
+    "432": {
+      "filename": "AFTRoot.sol",
+      "line": 43
+    },
+    "440": {
+      "filename": "AFTRoot.sol",
+      "line": 43
+    },
+    "456": {
+      "filename": "AFTRoot.sol",
+      "line": 43
+    },
+    "464": {
+      "filename": "AFTRoot.sol",
+      "line": 43
+    },
+    "472": {
+      "filename": "AFTRoot.sol",
+      "line": 44
+    },
+    "480": {
+      "filename": "AFTRoot.sol",
+      "line": 44
+    },
+    "504": {
+      "filename": "AFTRoot.sol",
+      "line": 45
+    },
+    "520": {
+      "filename": "AFTRoot.sol",
+      "line": 45
+    },
+    "536": {
+      "filename": "AFTRoot.sol",
+      "line": 45
+    },
+    "560": {
+      "filename": "AFTRoot.sol",
+      "line": 47
+    },
+    "568": {
+      "filename": "AFTRoot.sol",
+      "line": 47
+    },
+    "576": {
+      "filename": "AFTRoot.sol",
+      "line": 47
+    },
+    "592": {
+      "filename": "AFTRoot.sol",
+      "line": 47
+    },
+    "616": {
+      "filename": "AFTRoot.sol",
+      "line": 48
+    },
+    "632": {
+      "filename": "AFTRoot.sol",
+      "line": 50
+    },
+    "640": {
+      "filename": "AFTRoot.sol",
+      "line": 50
+    },
+    "656": {
+      "filename": "AFTRoot.sol",
+      "line": 51
+    },
+    "672": {
+      "filename": "AFTRoot.sol",
+      "line": 51
+    },
+    "688": {
+      "filename": "AFTRoot.sol",
+      "line": 52
+    },
+    "696": {
+      "filename": "AFTRoot.sol",
+      "line": 52
+    },
+    "712": {
+      "filename": "AFTRoot.sol",
+      "line": 54
+    },
+    "728": {
+      "filename": "AFTRoot.sol",
+      "line": 54
+    },
+    "736": {
+      "filename": "AFTRoot.sol",
+      "line": 54
+    },
+    "752": {
+      "filename": "AFTRoot.sol",
+      "line": 54
+    },
+    "768": {
+      "filename": "AFTRoot.sol",
+      "line": 54
+    },
+    "784": {
+      "filename": "AFTRoot.sol",
+      "line": 54
+    }
+  },
+  "285e634ac5bc448b899fbbf0458f26666b005b9b080dcdf78800ac75c6ef489e": {
+    "0": {
+      "filename": "./AFTRoot.code",
+      "line": 1916
+    },
+    "8": {
+      "filename": "./AFTRoot.code",
+      "line": 1917
+    },
+    "56": {
+      "filename": "./AFTRoot.code",
+      "line": 1918
+    },
+    "64": {
+      "filename": "./AFTRoot.code",
+      "line": 1919
+    },
+    "80": {
+      "filename": "./AFTRoot.code",
+      "line": 1922
+    },
+    "88": {
+      "filename": "./AFTRoot.code",
+      "line": 1923
+    },
+    "136": {
+      "filename": "./AFTRoot.code",
+      "line": 1924
+    },
+    "144": {
+      "filename": "./AFTRoot.code",
+      "line": 1925
+    },
+    "160": {
+      "filename": "./AFTRoot.code",
+      "line": 1928
+    },
+    "168": {
+      "filename": "./AFTRoot.code",
+      "line": 1929
+    },
+    "216": {
+      "filename": "./AFTRoot.code",
+      "line": 1930
+    },
+    "224": {
+      "filename": "./AFTRoot.code",
+      "line": 1931
+    },
+    "240": {
+      "filename": "./AFTRoot.code",
+      "line": 1934
+    },
+    "248": {
+      "filename": "./AFTRoot.code",
+      "line": 1935
+    },
+    "296": {
+      "filename": "./AFTRoot.code",
+      "line": 1936
+    },
+    "304": {
+      "filename": "./AFTRoot.code",
+      "line": 1937
+    }
+  },
+  "28a2e1c052b3ac689db037a1d7a7fb85da8e09876894303e45a4d1c5c30b2cc1": {
+    "0": {
+      "filename": "./AFTRoot.code",
+      "line": 2318
+    },
+    "8": {
+      "filename": "./AFTRoot.code",
+      "line": 2319
+    },
+    "24": {
+      "filename": "./AFTRoot.code",
+      "line": 2320
+    },
+    "32": {
+      "filename": "./AFTRoot.code",
+      "line": 2060
+    },
+    "48": {
+      "filename": "./AFTRoot.code",
+      "line": 2061
+    },
+    "72": {
+      "filename": "./AFTRoot.code",
+      "line": 2062
+    },
+    "88": {
+      "filename": "./AFTRoot.code",
+      "line": 2063
+    },
+    "96": {
+      "filename": "./AFTRoot.code",
+      "line": 2064
+    },
+    "112": {
+      "filename": "AFTRoot.sol",
+      "line": 228
+    },
+    "128": {
+      "filename": "AFTRoot.sol",
+      "line": 230
+    },
+    "144": {
+      "filename": "AFTRoot.sol",
+      "line": 231
+    },
+    "160": {
+      "filename": "AFTRoot.sol",
+      "line": 232
+    },
+    "176": {
+      "filename": "AFTRoot.sol",
+      "line": 232
+    },
+    "192": {
+      "filename": "AFTRoot.sol",
+      "line": 234
+    },
+    "200": {
+      "filename": "AFTRoot.sol",
+      "line": 234
+    },
+    "248": {
+      "filename": "AFTRoot.sol",
+      "line": 234
+    },
+    "256": {
+      "filename": "AFTRoot.sol",
+      "line": 234
+    },
+    "272": {
+      "filename": "./AFTRoot.code",
+      "line": 2257
+    },
+    "288": {
+      "filename": "./AFTRoot.code",
+      "line": 2258
+    },
+    "296": {
+      "filename": "./AFTRoot.code",
+      "line": 2259
+    },
+    "312": {
+      "filename": "./AFTRoot.code",
+      "line": 2260
+    },
+    "328": {
+      "filename": "AFTRoot.sol",
+      "line": 278
+    },
+    "344": {
+      "filename": "AFTRoot.sol",
+      "line": 278
+    },
+    "352": {
+      "filename": "AFTRoot.sol",
+      "line": 278
+    },
+    "360": {
+      "filename": "AFTRoot.sol",
+      "line": 278
+    },
+    "376": {
+      "filename": "AFTRoot.sol",
+      "line": 278
+    },
+    "392": {
+      "filename": "AFTRoot.sol",
+      "line": 279
+    },
+    "408": {
+      "filename": "AFTRoot.sol",
+      "line": 279
+    },
+    "424": {
+      "filename": "AFTRoot.sol",
+      "line": 279
+    },
+    "440": {
+      "filename": "AFTRoot.sol",
+      "line": 279
+    },
+    "456": {
+      "filename": "AFTRoot.sol",
+      "line": 279
+    },
+    "464": {
+      "filename": "AFTRoot.sol",
+      "line": 279
+    },
+    "488": {
+      "filename": "AFTRoot.sol",
+      "line": 279
+    },
+    "496": {
+      "filename": "AFTRoot.sol",
+      "line": 279
+    },
+    "504": {
+      "filename": "AFTRoot.sol",
+      "line": 279
+    },
+    "528": {
+      "filename": "AFTRoot.sol",
+      "line": 279
+    },
+    "544": {
+      "filename": "AFTRoot.sol",
+      "line": 279
+    },
+    "552": {
+      "filename": "AFTRoot.sol",
+      "line": 279
+    },
+    "600": {
+      "filename": "AFTRoot.sol",
+      "line": 279
+    },
+    "616": {
+      "filename": "AFTRoot.sol",
+      "line": 279
+    },
+    "632": {
+      "filename": "AFTRoot.sol",
+      "line": 279
+    },
+    "648": {
+      "filename": "AFTRoot.sol",
+      "line": 279
+    },
+    "664": {
+      "filename": "AFTRoot.sol",
+      "line": 279
+    },
+    "672": {
+      "filename": "AFTRoot.sol",
+      "line": 279
+    },
+    "680": {
+      "filename": "AFTRoot.sol",
+      "line": 279
+    },
+    "688": {
+      "filename": "AFTRoot.sol",
+      "line": 279
+    },
+    "704": {
+      "filename": "./AFTRoot.code",
+      "line": 2292
+    },
+    "712": {
+      "filename": "./AFTRoot.code",
+      "line": 2295
+    },
+    "720": {
+      "filename": "./AFTRoot.code",
+      "line": 2296
+    },
+    "736": {
+      "filename": "./AFTRoot.code",
+      "line": 2298
     }
   },
   "29c8a3b3401bfc385b3e7744d6070c64946f2272fe16176a265125c309e65af5": {
@@ -762,70 +1442,148 @@
       "line": 312
     }
   },
-  "2ae012757ccb1b4fdf60c1fc2da43269bd2b6e2dd49927efcd06b5e1c388f7eb": {
+  "2b07d1216db2b0ab779195ae633a6f453a887838b31951af04ba3fc77cbfa4ee": {
     "0": {
-      "filename": "./AFTRoot.code",
-      "line": 1847
+      "filename": "AFTRoot.sol",
+      "line": 73
     },
     "8": {
-      "filename": "./AFTRoot.code",
-      "line": 1848
+      "filename": "AFTRoot.sol",
+      "line": 73
+    },
+    "24": {
+      "filename": "AFTRoot.sol",
+      "line": 73
+    },
+    "32": {
+      "filename": "AFTRoot.sol",
+      "line": 73
     },
     "56": {
-      "filename": "./AFTRoot.code",
-      "line": 1849
+      "filename": "modifiers/modifiers.sol",
+      "line": 72
     },
-    "64": {
-      "filename": "./AFTRoot.code",
-      "line": 1850
-    },
-    "80": {
-      "filename": "./AFTRoot.code",
-      "line": 1903
+    "72": {
+      "filename": "modifiers/modifiers.sol",
+      "line": 72
     },
     "88": {
-      "filename": "./AFTRoot.code",
-      "line": 1904
+      "filename": "modifiers/modifiers.sol",
+      "line": 72
     },
-    "136": {
-      "filename": "./AFTRoot.code",
-      "line": 1905
+    "104": {
+      "filename": "modifiers/modifiers.sol",
+      "line": 72
+    },
+    "128": {
+      "filename": "AFTRoot.sol",
+      "line": 81
     },
     "144": {
-      "filename": "./AFTRoot.code",
-      "line": 1906
+      "filename": "AFTRoot.sol",
+      "line": 82
     },
     "160": {
-      "filename": "./AFTRoot.code",
-      "line": 1932
+      "filename": "AFTRoot.sol",
+      "line": 82
+    },
+    "176": {
+      "filename": "AFTRoot.sol",
+      "line": 82
+    }
+  },
+  "2b4ea9f7f72c3ca39699559996d06b528670010551c103e90d464385e2fdd850": {
+    "0": {
+      "filename": "AFTRoot.sol",
+      "line": 54
+    },
+    "16": {
+      "filename": "AFTRoot.sol",
+      "line": 54
+    },
+    "24": {
+      "filename": "AFTRoot.sol",
+      "line": 54
+    },
+    "48": {
+      "filename": "AFTRoot.sol",
+      "line": 54
+    },
+    "56": {
+      "filename": "AFTRoot.sol",
+      "line": 54
+    },
+    "64": {
+      "filename": "AFTRoot.sol",
+      "line": 54
+    },
+    "88": {
+      "filename": "AFTRoot.sol",
+      "line": 54
+    },
+    "104": {
+      "filename": "AFTRoot.sol",
+      "line": 54
+    },
+    "112": {
+      "filename": "AFTRoot.sol",
+      "line": 54
+    },
+    "160": {
+      "filename": "AFTRoot.sol",
+      "line": 54
     },
     "168": {
-      "filename": "./AFTRoot.code",
-      "line": 1933
+      "filename": "AFTRoot.sol",
+      "line": 54
+    },
+    "176": {
+      "filename": "AFTRoot.sol",
+      "line": 54
+    },
+    "192": {
+      "filename": "AFTRoot.sol",
+      "line": 54
+    },
+    "200": {
+      "filename": "AFTRoot.sol",
+      "line": 54
     },
     "216": {
-      "filename": "./AFTRoot.code",
-      "line": 1934
+      "filename": "AFTRoot.sol",
+      "line": 54
     },
-    "224": {
-      "filename": "./AFTRoot.code",
-      "line": 1935
+    "232": {
+      "filename": "AFTRoot.sol",
+      "line": 54
     },
     "240": {
-      "filename": "./AFTRoot.code",
-      "line": 1955
+      "filename": "AFTRoot.sol",
+      "line": 54
     },
     "248": {
-      "filename": "./AFTRoot.code",
-      "line": 1956
+      "filename": "AFTRoot.sol",
+      "line": 54
+    },
+    "256": {
+      "filename": "AFTRoot.sol",
+      "line": 54
+    },
+    "272": {
+      "filename": "AFTRoot.sol",
+      "line": 64
+    },
+    "280": {
+      "filename": "AFTRoot.sol",
+      "line": 64
     },
     "296": {
-      "filename": "./AFTRoot.code",
-      "line": 1957
+      "filename": "AFTRoot.sol",
+      "line": 65
     },
     "304": {
-      "filename": "./AFTRoot.code",
-      "line": 1958
+      "filename": "AFTRoot.sol",
+      "line": 65
     }
   },
   "2dd3c233087e26d45a65288cababbe421e4c54e68d12bb9728d18771b0746620": {
@@ -923,27 +1681,27 @@
   "30afe3e0b2c52047b4ed97bc75d53fe9ad28d5b29153e05c91df4453b43cc2b7": {
     "0": {
       "filename": "./AFTRoot.code",
-      "line": 904
+      "line": 907
     },
     "8": {
       "filename": "./AFTRoot.code",
-      "line": 905
+      "line": 908
     },
     "24": {
       "filename": "./AFTRoot.code",
-      "line": 906
+      "line": 909
     },
     "48": {
       "filename": "./AFTRoot.code",
-      "line": 907
+      "line": 910
     },
     "64": {
       "filename": "./AFTRoot.code",
-      "line": 908
+      "line": 911
     },
     "72": {
       "filename": "./AFTRoot.code",
-      "line": 909
+      "line": 912
     },
     "88": {
       "filename": "AFTRoot.sol",
@@ -951,163 +1709,413 @@
     },
     "96": {
       "filename": "./AFTRoot.code",
-      "line": 915
+      "line": 918
     },
     "112": {
       "filename": "./AFTRoot.code",
-      "line": 918
+      "line": 921
     },
     "120": {
       "filename": "./AFTRoot.code",
-      "line": 919
+      "line": 922
     },
     "136": {
       "filename": "./AFTRoot.code",
-      "line": 920
+      "line": 923
     },
     "144": {
       "filename": "./AFTRoot.code",
-      "line": 921
+      "line": 924
     },
     "152": {
       "filename": "./AFTRoot.code",
-      "line": 922
+      "line": 925
     },
     "168": {
       "filename": "./AFTRoot.code",
-      "line": 923
+      "line": 926
     },
     "184": {
       "filename": "./AFTRoot.code",
-      "line": 924
+      "line": 927
     },
     "192": {
       "filename": "./AFTRoot.code",
-      "line": 925
+      "line": 928
     },
     "200": {
       "filename": "./AFTRoot.code",
-      "line": 926
+      "line": 929
     },
     "208": {
       "filename": "./AFTRoot.code",
-      "line": 927
+      "line": 930
     },
     "232": {
       "filename": "./AFTRoot.code",
-      "line": 928
+      "line": 931
     },
     "240": {
       "filename": "./AFTRoot.code",
-      "line": 929
+      "line": 932
     },
     "248": {
       "filename": "./AFTRoot.code",
-      "line": 930
+      "line": 933
     },
     "272": {
       "filename": "./AFTRoot.code",
-      "line": 931
+      "line": 934
     },
     "288": {
       "filename": "./AFTRoot.code",
-      "line": 932
+      "line": 935
     },
     "296": {
       "filename": "./AFTRoot.code",
-      "line": 933
+      "line": 936
     },
     "344": {
       "filename": "./AFTRoot.code",
-      "line": 934
+      "line": 937
     },
     "352": {
       "filename": "./AFTRoot.code",
-      "line": 935
+      "line": 938
     },
     "360": {
       "filename": "./AFTRoot.code",
-      "line": 936
+      "line": 939
     },
     "376": {
       "filename": "./AFTRoot.code",
-      "line": 937
+      "line": 940
     },
     "384": {
       "filename": "./AFTRoot.code",
-      "line": 938
+      "line": 941
     },
     "400": {
       "filename": "./AFTRoot.code",
-      "line": 939
+      "line": 942
     },
     "408": {
       "filename": "./AFTRoot.code",
-      "line": 940
+      "line": 943
     },
     "416": {
       "filename": "./AFTRoot.code",
-      "line": 941
+      "line": 944
     },
     "432": {
       "filename": "./AFTRoot.code",
-      "line": 942
+      "line": 945
     },
     "440": {
       "filename": "./AFTRoot.code",
-      "line": 943
+      "line": 946
     },
     "448": {
       "filename": "./AFTRoot.code",
-      "line": 944
+      "line": 947
     },
     "464": {
       "filename": "./AFTRoot.code",
-      "line": 945
+      "line": 948
     },
     "480": {
       "filename": "./AFTRoot.code",
-      "line": 946
+      "line": 949
     },
     "488": {
       "filename": "./AFTRoot.code",
-      "line": 947
+      "line": 950
     },
     "496": {
       "filename": "./AFTRoot.code",
-      "line": 948
+      "line": 951
     },
     "504": {
       "filename": "./AFTRoot.code",
-      "line": 949
+      "line": 952
     },
     "512": {
       "filename": "./AFTRoot.code",
-      "line": 950
+      "line": 953
     },
     "520": {
       "filename": "./AFTRoot.code",
-      "line": 951
+      "line": 954
     },
     "536": {
       "filename": "./AFTRoot.code",
-      "line": 953
+      "line": 956
     },
     "544": {
       "filename": "./AFTRoot.code",
-      "line": 954
+      "line": 957
     },
     "560": {
       "filename": "./AFTRoot.code",
-      "line": 956
+      "line": 959
     },
     "568": {
       "filename": "./AFTRoot.code",
-      "line": 957
+      "line": 960
     },
     "584": {
       "filename": "./AFTRoot.code",
-      "line": 960
+      "line": 963
+    }
+  },
+  "326ccef0a016f1031eff3a9093797cc25b1ba9d1281bae2cfb796c21d4842d29": {
+    "0": {
+      "filename": "AFTRoot.sol",
+      "line": 135
+    },
+    "16": {
+      "filename": "AFTRoot.sol",
+      "line": 135
+    },
+    "24": {
+      "filename": "AFTRoot.sol",
+      "line": 135
+    },
+    "40": {
+      "filename": "AFTRoot.sol",
+      "line": 138
+    },
+    "56": {
+      "filename": "AFTRoot.sol",
+      "line": 138
+    },
+    "64": {
+      "filename": "AFTRoot.sol",
+      "line": 138
+    },
+    "72": {
+      "filename": "AFTRoot.sol",
+      "line": 138
+    },
+    "96": {
+      "filename": "AFTRoot.sol",
+      "line": 139
+    },
+    "104": {
+      "filename": "AFTRoot.sol",
+      "line": 139
+    },
+    "120": {
+      "filename": "AFTRoot.sol",
+      "line": 142
+    },
+    "136": {
+      "filename": "AFTRoot.sol",
+      "line": 142
+    },
+    "144": {
+      "filename": "AFTRoot.sol",
+      "line": 142
+    },
+    "160": {
+      "filename": "AFTRoot.sol",
+      "line": 143
+    },
+    "168": {
+      "filename": "AFTRoot.sol",
+      "line": 144
+    },
+    "176": {
+      "filename": "AFTRoot.sol",
+      "line": 144
+    },
+    "192": {
+      "filename": "AFTRoot.sol",
+      "line": 144
+    },
+    "200": {
+      "filename": "AFTRoot.sol",
+      "line": 144
+    },
+    "208": {
+      "filename": "AFTRoot.sol",
+      "line": 144
+    },
+    "216": {
+      "filename": "AFTRoot.sol",
+      "line": 144
+    },
+    "224": {
+      "filename": "AFTRoot.sol",
+      "line": 144
+    },
+    "232": {
+      "filename": "AFTRoot.sol",
+      "line": 144
+    },
+    "240": {
+      "filename": "AFTRoot.sol",
+      "line": 144
+    },
+    "256": {
+      "filename": "AFTRoot.sol",
+      "line": 144
+    },
+    "264": {
+      "filename": "AFTRoot.sol",
+      "line": 144
+    },
+    "280": {
+      "filename": "AFTRoot.sol",
+      "line": 144
+    },
+    "296": {
+      "filename": "./AFTRoot.code",
+      "line": 1558
+    },
+    "304": {
+      "filename": "AFTRoot.sol",
+      "line": 147
+    },
+    "320": {
+      "filename": "AFTRoot.sol",
+      "line": 147
+    },
+    "368": {
+      "filename": "AFTRoot.sol",
+      "line": 147
+    },
+    "384": {
+      "filename": "AFTRoot.sol",
+      "line": 147
+    },
+    "392": {
+      "filename": "AFTRoot.sol",
+      "line": 147
+    },
+    "400": {
+      "filename": "AFTRoot.sol",
+      "line": 147
+    },
+    "424": {
+      "filename": "AFTRoot.sol",
+      "line": 147
+    },
+    "440": {
+      "filename": "AFTRoot.sol",
+      "line": 147
+    },
+    "464": {
+      "filename": "AFTRoot.sol",
+      "line": 147
+    },
+    "472": {
+      "filename": "AFTRoot.sol",
+      "line": 147
+    },
+    "480": {
+      "filename": "AFTRoot.sol",
+      "line": 147
+    },
+    "496": {
+      "filename": "AFTRoot.sol",
+      "line": 147
+    },
+    "512": {
+      "filename": "AFTRoot.sol",
+      "line": 147
+    },
+    "520": {
+      "filename": "AFTRoot.sol",
+      "line": 147
+    },
+    "544": {
+      "filename": "AFTRoot.sol",
+      "line": 147
+    },
+    "560": {
+      "filename": "AFTRoot.sol",
+      "line": 147
+    },
+    "568": {
+      "filename": "AFTRoot.sol",
+      "line": 147
+    },
+    "616": {
+      "filename": "AFTRoot.sol",
+      "line": 147
+    },
+    "632": {
+      "filename": "AFTRoot.sol",
+      "line": 147
+    },
+    "640": {
+      "filename": "AFTRoot.sol",
+      "line": 147
+    },
+    "648": {
+      "filename": "AFTRoot.sol",
+      "line": 147
+    },
+    "672": {
+      "filename": "AFTRoot.sol",
+      "line": 147
+    },
+    "680": {
+      "filename": "AFTRoot.sol",
+      "line": 147
+    },
+    "688": {
+      "filename": "AFTRoot.sol",
+      "line": 147
+    },
+    "696": {
+      "filename": "AFTRoot.sol",
+      "line": 147
+    },
+    "712": {
+      "filename": "AFTRoot.sol",
+      "line": 147
+    },
+    "720": {
+      "filename": "AFTRoot.sol",
+      "line": 147
+    },
+    "728": {
+      "filename": "AFTRoot.sol",
+      "line": 147
+    },
+    "744": {
+      "filename": "AFTRoot.sol",
+      "line": 147
+    },
+    "752": {
+      "filename": "AFTRoot.sol",
+      "line": 147
+    },
+    "760": {
+      "filename": "AFTRoot.sol",
+      "line": 147
+    },
+    "768": {
+      "filename": "AFTRoot.sol",
+      "line": 147
+    },
+    "776": {
+      "filename": "AFTRoot.sol",
+      "line": 147
+    },
+    "784": {
+      "filename": "AFTRoot.sol",
+      "line": 147
+    },
+    "792": {
+      "filename": "AFTRoot.sol",
+      "line": 147
+    },
+    "808": {
+      "filename": "./AFTRoot.code",
+      "line": 1598
     }
   },
   "340382cad541936b05e90b54df020bece44f1ccc5c76c7560983a9f54c4286ad": {
@@ -1170,52 +2178,6 @@
     "192": {
       "filename": "modifiers/modifiers.sol",
       "line": 117
-    }
-  },
-  "36bd21f6231f80618f705bf01d47b5df5a5d19a3c07edbf8107cdf665a35b021": {
-    "0": {
-      "filename": "./AFTRoot.code",
-      "line": 1855
-    },
-    "8": {
-      "filename": "./AFTRoot.code",
-      "line": 1856
-    },
-    "24": {
-      "filename": "./AFTRoot.code",
-      "line": 1857
-    },
-    "40": {
-      "filename": "./AFTRoot.code",
-      "line": 1860
-    },
-    "48": {
-      "filename": "./AFTRoot.code",
-      "line": 1861
-    },
-    "96": {
-      "filename": "./AFTRoot.code",
-      "line": 1862
-    },
-    "104": {
-      "filename": "./AFTRoot.code",
-      "line": 1863
-    },
-    "120": {
-      "filename": "./AFTRoot.code",
-      "line": 1866
-    },
-    "128": {
-      "filename": "./AFTRoot.code",
-      "line": 1867
-    },
-    "176": {
-      "filename": "./AFTRoot.code",
-      "line": 1868
-    },
-    "184": {
-      "filename": "./AFTRoot.code",
-      "line": 1869
     }
   },
   "375352fe218c90c4df0c2dffd30aa548fa46d4155e744259eadfcea050aae032": {
@@ -1335,27 +2297,27 @@
   "37ed8a07bbc7cad091f1f1052e87b7739c5f6c12ee9aff351ffdaf98312ad6bd": {
     "0": {
       "filename": "./AFTRoot.code",
-      "line": 1673
+      "line": 1682
     },
     "8": {
       "filename": "./AFTRoot.code",
-      "line": 1674
+      "line": 1683
     },
     "24": {
       "filename": "./AFTRoot.code",
-      "line": 1675
+      "line": 1684
     },
     "48": {
       "filename": "./AFTRoot.code",
-      "line": 1676
+      "line": 1685
     },
     "64": {
       "filename": "./AFTRoot.code",
-      "line": 1677
+      "line": 1686
     },
     "72": {
       "filename": "./AFTRoot.code",
-      "line": 1678
+      "line": 1687
     },
     "88": {
       "filename": "AFTRoot.sol",
@@ -1423,15 +2385,15 @@
     },
     "264": {
       "filename": "./AFTRoot.code",
-      "line": 1700
+      "line": 1709
     },
     "280": {
       "filename": "./AFTRoot.code",
-      "line": 1703
+      "line": 1712
     },
     "296": {
       "filename": "./AFTRoot.code",
-      "line": 1706
+      "line": 1715
     }
   },
   "3f29e0cefccbdbe108b194e18f4c2f7ec6cf6d02d8e255bcbd5c450eaa6b2672": {
@@ -1483,27 +2445,27 @@
   "4167d676dad4f5fb7f583639726655ac64920dbabc0360c0bb53f5bdea1bf3c9": {
     "0": {
       "filename": "./AFTRoot.code",
-      "line": 616
+      "line": 619
     },
     "8": {
       "filename": "./AFTRoot.code",
-      "line": 617
+      "line": 620
     },
     "24": {
       "filename": "./AFTRoot.code",
-      "line": 618
+      "line": 621
     },
     "48": {
       "filename": "./AFTRoot.code",
-      "line": 619
+      "line": 622
     },
     "64": {
       "filename": "./AFTRoot.code",
-      "line": 620
+      "line": 623
     },
     "72": {
       "filename": "./AFTRoot.code",
-      "line": 621
+      "line": 624
     },
     "88": {
       "filename": "AFTRoot.sol",
@@ -1511,81 +2473,15 @@
     },
     "96": {
       "filename": "./AFTRoot.code",
-      "line": 627
+      "line": 630
     },
     "112": {
       "filename": "./AFTRoot.code",
-      "line": 630
+      "line": 633
     },
     "128": {
       "filename": "./AFTRoot.code",
-      "line": 633
-    }
-  },
-  "4216c1bb461b2d3a51bc2ffc819772f289fce6492a39f8291a9633961860a99b": {
-    "0": {
-      "filename": "./AFTRoot.code",
-      "line": 1851
-    },
-    "8": {
-      "filename": "./AFTRoot.code",
-      "line": 1852
-    },
-    "56": {
-      "filename": "./AFTRoot.code",
-      "line": 1853
-    },
-    "64": {
-      "filename": "./AFTRoot.code",
-      "line": 1854
-    },
-    "80": {
-      "filename": "./AFTRoot.code",
-      "line": 1873
-    },
-    "88": {
-      "filename": "./AFTRoot.code",
-      "line": 1874
-    },
-    "136": {
-      "filename": "./AFTRoot.code",
-      "line": 1875
-    },
-    "144": {
-      "filename": "./AFTRoot.code",
-      "line": 1876
-    },
-    "160": {
-      "filename": "./AFTRoot.code",
-      "line": 1890
-    },
-    "168": {
-      "filename": "./AFTRoot.code",
-      "line": 1891
-    },
-    "216": {
-      "filename": "./AFTRoot.code",
-      "line": 1892
-    },
-    "224": {
-      "filename": "./AFTRoot.code",
-      "line": 1893
-    },
-    "240": {
-      "filename": "./AFTRoot.code",
-      "line": 1896
-    },
-    "248": {
-      "filename": "./AFTRoot.code",
-      "line": 1897
-    },
-    "296": {
-      "filename": "./AFTRoot.code",
-      "line": 1898
-    },
-    "304": {
-      "filename": "./AFTRoot.code",
-      "line": 1899
+      "line": 636
     }
   },
   "456420064af61ce38865261643b44914e4085edb58f34baa11b4b08a80fc5ead": {
@@ -1722,120 +2618,18 @@
       "line": 92
     }
   },
-  "532222f2520185b0e483b4fb60fe3b48c0902ba42bcfbd6c3e34d0140b3276ae": {
-    "0": {
-      "filename": "./AFTRoot.code",
-      "line": 2292
-    },
-    "16": {
-      "filename": "./AFTRoot.code",
-      "line": 2293
-    },
-    "24": {
-      "filename": "./AFTRoot.code",
-      "line": 2294
-    },
-    "40": {
-      "filename": "./AFTRoot.code",
-      "line": 2295
-    },
-    "56": {
-      "filename": "./AFTRoot.code",
-      "line": 2296
-    },
-    "80": {
-      "filename": "./AFTRoot.code",
-      "line": 2297
-    },
-    "96": {
-      "filename": "./AFTRoot.code",
-      "line": 2298
-    },
-    "104": {
-      "filename": "./AFTRoot.code",
-      "line": 2299
-    },
-    "112": {
-      "filename": "./AFTRoot.code",
-      "line": 2300
-    },
-    "128": {
-      "filename": "./AFTRoot.code",
-      "line": 2301
-    },
-    "144": {
-      "filename": "./AFTRoot.code",
-      "line": 2302
-    },
-    "152": {
-      "filename": "./AFTRoot.code",
-      "line": 2303
-    },
-    "168": {
-      "filename": "./AFTRoot.code",
-      "line": 2304
-    },
-    "192": {
-      "filename": "./AFTRoot.code",
-      "line": 2305
-    },
-    "208": {
-      "filename": "./AFTRoot.code",
-      "line": 2311
-    },
-    "216": {
-      "filename": "./AFTRoot.code",
-      "line": 2312
-    },
-    "232": {
-      "filename": "./AFTRoot.code",
-      "line": 2313
-    },
-    "248": {
-      "filename": "./AFTRoot.code",
-      "line": 2317
-    },
-    "256": {
-      "filename": "./AFTRoot.code",
-      "line": 2318
-    },
-    "280": {
-      "filename": "./AFTRoot.code",
-      "line": 2319
-    },
-    "296": {
-      "filename": "./AFTRoot.code",
-      "line": 2320
-    },
-    "304": {
-      "filename": "./AFTRoot.code",
-      "line": 2321
-    },
-    "320": {
-      "filename": "./AFTRoot.code",
-      "line": 2325
-    },
-    "328": {
-      "filename": "./AFTRoot.code",
-      "line": 2326
-    },
-    "344": {
-      "filename": "./AFTRoot.code",
-      "line": 2329
-    }
-  },
   "545036109a6618f484d9d436edbed42cbb75d05d6db87db8d58e12444253a546": {
     "0": {
       "filename": "./AFTRoot.code",
-      "line": 1029
+      "line": 1032
     },
     "8": {
       "filename": "./AFTRoot.code",
-      "line": 1030
+      "line": 1033
     },
     "24": {
       "filename": "./AFTRoot.code",
-      "line": 1031
+      "line": 1034
     },
     "48": {
       "filename": "AFTRoot.sol",
@@ -1843,383 +2637,129 @@
     },
     "56": {
       "filename": "./AFTRoot.code",
-      "line": 1035
+      "line": 1038
     },
     "72": {
       "filename": "./AFTRoot.code",
-      "line": 1038
+      "line": 1041
     },
     "80": {
       "filename": "./AFTRoot.code",
-      "line": 1039
+      "line": 1042
     },
     "96": {
       "filename": "./AFTRoot.code",
-      "line": 1040
+      "line": 1043
     },
     "104": {
       "filename": "./AFTRoot.code",
-      "line": 1041
+      "line": 1044
     },
     "112": {
       "filename": "./AFTRoot.code",
-      "line": 1042
+      "line": 1045
     },
     "128": {
       "filename": "./AFTRoot.code",
-      "line": 1043
+      "line": 1046
     },
     "144": {
       "filename": "./AFTRoot.code",
-      "line": 1044
+      "line": 1047
     },
     "152": {
       "filename": "./AFTRoot.code",
-      "line": 1045
+      "line": 1048
     },
     "160": {
       "filename": "./AFTRoot.code",
-      "line": 1046
+      "line": 1049
     },
     "168": {
       "filename": "./AFTRoot.code",
-      "line": 1047
+      "line": 1050
     },
     "192": {
       "filename": "./AFTRoot.code",
-      "line": 1048
+      "line": 1051
     },
     "200": {
       "filename": "./AFTRoot.code",
-      "line": 1049
+      "line": 1052
     },
     "248": {
       "filename": "./AFTRoot.code",
-      "line": 1050
+      "line": 1053
     },
     "272": {
       "filename": "./AFTRoot.code",
-      "line": 1051
+      "line": 1054
     },
     "288": {
       "filename": "./AFTRoot.code",
-      "line": 1052
+      "line": 1055
     },
     "296": {
       "filename": "./AFTRoot.code",
-      "line": 1053
+      "line": 1056
     },
     "304": {
       "filename": "./AFTRoot.code",
-      "line": 1054
+      "line": 1057
     },
     "320": {
       "filename": "./AFTRoot.code",
-      "line": 1056
+      "line": 1059
     },
     "328": {
       "filename": "./AFTRoot.code",
-      "line": 1057
+      "line": 1060
     },
     "336": {
       "filename": "./AFTRoot.code",
-      "line": 1059
+      "line": 1062
     },
     "344": {
       "filename": "./AFTRoot.code",
-      "line": 1060
+      "line": 1063
     },
     "360": {
       "filename": "./AFTRoot.code",
-      "line": 1063
+      "line": 1066
     }
   },
   "565945aaa8c8f986c4aa050822d410d99fe38fc871c2d0af4907de7d7c464a8a": {
     "0": {
       "filename": "./AFTRoot.code",
-      "line": 1877
+      "line": 1886
     },
     "8": {
       "filename": "./AFTRoot.code",
-      "line": 1878
+      "line": 1887
     },
     "56": {
       "filename": "./AFTRoot.code",
-      "line": 1879
+      "line": 1888
     },
     "64": {
       "filename": "./AFTRoot.code",
-      "line": 1880
+      "line": 1889
     },
     "80": {
       "filename": "./AFTRoot.code",
-      "line": 1883
+      "line": 1892
     },
     "88": {
       "filename": "./AFTRoot.code",
-      "line": 1884
+      "line": 1893
     },
     "136": {
       "filename": "./AFTRoot.code",
-      "line": 1885
+      "line": 1894
     },
     "144": {
       "filename": "./AFTRoot.code",
-      "line": 1886
-    }
-  },
-  "5f1adb78880f6a4a0b6fe23cac7dce06c7c36d279570fe2720d9e5dea71514b3": {
-    "0": {
-      "filename": "AFTRoot.sol",
-      "line": 176
-    },
-    "16": {
-      "filename": "AFTRoot.sol",
-      "line": 178
-    },
-    "24": {
-      "filename": "AFTRoot.sol",
-      "line": 178
-    },
-    "32": {
-      "filename": "AFTRoot.sol",
-      "line": 178
-    },
-    "80": {
-      "filename": "AFTRoot.sol",
-      "line": 178
-    },
-    "96": {
-      "filename": "AFTRoot.sol",
-      "line": 178
-    },
-    "104": {
-      "filename": "AFTRoot.sol",
-      "line": 179
-    },
-    "136": {
-      "filename": "AFTRoot.sol",
-      "line": 179
-    },
-    "152": {
-      "filename": "AFTRoot.sol",
-      "line": 179
-    },
-    "160": {
-      "filename": "AFTRoot.sol",
-      "line": 179
-    },
-    "176": {
-      "filename": "AFTRoot.sol",
-      "line": 179
-    },
-    "184": {
-      "filename": "AFTRoot.sol",
-      "line": 179
-    },
-    "200": {
-      "filename": "AFTRoot.sol",
-      "line": 184
-    },
-    "216": {
-      "filename": "AFTRoot.sol",
-      "line": 185
-    },
-    "232": {
-      "filename": "AFTRoot.sol",
-      "line": 185
-    },
-    "240": {
-      "filename": "AFTRoot.sol",
-      "line": 185
-    },
-    "256": {
-      "filename": "AFTRoot.sol",
-      "line": 185
-    },
-    "264": {
-      "filename": "AFTRoot.sol",
-      "line": 185
-    },
-    "280": {
-      "filename": "AFTRoot.sol",
-      "line": 185
-    },
-    "288": {
-      "filename": "AFTRoot.sol",
-      "line": 185
-    },
-    "304": {
-      "filename": "AFTRoot.sol",
-      "line": 185
-    },
-    "312": {
-      "filename": "AFTRoot.sol",
-      "line": 186
-    },
-    "320": {
-      "filename": "AFTRoot.sol",
-      "line": 186
-    },
-    "368": {
-      "filename": "AFTRoot.sol",
-      "line": 186
-    },
-    "376": {
-      "filename": "AFTRoot.sol",
-      "line": 186
-    },
-    "384": {
-      "filename": "AFTRoot.sol",
-      "line": 186
-    },
-    "392": {
-      "filename": "AFTRoot.sol",
-      "line": 186
-    },
-    "440": {
-      "filename": "./AFTRoot.code",
-      "line": 1344
-    },
-    "448": {
-      "filename": "AFTRoot.sol",
-      "line": 187
-    },
-    "456": {
-      "filename": "AFTRoot.sol",
-      "line": 188
-    },
-    "464": {
-      "filename": "AFTRoot.sol",
-      "line": 188
-    },
-    "480": {
-      "filename": "AFTRoot.sol",
-      "line": 188
-    },
-    "488": {
-      "filename": "AFTRoot.sol",
-      "line": 189
-    },
-    "496": {
-      "filename": "AFTRoot.sol",
-      "line": 189
-    },
-    "504": {
-      "filename": "AFTRoot.sol",
-      "line": 189
-    },
-    "512": {
-      "filename": "AFTRoot.sol",
-      "line": 189
-    },
-    "520": {
-      "filename": "AFTRoot.sol",
-      "line": 189
-    },
-    "528": {
-      "filename": "AFTRoot.sol",
-      "line": 189
-    },
-    "544": {
-      "filename": "AFTRoot.sol",
-      "line": 189
-    },
-    "552": {
-      "filename": "AFTRoot.sol",
-      "line": 189
-    },
-    "568": {
-      "filename": "AFTRoot.sol",
-      "line": 189
-    },
-    "584": {
-      "filename": "./AFTRoot.code",
-      "line": 1363
-    },
-    "592": {
-      "filename": "AFTRoot.sol",
-      "line": 191
-    },
-    "608": {
-      "filename": "AFTRoot.sol",
-      "line": 191
-    },
-    "616": {
-      "filename": "AFTRoot.sol",
-      "line": 191
-    },
-    "624": {
-      "filename": "AFTRoot.sol",
-      "line": 191
-    },
-    "632": {
-      "filename": "AFTRoot.sol",
-      "line": 191
-    },
-    "640": {
-      "filename": "AFTRoot.sol",
-      "line": 191
-    },
-    "664": {
-      "filename": "AFTRoot.sol",
-      "line": 191
-    },
-    "680": {
-      "filename": "AFTRoot.sol",
-      "line": 191
-    },
-    "704": {
-      "filename": "AFTRoot.sol",
-      "line": 191
-    },
-    "712": {
-      "filename": "AFTRoot.sol",
-      "line": 191
-    },
-    "720": {
-      "filename": "AFTRoot.sol",
-      "line": 191
-    },
-    "736": {
-      "filename": "AFTRoot.sol",
-      "line": 191
-    },
-    "752": {
-      "filename": "AFTRoot.sol",
-      "line": 191
-    },
-    "800": {
-      "filename": "AFTRoot.sol",
-      "line": 191
-    },
-    "824": {
-      "filename": "AFTRoot.sol",
-      "line": 191
-    },
-    "840": {
-      "filename": "AFTRoot.sol",
-      "line": 191
-    },
-    "848": {
-      "filename": "AFTRoot.sol",
-      "line": 191
-    },
-    "856": {
-      "filename": "AFTRoot.sol",
-      "line": 191
-    },
-    "872": {
-      "filename": "./AFTRoot.code",
-      "line": 1384
-    },
-    "888": {
-      "filename": "./AFTRoot.code",
-      "line": 1386
-    },
-    "896": {
-      "filename": "./AFTRoot.code",
-      "line": 1388
+      "line": 1895
     }
   },
   "5f5a038e9781d7be6cf44d42e28dd8ca39d603a946fafb24ba1a2eb517d49298": {
@@ -2319,7 +2859,7 @@
     },
     "248": {
       "filename": "./AFTRoot.code",
-      "line": 341
+      "line": 344
     },
     "256": {
       "filename": "AFTRoot.sol",
@@ -2537,3102 +3077,328 @@
   "61ab4641fa30d9310391025086eec65d200d79268e1b7cd402565e01ba64be3c": {
     "0": {
       "filename": "./AFTRoot.code",
-      "line": 1976
+      "line": 1985
+    }
+  },
+  "62c5d431c3f754a66d26b61b8fcbcc766e09b1a4a125081d127df580b209113a": {
+    "0": {
+      "filename": "AFTRoot.sol",
+      "line": 269
+    },
+    "8": {
+      "filename": "AFTRoot.sol",
+      "line": 269
+    },
+    "16": {
+      "filename": "AFTRoot.sol",
+      "line": 269
+    },
+    "24": {
+      "filename": "AFTRoot.sol",
+      "line": 269
+    },
+    "32": {
+      "filename": "AFTRoot.sol",
+      "line": 269
+    },
+    "40": {
+      "filename": "AFTRoot.sol",
+      "line": 269
+    },
+    "48": {
+      "filename": "AFTRoot.sol",
+      "line": 269
+    },
+    "64": {
+      "filename": "./AFTRoot.code",
+      "line": 2255
+    }
+  },
+  "6858fb2bc8a6548f043a5837fe9703d189487eb4db20d1d8a10e6697a71e2c69": {
+    "0": {
+      "filename": "./AFTRoot.code",
+      "line": 1602
+    },
+    "8": {
+      "filename": "./AFTRoot.code",
+      "line": 1603
+    },
+    "24": {
+      "filename": "./AFTRoot.code",
+      "line": 1604
+    },
+    "48": {
+      "filename": "./AFTRoot.code",
+      "line": 1605
+    },
+    "64": {
+      "filename": "./AFTRoot.code",
+      "line": 1606
+    },
+    "72": {
+      "filename": "./AFTRoot.code",
+      "line": 1607
+    },
+    "88": {
+      "filename": "AFTRoot.sol",
+      "line": 109
+    },
+    "96": {
+      "filename": "AFTRoot.sol",
+      "line": 109
+    },
+    "104": {
+      "filename": "AFTRoot.sol",
+      "line": 109
+    },
+    "112": {
+      "filename": "AFTRoot.sol",
+      "line": 109
+    },
+    "120": {
+      "filename": "AFTRoot.sol",
+      "line": 109
+    },
+    "128": {
+      "filename": "AFTRoot.sol",
+      "line": 109
+    },
+    "136": {
+      "filename": "AFTRoot.sol",
+      "line": 109
+    },
+    "152": {
+      "filename": "AFTRoot.sol",
+      "line": 109
+    },
+    "168": {
+      "filename": "AFTRoot.sol",
+      "line": 109
+    },
+    "184": {
+      "filename": "AFTRoot.sol",
+      "line": 109
+    },
+    "192": {
+      "filename": "./AFTRoot.code",
+      "line": 1623
+    },
+    "208": {
+      "filename": "./AFTRoot.code",
+      "line": 1626
+    },
+    "224": {
+      "filename": "./AFTRoot.code",
+      "line": 1629
     }
   },
   "6992baf97219b04cfed69be5a3659a55e7a96eb333e78e557dfa34bbef70bc39": {
     "0": {
       "filename": "./AFTRoot.code",
-      "line": 485
-    },
-    "16": {
-      "filename": "./AFTRoot.code",
-      "line": 486
-    },
-    "24": {
-      "filename": "./AFTRoot.code",
-      "line": 487
-    },
-    "40": {
-      "filename": "./AFTRoot.code",
       "line": 488
     },
-    "56": {
+    "16": {
       "filename": "./AFTRoot.code",
       "line": 489
     },
-    "72": {
+    "24": {
       "filename": "./AFTRoot.code",
       "line": 490
     },
-    "80": {
+    "40": {
       "filename": "./AFTRoot.code",
       "line": 491
     },
-    "88": {
+    "56": {
       "filename": "./AFTRoot.code",
       "line": 492
     },
-    "104": {
+    "72": {
       "filename": "./AFTRoot.code",
       "line": 493
     },
-    "112": {
+    "80": {
       "filename": "./AFTRoot.code",
       "line": 494
     },
-    "120": {
+    "88": {
       "filename": "./AFTRoot.code",
       "line": 495
     },
-    "128": {
+    "104": {
       "filename": "./AFTRoot.code",
       "line": 496
     },
-    "144": {
+    "112": {
       "filename": "./AFTRoot.code",
       "line": 497
     },
-    "152": {
+    "120": {
       "filename": "./AFTRoot.code",
       "line": 498
     },
-    "160": {
+    "128": {
       "filename": "./AFTRoot.code",
       "line": 499
     },
-    "168": {
+    "144": {
       "filename": "./AFTRoot.code",
       "line": 500
     },
-    "184": {
+    "152": {
       "filename": "./AFTRoot.code",
       "line": 501
     },
-    "200": {
+    "160": {
       "filename": "./AFTRoot.code",
       "line": 502
     },
-    "216": {
+    "168": {
       "filename": "./AFTRoot.code",
       "line": 503
     },
-    "224": {
+    "184": {
       "filename": "./AFTRoot.code",
       "line": 504
     },
-    "232": {
+    "200": {
       "filename": "./AFTRoot.code",
       "line": 505
     },
-    "240": {
+    "216": {
       "filename": "./AFTRoot.code",
       "line": 506
     },
-    "256": {
+    "224": {
       "filename": "./AFTRoot.code",
       "line": 507
     },
-    "272": {
+    "232": {
       "filename": "./AFTRoot.code",
       "line": 508
     },
-    "288": {
+    "240": {
       "filename": "./AFTRoot.code",
       "line": 509
     },
-    "304": {
+    "256": {
       "filename": "./AFTRoot.code",
       "line": 510
     },
-    "320": {
+    "272": {
       "filename": "./AFTRoot.code",
       "line": 511
     },
-    "336": {
+    "288": {
       "filename": "./AFTRoot.code",
       "line": 512
     },
-    "352": {
+    "304": {
       "filename": "./AFTRoot.code",
       "line": 513
     },
-    "368": {
+    "320": {
       "filename": "./AFTRoot.code",
       "line": 514
     },
-    "384": {
+    "336": {
       "filename": "./AFTRoot.code",
       "line": 515
     },
-    "400": {
+    "352": {
       "filename": "./AFTRoot.code",
       "line": 516
     },
-    "416": {
+    "368": {
       "filename": "./AFTRoot.code",
       "line": 517
-    }
-  },
-  "6d625ef28698a930583bde3fb0b31f06796a20511d54fcb1cd1955665f68c815": {
-    "0": {
-      "filename": "AFTRoot.sol",
-      "line": 54
-    },
-    "16": {
-      "filename": "AFTRoot.sol",
-      "line": 54
-    },
-    "24": {
-      "filename": "AFTRoot.sol",
-      "line": 54
-    },
-    "48": {
-      "filename": "AFTRoot.sol",
-      "line": 54
-    },
-    "56": {
-      "filename": "AFTRoot.sol",
-      "line": 54
-    },
-    "64": {
-      "filename": "AFTRoot.sol",
-      "line": 54
-    },
-    "88": {
-      "filename": "AFTRoot.sol",
-      "line": 54
-    },
-    "104": {
-      "filename": "AFTRoot.sol",
-      "line": 54
-    },
-    "112": {
-      "filename": "AFTRoot.sol",
-      "line": 54
-    },
-    "160": {
-      "filename": "AFTRoot.sol",
-      "line": 54
-    },
-    "168": {
-      "filename": "AFTRoot.sol",
-      "line": 54
-    },
-    "176": {
-      "filename": "AFTRoot.sol",
-      "line": 54
-    },
-    "192": {
-      "filename": "AFTRoot.sol",
-      "line": 54
-    },
-    "200": {
-      "filename": "AFTRoot.sol",
-      "line": 54
-    },
-    "216": {
-      "filename": "AFTRoot.sol",
-      "line": 54
-    },
-    "232": {
-      "filename": "AFTRoot.sol",
-      "line": 54
-    },
-    "240": {
-      "filename": "AFTRoot.sol",
-      "line": 54
-    },
-    "248": {
-      "filename": "AFTRoot.sol",
-      "line": 54
-    },
-    "256": {
-      "filename": "AFTRoot.sol",
-      "line": 54
-    },
-    "272": {
-      "filename": "AFTRoot.sol",
-      "line": 64
-    },
-    "280": {
-      "filename": "AFTRoot.sol",
-      "line": 64
-    },
-    "296": {
-      "filename": "AFTRoot.sol",
-      "line": 65
-    },
-    "304": {
-      "filename": "AFTRoot.sol",
-      "line": 65
-    }
-  },
-  "77dcdf43e63117297876c999d441ccf2e47f0447940667be1997c38d86270e46": {
-    "0": {
-      "filename": "./AFTRoot.code",
-      "line": 1593
-    },
-    "8": {
-      "filename": "./AFTRoot.code",
-      "line": 1594
-    },
-    "24": {
-      "filename": "./AFTRoot.code",
-      "line": 1595
-    },
-    "48": {
-      "filename": "./AFTRoot.code",
-      "line": 1596
-    },
-    "64": {
-      "filename": "./AFTRoot.code",
-      "line": 1597
-    },
-    "72": {
-      "filename": "./AFTRoot.code",
-      "line": 1598
-    },
-    "88": {
-      "filename": "AFTRoot.sol",
-      "line": 109
-    },
-    "96": {
-      "filename": "AFTRoot.sol",
-      "line": 109
-    },
-    "104": {
-      "filename": "AFTRoot.sol",
-      "line": 109
-    },
-    "112": {
-      "filename": "AFTRoot.sol",
-      "line": 109
-    },
-    "120": {
-      "filename": "AFTRoot.sol",
-      "line": 109
-    },
-    "128": {
-      "filename": "AFTRoot.sol",
-      "line": 109
-    },
-    "136": {
-      "filename": "AFTRoot.sol",
-      "line": 109
-    },
-    "152": {
-      "filename": "AFTRoot.sol",
-      "line": 109
-    },
-    "168": {
-      "filename": "AFTRoot.sol",
-      "line": 109
-    },
-    "184": {
-      "filename": "AFTRoot.sol",
-      "line": 109
-    },
-    "192": {
-      "filename": "./AFTRoot.code",
-      "line": 1614
-    },
-    "208": {
-      "filename": "./AFTRoot.code",
-      "line": 1617
-    },
-    "224": {
-      "filename": "./AFTRoot.code",
-      "line": 1620
-    }
-  },
-  "8412c0f97703a920601aa6315890cb20dad77862dc7ba466ebe3200c01fe2eba": {
-    "0": {
-      "filename": "AFTRoot.sol",
-      "line": 95
-    },
-    "8": {
-      "filename": "AFTRoot.sol",
-      "line": 95
-    },
-    "24": {
-      "filename": "AFTRoot.sol",
-      "line": 95
-    },
-    "32": {
-      "filename": "AFTRoot.sol",
-      "line": 95
-    },
-    "56": {
-      "filename": "modifiers/modifiers.sol",
-      "line": 77
-    },
-    "72": {
-      "filename": "modifiers/modifiers.sol",
-      "line": 77
-    },
-    "88": {
-      "filename": "modifiers/modifiers.sol",
-      "line": 77
-    },
-    "104": {
-      "filename": "modifiers/modifiers.sol",
-      "line": 77
-    },
-    "128": {
-      "filename": "modifiers/modifiers.sol",
-      "line": 62
-    },
-    "144": {
-      "filename": "AFTRoot.sol",
-      "line": 96
-    },
-    "160": {
-      "filename": "AFTRoot.sol",
-      "line": 97
-    },
-    "176": {
-      "filename": "AFTRoot.sol",
-      "line": 97
-    },
-    "192": {
-      "filename": "AFTRoot.sol",
-      "line": 98
-    },
-    "200": {
-      "filename": "AFTRoot.sol",
-      "line": 98
-    },
-    "216": {
-      "filename": "AFTRoot.sol",
-      "line": 99
-    },
-    "232": {
-      "filename": "AFTRoot.sol",
-      "line": 99
-    },
-    "248": {
-      "filename": "AFTRoot.sol",
-      "line": 99
-    },
-    "256": {
-      "filename": "AFTRoot.sol",
-      "line": 99
-    },
-    "272": {
-      "filename": "AFTRoot.sol",
-      "line": 99
-    },
-    "280": {
-      "filename": "AFTRoot.sol",
-      "line": 99
-    },
-    "304": {
-      "filename": "AFTRoot.sol",
-      "line": 99
-    },
-    "312": {
-      "filename": "AFTRoot.sol",
-      "line": 99
-    },
-    "320": {
-      "filename": "AFTRoot.sol",
-      "line": 99
-    },
-    "344": {
-      "filename": "AFTRoot.sol",
-      "line": 99
-    },
-    "360": {
-      "filename": "AFTRoot.sol",
-      "line": 99
-    },
-    "368": {
-      "filename": "AFTRoot.sol",
-      "line": 99
-    },
-    "416": {
-      "filename": "AFTRoot.sol",
-      "line": 99
-    },
-    "424": {
-      "filename": "AFTRoot.sol",
-      "line": 99
-    },
-    "432": {
-      "filename": "AFTRoot.sol",
-      "line": 99
-    },
-    "440": {
-      "filename": "AFTRoot.sol",
-      "line": 99
-    },
-    "448": {
-      "filename": "AFTRoot.sol",
-      "line": 99
-    },
-    "464": {
-      "filename": "AFTRoot.sol",
-      "line": 99
-    },
-    "472": {
-      "filename": "AFTRoot.sol",
-      "line": 99
-    },
-    "480": {
-      "filename": "AFTRoot.sol",
-      "line": 99
-    },
-    "488": {
-      "filename": "AFTRoot.sol",
-      "line": 99
-    },
-    "496": {
-      "filename": "AFTRoot.sol",
-      "line": 99
-    }
-  },
-  "86c3c0c050ac9a5f950f56a835f27858e3e1f2bade687279ed4e0aadf37b6cf0": {
-    "0": {
-      "filename": "modifiers/modifiers.sol",
-      "line": 91
-    },
-    "8": {
-      "filename": "modifiers/modifiers.sol",
-      "line": 91
-    },
-    "24": {
-      "filename": "modifiers/modifiers.sol",
-      "line": 91
-    },
-    "40": {
-      "filename": "modifiers/modifiers.sol",
-      "line": 91
-    },
-    "56": {
-      "filename": "modifiers/modifiers.sol",
-      "line": 91
-    },
-    "72": {
-      "filename": "modifiers/modifiers.sol",
-      "line": 91
-    },
-    "80": {
-      "filename": "modifiers/modifiers.sol",
-      "line": 91
-    },
-    "96": {
-      "filename": "modifiers/modifiers.sol",
-      "line": 91
-    },
-    "104": {
-      "filename": "modifiers/modifiers.sol",
-      "line": 91
-    },
-    "112": {
-      "filename": "modifiers/modifiers.sol",
-      "line": 91
-    }
-  },
-  "8a5972eeb0ea1a19814ad18a355f5e412a334f174f1c8c3b9181ea79d54d140b": {
-    "0": {
-      "filename": "./AFTRoot.code",
-      "line": 1752
-    },
-    "8": {
-      "filename": "./AFTRoot.code",
-      "line": 1753
-    },
-    "24": {
-      "filename": "./AFTRoot.code",
-      "line": 1754
-    },
-    "48": {
-      "filename": "./AFTRoot.code",
-      "line": 1755
-    },
-    "64": {
-      "filename": "./AFTRoot.code",
-      "line": 1756
-    },
-    "72": {
-      "filename": "./AFTRoot.code",
-      "line": 1757
-    },
-    "88": {
-      "filename": "AFTRoot.sol",
-      "line": 102
-    },
-    "96": {
-      "filename": "AFTRoot.sol",
-      "line": 102
-    },
-    "104": {
-      "filename": "./AFTRoot.code",
-      "line": 1764
-    },
-    "120": {
-      "filename": "./AFTRoot.code",
-      "line": 1767
-    },
-    "136": {
-      "filename": "./AFTRoot.code",
-      "line": 1770
-    }
-  },
-  "8a83c4b39f0a8cedb63095171c2b28b72414e7e6f312325b4fc7cff1d8ed6218": {
-    "0": {
-      "filename": "AFTRoot.sol",
-      "line": 335
-    },
-    "16": {
-      "filename": "AFTRoot.sol",
-      "line": 336
-    },
-    "24": {
-      "filename": "AFTRoot.sol",
-      "line": 336
-    },
-    "40": {
-      "filename": "AFTRoot.sol",
-      "line": 336
-    },
-    "48": {
-      "filename": "AFTRoot.sol",
-      "line": 336
-    },
-    "64": {
-      "filename": "AFTRoot.sol",
-      "line": 336
-    },
-    "72": {
-      "filename": "AFTRoot.sol",
-      "line": 336
-    }
-  },
-  "8d1f010682abbf623a65f16c70f3907191dbb50c430dd839f5c0a1cc1beea4cd": {
-    "0": {
-      "filename": "./AFTRoot.code",
-      "line": 979
-    },
-    "8": {
-      "filename": "./AFTRoot.code",
-      "line": 980
-    },
-    "24": {
-      "filename": "./AFTRoot.code",
-      "line": 981
-    },
-    "48": {
-      "filename": "AFTRoot.sol",
-      "line": 334
-    },
-    "56": {
-      "filename": "./AFTRoot.code",
-      "line": 985
-    },
-    "72": {
-      "filename": "./AFTRoot.code",
-      "line": 988
-    },
-    "80": {
-      "filename": "./AFTRoot.code",
-      "line": 989
-    },
-    "96": {
-      "filename": "./AFTRoot.code",
-      "line": 990
-    },
-    "104": {
-      "filename": "./AFTRoot.code",
-      "line": 991
-    },
-    "112": {
-      "filename": "./AFTRoot.code",
-      "line": 992
-    },
-    "128": {
-      "filename": "./AFTRoot.code",
-      "line": 993
-    },
-    "144": {
-      "filename": "./AFTRoot.code",
-      "line": 994
-    },
-    "152": {
-      "filename": "./AFTRoot.code",
-      "line": 995
-    },
-    "160": {
-      "filename": "./AFTRoot.code",
-      "line": 996
-    },
-    "168": {
-      "filename": "./AFTRoot.code",
-      "line": 997
-    },
-    "192": {
-      "filename": "./AFTRoot.code",
-      "line": 998
-    },
-    "200": {
-      "filename": "./AFTRoot.code",
-      "line": 999
-    },
-    "216": {
-      "filename": "./AFTRoot.code",
-      "line": 1000
-    },
-    "232": {
-      "filename": "./AFTRoot.code",
-      "line": 1001
-    },
-    "240": {
-      "filename": "./AFTRoot.code",
-      "line": 1002
-    },
-    "288": {
-      "filename": "./AFTRoot.code",
-      "line": 1003
-    },
-    "304": {
-      "filename": "./AFTRoot.code",
-      "line": 1004
-    },
-    "320": {
-      "filename": "./AFTRoot.code",
-      "line": 1005
-    },
-    "336": {
-      "filename": "./AFTRoot.code",
-      "line": 1006
-    },
-    "344": {
-      "filename": "./AFTRoot.code",
-      "line": 1007
-    },
-    "352": {
-      "filename": "./AFTRoot.code",
-      "line": 1008
-    },
-    "368": {
-      "filename": "./AFTRoot.code",
-      "line": 1010
-    },
-    "376": {
-      "filename": "./AFTRoot.code",
-      "line": 1011
-    },
-    "392": {
-      "filename": "./AFTRoot.code",
-      "line": 1013
-    },
-    "400": {
-      "filename": "./AFTRoot.code",
-      "line": 1014
-    },
-    "416": {
-      "filename": "./AFTRoot.code",
-      "line": 1017
-    }
-  },
-  "95578aee441fc5ce99344e253dc0268091bea8cdd10393fec4d699da74b42143": {
-    "0": {
-      "filename": "./AFTRoot.code",
-      "line": 2396
-    },
-    "8": {
-      "filename": "./AFTRoot.code",
-      "line": 2406
-    },
-    "24": {
-      "filename": "./AFTRoot.code",
-      "line": 2407
-    },
-    "32": {
-      "filename": "./AFTRoot.code",
-      "line": 2408
-    },
-    "48": {
-      "filename": "./AFTRoot.code",
-      "line": 2411
-    },
-    "56": {
-      "filename": "./AFTRoot.code",
-      "line": 2412
-    },
-    "72": {
-      "filename": "./AFTRoot.code",
-      "line": 2413
-    },
-    "88": {
-      "filename": "./AFTRoot.code",
-      "line": 2416
-    },
-    "96": {
-      "filename": "./AFTRoot.code",
-      "line": 2417
-    },
-    "112": {
-      "filename": "./AFTRoot.code",
-      "line": 2418
-    },
-    "128": {
-      "filename": "./AFTRoot.code",
-      "line": 2421
-    }
-  },
-  "96a296d224f285c67bee93c30f8a309157f0daa35dc5b87e410b78630a09cfc7": {},
-  "9738dfce8ecf273245a4781b623d5a3c33f54f3001894b40b523f697de3cc4f1": {
-    "0": {
-      "filename": "AFTRoot.sol",
-      "line": 384
-    },
-    "24": {
-      "filename": "AFTRoot.sol",
-      "line": 384
-    },
-    "40": {
-      "filename": "AFTRoot.sol",
-      "line": 384
-    },
-    "48": {
-      "filename": "AFTRoot.sol",
-      "line": 384
-    },
-    "96": {
-      "filename": "AFTRoot.sol",
-      "line": 384
-    },
-    "112": {
-      "filename": "AFTRoot.sol",
-      "line": 384
-    },
-    "120": {
-      "filename": "AFTRoot.sol",
-      "line": 384
-    },
-    "136": {
-      "filename": "AFTRoot.sol",
-      "line": 384
-    },
-    "152": {
-      "filename": "AFTRoot.sol",
-      "line": 384
-    },
-    "160": {
-      "filename": "AFTRoot.sol",
-      "line": 384
-    },
-    "168": {
-      "filename": "AFTRoot.sol",
-      "line": 384
-    },
-    "184": {
-      "filename": "AFTRoot.sol",
-      "line": 384
-    },
-    "200": {
-      "filename": "AFTRoot.sol",
-      "line": 384
-    },
-    "208": {
-      "filename": "AFTRoot.sol",
-      "line": 384
-    },
-    "216": {
-      "filename": "AFTRoot.sol",
-      "line": 384
-    },
-    "224": {
-      "filename": "AFTRoot.sol",
-      "line": 384
-    },
-    "232": {
-      "filename": "AFTRoot.sol",
-      "line": 384
-    }
-  },
-  "9d446d23e1e19ad38de302186c33cbfbbef50f165fc1b1547c0c8df378fa73ff": {
-    "0": {
-      "filename": "./AFTRoot.code",
-      "line": 1907
-    },
-    "8": {
-      "filename": "./AFTRoot.code",
-      "line": 1908
-    },
-    "56": {
-      "filename": "./AFTRoot.code",
-      "line": 1909
-    },
-    "64": {
-      "filename": "./AFTRoot.code",
-      "line": 1910
-    },
-    "80": {
-      "filename": "./AFTRoot.code",
-      "line": 1913
-    },
-    "88": {
-      "filename": "./AFTRoot.code",
-      "line": 1914
-    },
-    "136": {
-      "filename": "./AFTRoot.code",
-      "line": 1915
-    },
-    "144": {
-      "filename": "./AFTRoot.code",
-      "line": 1916
-    },
-    "160": {
-      "filename": "./AFTRoot.code",
-      "line": 1919
-    },
-    "168": {
-      "filename": "./AFTRoot.code",
-      "line": 1920
-    },
-    "216": {
-      "filename": "./AFTRoot.code",
-      "line": 1921
-    },
-    "224": {
-      "filename": "./AFTRoot.code",
-      "line": 1922
-    },
-    "240": {
-      "filename": "./AFTRoot.code",
-      "line": 1925
-    },
-    "248": {
-      "filename": "./AFTRoot.code",
-      "line": 1926
-    },
-    "296": {
-      "filename": "./AFTRoot.code",
-      "line": 1927
-    },
-    "304": {
-      "filename": "./AFTRoot.code",
-      "line": 1928
-    }
-  },
-  "9dd8afc470178fda37cdbf8b9b92d4f19ebab0bb39134e93d019d2dad914e3ef": {
-    "0": {
-      "filename": "./AFTRoot.code",
-      "line": 1077
-    },
-    "8": {
-      "filename": "./AFTRoot.code",
-      "line": 1078
-    },
-    "24": {
-      "filename": "./AFTRoot.code",
-      "line": 1079
-    },
-    "48": {
-      "filename": "./AFTRoot.code",
-      "line": 1080
-    },
-    "64": {
-      "filename": "./AFTRoot.code",
-      "line": 1081
-    },
-    "72": {
-      "filename": "./AFTRoot.code",
-      "line": 1082
-    },
-    "88": {
-      "filename": "AFTRoot.sol",
-      "line": 301
-    },
-    "96": {
-      "filename": "./AFTRoot.code",
-      "line": 1088
-    },
-    "112": {
-      "filename": "./AFTRoot.code",
-      "line": 1091
-    },
-    "120": {
-      "filename": "./AFTRoot.code",
-      "line": 1092
-    },
-    "136": {
-      "filename": "./AFTRoot.code",
-      "line": 1093
-    },
-    "144": {
-      "filename": "./AFTRoot.code",
-      "line": 1094
-    },
-    "152": {
-      "filename": "./AFTRoot.code",
-      "line": 1095
-    },
-    "168": {
-      "filename": "./AFTRoot.code",
-      "line": 1096
-    },
-    "184": {
-      "filename": "./AFTRoot.code",
-      "line": 1097
-    },
-    "192": {
-      "filename": "./AFTRoot.code",
-      "line": 1098
-    },
-    "200": {
-      "filename": "./AFTRoot.code",
-      "line": 1099
-    },
-    "208": {
-      "filename": "./AFTRoot.code",
-      "line": 1100
-    },
-    "232": {
-      "filename": "./AFTRoot.code",
-      "line": 1101
-    },
-    "240": {
-      "filename": "./AFTRoot.code",
-      "line": 1102
-    },
-    "248": {
-      "filename": "./AFTRoot.code",
-      "line": 1103
-    },
-    "272": {
-      "filename": "./AFTRoot.code",
-      "line": 1104
-    },
-    "288": {
-      "filename": "./AFTRoot.code",
-      "line": 1105
-    },
-    "296": {
-      "filename": "./AFTRoot.code",
-      "line": 1106
-    },
-    "344": {
-      "filename": "./AFTRoot.code",
-      "line": 1107
-    },
-    "360": {
-      "filename": "./AFTRoot.code",
-      "line": 1108
-    },
-    "376": {
-      "filename": "./AFTRoot.code",
-      "line": 1109
     },
     "384": {
       "filename": "./AFTRoot.code",
-      "line": 1110
-    },
-    "392": {
-      "filename": "./AFTRoot.code",
-      "line": 1111
+      "line": 518
     },
     "400": {
       "filename": "./AFTRoot.code",
-      "line": 1112
-    },
-    "408": {
-      "filename": "./AFTRoot.code",
-      "line": 1113
+      "line": 519
     },
     "416": {
       "filename": "./AFTRoot.code",
-      "line": 1114
-    },
-    "424": {
-      "filename": "./AFTRoot.code",
-      "line": 1115
-    },
-    "440": {
-      "filename": "./AFTRoot.code",
-      "line": 1117
-    },
-    "448": {
-      "filename": "./AFTRoot.code",
-      "line": 1118
-    },
-    "464": {
-      "filename": "./AFTRoot.code",
-      "line": 1120
-    },
-    "472": {
-      "filename": "./AFTRoot.code",
-      "line": 1121
-    },
-    "488": {
-      "filename": "./AFTRoot.code",
-      "line": 1124
+      "line": 520
     }
   },
-  "a23768b86179371e8b5ea5f8d7cf3a9e4c603499228ca814874a5bcd91f66a6d": {
+  "774e2268a7fba46862531c701e43053a03b1b0b50a381a4e7b4cf6f3b0167e04": {
     "0": {
       "filename": "./AFTRoot.code",
-      "line": 1959
-    },
-    "8": {
-      "filename": "./AFTRoot.code",
-      "line": 1960
-    },
-    "56": {
-      "filename": "./AFTRoot.code",
-      "line": 1961
-    },
-    "64": {
-      "filename": "./AFTRoot.code",
-      "line": 1962
-    },
-    "80": {
-      "filename": "./AFTRoot.code",
-      "line": 1965
-    },
-    "88": {
-      "filename": "./AFTRoot.code",
-      "line": 1966
-    },
-    "136": {
-      "filename": "./AFTRoot.code",
-      "line": 1967
-    },
-    "144": {
-      "filename": "./AFTRoot.code",
-      "line": 1968
-    }
-  },
-  "a23d341be251533d1239a436302911fe0bc98353003054e1c344b6c6829ada5e": {
-    "0": {
-      "filename": "AFTRoot.sol",
-      "line": 102
-    },
-    "8": {
-      "filename": "AFTRoot.sol",
-      "line": 102
-    },
-    "24": {
-      "filename": "AFTRoot.sol",
-      "line": 102
-    },
-    "32": {
-      "filename": "AFTRoot.sol",
-      "line": 102
-    },
-    "56": {
-      "filename": "modifiers/modifiers.sol",
-      "line": 72
-    },
-    "72": {
-      "filename": "modifiers/modifiers.sol",
-      "line": 72
-    },
-    "88": {
-      "filename": "modifiers/modifiers.sol",
-      "line": 72
-    },
-    "104": {
-      "filename": "modifiers/modifiers.sol",
-      "line": 72
-    },
-    "128": {
-      "filename": "modifiers/modifiers.sol",
-      "line": 62
-    },
-    "144": {
-      "filename": "AFTRoot.sol",
-      "line": 103
-    },
-    "152": {
-      "filename": "AFTRoot.sol",
-      "line": 103
-    },
-    "168": {
-      "filename": "AFTRoot.sol",
-      "line": 104
-    },
-    "184": {
-      "filename": "AFTRoot.sol",
-      "line": 104
-    },
-    "192": {
-      "filename": "AFTRoot.sol",
-      "line": 104
-    },
-    "208": {
-      "filename": "AFTRoot.sol",
-      "line": 104
-    },
-    "224": {
-      "filename": "AFTRoot.sol",
-      "line": 104
-    },
-    "240": {
-      "filename": "AFTRoot.sol",
-      "line": 104
-    },
-    "248": {
-      "filename": "AFTRoot.sol",
-      "line": 104
-    },
-    "272": {
-      "filename": "AFTRoot.sol",
-      "line": 104
-    },
-    "280": {
-      "filename": "AFTRoot.sol",
-      "line": 104
-    },
-    "288": {
-      "filename": "AFTRoot.sol",
-      "line": 104
-    },
-    "312": {
-      "filename": "AFTRoot.sol",
-      "line": 104
-    },
-    "328": {
-      "filename": "AFTRoot.sol",
-      "line": 104
-    },
-    "336": {
-      "filename": "AFTRoot.sol",
-      "line": 104
-    },
-    "384": {
-      "filename": "AFTRoot.sol",
-      "line": 104
-    },
-    "392": {
-      "filename": "AFTRoot.sol",
-      "line": 104
-    },
-    "408": {
-      "filename": "AFTRoot.sol",
-      "line": 104
-    },
-    "424": {
-      "filename": "AFTRoot.sol",
-      "line": 104
-    },
-    "432": {
-      "filename": "AFTRoot.sol",
-      "line": 104
-    },
-    "440": {
-      "filename": "AFTRoot.sol",
-      "line": 104
-    },
-    "448": {
-      "filename": "AFTRoot.sol",
-      "line": 104
-    }
-  },
-  "a8706c6358fecfba3c31d885dcf337fed67609c22ebf972396a9aca8faf7a108": {
-    "0": {
-      "filename": "./AFTRoot.code",
-      "line": 2403
-    }
-  },
-  "abcfa13921e15d791909da3e2d7bf55f2ca214ce0cdfa75179115f799c0027a7": {
-    "0": {
-      "filename": "AFTRoot.sol",
-      "line": 325
-    },
-    "16": {
-      "filename": "AFTRoot.sol",
-      "line": 325
-    },
-    "32": {
-      "filename": "AFTRoot.sol",
-      "line": 325
-    },
-    "48": {
-      "filename": "AFTRoot.sol",
-      "line": 325
-    },
-    "64": {
-      "filename": "AFTRoot.sol",
-      "line": 325
-    },
-    "80": {
-      "filename": "AFTRoot.sol",
-      "line": 325
-    },
-    "96": {
-      "filename": "AFTRoot.sol",
-      "line": 325
-    },
-    "112": {
-      "filename": "AFTRoot.sol",
-      "line": 325
-    }
-  },
-  "ac3f2409bab8c5396c77034b4b7b083e2dc5e2520785a8381aa1f3390224cb8b": {
-    "0": {
-      "filename": "./AFTRoot.code",
-      "line": 1213
-    },
-    "8": {
-      "filename": "./AFTRoot.code",
-      "line": 1214
-    },
-    "24": {
-      "filename": "./AFTRoot.code",
-      "line": 1215
-    },
-    "48": {
-      "filename": "./AFTRoot.code",
-      "line": 1216
-    },
-    "64": {
-      "filename": "./AFTRoot.code",
-      "line": 1217
-    },
-    "72": {
-      "filename": "./AFTRoot.code",
-      "line": 1218
-    },
-    "88": {
-      "filename": "AFTRoot.sol",
-      "line": 73
-    },
-    "96": {
-      "filename": "AFTRoot.sol",
-      "line": 73
-    },
-    "104": {
-      "filename": "AFTRoot.sol",
-      "line": 73
-    },
-    "112": {
-      "filename": "AFTRoot.sol",
-      "line": 73
-    },
-    "120": {
-      "filename": "AFTRoot.sol",
-      "line": 73
-    },
-    "128": {
-      "filename": "AFTRoot.sol",
-      "line": 73
-    },
-    "136": {
-      "filename": "AFTRoot.sol",
-      "line": 73
-    },
-    "152": {
-      "filename": "AFTRoot.sol",
-      "line": 73
-    },
-    "168": {
-      "filename": "AFTRoot.sol",
-      "line": 73
-    },
-    "184": {
-      "filename": "AFTRoot.sol",
-      "line": 73
-    },
-    "192": {
-      "filename": "AFTRoot.sol",
-      "line": 73
-    },
-    "200": {
-      "filename": "AFTRoot.sol",
-      "line": 73
-    },
-    "208": {
-      "filename": "AFTRoot.sol",
-      "line": 73
-    },
-    "224": {
-      "filename": "AFTRoot.sol",
-      "line": 73
-    },
-    "240": {
-      "filename": "AFTRoot.sol",
-      "line": 73
-    },
-    "248": {
-      "filename": "AFTRoot.sol",
-      "line": 73
-    },
-    "256": {
-      "filename": "./AFTRoot.code",
-      "line": 1240
-    },
-    "272": {
-      "filename": "./AFTRoot.code",
-      "line": 1243
-    },
-    "288": {
-      "filename": "./AFTRoot.code",
-      "line": 1246
-    }
-  },
-  "b0c62a2d10323efaca71b176fa7653e4d3dca659b9713beca7242453541c3397": {
-    "0": {
-      "filename": "AFTRoot.sol",
-      "line": 135
-    },
-    "16": {
-      "filename": "AFTRoot.sol",
-      "line": 135
-    },
-    "24": {
-      "filename": "AFTRoot.sol",
-      "line": 135
-    },
-    "40": {
-      "filename": "AFTRoot.sol",
-      "line": 138
-    },
-    "56": {
-      "filename": "AFTRoot.sol",
-      "line": 138
-    },
-    "64": {
-      "filename": "AFTRoot.sol",
-      "line": 138
-    },
-    "72": {
-      "filename": "AFTRoot.sol",
-      "line": 138
-    },
-    "96": {
-      "filename": "AFTRoot.sol",
-      "line": 142
-    },
-    "112": {
-      "filename": "AFTRoot.sol",
-      "line": 142
-    },
-    "120": {
-      "filename": "AFTRoot.sol",
-      "line": 142
-    },
-    "136": {
-      "filename": "AFTRoot.sol",
-      "line": 143
-    },
-    "144": {
-      "filename": "AFTRoot.sol",
-      "line": 144
-    },
-    "152": {
-      "filename": "AFTRoot.sol",
-      "line": 144
-    },
-    "168": {
-      "filename": "AFTRoot.sol",
-      "line": 144
-    },
-    "176": {
-      "filename": "AFTRoot.sol",
-      "line": 144
-    },
-    "184": {
-      "filename": "AFTRoot.sol",
-      "line": 144
-    },
-    "192": {
-      "filename": "AFTRoot.sol",
-      "line": 144
-    },
-    "200": {
-      "filename": "AFTRoot.sol",
-      "line": 144
-    },
-    "208": {
-      "filename": "AFTRoot.sol",
-      "line": 144
-    },
-    "216": {
-      "filename": "AFTRoot.sol",
-      "line": 144
-    },
-    "232": {
-      "filename": "AFTRoot.sol",
-      "line": 144
-    },
-    "240": {
-      "filename": "AFTRoot.sol",
-      "line": 144
-    },
-    "256": {
-      "filename": "AFTRoot.sol",
-      "line": 144
-    },
-    "272": {
-      "filename": "./AFTRoot.code",
-      "line": 1549
-    },
-    "280": {
-      "filename": "AFTRoot.sol",
-      "line": 147
-    },
-    "296": {
-      "filename": "AFTRoot.sol",
-      "line": 147
-    },
-    "344": {
-      "filename": "AFTRoot.sol",
-      "line": 147
-    },
-    "360": {
-      "filename": "AFTRoot.sol",
-      "line": 147
-    },
-    "368": {
-      "filename": "AFTRoot.sol",
-      "line": 147
-    },
-    "376": {
-      "filename": "AFTRoot.sol",
-      "line": 147
-    },
-    "400": {
-      "filename": "AFTRoot.sol",
-      "line": 147
-    },
-    "416": {
-      "filename": "AFTRoot.sol",
-      "line": 147
-    },
-    "440": {
-      "filename": "AFTRoot.sol",
-      "line": 147
-    },
-    "448": {
-      "filename": "AFTRoot.sol",
-      "line": 147
-    },
-    "456": {
-      "filename": "AFTRoot.sol",
-      "line": 147
-    },
-    "472": {
-      "filename": "AFTRoot.sol",
-      "line": 147
-    },
-    "488": {
-      "filename": "AFTRoot.sol",
-      "line": 147
-    },
-    "496": {
-      "filename": "AFTRoot.sol",
-      "line": 147
-    },
-    "520": {
-      "filename": "AFTRoot.sol",
-      "line": 147
-    },
-    "536": {
-      "filename": "AFTRoot.sol",
-      "line": 147
-    },
-    "544": {
-      "filename": "AFTRoot.sol",
-      "line": 147
-    },
-    "592": {
-      "filename": "AFTRoot.sol",
-      "line": 147
-    },
-    "608": {
-      "filename": "AFTRoot.sol",
-      "line": 147
-    },
-    "616": {
-      "filename": "AFTRoot.sol",
-      "line": 147
-    },
-    "624": {
-      "filename": "AFTRoot.sol",
-      "line": 147
-    },
-    "648": {
-      "filename": "AFTRoot.sol",
-      "line": 147
-    },
-    "656": {
-      "filename": "AFTRoot.sol",
-      "line": 147
-    },
-    "664": {
-      "filename": "AFTRoot.sol",
-      "line": 147
-    },
-    "672": {
-      "filename": "AFTRoot.sol",
-      "line": 147
-    },
-    "688": {
-      "filename": "AFTRoot.sol",
-      "line": 147
-    },
-    "696": {
-      "filename": "AFTRoot.sol",
-      "line": 147
-    },
-    "704": {
-      "filename": "AFTRoot.sol",
-      "line": 147
-    },
-    "720": {
-      "filename": "AFTRoot.sol",
-      "line": 147
-    },
-    "728": {
-      "filename": "AFTRoot.sol",
-      "line": 147
-    },
-    "736": {
-      "filename": "AFTRoot.sol",
-      "line": 147
-    },
-    "744": {
-      "filename": "AFTRoot.sol",
-      "line": 147
-    },
-    "752": {
-      "filename": "AFTRoot.sol",
-      "line": 147
-    },
-    "760": {
-      "filename": "AFTRoot.sol",
-      "line": 147
-    },
-    "768": {
-      "filename": "AFTRoot.sol",
-      "line": 147
-    },
-    "784": {
-      "filename": "./AFTRoot.code",
-      "line": 1589
-    }
-  },
-  "b36524259e8848d462b9dfb56f7d60c8f3a172eccc109d3f97d74d93946cdc04": {
-    "0": {
-      "filename": "AFTRoot.sol",
-      "line": 73
-    },
-    "8": {
-      "filename": "AFTRoot.sol",
-      "line": 73
-    },
-    "24": {
-      "filename": "AFTRoot.sol",
-      "line": 73
-    },
-    "32": {
-      "filename": "AFTRoot.sol",
-      "line": 73
-    },
-    "56": {
-      "filename": "modifiers/modifiers.sol",
-      "line": 72
-    },
-    "72": {
-      "filename": "modifiers/modifiers.sol",
-      "line": 72
-    },
-    "88": {
-      "filename": "modifiers/modifiers.sol",
-      "line": 72
-    },
-    "104": {
-      "filename": "modifiers/modifiers.sol",
-      "line": 72
-    },
-    "128": {
-      "filename": "AFTRoot.sol",
-      "line": 81
-    },
-    "144": {
-      "filename": "AFTRoot.sol",
-      "line": 82
-    },
-    "160": {
-      "filename": "AFTRoot.sol",
-      "line": 82
-    },
-    "176": {
-      "filename": "AFTRoot.sol",
-      "line": 82
-    }
-  },
-  "bdd973877b37903a3d079bc6740f955632b26cea4867af0564596837cbfd6eb1": {
-    "0": {
-      "filename": "modifiers/modifiers.sol",
-      "line": 82
-    }
-  },
-  "bf1c2b0f6c810a512c6621d345dbb8c3c3aae0e46e34ceaa6853b21ede53f068": {
-    "0": {
-      "filename": "./AFTRoot.code",
-      "line": 556
-    },
-    "8": {
-      "filename": "./AFTRoot.code",
-      "line": 557
-    },
-    "24": {
-      "filename": "./AFTRoot.code",
-      "line": 558
-    },
-    "48": {
-      "filename": "./AFTRoot.code",
-      "line": 559
-    },
-    "64": {
-      "filename": "./AFTRoot.code",
-      "line": 560
-    },
-    "72": {
-      "filename": "./AFTRoot.code",
-      "line": 561
-    },
-    "88": {
-      "filename": "AFTRoot.sol",
-      "line": 95
-    },
-    "96": {
-      "filename": "./AFTRoot.code",
-      "line": 567
-    },
-    "112": {
-      "filename": "./AFTRoot.code",
-      "line": 570
-    },
-    "128": {
-      "filename": "./AFTRoot.code",
-      "line": 573
-    }
-  },
-  "c564673b073b0ef600e4143fd71192007282263ae96eaf9aff49b250a047413c": {
-    "0": {
-      "filename": "AFTRoot.sol",
-      "line": 202
-    },
-    "8": {
-      "filename": "AFTRoot.sol",
-      "line": 202
-    },
-    "24": {
-      "filename": "AFTRoot.sol",
-      "line": 202
-    },
-    "32": {
-      "filename": "AFTRoot.sol",
-      "line": 202
-    },
-    "56": {
-      "filename": "AFTRoot.sol",
-      "line": 211
-    },
-    "72": {
-      "filename": "AFTRoot.sol",
-      "line": 211
-    },
-    "80": {
-      "filename": "AFTRoot.sol",
-      "line": 211
-    },
-    "96": {
-      "filename": "AFTRoot.sol",
-      "line": 211
-    },
-    "112": {
-      "filename": "AFTRoot.sol",
-      "line": 211
-    },
-    "136": {
-      "filename": "AFTRoot.sol",
-      "line": 212
-    },
-    "152": {
-      "filename": "AFTRoot.sol",
-      "line": 214
-    },
-    "168": {
-      "filename": "AFTRoot.sol",
-      "line": 214
-    },
-    "184": {
-      "filename": "AFTRoot.sol",
-      "line": 214
-    },
-    "192": {
-      "filename": "AFTRoot.sol",
-      "line": 214
-    },
-    "216": {
-      "filename": "AFTRoot.sol",
-      "line": 214
-    },
-    "224": {
-      "filename": "AFTRoot.sol",
-      "line": 214
-    },
-    "232": {
-      "filename": "AFTRoot.sol",
-      "line": 214
-    },
-    "256": {
-      "filename": "AFTRoot.sol",
-      "line": 214
-    },
-    "272": {
-      "filename": "AFTRoot.sol",
-      "line": 214
-    },
-    "280": {
-      "filename": "AFTRoot.sol",
-      "line": 214
-    },
-    "328": {
-      "filename": "AFTRoot.sol",
-      "line": 214
-    },
-    "344": {
-      "filename": "AFTRoot.sol",
-      "line": 214
-    },
-    "352": {
-      "filename": "AFTRoot.sol",
-      "line": 214
-    },
-    "368": {
-      "filename": "AFTRoot.sol",
-      "line": 214
-    },
-    "376": {
-      "filename": "AFTRoot.sol",
-      "line": 214
-    },
-    "384": {
-      "filename": "AFTRoot.sol",
-      "line": 214
-    },
-    "400": {
-      "filename": "AFTRoot.sol",
-      "line": 214
-    },
-    "416": {
-      "filename": "AFTRoot.sol",
-      "line": 214
-    },
-    "432": {
-      "filename": "AFTRoot.sol",
-      "line": 214
-    },
-    "448": {
-      "filename": "AFTRoot.sol",
-      "line": 214
-    },
-    "456": {
-      "filename": "AFTRoot.sol",
-      "line": 214
-    },
-    "472": {
-      "filename": "AFTRoot.sol",
-      "line": 214
-    },
-    "480": {
-      "filename": "AFTRoot.sol",
-      "line": 214
-    },
-    "488": {
-      "filename": "AFTRoot.sol",
-      "line": 214
-    },
-    "496": {
-      "filename": "AFTRoot.sol",
-      "line": 214
-    },
-    "504": {
-      "filename": "AFTRoot.sol",
-      "line": 214
-    },
-    "512": {
-      "filename": "AFTRoot.sol",
-      "line": 214
-    }
-  },
-  "c980fa7eae82f6b5201223a71f68ccd7a86339502f92575324f36a39285dec9b": {
-    "0": {
-      "filename": "AFTRoot.sol",
-      "line": 395
-    },
-    "8": {
-      "filename": "AFTRoot.sol",
-      "line": 395
-    },
-    "16": {
-      "filename": "AFTRoot.sol",
-      "line": 395
-    },
-    "32": {
-      "filename": "AFTRoot.sol",
-      "line": 395
-    },
-    "40": {
-      "filename": "AFTRoot.sol",
-      "line": 395
-    },
-    "64": {
-      "filename": "AFTRoot.sol",
-      "line": 395
-    },
-    "80": {
-      "filename": "AFTRoot.sol",
-      "line": 395
-    },
-    "88": {
-      "filename": "AFTRoot.sol",
-      "line": 395
-    },
-    "96": {
-      "filename": "AFTRoot.sol",
-      "line": 395
-    },
-    "104": {
-      "filename": "AFTRoot.sol",
-      "line": 395
-    },
-    "112": {
-      "filename": "AFTRoot.sol",
-      "line": 395
-    },
-    "128": {
-      "filename": "AFTRoot.sol",
-      "line": 395
-    },
-    "136": {
-      "filename": "AFTRoot.sol",
-      "line": 395
-    },
-    "144": {
-      "filename": "AFTRoot.sol",
-      "line": 395
-    },
-    "160": {
-      "filename": "AFTRoot.sol",
-      "line": 395
-    },
-    "168": {
-      "filename": "AFTRoot.sol",
-      "line": 395
-    },
-    "192": {
-      "filename": "AFTRoot.sol",
-      "line": 395
-    },
-    "208": {
-      "filename": "AFTRoot.sol",
-      "line": 395
-    },
-    "224": {
-      "filename": "AFTRoot.sol",
-      "line": 395
-    },
-    "240": {
-      "filename": "AFTRoot.sol",
-      "line": 395
-    }
-  },
-  "c9a739faf804dd293fb12948fc6d0fce494c985837426a0072f6ed963ce4539b": {},
-  "cbb905ea05a11de4acab1e221fc63c5b543433763325cac710a2d6458e7a6733": {
-    "0": {
-      "filename": "./AFTRoot.code",
-      "line": 1136
-    },
-    "8": {
-      "filename": "./AFTRoot.code",
-      "line": 1137
-    },
-    "24": {
-      "filename": "./AFTRoot.code",
-      "line": 1138
-    },
-    "48": {
-      "filename": "./AFTRoot.code",
-      "line": 1139
-    },
-    "64": {
-      "filename": "./AFTRoot.code",
-      "line": 1140
-    },
-    "72": {
-      "filename": "./AFTRoot.code",
-      "line": 1141
-    },
-    "88": {
-      "filename": "AFTRoot.sol",
-      "line": 311
-    },
-    "96": {
-      "filename": "AFTRoot.sol",
-      "line": 311
-    },
-    "104": {
-      "filename": "AFTRoot.sol",
-      "line": 311
-    },
-    "112": {
-      "filename": "AFTRoot.sol",
-      "line": 311
-    },
-    "120": {
-      "filename": "AFTRoot.sol",
-      "line": 311
-    },
-    "128": {
-      "filename": "AFTRoot.sol",
-      "line": 311
-    },
-    "136": {
-      "filename": "AFTRoot.sol",
-      "line": 311
-    },
-    "152": {
-      "filename": "AFTRoot.sol",
-      "line": 311
-    },
-    "160": {
-      "filename": "./AFTRoot.code",
-      "line": 1155
-    },
-    "176": {
-      "filename": "./AFTRoot.code",
-      "line": 1158
-    },
-    "184": {
-      "filename": "./AFTRoot.code",
-      "line": 1159
-    },
-    "200": {
-      "filename": "./AFTRoot.code",
-      "line": 1160
-    },
-    "208": {
-      "filename": "./AFTRoot.code",
-      "line": 1161
-    },
-    "216": {
-      "filename": "./AFTRoot.code",
-      "line": 1162
-    },
-    "232": {
-      "filename": "./AFTRoot.code",
-      "line": 1163
-    },
-    "248": {
-      "filename": "./AFTRoot.code",
-      "line": 1164
-    },
-    "256": {
-      "filename": "./AFTRoot.code",
-      "line": 1165
-    },
-    "264": {
-      "filename": "./AFTRoot.code",
-      "line": 1166
-    },
-    "272": {
-      "filename": "./AFTRoot.code",
-      "line": 1167
-    },
-    "296": {
-      "filename": "./AFTRoot.code",
-      "line": 1168
-    },
-    "304": {
-      "filename": "./AFTRoot.code",
-      "line": 1169
-    },
-    "312": {
-      "filename": "./AFTRoot.code",
-      "line": 1170
-    },
-    "336": {
-      "filename": "./AFTRoot.code",
-      "line": 1171
-    },
-    "344": {
-      "filename": "./AFTRoot.code",
-      "line": 1172
-    },
-    "352": {
-      "filename": "./AFTRoot.code",
-      "line": 1173
-    },
-    "400": {
-      "filename": "./AFTRoot.code",
-      "line": 1174
-    },
-    "408": {
-      "filename": "./AFTRoot.code",
-      "line": 1175
-    },
-    "416": {
-      "filename": "./AFTRoot.code",
-      "line": 1176
-    },
-    "424": {
-      "filename": "./AFTRoot.code",
-      "line": 1177
-    },
-    "432": {
-      "filename": "./AFTRoot.code",
-      "line": 1178
-    },
-    "448": {
-      "filename": "./AFTRoot.code",
-      "line": 1180
-    },
-    "456": {
-      "filename": "./AFTRoot.code",
-      "line": 1181
-    },
-    "464": {
-      "filename": "./AFTRoot.code",
-      "line": 1183
-    },
-    "472": {
-      "filename": "./AFTRoot.code",
-      "line": 1184
-    },
-    "488": {
-      "filename": "./AFTRoot.code",
-      "line": 1187
-    }
-  },
-  "ccad26db0f16b5ae858b66da0cf1192ccbab0c40a16ea1a1839ca3dde96d0563": {
-    "0": {
-      "filename": "modifiers/modifiers.sol",
-      "line": 86
-    }
-  },
-  "cdbc73ed2354fc454ea2514b3698123e44e0279471cb5076277934ebdd419439": {
-    "0": {
-      "filename": "AFTRoot.sol",
-      "line": 330
-    },
-    "8": {
-      "filename": "AFTRoot.sol",
-      "line": 331
-    }
-  },
-  "da670fd848c85685a0703ce702b01e77b3d2729970cb47d64ef33a2bf2eae00d": {
-    "0": {
-      "filename": "./AFTRoot.code",
-      "line": 1975
-    },
-    "8": {
-      "filename": "./AFTRoot.code",
-      "line": 1978
-    },
-    "24": {
-      "filename": "./AFTRoot.code",
-      "line": 1979
-    },
-    "32": {
-      "filename": "./AFTRoot.code",
-      "line": 1980
-    },
-    "48": {
-      "filename": "./AFTRoot.code",
-      "line": 1983
-    },
-    "64": {
-      "filename": "./AFTRoot.code",
-      "line": 1984
-    },
-    "72": {
-      "filename": "./AFTRoot.code",
-      "line": 1985
-    },
-    "88": {
-      "filename": "./AFTRoot.code",
-      "line": 1986
-    },
-    "104": {
-      "filename": "./AFTRoot.code",
-      "line": 1987
-    },
-    "120": {
-      "filename": "./AFTRoot.code",
-      "line": 1988
-    },
-    "128": {
-      "filename": "./AFTRoot.code",
-      "line": 1989
-    },
-    "144": {
-      "filename": "./AFTRoot.code",
-      "line": 1990
-    },
-    "152": {
-      "filename": "./AFTRoot.code",
-      "line": 1991
-    },
-    "160": {
-      "filename": "./AFTRoot.code",
-      "line": 1992
-    },
-    "168": {
-      "filename": "./AFTRoot.code",
-      "line": 1993
-    },
-    "176": {
-      "filename": "./AFTRoot.code",
-      "line": 1994
-    },
-    "192": {
-      "filename": "./AFTRoot.code",
-      "line": 1995
-    },
-    "200": {
-      "filename": "./AFTRoot.code",
-      "line": 1996
-    },
-    "216": {
-      "filename": "./AFTRoot.code",
-      "line": 1997
-    },
-    "224": {
-      "filename": "./AFTRoot.code",
-      "line": 1998
-    },
-    "232": {
-      "filename": "./AFTRoot.code",
-      "line": 1999
-    },
-    "248": {
-      "filename": "./AFTRoot.code",
-      "line": 2000
-    },
-    "264": {
-      "filename": "./AFTRoot.code",
-      "line": 2002
-    },
-    "272": {
-      "filename": "./AFTRoot.code",
-      "line": 2003
-    },
-    "280": {
-      "filename": "./AFTRoot.code",
-      "line": 2004
-    },
-    "296": {
-      "filename": "./AFTRoot.code",
-      "line": 2006
-    },
-    "304": {
-      "filename": "./AFTRoot.code",
-      "line": 2007
-    },
-    "312": {
-      "filename": "./AFTRoot.code",
-      "line": 2008
-    },
-    "328": {
-      "filename": "./AFTRoot.code",
-      "line": 2009
-    },
-    "344": {
-      "filename": "./AFTRoot.code",
-      "line": 2010
-    },
-    "360": {
-      "filename": "./AFTRoot.code",
-      "line": 2012
-    },
-    "368": {
-      "filename": "./AFTRoot.code",
-      "line": 2013
-    },
-    "384": {
-      "filename": "./AFTRoot.code",
-      "line": 2014
-    },
-    "392": {
-      "filename": "./AFTRoot.code",
-      "line": 2015
-    },
-    "408": {
-      "filename": "./AFTRoot.code",
-      "line": 2017
-    },
-    "416": {
-      "filename": "./AFTRoot.code",
-      "line": 2018
-    },
-    "432": {
-      "filename": "modifiers/modifiers.sol",
-      "line": 163
-    },
-    "448": {
-      "filename": "modifiers/modifiers.sol",
-      "line": 163
-    },
-    "464": {
-      "filename": "modifiers/modifiers.sol",
-      "line": 163
-    },
-    "480": {
-      "filename": "modifiers/modifiers.sol",
-      "line": 164
-    },
-    "496": {
-      "filename": "modifiers/modifiers.sol",
-      "line": 164
-    },
-    "504": {
-      "filename": "modifiers/modifiers.sol",
-      "line": 165
-    },
-    "512": {
-      "filename": "modifiers/modifiers.sol",
-      "line": 165
-    },
-    "528": {
-      "filename": "modifiers/modifiers.sol",
-      "line": 165
-    },
-    "536": {
-      "filename": "modifiers/modifiers.sol",
-      "line": 165
-    },
-    "552": {
-      "filename": "modifiers/modifiers.sol",
-      "line": 166
-    },
-    "560": {
-      "filename": "modifiers/modifiers.sol",
-      "line": 166
-    },
-    "576": {
-      "filename": "modifiers/modifiers.sol",
-      "line": 166
-    },
-    "600": {
-      "filename": "modifiers/modifiers.sol",
-      "line": 166
-    },
-    "608": {
-      "filename": "modifiers/modifiers.sol",
-      "line": 166
-    },
-    "624": {
-      "filename": "modifiers/modifiers.sol",
-      "line": 166
-    },
-    "632": {
-      "filename": "modifiers/modifiers.sol",
-      "line": 166
-    },
-    "656": {
-      "filename": "modifiers/modifiers.sol",
-      "line": 167
-    },
-    "664": {
-      "filename": "./AFTRoot.code",
-      "line": 2042
-    },
-    "680": {
-      "filename": "./AFTRoot.code",
-      "line": 2043
-    },
-    "688": {
-      "filename": "./AFTRoot.code",
-      "line": 2044
-    },
-    "704": {
-      "filename": "./AFTRoot.code",
-      "line": 2047
-    }
-  },
-  "db46c30950a9aaa79e96bd0f5c3df649ede362d6fa14e6bbbb9206428404a792": {
-    "0": {
-      "filename": "./AFTRoot.code",
-      "line": 2392
+      "line": 2404
     },
     "1": {
       "filename": "./AFTRoot.code",
-      "line": 2393
+      "line": 2405
     },
     "2": {
       "filename": "./AFTRoot.code",
-      "line": 2394
+      "line": 2406
     },
     "3": {
       "filename": "./AFTRoot.code",
-      "line": 2423
+      "line": 2435
     },
     "4": {
       "filename": "./AFTRoot.code",
-      "line": 2427
+      "line": 2439
     }
   },
-  "db73eaa0da7c6e450863917dfe054eabf5493835323fb845150ae67c46904caf": {
+  "7838235da0583c18362498966c0b6709f9ee034cffbccb79ceaef89a715f20cf": {
     "0": {
       "filename": "AFTRoot.sol",
-      "line": 258
+      "line": 65
     },
     "16": {
       "filename": "AFTRoot.sol",
-      "line": 258
-    },
-    "64": {
-      "filename": "AFTRoot.sol",
-      "line": 258
-    },
-    "72": {
-      "filename": "AFTRoot.sol",
-      "line": 258
-    },
-    "88": {
-      "filename": "AFTRoot.sol",
-      "line": 258
-    },
-    "96": {
-      "filename": "AFTRoot.sol",
-      "line": 258
-    },
-    "112": {
-      "filename": "AFTRoot.sol",
-      "line": 264
-    },
-    "128": {
-      "filename": "AFTRoot.sol",
-      "line": 265
-    },
-    "144": {
-      "filename": "AFTRoot.sol",
-      "line": 265
-    },
-    "152": {
-      "filename": "AFTRoot.sol",
-      "line": 265
-    },
-    "168": {
-      "filename": "AFTRoot.sol",
-      "line": 265
-    },
-    "176": {
-      "filename": "AFTRoot.sol",
-      "line": 265
-    },
-    "192": {
-      "filename": "AFTRoot.sol",
-      "line": 265
-    },
-    "200": {
-      "filename": "AFTRoot.sol",
-      "line": 265
-    },
-    "216": {
-      "filename": "AFTRoot.sol",
-      "line": 265
-    },
-    "224": {
-      "filename": "AFTRoot.sol",
-      "line": 265
-    },
-    "232": {
-      "filename": "AFTRoot.sol",
-      "line": 266
-    },
-    "240": {
-      "filename": "AFTRoot.sol",
-      "line": 267
-    },
-    "248": {
-      "filename": "AFTRoot.sol",
-      "line": 267
-    },
-    "264": {
-      "filename": "AFTRoot.sol",
-      "line": 267
-    },
-    "272": {
-      "filename": "AFTRoot.sol",
-      "line": 267
-    },
-    "280": {
-      "filename": "AFTRoot.sol",
-      "line": 267
-    },
-    "288": {
-      "filename": "AFTRoot.sol",
-      "line": 267
-    },
-    "296": {
-      "filename": "AFTRoot.sol",
-      "line": 267
-    },
-    "304": {
-      "filename": "AFTRoot.sol",
-      "line": 267
-    },
-    "312": {
-      "filename": "AFTRoot.sol",
-      "line": 267
-    },
-    "328": {
-      "filename": "AFTRoot.sol",
-      "line": 267
-    },
-    "336": {
-      "filename": "AFTRoot.sol",
-      "line": 267
-    },
-    "352": {
-      "filename": "AFTRoot.sol",
-      "line": 267
-    },
-    "368": {
-      "filename": "./AFTRoot.code",
-      "line": 2173
-    },
-    "376": {
-      "filename": "AFTRoot.sol",
-      "line": 269
-    },
-    "392": {
-      "filename": "AFTRoot.sol",
-      "line": 269
-    },
-    "408": {
-      "filename": "AFTRoot.sol",
-      "line": 269
-    },
-    "424": {
-      "filename": "AFTRoot.sol",
-      "line": 269
-    },
-    "440": {
-      "filename": "AFTRoot.sol",
-      "line": 269
-    },
-    "456": {
-      "filename": "AFTRoot.sol",
-      "line": 269
-    },
-    "464": {
-      "filename": "AFTRoot.sol",
-      "line": 269
-    },
-    "480": {
-      "filename": "AFTRoot.sol",
-      "line": 269
-    },
-    "488": {
-      "filename": "AFTRoot.sol",
-      "line": 269
-    },
-    "520": {
-      "filename": "AFTRoot.sol",
-      "line": 269
-    },
-    "536": {
-      "filename": "AFTRoot.sol",
-      "line": 269
-    },
-    "552": {
-      "filename": "AFTRoot.sol",
-      "line": 269
-    },
-    "568": {
-      "filename": "AFTRoot.sol",
-      "line": 269
-    },
-    "616": {
-      "filename": "AFTRoot.sol",
-      "line": 269
-    },
-    "632": {
-      "filename": "AFTRoot.sol",
-      "line": 269
-    },
-    "640": {
-      "filename": "AFTRoot.sol",
-      "line": 269
-    },
-    "664": {
-      "filename": "AFTRoot.sol",
-      "line": 269
-    },
-    "680": {
-      "filename": "AFTRoot.sol",
-      "line": 269
-    },
-    "688": {
-      "filename": "AFTRoot.sol",
-      "line": 269
-    },
-    "704": {
-      "filename": "AFTRoot.sol",
-      "line": 269
-    },
-    "720": {
-      "filename": "AFTRoot.sol",
-      "line": 269
-    },
-    "728": {
-      "filename": "AFTRoot.sol",
-      "line": 269
-    },
-    "752": {
-      "filename": "AFTRoot.sol",
-      "line": 269
-    },
-    "760": {
-      "filename": "AFTRoot.sol",
-      "line": 269
-    },
-    "776": {
-      "filename": "AFTRoot.sol",
-      "line": 269
-    },
-    "784": {
-      "filename": "AFTRoot.sol",
-      "line": 269
-    },
-    "800": {
-      "filename": "AFTRoot.sol",
-      "line": 269
-    },
-    "816": {
-      "filename": "AFTRoot.sol",
-      "line": 269
-    },
-    "824": {
-      "filename": "AFTRoot.sol",
-      "line": 269
-    },
-    "872": {
-      "filename": "AFTRoot.sol",
-      "line": 269
-    },
-    "888": {
-      "filename": "AFTRoot.sol",
-      "line": 269
-    },
-    "904": {
-      "filename": "AFTRoot.sol",
-      "line": 269
-    },
-    "912": {
-      "filename": "AFTRoot.sol",
-      "line": 269
-    },
-    "928": {
-      "filename": "AFTRoot.sol",
-      "line": 269
-    },
-    "936": {
-      "filename": "AFTRoot.sol",
-      "line": 269
-    },
-    "944": {
-      "filename": "AFTRoot.sol",
-      "line": 269
-    },
-    "960": {
-      "filename": "AFTRoot.sol",
-      "line": 269
-    },
-    "968": {
-      "filename": "AFTRoot.sol",
-      "line": 269
-    },
-    "976": {
-      "filename": "AFTRoot.sol",
-      "line": 269
-    },
-    "992": {
-      "filename": "AFTRoot.sol",
-      "line": 269
-    },
-    "1000": {
-      "filename": "AFTRoot.sol",
-      "line": 269
-    },
-    "1008": {
-      "filename": "AFTRoot.sol",
-      "line": 269
-    }
-  },
-  "dbea6db40990ac74640b8877e16afae71faef42092b55a04426d64f69a629961": {
-    "0": {
-      "filename": "./AFTRoot.code",
-      "line": 637
-    },
-    "8": {
-      "filename": "./AFTRoot.code",
-      "line": 638
+      "line": 66
     },
     "24": {
-      "filename": "./AFTRoot.code",
-      "line": 639
+      "filename": "AFTRoot.sol",
+      "line": 66
     },
     "32": {
-      "filename": "./AFTRoot.code",
-      "line": 640
+      "filename": "AFTRoot.sol",
+      "line": 66
+    },
+    "40": {
+      "filename": "AFTRoot.sol",
+      "line": 66
     },
     "48": {
-      "filename": "./AFTRoot.code",
-      "line": 643
+      "filename": "AFTRoot.sol",
+      "line": 66
     },
-    "64": {
+    "56": {
+      "filename": "AFTRoot.sol",
+      "line": 66
+    },
+    "72": {
       "filename": "./AFTRoot.code",
-      "line": 644
+      "line": 764
     },
     "80": {
-      "filename": "./AFTRoot.code",
-      "line": 645
+      "filename": "AFTRoot.sol",
+      "line": 68
     },
     "88": {
-      "filename": "./AFTRoot.code",
-      "line": 646
-    },
-    "96": {
-      "filename": "./AFTRoot.code",
-      "line": 647
+      "filename": "AFTRoot.sol",
+      "line": 68
     },
     "104": {
       "filename": "./AFTRoot.code",
-      "line": 648
-    },
-    "112": {
-      "filename": "./AFTRoot.code",
-      "line": 649
+      "line": 769
     },
     "120": {
       "filename": "./AFTRoot.code",
-      "line": 651
-    },
-    "128": {
-      "filename": "./AFTRoot.code",
-      "line": 652
-    },
-    "144": {
-      "filename": "./AFTRoot.code",
-      "line": 653
-    },
-    "160": {
-      "filename": "./AFTRoot.code",
-      "line": 654
-    },
-    "168": {
-      "filename": "./AFTRoot.code",
-      "line": 655
-    },
-    "176": {
-      "filename": "./AFTRoot.code",
-      "line": 656
-    },
-    "184": {
-      "filename": "./AFTRoot.code",
-      "line": 657
-    },
-    "192": {
-      "filename": "./AFTRoot.code",
-      "line": 658
-    },
-    "200": {
-      "filename": "./AFTRoot.code",
-      "line": 659
-    },
-    "216": {
-      "filename": "./AFTRoot.code",
-      "line": 660
-    },
-    "232": {
-      "filename": "./AFTRoot.code",
-      "line": 661
-    },
-    "240": {
-      "filename": "AFTRoot.sol",
-      "line": 42
-    },
-    "256": {
-      "filename": "AFTRoot.sol",
-      "line": 42
-    },
-    "264": {
-      "filename": "AFTRoot.sol",
-      "line": 42
-    },
-    "280": {
-      "filename": "AFTRoot.sol",
-      "line": 42
-    },
-    "288": {
-      "filename": "AFTRoot.sol",
-      "line": 42
-    },
-    "304": {
-      "filename": "AFTRoot.sol",
-      "line": 42
-    },
-    "320": {
-      "filename": "AFTRoot.sol",
-      "line": 42
-    },
-    "336": {
-      "filename": "AFTRoot.sol",
-      "line": 42
-    },
-    "344": {
-      "filename": "AFTRoot.sol",
-      "line": 43
-    },
-    "360": {
-      "filename": "AFTRoot.sol",
-      "line": 43
-    },
-    "376": {
-      "filename": "AFTRoot.sol",
-      "line": 43
-    },
-    "392": {
-      "filename": "AFTRoot.sol",
-      "line": 43
-    },
-    "400": {
-      "filename": "AFTRoot.sol",
-      "line": 43
-    },
-    "408": {
-      "filename": "AFTRoot.sol",
-      "line": 43
-    },
-    "416": {
-      "filename": "AFTRoot.sol",
-      "line": 43
-    },
-    "424": {
-      "filename": "AFTRoot.sol",
-      "line": 43
-    },
-    "432": {
-      "filename": "AFTRoot.sol",
-      "line": 43
-    },
-    "440": {
-      "filename": "AFTRoot.sol",
-      "line": 43
-    },
-    "456": {
-      "filename": "AFTRoot.sol",
-      "line": 43
-    },
-    "464": {
-      "filename": "AFTRoot.sol",
-      "line": 43
-    },
-    "472": {
-      "filename": "AFTRoot.sol",
-      "line": 44
-    },
-    "480": {
-      "filename": "AFTRoot.sol",
-      "line": 44
-    },
-    "504": {
-      "filename": "AFTRoot.sol",
-      "line": 45
-    },
-    "520": {
-      "filename": "AFTRoot.sol",
-      "line": 45
-    },
-    "536": {
-      "filename": "AFTRoot.sol",
-      "line": 45
-    },
-    "560": {
-      "filename": "AFTRoot.sol",
-      "line": 47
-    },
-    "568": {
-      "filename": "AFTRoot.sol",
-      "line": 47
-    },
-    "576": {
-      "filename": "AFTRoot.sol",
-      "line": 47
-    },
-    "592": {
-      "filename": "AFTRoot.sol",
-      "line": 47
-    },
-    "616": {
-      "filename": "AFTRoot.sol",
-      "line": 48
-    },
-    "632": {
-      "filename": "AFTRoot.sol",
-      "line": 50
-    },
-    "640": {
-      "filename": "AFTRoot.sol",
-      "line": 50
-    },
-    "656": {
-      "filename": "AFTRoot.sol",
-      "line": 51
-    },
-    "672": {
-      "filename": "AFTRoot.sol",
-      "line": 51
-    },
-    "688": {
-      "filename": "AFTRoot.sol",
-      "line": 52
-    },
-    "696": {
-      "filename": "AFTRoot.sol",
-      "line": 52
-    },
-    "712": {
-      "filename": "AFTRoot.sol",
-      "line": 54
-    },
-    "728": {
-      "filename": "AFTRoot.sol",
-      "line": 54
-    },
-    "736": {
-      "filename": "AFTRoot.sol",
-      "line": 54
-    },
-    "752": {
-      "filename": "AFTRoot.sol",
-      "line": 54
-    },
-    "768": {
-      "filename": "AFTRoot.sol",
-      "line": 54
-    },
-    "784": {
-      "filename": "AFTRoot.sol",
-      "line": 54
+      "line": 772
     }
   },
-  "dcc4b41ed5b376765da0bb66e49133f9a60b8c9c3814fadb83ea9fdbf96ac282": {
-    "0": {
-      "filename": "./AFTRoot.code",
-      "line": 2306
-    },
-    "8": {
-      "filename": "./AFTRoot.code",
-      "line": 2307
-    },
-    "24": {
-      "filename": "./AFTRoot.code",
-      "line": 2308
-    },
-    "32": {
-      "filename": "./AFTRoot.code",
-      "line": 2051
-    },
-    "48": {
-      "filename": "./AFTRoot.code",
-      "line": 2052
-    },
-    "72": {
-      "filename": "./AFTRoot.code",
-      "line": 2053
-    },
-    "88": {
-      "filename": "./AFTRoot.code",
-      "line": 2054
-    },
-    "96": {
-      "filename": "./AFTRoot.code",
-      "line": 2055
-    },
-    "112": {
-      "filename": "AFTRoot.sol",
-      "line": 228
-    },
-    "128": {
-      "filename": "AFTRoot.sol",
-      "line": 230
-    },
-    "144": {
-      "filename": "AFTRoot.sol",
-      "line": 231
-    },
-    "160": {
-      "filename": "AFTRoot.sol",
-      "line": 232
-    },
-    "176": {
-      "filename": "AFTRoot.sol",
-      "line": 232
-    },
-    "192": {
-      "filename": "AFTRoot.sol",
-      "line": 234
-    },
-    "200": {
-      "filename": "AFTRoot.sol",
-      "line": 234
-    },
-    "248": {
-      "filename": "AFTRoot.sol",
-      "line": 234
-    },
-    "256": {
-      "filename": "AFTRoot.sol",
-      "line": 234
-    },
-    "272": {
-      "filename": "./AFTRoot.code",
-      "line": 2245
-    },
-    "288": {
-      "filename": "./AFTRoot.code",
-      "line": 2246
-    },
-    "296": {
-      "filename": "./AFTRoot.code",
-      "line": 2247
-    },
-    "312": {
-      "filename": "./AFTRoot.code",
-      "line": 2248
-    },
-    "328": {
-      "filename": "AFTRoot.sol",
-      "line": 278
-    },
-    "344": {
-      "filename": "AFTRoot.sol",
-      "line": 278
-    },
-    "352": {
-      "filename": "AFTRoot.sol",
-      "line": 278
-    },
-    "360": {
-      "filename": "AFTRoot.sol",
-      "line": 278
-    },
-    "376": {
-      "filename": "AFTRoot.sol",
-      "line": 278
-    },
-    "392": {
-      "filename": "AFTRoot.sol",
-      "line": 279
-    },
-    "408": {
-      "filename": "AFTRoot.sol",
-      "line": 279
-    },
-    "424": {
-      "filename": "AFTRoot.sol",
-      "line": 279
-    },
-    "440": {
-      "filename": "AFTRoot.sol",
-      "line": 279
-    },
-    "456": {
-      "filename": "AFTRoot.sol",
-      "line": 279
-    },
-    "464": {
-      "filename": "AFTRoot.sol",
-      "line": 279
-    },
-    "488": {
-      "filename": "AFTRoot.sol",
-      "line": 279
-    },
-    "496": {
-      "filename": "AFTRoot.sol",
-      "line": 279
-    },
-    "504": {
-      "filename": "AFTRoot.sol",
-      "line": 279
-    },
-    "528": {
-      "filename": "AFTRoot.sol",
-      "line": 279
-    },
-    "544": {
-      "filename": "AFTRoot.sol",
-      "line": 279
-    },
-    "552": {
-      "filename": "AFTRoot.sol",
-      "line": 279
-    },
-    "600": {
-      "filename": "AFTRoot.sol",
-      "line": 279
-    },
-    "616": {
-      "filename": "AFTRoot.sol",
-      "line": 279
-    },
-    "632": {
-      "filename": "AFTRoot.sol",
-      "line": 279
-    },
-    "648": {
-      "filename": "AFTRoot.sol",
-      "line": 279
-    },
-    "664": {
-      "filename": "AFTRoot.sol",
-      "line": 279
-    },
-    "672": {
-      "filename": "AFTRoot.sol",
-      "line": 279
-    },
-    "680": {
-      "filename": "AFTRoot.sol",
-      "line": 279
-    },
-    "688": {
-      "filename": "AFTRoot.sol",
-      "line": 279
-    },
-    "704": {
-      "filename": "./AFTRoot.code",
-      "line": 2280
-    },
-    "712": {
-      "filename": "./AFTRoot.code",
-      "line": 2283
-    },
-    "720": {
-      "filename": "./AFTRoot.code",
-      "line": 2284
-    },
-    "736": {
-      "filename": "./AFTRoot.code",
-      "line": 2286
-    }
-  },
-  "de927ba79a843bf04ad813707a277c31b5eea67b209793a542d1fd7edded95b3": {
+  "83e6147754ebfd6a9b14c87a628bf8554e8fc7e088595cc3cf74c1dfd0167305": {
     "0": {
       "filename": "AFTRoot.sol",
       "line": 109
@@ -5683,7 +3449,7 @@
     },
     "136": {
       "filename": "./AFTRoot.code",
-      "line": 1449
+      "line": 1455
     },
     "144": {
       "filename": "AFTRoot.sol",
@@ -5902,7 +3668,1200 @@
       "line": 135
     }
   },
-  "e2202084485fb42cff674e3bd079800eac879629bc3eabf2688393f406b5e667": {
+  "8412c0f97703a920601aa6315890cb20dad77862dc7ba466ebe3200c01fe2eba": {
+    "0": {
+      "filename": "AFTRoot.sol",
+      "line": 95
+    },
+    "8": {
+      "filename": "AFTRoot.sol",
+      "line": 95
+    },
+    "24": {
+      "filename": "AFTRoot.sol",
+      "line": 95
+    },
+    "32": {
+      "filename": "AFTRoot.sol",
+      "line": 95
+    },
+    "56": {
+      "filename": "modifiers/modifiers.sol",
+      "line": 77
+    },
+    "72": {
+      "filename": "modifiers/modifiers.sol",
+      "line": 77
+    },
+    "88": {
+      "filename": "modifiers/modifiers.sol",
+      "line": 77
+    },
+    "104": {
+      "filename": "modifiers/modifiers.sol",
+      "line": 77
+    },
+    "128": {
+      "filename": "modifiers/modifiers.sol",
+      "line": 62
+    },
+    "144": {
+      "filename": "AFTRoot.sol",
+      "line": 96
+    },
+    "160": {
+      "filename": "AFTRoot.sol",
+      "line": 97
+    },
+    "176": {
+      "filename": "AFTRoot.sol",
+      "line": 97
+    },
+    "192": {
+      "filename": "AFTRoot.sol",
+      "line": 98
+    },
+    "200": {
+      "filename": "AFTRoot.sol",
+      "line": 98
+    },
+    "216": {
+      "filename": "AFTRoot.sol",
+      "line": 99
+    },
+    "232": {
+      "filename": "AFTRoot.sol",
+      "line": 99
+    },
+    "248": {
+      "filename": "AFTRoot.sol",
+      "line": 99
+    },
+    "256": {
+      "filename": "AFTRoot.sol",
+      "line": 99
+    },
+    "272": {
+      "filename": "AFTRoot.sol",
+      "line": 99
+    },
+    "280": {
+      "filename": "AFTRoot.sol",
+      "line": 99
+    },
+    "304": {
+      "filename": "AFTRoot.sol",
+      "line": 99
+    },
+    "312": {
+      "filename": "AFTRoot.sol",
+      "line": 99
+    },
+    "320": {
+      "filename": "AFTRoot.sol",
+      "line": 99
+    },
+    "344": {
+      "filename": "AFTRoot.sol",
+      "line": 99
+    },
+    "360": {
+      "filename": "AFTRoot.sol",
+      "line": 99
+    },
+    "368": {
+      "filename": "AFTRoot.sol",
+      "line": 99
+    },
+    "416": {
+      "filename": "AFTRoot.sol",
+      "line": 99
+    },
+    "424": {
+      "filename": "AFTRoot.sol",
+      "line": 99
+    },
+    "432": {
+      "filename": "AFTRoot.sol",
+      "line": 99
+    },
+    "440": {
+      "filename": "AFTRoot.sol",
+      "line": 99
+    },
+    "448": {
+      "filename": "AFTRoot.sol",
+      "line": 99
+    },
+    "464": {
+      "filename": "AFTRoot.sol",
+      "line": 99
+    },
+    "472": {
+      "filename": "AFTRoot.sol",
+      "line": 99
+    },
+    "480": {
+      "filename": "AFTRoot.sol",
+      "line": 99
+    },
+    "488": {
+      "filename": "AFTRoot.sol",
+      "line": 99
+    },
+    "496": {
+      "filename": "AFTRoot.sol",
+      "line": 99
+    }
+  },
+  "86c3c0c050ac9a5f950f56a835f27858e3e1f2bade687279ed4e0aadf37b6cf0": {
+    "0": {
+      "filename": "modifiers/modifiers.sol",
+      "line": 91
+    },
+    "8": {
+      "filename": "modifiers/modifiers.sol",
+      "line": 91
+    },
+    "24": {
+      "filename": "modifiers/modifiers.sol",
+      "line": 91
+    },
+    "40": {
+      "filename": "modifiers/modifiers.sol",
+      "line": 91
+    },
+    "56": {
+      "filename": "modifiers/modifiers.sol",
+      "line": 91
+    },
+    "72": {
+      "filename": "modifiers/modifiers.sol",
+      "line": 91
+    },
+    "80": {
+      "filename": "modifiers/modifiers.sol",
+      "line": 91
+    },
+    "96": {
+      "filename": "modifiers/modifiers.sol",
+      "line": 91
+    },
+    "104": {
+      "filename": "modifiers/modifiers.sol",
+      "line": 91
+    },
+    "112": {
+      "filename": "modifiers/modifiers.sol",
+      "line": 91
+    }
+  },
+  "8a5972eeb0ea1a19814ad18a355f5e412a334f174f1c8c3b9181ea79d54d140b": {
+    "0": {
+      "filename": "./AFTRoot.code",
+      "line": 1761
+    },
+    "8": {
+      "filename": "./AFTRoot.code",
+      "line": 1762
+    },
+    "24": {
+      "filename": "./AFTRoot.code",
+      "line": 1763
+    },
+    "48": {
+      "filename": "./AFTRoot.code",
+      "line": 1764
+    },
+    "64": {
+      "filename": "./AFTRoot.code",
+      "line": 1765
+    },
+    "72": {
+      "filename": "./AFTRoot.code",
+      "line": 1766
+    },
+    "88": {
+      "filename": "AFTRoot.sol",
+      "line": 102
+    },
+    "96": {
+      "filename": "AFTRoot.sol",
+      "line": 102
+    },
+    "104": {
+      "filename": "./AFTRoot.code",
+      "line": 1773
+    },
+    "120": {
+      "filename": "./AFTRoot.code",
+      "line": 1776
+    },
+    "136": {
+      "filename": "./AFTRoot.code",
+      "line": 1779
+    }
+  },
+  "8a83c4b39f0a8cedb63095171c2b28b72414e7e6f312325b4fc7cff1d8ed6218": {
+    "0": {
+      "filename": "AFTRoot.sol",
+      "line": 335
+    },
+    "16": {
+      "filename": "AFTRoot.sol",
+      "line": 336
+    },
+    "24": {
+      "filename": "AFTRoot.sol",
+      "line": 336
+    },
+    "40": {
+      "filename": "AFTRoot.sol",
+      "line": 336
+    },
+    "48": {
+      "filename": "AFTRoot.sol",
+      "line": 336
+    },
+    "64": {
+      "filename": "AFTRoot.sol",
+      "line": 336
+    },
+    "72": {
+      "filename": "AFTRoot.sol",
+      "line": 336
+    }
+  },
+  "8b00bbceb71a80e11c8005b68a358f1d76bb12fd8c7e08ce97c65f1eaa20fbfd": {
+    "0": {
+      "filename": "./AFTRoot.code",
+      "line": 1860
+    },
+    "8": {
+      "filename": "./AFTRoot.code",
+      "line": 1861
+    },
+    "56": {
+      "filename": "./AFTRoot.code",
+      "line": 1862
+    },
+    "64": {
+      "filename": "./AFTRoot.code",
+      "line": 1863
+    },
+    "80": {
+      "filename": "./AFTRoot.code",
+      "line": 1882
+    },
+    "88": {
+      "filename": "./AFTRoot.code",
+      "line": 1883
+    },
+    "136": {
+      "filename": "./AFTRoot.code",
+      "line": 1884
+    },
+    "144": {
+      "filename": "./AFTRoot.code",
+      "line": 1885
+    },
+    "160": {
+      "filename": "./AFTRoot.code",
+      "line": 1899
+    },
+    "168": {
+      "filename": "./AFTRoot.code",
+      "line": 1900
+    },
+    "216": {
+      "filename": "./AFTRoot.code",
+      "line": 1901
+    },
+    "224": {
+      "filename": "./AFTRoot.code",
+      "line": 1902
+    },
+    "240": {
+      "filename": "./AFTRoot.code",
+      "line": 1905
+    },
+    "248": {
+      "filename": "./AFTRoot.code",
+      "line": 1906
+    },
+    "296": {
+      "filename": "./AFTRoot.code",
+      "line": 1907
+    },
+    "304": {
+      "filename": "./AFTRoot.code",
+      "line": 1908
+    }
+  },
+  "8d1f010682abbf623a65f16c70f3907191dbb50c430dd839f5c0a1cc1beea4cd": {
+    "0": {
+      "filename": "./AFTRoot.code",
+      "line": 982
+    },
+    "8": {
+      "filename": "./AFTRoot.code",
+      "line": 983
+    },
+    "24": {
+      "filename": "./AFTRoot.code",
+      "line": 984
+    },
+    "48": {
+      "filename": "AFTRoot.sol",
+      "line": 334
+    },
+    "56": {
+      "filename": "./AFTRoot.code",
+      "line": 988
+    },
+    "72": {
+      "filename": "./AFTRoot.code",
+      "line": 991
+    },
+    "80": {
+      "filename": "./AFTRoot.code",
+      "line": 992
+    },
+    "96": {
+      "filename": "./AFTRoot.code",
+      "line": 993
+    },
+    "104": {
+      "filename": "./AFTRoot.code",
+      "line": 994
+    },
+    "112": {
+      "filename": "./AFTRoot.code",
+      "line": 995
+    },
+    "128": {
+      "filename": "./AFTRoot.code",
+      "line": 996
+    },
+    "144": {
+      "filename": "./AFTRoot.code",
+      "line": 997
+    },
+    "152": {
+      "filename": "./AFTRoot.code",
+      "line": 998
+    },
+    "160": {
+      "filename": "./AFTRoot.code",
+      "line": 999
+    },
+    "168": {
+      "filename": "./AFTRoot.code",
+      "line": 1000
+    },
+    "192": {
+      "filename": "./AFTRoot.code",
+      "line": 1001
+    },
+    "200": {
+      "filename": "./AFTRoot.code",
+      "line": 1002
+    },
+    "216": {
+      "filename": "./AFTRoot.code",
+      "line": 1003
+    },
+    "232": {
+      "filename": "./AFTRoot.code",
+      "line": 1004
+    },
+    "240": {
+      "filename": "./AFTRoot.code",
+      "line": 1005
+    },
+    "288": {
+      "filename": "./AFTRoot.code",
+      "line": 1006
+    },
+    "304": {
+      "filename": "./AFTRoot.code",
+      "line": 1007
+    },
+    "320": {
+      "filename": "./AFTRoot.code",
+      "line": 1008
+    },
+    "336": {
+      "filename": "./AFTRoot.code",
+      "line": 1009
+    },
+    "344": {
+      "filename": "./AFTRoot.code",
+      "line": 1010
+    },
+    "352": {
+      "filename": "./AFTRoot.code",
+      "line": 1011
+    },
+    "368": {
+      "filename": "./AFTRoot.code",
+      "line": 1013
+    },
+    "376": {
+      "filename": "./AFTRoot.code",
+      "line": 1014
+    },
+    "392": {
+      "filename": "./AFTRoot.code",
+      "line": 1016
+    },
+    "400": {
+      "filename": "./AFTRoot.code",
+      "line": 1017
+    },
+    "416": {
+      "filename": "./AFTRoot.code",
+      "line": 1020
+    }
+  },
+  "96a296d224f285c67bee93c30f8a309157f0daa35dc5b87e410b78630a09cfc7": {},
+  "9738dfce8ecf273245a4781b623d5a3c33f54f3001894b40b523f697de3cc4f1": {
+    "0": {
+      "filename": "AFTRoot.sol",
+      "line": 384
+    },
+    "24": {
+      "filename": "AFTRoot.sol",
+      "line": 384
+    },
+    "40": {
+      "filename": "AFTRoot.sol",
+      "line": 384
+    },
+    "48": {
+      "filename": "AFTRoot.sol",
+      "line": 384
+    },
+    "96": {
+      "filename": "AFTRoot.sol",
+      "line": 384
+    },
+    "112": {
+      "filename": "AFTRoot.sol",
+      "line": 384
+    },
+    "120": {
+      "filename": "AFTRoot.sol",
+      "line": 384
+    },
+    "136": {
+      "filename": "AFTRoot.sol",
+      "line": 384
+    },
+    "152": {
+      "filename": "AFTRoot.sol",
+      "line": 384
+    },
+    "160": {
+      "filename": "AFTRoot.sol",
+      "line": 384
+    },
+    "168": {
+      "filename": "AFTRoot.sol",
+      "line": 384
+    },
+    "184": {
+      "filename": "AFTRoot.sol",
+      "line": 384
+    },
+    "200": {
+      "filename": "AFTRoot.sol",
+      "line": 384
+    },
+    "208": {
+      "filename": "AFTRoot.sol",
+      "line": 384
+    },
+    "216": {
+      "filename": "AFTRoot.sol",
+      "line": 384
+    },
+    "224": {
+      "filename": "AFTRoot.sol",
+      "line": 384
+    },
+    "232": {
+      "filename": "AFTRoot.sol",
+      "line": 384
+    }
+  },
+  "9dd8afc470178fda37cdbf8b9b92d4f19ebab0bb39134e93d019d2dad914e3ef": {
+    "0": {
+      "filename": "./AFTRoot.code",
+      "line": 1080
+    },
+    "8": {
+      "filename": "./AFTRoot.code",
+      "line": 1081
+    },
+    "24": {
+      "filename": "./AFTRoot.code",
+      "line": 1082
+    },
+    "48": {
+      "filename": "./AFTRoot.code",
+      "line": 1083
+    },
+    "64": {
+      "filename": "./AFTRoot.code",
+      "line": 1084
+    },
+    "72": {
+      "filename": "./AFTRoot.code",
+      "line": 1085
+    },
+    "88": {
+      "filename": "AFTRoot.sol",
+      "line": 301
+    },
+    "96": {
+      "filename": "./AFTRoot.code",
+      "line": 1091
+    },
+    "112": {
+      "filename": "./AFTRoot.code",
+      "line": 1094
+    },
+    "120": {
+      "filename": "./AFTRoot.code",
+      "line": 1095
+    },
+    "136": {
+      "filename": "./AFTRoot.code",
+      "line": 1096
+    },
+    "144": {
+      "filename": "./AFTRoot.code",
+      "line": 1097
+    },
+    "152": {
+      "filename": "./AFTRoot.code",
+      "line": 1098
+    },
+    "168": {
+      "filename": "./AFTRoot.code",
+      "line": 1099
+    },
+    "184": {
+      "filename": "./AFTRoot.code",
+      "line": 1100
+    },
+    "192": {
+      "filename": "./AFTRoot.code",
+      "line": 1101
+    },
+    "200": {
+      "filename": "./AFTRoot.code",
+      "line": 1102
+    },
+    "208": {
+      "filename": "./AFTRoot.code",
+      "line": 1103
+    },
+    "232": {
+      "filename": "./AFTRoot.code",
+      "line": 1104
+    },
+    "240": {
+      "filename": "./AFTRoot.code",
+      "line": 1105
+    },
+    "248": {
+      "filename": "./AFTRoot.code",
+      "line": 1106
+    },
+    "272": {
+      "filename": "./AFTRoot.code",
+      "line": 1107
+    },
+    "288": {
+      "filename": "./AFTRoot.code",
+      "line": 1108
+    },
+    "296": {
+      "filename": "./AFTRoot.code",
+      "line": 1109
+    },
+    "344": {
+      "filename": "./AFTRoot.code",
+      "line": 1110
+    },
+    "360": {
+      "filename": "./AFTRoot.code",
+      "line": 1111
+    },
+    "376": {
+      "filename": "./AFTRoot.code",
+      "line": 1112
+    },
+    "384": {
+      "filename": "./AFTRoot.code",
+      "line": 1113
+    },
+    "392": {
+      "filename": "./AFTRoot.code",
+      "line": 1114
+    },
+    "400": {
+      "filename": "./AFTRoot.code",
+      "line": 1115
+    },
+    "408": {
+      "filename": "./AFTRoot.code",
+      "line": 1116
+    },
+    "416": {
+      "filename": "./AFTRoot.code",
+      "line": 1117
+    },
+    "424": {
+      "filename": "./AFTRoot.code",
+      "line": 1118
+    },
+    "440": {
+      "filename": "./AFTRoot.code",
+      "line": 1120
+    },
+    "448": {
+      "filename": "./AFTRoot.code",
+      "line": 1121
+    },
+    "464": {
+      "filename": "./AFTRoot.code",
+      "line": 1123
+    },
+    "472": {
+      "filename": "./AFTRoot.code",
+      "line": 1124
+    },
+    "488": {
+      "filename": "./AFTRoot.code",
+      "line": 1127
+    }
+  },
+  "a23d341be251533d1239a436302911fe0bc98353003054e1c344b6c6829ada5e": {
+    "0": {
+      "filename": "AFTRoot.sol",
+      "line": 102
+    },
+    "8": {
+      "filename": "AFTRoot.sol",
+      "line": 102
+    },
+    "24": {
+      "filename": "AFTRoot.sol",
+      "line": 102
+    },
+    "32": {
+      "filename": "AFTRoot.sol",
+      "line": 102
+    },
+    "56": {
+      "filename": "modifiers/modifiers.sol",
+      "line": 72
+    },
+    "72": {
+      "filename": "modifiers/modifiers.sol",
+      "line": 72
+    },
+    "88": {
+      "filename": "modifiers/modifiers.sol",
+      "line": 72
+    },
+    "104": {
+      "filename": "modifiers/modifiers.sol",
+      "line": 72
+    },
+    "128": {
+      "filename": "modifiers/modifiers.sol",
+      "line": 62
+    },
+    "144": {
+      "filename": "AFTRoot.sol",
+      "line": 103
+    },
+    "152": {
+      "filename": "AFTRoot.sol",
+      "line": 103
+    },
+    "168": {
+      "filename": "AFTRoot.sol",
+      "line": 104
+    },
+    "184": {
+      "filename": "AFTRoot.sol",
+      "line": 104
+    },
+    "192": {
+      "filename": "AFTRoot.sol",
+      "line": 104
+    },
+    "208": {
+      "filename": "AFTRoot.sol",
+      "line": 104
+    },
+    "224": {
+      "filename": "AFTRoot.sol",
+      "line": 104
+    },
+    "240": {
+      "filename": "AFTRoot.sol",
+      "line": 104
+    },
+    "248": {
+      "filename": "AFTRoot.sol",
+      "line": 104
+    },
+    "272": {
+      "filename": "AFTRoot.sol",
+      "line": 104
+    },
+    "280": {
+      "filename": "AFTRoot.sol",
+      "line": 104
+    },
+    "288": {
+      "filename": "AFTRoot.sol",
+      "line": 104
+    },
+    "312": {
+      "filename": "AFTRoot.sol",
+      "line": 104
+    },
+    "328": {
+      "filename": "AFTRoot.sol",
+      "line": 104
+    },
+    "336": {
+      "filename": "AFTRoot.sol",
+      "line": 104
+    },
+    "384": {
+      "filename": "AFTRoot.sol",
+      "line": 104
+    },
+    "392": {
+      "filename": "AFTRoot.sol",
+      "line": 104
+    },
+    "408": {
+      "filename": "AFTRoot.sol",
+      "line": 104
+    },
+    "424": {
+      "filename": "AFTRoot.sol",
+      "line": 104
+    },
+    "432": {
+      "filename": "AFTRoot.sol",
+      "line": 104
+    },
+    "440": {
+      "filename": "AFTRoot.sol",
+      "line": 104
+    },
+    "448": {
+      "filename": "AFTRoot.sol",
+      "line": 104
+    }
+  },
+  "a8706c6358fecfba3c31d885dcf337fed67609c22ebf972396a9aca8faf7a108": {
+    "0": {
+      "filename": "./AFTRoot.code",
+      "line": 2415
+    }
+  },
+  "abcfa13921e15d791909da3e2d7bf55f2ca214ce0cdfa75179115f799c0027a7": {
+    "0": {
+      "filename": "AFTRoot.sol",
+      "line": 325
+    },
+    "16": {
+      "filename": "AFTRoot.sol",
+      "line": 325
+    },
+    "32": {
+      "filename": "AFTRoot.sol",
+      "line": 325
+    },
+    "48": {
+      "filename": "AFTRoot.sol",
+      "line": 325
+    },
+    "64": {
+      "filename": "AFTRoot.sol",
+      "line": 325
+    },
+    "80": {
+      "filename": "AFTRoot.sol",
+      "line": 325
+    },
+    "96": {
+      "filename": "AFTRoot.sol",
+      "line": 325
+    },
+    "112": {
+      "filename": "AFTRoot.sol",
+      "line": 325
+    }
+  },
+  "acdcfecd3d2608c1e66ab2e08daa4cb18d3685768dd30e3db48e88ccf174b45c": {
+    "0": {
+      "filename": "./AFTRoot.code",
+      "line": 2304
+    },
+    "16": {
+      "filename": "./AFTRoot.code",
+      "line": 2305
+    },
+    "24": {
+      "filename": "./AFTRoot.code",
+      "line": 2306
+    },
+    "40": {
+      "filename": "./AFTRoot.code",
+      "line": 2307
+    },
+    "56": {
+      "filename": "./AFTRoot.code",
+      "line": 2308
+    },
+    "80": {
+      "filename": "./AFTRoot.code",
+      "line": 2309
+    },
+    "96": {
+      "filename": "./AFTRoot.code",
+      "line": 2310
+    },
+    "104": {
+      "filename": "./AFTRoot.code",
+      "line": 2311
+    },
+    "112": {
+      "filename": "./AFTRoot.code",
+      "line": 2312
+    },
+    "128": {
+      "filename": "./AFTRoot.code",
+      "line": 2313
+    },
+    "144": {
+      "filename": "./AFTRoot.code",
+      "line": 2314
+    },
+    "152": {
+      "filename": "./AFTRoot.code",
+      "line": 2315
+    },
+    "168": {
+      "filename": "./AFTRoot.code",
+      "line": 2316
+    },
+    "192": {
+      "filename": "./AFTRoot.code",
+      "line": 2317
+    },
+    "208": {
+      "filename": "./AFTRoot.code",
+      "line": 2323
+    },
+    "216": {
+      "filename": "./AFTRoot.code",
+      "line": 2324
+    },
+    "232": {
+      "filename": "./AFTRoot.code",
+      "line": 2325
+    },
+    "248": {
+      "filename": "./AFTRoot.code",
+      "line": 2329
+    },
+    "256": {
+      "filename": "./AFTRoot.code",
+      "line": 2330
+    },
+    "280": {
+      "filename": "./AFTRoot.code",
+      "line": 2331
+    },
+    "296": {
+      "filename": "./AFTRoot.code",
+      "line": 2332
+    },
+    "304": {
+      "filename": "./AFTRoot.code",
+      "line": 2333
+    },
+    "320": {
+      "filename": "./AFTRoot.code",
+      "line": 2337
+    },
+    "328": {
+      "filename": "./AFTRoot.code",
+      "line": 2338
+    },
+    "344": {
+      "filename": "./AFTRoot.code",
+      "line": 2341
+    }
+  },
+  "bdd973877b37903a3d079bc6740f955632b26cea4867af0564596837cbfd6eb1": {
+    "0": {
+      "filename": "modifiers/modifiers.sol",
+      "line": 82
+    }
+  },
+  "bf1c2b0f6c810a512c6621d345dbb8c3c3aae0e46e34ceaa6853b21ede53f068": {
+    "0": {
+      "filename": "./AFTRoot.code",
+      "line": 559
+    },
+    "8": {
+      "filename": "./AFTRoot.code",
+      "line": 560
+    },
+    "24": {
+      "filename": "./AFTRoot.code",
+      "line": 561
+    },
+    "48": {
+      "filename": "./AFTRoot.code",
+      "line": 562
+    },
+    "64": {
+      "filename": "./AFTRoot.code",
+      "line": 563
+    },
+    "72": {
+      "filename": "./AFTRoot.code",
+      "line": 564
+    },
+    "88": {
+      "filename": "AFTRoot.sol",
+      "line": 95
+    },
+    "96": {
+      "filename": "./AFTRoot.code",
+      "line": 570
+    },
+    "112": {
+      "filename": "./AFTRoot.code",
+      "line": 573
+    },
+    "128": {
+      "filename": "./AFTRoot.code",
+      "line": 576
+    }
+  },
+  "c0f53895d06acfa35f19c88a2585652c9650d1697aec42088f9cad605424209d": {
+    "0": {
+      "filename": "./AFTRoot.code",
+      "line": 2408
+    },
+    "8": {
+      "filename": "./AFTRoot.code",
+      "line": 2418
+    },
+    "24": {
+      "filename": "./AFTRoot.code",
+      "line": 2419
+    },
+    "32": {
+      "filename": "./AFTRoot.code",
+      "line": 2420
+    },
+    "48": {
+      "filename": "./AFTRoot.code",
+      "line": 2423
+    },
+    "56": {
+      "filename": "./AFTRoot.code",
+      "line": 2424
+    },
+    "72": {
+      "filename": "./AFTRoot.code",
+      "line": 2425
+    },
+    "88": {
+      "filename": "./AFTRoot.code",
+      "line": 2428
+    },
+    "96": {
+      "filename": "./AFTRoot.code",
+      "line": 2429
+    },
+    "112": {
+      "filename": "./AFTRoot.code",
+      "line": 2430
+    },
+    "128": {
+      "filename": "./AFTRoot.code",
+      "line": 2433
+    }
+  },
+  "c564673b073b0ef600e4143fd71192007282263ae96eaf9aff49b250a047413c": {
+    "0": {
+      "filename": "AFTRoot.sol",
+      "line": 202
+    },
+    "8": {
+      "filename": "AFTRoot.sol",
+      "line": 202
+    },
+    "24": {
+      "filename": "AFTRoot.sol",
+      "line": 202
+    },
+    "32": {
+      "filename": "AFTRoot.sol",
+      "line": 202
+    },
+    "56": {
+      "filename": "AFTRoot.sol",
+      "line": 211
+    },
+    "72": {
+      "filename": "AFTRoot.sol",
+      "line": 211
+    },
+    "80": {
+      "filename": "AFTRoot.sol",
+      "line": 211
+    },
+    "96": {
+      "filename": "AFTRoot.sol",
+      "line": 211
+    },
+    "112": {
+      "filename": "AFTRoot.sol",
+      "line": 211
+    },
+    "136": {
+      "filename": "AFTRoot.sol",
+      "line": 212
+    },
+    "152": {
+      "filename": "AFTRoot.sol",
+      "line": 214
+    },
+    "168": {
+      "filename": "AFTRoot.sol",
+      "line": 214
+    },
+    "184": {
+      "filename": "AFTRoot.sol",
+      "line": 214
+    },
+    "192": {
+      "filename": "AFTRoot.sol",
+      "line": 214
+    },
+    "216": {
+      "filename": "AFTRoot.sol",
+      "line": 214
+    },
+    "224": {
+      "filename": "AFTRoot.sol",
+      "line": 214
+    },
+    "232": {
+      "filename": "AFTRoot.sol",
+      "line": 214
+    },
+    "256": {
+      "filename": "AFTRoot.sol",
+      "line": 214
+    },
+    "272": {
+      "filename": "AFTRoot.sol",
+      "line": 214
+    },
+    "280": {
+      "filename": "AFTRoot.sol",
+      "line": 214
+    },
+    "328": {
+      "filename": "AFTRoot.sol",
+      "line": 214
+    },
+    "344": {
+      "filename": "AFTRoot.sol",
+      "line": 214
+    },
+    "352": {
+      "filename": "AFTRoot.sol",
+      "line": 214
+    },
+    "368": {
+      "filename": "AFTRoot.sol",
+      "line": 214
+    },
+    "376": {
+      "filename": "AFTRoot.sol",
+      "line": 214
+    },
+    "384": {
+      "filename": "AFTRoot.sol",
+      "line": 214
+    },
+    "400": {
+      "filename": "AFTRoot.sol",
+      "line": 214
+    },
+    "416": {
+      "filename": "AFTRoot.sol",
+      "line": 214
+    },
+    "432": {
+      "filename": "AFTRoot.sol",
+      "line": 214
+    },
+    "448": {
+      "filename": "AFTRoot.sol",
+      "line": 214
+    },
+    "456": {
+      "filename": "AFTRoot.sol",
+      "line": 214
+    },
+    "472": {
+      "filename": "AFTRoot.sol",
+      "line": 214
+    },
+    "480": {
+      "filename": "AFTRoot.sol",
+      "line": 214
+    },
+    "488": {
+      "filename": "AFTRoot.sol",
+      "line": 214
+    },
+    "496": {
+      "filename": "AFTRoot.sol",
+      "line": 214
+    },
+    "504": {
+      "filename": "AFTRoot.sol",
+      "line": 214
+    },
+    "512": {
+      "filename": "AFTRoot.sol",
+      "line": 214
+    }
+  },
+  "c60ca90e648b2ce9b0c693d82f32860da9a42e84dfb3c17a517240e6922f36ad": {
     "0": {
       "filename": "AFTRoot.sol",
       "line": 354
@@ -6074,534 +5033,332 @@
     "632": {
       "filename": "AFTRoot.sol",
       "line": 365
+    },
+    "648": {
+      "filename": "AFTRoot.sol",
+      "line": 368
+    },
+    "656": {
+      "filename": "AFTRoot.sol",
+      "line": 368
     }
   },
-  "e496c34b7cb93ad12d8a0b9c1711fc857544011b9126bb72ad7af25bcab45226": {
+  "c6a0be809ca014af022afdf2adc055a67b312338572f0e8e974f8e2f8fb255da": {
     "0": {
       "filename": "./AFTRoot.code",
-      "line": 840
+      "line": 1856
     },
     "8": {
       "filename": "./AFTRoot.code",
-      "line": 841
+      "line": 1857
     },
-    "24": {
+    "56": {
       "filename": "./AFTRoot.code",
-      "line": 842
-    },
-    "48": {
-      "filename": "./AFTRoot.code",
-      "line": 843
+      "line": 1858
     },
     "64": {
       "filename": "./AFTRoot.code",
-      "line": 844
+      "line": 1859
     },
-    "72": {
+    "80": {
       "filename": "./AFTRoot.code",
-      "line": 845
+      "line": 1912
     },
     "88": {
-      "filename": "AFTRoot.sol",
-      "line": 290
-    },
-    "96": {
       "filename": "./AFTRoot.code",
-      "line": 851
-    },
-    "112": {
-      "filename": "./AFTRoot.code",
-      "line": 854
-    },
-    "120": {
-      "filename": "./AFTRoot.code",
-      "line": 855
+      "line": 1913
     },
     "136": {
       "filename": "./AFTRoot.code",
-      "line": 856
+      "line": 1914
     },
     "144": {
       "filename": "./AFTRoot.code",
-      "line": 857
-    },
-    "152": {
-      "filename": "./AFTRoot.code",
-      "line": 858
-    },
-    "168": {
-      "filename": "./AFTRoot.code",
-      "line": 859
-    },
-    "184": {
-      "filename": "./AFTRoot.code",
-      "line": 860
-    },
-    "192": {
-      "filename": "./AFTRoot.code",
-      "line": 861
-    },
-    "200": {
-      "filename": "./AFTRoot.code",
-      "line": 862
-    },
-    "208": {
-      "filename": "./AFTRoot.code",
-      "line": 863
-    },
-    "232": {
-      "filename": "./AFTRoot.code",
-      "line": 864
-    },
-    "240": {
-      "filename": "./AFTRoot.code",
-      "line": 865
-    },
-    "248": {
-      "filename": "./AFTRoot.code",
-      "line": 866
-    },
-    "272": {
-      "filename": "./AFTRoot.code",
-      "line": 867
-    },
-    "288": {
-      "filename": "./AFTRoot.code",
-      "line": 868
-    },
-    "296": {
-      "filename": "./AFTRoot.code",
-      "line": 869
-    },
-    "344": {
-      "filename": "./AFTRoot.code",
-      "line": 870
-    },
-    "360": {
-      "filename": "./AFTRoot.code",
-      "line": 871
-    },
-    "376": {
-      "filename": "./AFTRoot.code",
-      "line": 872
-    },
-    "384": {
-      "filename": "./AFTRoot.code",
-      "line": 873
-    },
-    "392": {
-      "filename": "./AFTRoot.code",
-      "line": 874
-    },
-    "400": {
-      "filename": "./AFTRoot.code",
-      "line": 875
-    },
-    "408": {
-      "filename": "./AFTRoot.code",
-      "line": 876
-    },
-    "416": {
-      "filename": "./AFTRoot.code",
-      "line": 877
-    },
-    "424": {
-      "filename": "./AFTRoot.code",
-      "line": 878
-    },
-    "440": {
-      "filename": "./AFTRoot.code",
-      "line": 880
-    },
-    "448": {
-      "filename": "./AFTRoot.code",
-      "line": 881
-    },
-    "464": {
-      "filename": "./AFTRoot.code",
-      "line": 883
-    },
-    "472": {
-      "filename": "./AFTRoot.code",
-      "line": 884
-    },
-    "488": {
-      "filename": "./AFTRoot.code",
-      "line": 887
-    }
-  },
-  "e5c3c821310657435d657998d307f03550183f11b10573c68c7769e0560383b0": {
-    "0": {
-      "filename": "AFTRoot.sol",
-      "line": 157
-    },
-    "8": {
-      "filename": "AFTRoot.sol",
-      "line": 157
-    },
-    "24": {
-      "filename": "AFTRoot.sol",
-      "line": 157
-    },
-    "32": {
-      "filename": "AFTRoot.sol",
-      "line": 157
-    },
-    "56": {
-      "filename": "AFTRoot.sol",
-      "line": 163
-    },
-    "72": {
-      "filename": "AFTRoot.sol",
-      "line": 163
-    },
-    "80": {
-      "filename": "AFTRoot.sol",
-      "line": 163
-    },
-    "96": {
-      "filename": "AFTRoot.sol",
-      "line": 163
-    },
-    "112": {
-      "filename": "AFTRoot.sol",
-      "line": 163
-    },
-    "136": {
-      "filename": "AFTRoot.sol",
-      "line": 165
-    },
-    "152": {
-      "filename": "AFTRoot.sol",
-      "line": 166
-    },
-    "168": {
-      "filename": "AFTRoot.sol",
-      "line": 166
-    },
-    "176": {
-      "filename": "AFTRoot.sol",
-      "line": 166
-    },
-    "184": {
-      "filename": "AFTRoot.sol",
-      "line": 166
-    },
-    "200": {
-      "filename": "AFTRoot.sol",
-      "line": 166
-    },
-    "216": {
-      "filename": "AFTRoot.sol",
-      "line": 168
-    },
-    "232": {
-      "filename": "AFTRoot.sol",
-      "line": 168
-    },
-    "248": {
-      "filename": "AFTRoot.sol",
-      "line": 168
-    },
-    "264": {
-      "filename": "AFTRoot.sol",
-      "line": 168
-    },
-    "272": {
-      "filename": "AFTRoot.sol",
-      "line": 168
-    },
-    "288": {
-      "filename": "AFTRoot.sol",
-      "line": 168
-    },
-    "296": {
-      "filename": "AFTRoot.sol",
-      "line": 168
-    },
-    "320": {
-      "filename": "AFTRoot.sol",
-      "line": 168
-    },
-    "328": {
-      "filename": "AFTRoot.sol",
-      "line": 168
-    },
-    "336": {
-      "filename": "AFTRoot.sol",
-      "line": 168
-    },
-    "360": {
-      "filename": "AFTRoot.sol",
-      "line": 168
-    },
-    "376": {
-      "filename": "AFTRoot.sol",
-      "line": 168
-    },
-    "384": {
-      "filename": "AFTRoot.sol",
-      "line": 168
-    },
-    "432": {
-      "filename": "AFTRoot.sol",
-      "line": 168
-    },
-    "448": {
-      "filename": "AFTRoot.sol",
-      "line": 168
-    },
-    "456": {
-      "filename": "AFTRoot.sol",
-      "line": 168
-    },
-    "472": {
-      "filename": "AFTRoot.sol",
-      "line": 168
-    },
-    "488": {
-      "filename": "AFTRoot.sol",
-      "line": 168
-    },
-    "504": {
-      "filename": "AFTRoot.sol",
-      "line": 168
-    },
-    "512": {
-      "filename": "AFTRoot.sol",
-      "line": 168
-    },
-    "520": {
-      "filename": "AFTRoot.sol",
-      "line": 168
-    },
-    "528": {
-      "filename": "AFTRoot.sol",
-      "line": 168
-    },
-    "544": {
-      "filename": "AFTRoot.sol",
-      "line": 176
-    },
-    "552": {
-      "filename": "AFTRoot.sol",
-      "line": 176
-    },
-    "560": {
-      "filename": "AFTRoot.sol",
-      "line": 176
-    }
-  },
-  "e9e5b08e673e611d8c08a9e26ee041127b0214182769f41d2f307b6369752fb3": {
-    "0": {
-      "filename": "./AFTRoot.code",
-      "line": 2397
-    },
-    "24": {
-      "filename": "./AFTRoot.code",
-      "line": 2398
-    },
-    "40": {
-      "filename": "./AFTRoot.code",
-      "line": 2399
-    }
-  },
-  "ed37e3db1d5df3d802f5f3f0af19aece698a826b1e891a6d95cf17b60e89b19a": {
-    "0": {
-      "filename": "modifiers/modifiers.sol",
-      "line": 91
-    },
-    "8": {
-      "filename": "modifiers/modifiers.sol",
-      "line": 91
-    },
-    "24": {
-      "filename": "modifiers/modifiers.sol",
-      "line": 91
-    },
-    "32": {
-      "filename": "modifiers/modifiers.sol",
-      "line": 91
-    },
-    "40": {
-      "filename": "modifiers/modifiers.sol",
-      "line": 91
-    },
-    "48": {
-      "filename": "modifiers/modifiers.sol",
-      "line": 91
-    },
-    "64": {
-      "filename": "modifiers/modifiers.sol",
-      "line": 91
-    },
-    "72": {
-      "filename": "modifiers/modifiers.sol",
-      "line": 91
-    },
-    "88": {
-      "filename": "modifiers/modifiers.sol",
-      "line": 91
-    },
-    "96": {
-      "filename": "modifiers/modifiers.sol",
-      "line": 91
-    },
-    "104": {
-      "filename": "modifiers/modifiers.sol",
-      "line": 91
-    },
-    "120": {
-      "filename": "modifiers/modifiers.sol",
-      "line": 91
-    },
-    "136": {
-      "filename": "modifiers/modifiers.sol",
-      "line": 91
-    },
-    "152": {
-      "filename": "modifiers/modifiers.sol",
-      "line": 91
-    },
-    "168": {
-      "filename": "modifiers/modifiers.sol",
-      "line": 91
-    },
-    "184": {
-      "filename": "modifiers/modifiers.sol",
-      "line": 91
-    },
-    "200": {
-      "filename": "modifiers/modifiers.sol",
-      "line": 91
-    }
-  },
-  "f1d003b2dcfec2a927b8825bd543000b3ec6178242c9ed2ee320786735b35271": {
-    "0": {
-      "filename": "AFTRoot.sol",
-      "line": 308
-    },
-    "16": {
-      "filename": "AFTRoot.sol",
-      "line": 308
-    },
-    "32": {
-      "filename": "AFTRoot.sol",
-      "line": 308
-    },
-    "48": {
-      "filename": "AFTRoot.sol",
-      "line": 308
-    },
-    "64": {
-      "filename": "AFTRoot.sol",
-      "line": 308
-    }
-  },
-  "f24e1e7aa04d89aad2945816b6e9b921f2b3892da9ba53e2383c148351b96d0c": {
-    "0": {
-      "filename": "./AFTRoot.code",
-      "line": 2314
-    },
-    "16": {
-      "filename": "./AFTRoot.code",
-      "line": 2315
-    }
-  },
-  "f439b2aee2e8f9e13f511b21bc621816be8296a6544503a8b51b396ea4d397a6": {
-    "0": {
-      "filename": "AFTRoot.sol",
-      "line": 269
-    },
-    "8": {
-      "filename": "AFTRoot.sol",
-      "line": 269
-    },
-    "16": {
-      "filename": "AFTRoot.sol",
-      "line": 269
-    },
-    "24": {
-      "filename": "AFTRoot.sol",
-      "line": 269
-    },
-    "40": {
-      "filename": "./AFTRoot.code",
-      "line": 2243
-    }
-  },
-  "f4712c4ccad02fc13d8744cd0235b7bb42245caf29588d8aae6d6e8db978dfa3": {},
-  "fafc137b3d14593cdcc8e3da832dbca63a3c8bfbadfe936bfab1300854438ade": {
-    "0": {
-      "filename": "./AFTRoot.code",
-      "line": 1818
-    },
-    "8": {
-      "filename": "./AFTRoot.code",
-      "line": 1819
-    },
-    "24": {
-      "filename": "./AFTRoot.code",
-      "line": 1820
-    },
-    "48": {
-      "filename": "./AFTRoot.code",
-      "line": 1821
-    },
-    "64": {
-      "filename": "./AFTRoot.code",
-      "line": 1822
-    },
-    "72": {
-      "filename": "./AFTRoot.code",
-      "line": 1823
-    },
-    "88": {
-      "filename": "AFTRoot.sol",
-      "line": 90
-    },
-    "96": {
-      "filename": "AFTRoot.sol",
-      "line": 90
-    },
-    "104": {
-      "filename": "AFTRoot.sol",
-      "line": 90
-    },
-    "112": {
-      "filename": "AFTRoot.sol",
-      "line": 90
-    },
-    "120": {
-      "filename": "AFTRoot.sol",
-      "line": 90
-    },
-    "128": {
-      "filename": "AFTRoot.sol",
-      "line": 90
-    },
-    "136": {
-      "filename": "AFTRoot.sol",
-      "line": 90
-    },
-    "152": {
-      "filename": "AFTRoot.sol",
-      "line": 90
+      "line": 1915
     },
     "160": {
       "filename": "./AFTRoot.code",
-      "line": 1837
+      "line": 1941
+    },
+    "168": {
+      "filename": "./AFTRoot.code",
+      "line": 1942
+    },
+    "216": {
+      "filename": "./AFTRoot.code",
+      "line": 1943
+    },
+    "224": {
+      "filename": "./AFTRoot.code",
+      "line": 1944
+    },
+    "240": {
+      "filename": "./AFTRoot.code",
+      "line": 1964
+    },
+    "248": {
+      "filename": "./AFTRoot.code",
+      "line": 1965
+    },
+    "296": {
+      "filename": "./AFTRoot.code",
+      "line": 1966
+    },
+    "304": {
+      "filename": "./AFTRoot.code",
+      "line": 1967
+    }
+  },
+  "c980fa7eae82f6b5201223a71f68ccd7a86339502f92575324f36a39285dec9b": {
+    "0": {
+      "filename": "AFTRoot.sol",
+      "line": 395
+    },
+    "8": {
+      "filename": "AFTRoot.sol",
+      "line": 395
+    },
+    "16": {
+      "filename": "AFTRoot.sol",
+      "line": 395
+    },
+    "32": {
+      "filename": "AFTRoot.sol",
+      "line": 395
+    },
+    "40": {
+      "filename": "AFTRoot.sol",
+      "line": 395
+    },
+    "64": {
+      "filename": "AFTRoot.sol",
+      "line": 395
+    },
+    "80": {
+      "filename": "AFTRoot.sol",
+      "line": 395
+    },
+    "88": {
+      "filename": "AFTRoot.sol",
+      "line": 395
+    },
+    "96": {
+      "filename": "AFTRoot.sol",
+      "line": 395
+    },
+    "104": {
+      "filename": "AFTRoot.sol",
+      "line": 395
+    },
+    "112": {
+      "filename": "AFTRoot.sol",
+      "line": 395
+    },
+    "128": {
+      "filename": "AFTRoot.sol",
+      "line": 395
+    },
+    "136": {
+      "filename": "AFTRoot.sol",
+      "line": 395
+    },
+    "144": {
+      "filename": "AFTRoot.sol",
+      "line": 395
+    },
+    "160": {
+      "filename": "AFTRoot.sol",
+      "line": 395
+    },
+    "168": {
+      "filename": "AFTRoot.sol",
+      "line": 395
+    },
+    "192": {
+      "filename": "AFTRoot.sol",
+      "line": 395
+    },
+    "208": {
+      "filename": "AFTRoot.sol",
+      "line": 395
+    },
+    "224": {
+      "filename": "AFTRoot.sol",
+      "line": 395
+    },
+    "240": {
+      "filename": "AFTRoot.sol",
+      "line": 395
+    }
+  },
+  "c9a739faf804dd293fb12948fc6d0fce494c985837426a0072f6ed963ce4539b": {},
+  "cbb905ea05a11de4acab1e221fc63c5b543433763325cac710a2d6458e7a6733": {
+    "0": {
+      "filename": "./AFTRoot.code",
+      "line": 1139
+    },
+    "8": {
+      "filename": "./AFTRoot.code",
+      "line": 1140
+    },
+    "24": {
+      "filename": "./AFTRoot.code",
+      "line": 1141
+    },
+    "48": {
+      "filename": "./AFTRoot.code",
+      "line": 1142
+    },
+    "64": {
+      "filename": "./AFTRoot.code",
+      "line": 1143
+    },
+    "72": {
+      "filename": "./AFTRoot.code",
+      "line": 1144
+    },
+    "88": {
+      "filename": "AFTRoot.sol",
+      "line": 311
+    },
+    "96": {
+      "filename": "AFTRoot.sol",
+      "line": 311
+    },
+    "104": {
+      "filename": "AFTRoot.sol",
+      "line": 311
+    },
+    "112": {
+      "filename": "AFTRoot.sol",
+      "line": 311
+    },
+    "120": {
+      "filename": "AFTRoot.sol",
+      "line": 311
+    },
+    "128": {
+      "filename": "AFTRoot.sol",
+      "line": 311
+    },
+    "136": {
+      "filename": "AFTRoot.sol",
+      "line": 311
+    },
+    "152": {
+      "filename": "AFTRoot.sol",
+      "line": 311
+    },
+    "160": {
+      "filename": "./AFTRoot.code",
+      "line": 1158
     },
     "176": {
       "filename": "./AFTRoot.code",
-      "line": 1840
+      "line": 1161
     },
-    "192": {
+    "184": {
       "filename": "./AFTRoot.code",
-      "line": 1843
+      "line": 1162
+    },
+    "200": {
+      "filename": "./AFTRoot.code",
+      "line": 1163
+    },
+    "208": {
+      "filename": "./AFTRoot.code",
+      "line": 1164
+    },
+    "216": {
+      "filename": "./AFTRoot.code",
+      "line": 1165
+    },
+    "232": {
+      "filename": "./AFTRoot.code",
+      "line": 1166
+    },
+    "248": {
+      "filename": "./AFTRoot.code",
+      "line": 1167
+    },
+    "256": {
+      "filename": "./AFTRoot.code",
+      "line": 1168
+    },
+    "264": {
+      "filename": "./AFTRoot.code",
+      "line": 1169
+    },
+    "272": {
+      "filename": "./AFTRoot.code",
+      "line": 1170
+    },
+    "296": {
+      "filename": "./AFTRoot.code",
+      "line": 1171
+    },
+    "304": {
+      "filename": "./AFTRoot.code",
+      "line": 1172
+    },
+    "312": {
+      "filename": "./AFTRoot.code",
+      "line": 1173
+    },
+    "336": {
+      "filename": "./AFTRoot.code",
+      "line": 1174
+    },
+    "344": {
+      "filename": "./AFTRoot.code",
+      "line": 1175
+    },
+    "352": {
+      "filename": "./AFTRoot.code",
+      "line": 1176
+    },
+    "400": {
+      "filename": "./AFTRoot.code",
+      "line": 1177
+    },
+    "408": {
+      "filename": "./AFTRoot.code",
+      "line": 1178
+    },
+    "416": {
+      "filename": "./AFTRoot.code",
+      "line": 1179
+    },
+    "424": {
+      "filename": "./AFTRoot.code",
+      "line": 1180
+    },
+    "432": {
+      "filename": "./AFTRoot.code",
+      "line": 1181
+    },
+    "448": {
+      "filename": "./AFTRoot.code",
+      "line": 1183
+    },
+    "456": {
+      "filename": "./AFTRoot.code",
+      "line": 1184
+    },
+    "464": {
+      "filename": "./AFTRoot.code",
+      "line": 1186
+    },
+    "472": {
+      "filename": "./AFTRoot.code",
+      "line": 1187
+    },
+    "488": {
+      "filename": "./AFTRoot.code",
+      "line": 1190
     }
   },
-  "fe441bda2327f30d8336b78a57c57e4fa7851544d0fa8e35fbf130de4037f82e": {
+  "cbe7d2386ee40d137343c04f9fd81c810d5947b6602741c8986517756b43f984": {
     "0": {
       "filename": "AFTRoot.sol",
       "line": 236
@@ -6793,6 +5550,1281 @@
     "584": {
       "filename": "AFTRoot.sol",
       "line": 258
+    }
+  },
+  "ccad26db0f16b5ae858b66da0cf1192ccbab0c40a16ea1a1839ca3dde96d0563": {
+    "0": {
+      "filename": "modifiers/modifiers.sol",
+      "line": 86
+    }
+  },
+  "ccc05cfedc4423d2cd11291f18ba5e85758a0f43072859a6d800b69ba35e9307": {
+    "0": {
+      "filename": "AFTRoot.sol",
+      "line": 258
+    },
+    "16": {
+      "filename": "AFTRoot.sol",
+      "line": 258
+    },
+    "64": {
+      "filename": "AFTRoot.sol",
+      "line": 258
+    },
+    "72": {
+      "filename": "AFTRoot.sol",
+      "line": 258
+    },
+    "88": {
+      "filename": "AFTRoot.sol",
+      "line": 258
+    },
+    "96": {
+      "filename": "AFTRoot.sol",
+      "line": 258
+    },
+    "112": {
+      "filename": "AFTRoot.sol",
+      "line": 261
+    },
+    "120": {
+      "filename": "AFTRoot.sol",
+      "line": 261
+    },
+    "136": {
+      "filename": "AFTRoot.sol",
+      "line": 264
+    },
+    "152": {
+      "filename": "AFTRoot.sol",
+      "line": 265
+    },
+    "168": {
+      "filename": "AFTRoot.sol",
+      "line": 265
+    },
+    "176": {
+      "filename": "AFTRoot.sol",
+      "line": 265
+    },
+    "192": {
+      "filename": "AFTRoot.sol",
+      "line": 265
+    },
+    "200": {
+      "filename": "AFTRoot.sol",
+      "line": 265
+    },
+    "216": {
+      "filename": "AFTRoot.sol",
+      "line": 265
+    },
+    "224": {
+      "filename": "AFTRoot.sol",
+      "line": 265
+    },
+    "240": {
+      "filename": "AFTRoot.sol",
+      "line": 265
+    },
+    "248": {
+      "filename": "AFTRoot.sol",
+      "line": 265
+    },
+    "256": {
+      "filename": "AFTRoot.sol",
+      "line": 266
+    },
+    "264": {
+      "filename": "AFTRoot.sol",
+      "line": 267
+    },
+    "272": {
+      "filename": "AFTRoot.sol",
+      "line": 267
+    },
+    "288": {
+      "filename": "AFTRoot.sol",
+      "line": 267
+    },
+    "296": {
+      "filename": "AFTRoot.sol",
+      "line": 267
+    },
+    "304": {
+      "filename": "AFTRoot.sol",
+      "line": 267
+    },
+    "312": {
+      "filename": "AFTRoot.sol",
+      "line": 267
+    },
+    "320": {
+      "filename": "AFTRoot.sol",
+      "line": 267
+    },
+    "328": {
+      "filename": "AFTRoot.sol",
+      "line": 267
+    },
+    "336": {
+      "filename": "AFTRoot.sol",
+      "line": 267
+    },
+    "352": {
+      "filename": "AFTRoot.sol",
+      "line": 267
+    },
+    "360": {
+      "filename": "AFTRoot.sol",
+      "line": 267
+    },
+    "376": {
+      "filename": "AFTRoot.sol",
+      "line": 267
+    },
+    "392": {
+      "filename": "./AFTRoot.code",
+      "line": 2185
+    },
+    "400": {
+      "filename": "AFTRoot.sol",
+      "line": 269
+    },
+    "416": {
+      "filename": "AFTRoot.sol",
+      "line": 269
+    },
+    "432": {
+      "filename": "AFTRoot.sol",
+      "line": 269
+    },
+    "448": {
+      "filename": "AFTRoot.sol",
+      "line": 269
+    },
+    "464": {
+      "filename": "AFTRoot.sol",
+      "line": 269
+    },
+    "480": {
+      "filename": "AFTRoot.sol",
+      "line": 269
+    },
+    "488": {
+      "filename": "AFTRoot.sol",
+      "line": 269
+    },
+    "504": {
+      "filename": "AFTRoot.sol",
+      "line": 269
+    },
+    "512": {
+      "filename": "AFTRoot.sol",
+      "line": 269
+    },
+    "544": {
+      "filename": "AFTRoot.sol",
+      "line": 269
+    },
+    "560": {
+      "filename": "AFTRoot.sol",
+      "line": 269
+    },
+    "576": {
+      "filename": "AFTRoot.sol",
+      "line": 269
+    },
+    "592": {
+      "filename": "AFTRoot.sol",
+      "line": 269
+    },
+    "640": {
+      "filename": "AFTRoot.sol",
+      "line": 269
+    },
+    "656": {
+      "filename": "AFTRoot.sol",
+      "line": 269
+    },
+    "664": {
+      "filename": "AFTRoot.sol",
+      "line": 269
+    },
+    "688": {
+      "filename": "AFTRoot.sol",
+      "line": 269
+    },
+    "704": {
+      "filename": "AFTRoot.sol",
+      "line": 269
+    },
+    "712": {
+      "filename": "AFTRoot.sol",
+      "line": 269
+    },
+    "728": {
+      "filename": "AFTRoot.sol",
+      "line": 269
+    },
+    "744": {
+      "filename": "AFTRoot.sol",
+      "line": 269
+    },
+    "752": {
+      "filename": "AFTRoot.sol",
+      "line": 269
+    },
+    "776": {
+      "filename": "AFTRoot.sol",
+      "line": 269
+    },
+    "784": {
+      "filename": "AFTRoot.sol",
+      "line": 269
+    },
+    "800": {
+      "filename": "AFTRoot.sol",
+      "line": 269
+    },
+    "808": {
+      "filename": "AFTRoot.sol",
+      "line": 269
+    },
+    "824": {
+      "filename": "AFTRoot.sol",
+      "line": 269
+    },
+    "840": {
+      "filename": "AFTRoot.sol",
+      "line": 269
+    },
+    "848": {
+      "filename": "AFTRoot.sol",
+      "line": 269
+    },
+    "896": {
+      "filename": "AFTRoot.sol",
+      "line": 269
+    },
+    "912": {
+      "filename": "AFTRoot.sol",
+      "line": 269
+    },
+    "928": {
+      "filename": "AFTRoot.sol",
+      "line": 269
+    },
+    "936": {
+      "filename": "AFTRoot.sol",
+      "line": 269
+    },
+    "952": {
+      "filename": "AFTRoot.sol",
+      "line": 269
+    },
+    "960": {
+      "filename": "AFTRoot.sol",
+      "line": 269
+    },
+    "968": {
+      "filename": "AFTRoot.sol",
+      "line": 269
+    },
+    "984": {
+      "filename": "AFTRoot.sol",
+      "line": 269
+    },
+    "992": {
+      "filename": "AFTRoot.sol",
+      "line": 269
+    },
+    "1000": {
+      "filename": "AFTRoot.sol",
+      "line": 269
+    }
+  },
+  "cdbc73ed2354fc454ea2514b3698123e44e0279471cb5076277934ebdd419439": {
+    "0": {
+      "filename": "AFTRoot.sol",
+      "line": 330
+    },
+    "8": {
+      "filename": "AFTRoot.sol",
+      "line": 331
+    }
+  },
+  "dc37cee96d9c30ecaac674aff6a793ebe8d2d2a9d91c8b2ec77fa8c7058ac3b3": {
+    "0": {
+      "filename": "./AFTRoot.code",
+      "line": 1984
+    },
+    "8": {
+      "filename": "./AFTRoot.code",
+      "line": 1987
+    },
+    "24": {
+      "filename": "./AFTRoot.code",
+      "line": 1988
+    },
+    "32": {
+      "filename": "./AFTRoot.code",
+      "line": 1989
+    },
+    "48": {
+      "filename": "./AFTRoot.code",
+      "line": 1992
+    },
+    "64": {
+      "filename": "./AFTRoot.code",
+      "line": 1993
+    },
+    "72": {
+      "filename": "./AFTRoot.code",
+      "line": 1994
+    },
+    "88": {
+      "filename": "./AFTRoot.code",
+      "line": 1995
+    },
+    "104": {
+      "filename": "./AFTRoot.code",
+      "line": 1996
+    },
+    "120": {
+      "filename": "./AFTRoot.code",
+      "line": 1997
+    },
+    "128": {
+      "filename": "./AFTRoot.code",
+      "line": 1998
+    },
+    "144": {
+      "filename": "./AFTRoot.code",
+      "line": 1999
+    },
+    "152": {
+      "filename": "./AFTRoot.code",
+      "line": 2000
+    },
+    "160": {
+      "filename": "./AFTRoot.code",
+      "line": 2001
+    },
+    "168": {
+      "filename": "./AFTRoot.code",
+      "line": 2002
+    },
+    "176": {
+      "filename": "./AFTRoot.code",
+      "line": 2003
+    },
+    "192": {
+      "filename": "./AFTRoot.code",
+      "line": 2004
+    },
+    "200": {
+      "filename": "./AFTRoot.code",
+      "line": 2005
+    },
+    "216": {
+      "filename": "./AFTRoot.code",
+      "line": 2006
+    },
+    "224": {
+      "filename": "./AFTRoot.code",
+      "line": 2007
+    },
+    "232": {
+      "filename": "./AFTRoot.code",
+      "line": 2008
+    },
+    "248": {
+      "filename": "./AFTRoot.code",
+      "line": 2009
+    },
+    "264": {
+      "filename": "./AFTRoot.code",
+      "line": 2011
+    },
+    "272": {
+      "filename": "./AFTRoot.code",
+      "line": 2012
+    },
+    "280": {
+      "filename": "./AFTRoot.code",
+      "line": 2013
+    },
+    "296": {
+      "filename": "./AFTRoot.code",
+      "line": 2015
+    },
+    "304": {
+      "filename": "./AFTRoot.code",
+      "line": 2016
+    },
+    "312": {
+      "filename": "./AFTRoot.code",
+      "line": 2017
+    },
+    "328": {
+      "filename": "./AFTRoot.code",
+      "line": 2018
+    },
+    "344": {
+      "filename": "./AFTRoot.code",
+      "line": 2019
+    },
+    "360": {
+      "filename": "./AFTRoot.code",
+      "line": 2021
+    },
+    "368": {
+      "filename": "./AFTRoot.code",
+      "line": 2022
+    },
+    "384": {
+      "filename": "./AFTRoot.code",
+      "line": 2023
+    },
+    "392": {
+      "filename": "./AFTRoot.code",
+      "line": 2024
+    },
+    "408": {
+      "filename": "./AFTRoot.code",
+      "line": 2026
+    },
+    "416": {
+      "filename": "./AFTRoot.code",
+      "line": 2027
+    },
+    "432": {
+      "filename": "modifiers/modifiers.sol",
+      "line": 163
+    },
+    "448": {
+      "filename": "modifiers/modifiers.sol",
+      "line": 163
+    },
+    "464": {
+      "filename": "modifiers/modifiers.sol",
+      "line": 163
+    },
+    "480": {
+      "filename": "modifiers/modifiers.sol",
+      "line": 164
+    },
+    "496": {
+      "filename": "modifiers/modifiers.sol",
+      "line": 164
+    },
+    "504": {
+      "filename": "modifiers/modifiers.sol",
+      "line": 165
+    },
+    "512": {
+      "filename": "modifiers/modifiers.sol",
+      "line": 165
+    },
+    "528": {
+      "filename": "modifiers/modifiers.sol",
+      "line": 165
+    },
+    "536": {
+      "filename": "modifiers/modifiers.sol",
+      "line": 165
+    },
+    "552": {
+      "filename": "modifiers/modifiers.sol",
+      "line": 166
+    },
+    "560": {
+      "filename": "modifiers/modifiers.sol",
+      "line": 166
+    },
+    "576": {
+      "filename": "modifiers/modifiers.sol",
+      "line": 166
+    },
+    "600": {
+      "filename": "modifiers/modifiers.sol",
+      "line": 166
+    },
+    "608": {
+      "filename": "modifiers/modifiers.sol",
+      "line": 166
+    },
+    "624": {
+      "filename": "modifiers/modifiers.sol",
+      "line": 166
+    },
+    "632": {
+      "filename": "modifiers/modifiers.sol",
+      "line": 166
+    },
+    "656": {
+      "filename": "modifiers/modifiers.sol",
+      "line": 167
+    },
+    "664": {
+      "filename": "./AFTRoot.code",
+      "line": 2051
+    },
+    "680": {
+      "filename": "./AFTRoot.code",
+      "line": 2052
+    },
+    "688": {
+      "filename": "./AFTRoot.code",
+      "line": 2053
+    },
+    "704": {
+      "filename": "./AFTRoot.code",
+      "line": 2056
+    }
+  },
+  "e496c34b7cb93ad12d8a0b9c1711fc857544011b9126bb72ad7af25bcab45226": {
+    "0": {
+      "filename": "./AFTRoot.code",
+      "line": 843
+    },
+    "8": {
+      "filename": "./AFTRoot.code",
+      "line": 844
+    },
+    "24": {
+      "filename": "./AFTRoot.code",
+      "line": 845
+    },
+    "48": {
+      "filename": "./AFTRoot.code",
+      "line": 846
+    },
+    "64": {
+      "filename": "./AFTRoot.code",
+      "line": 847
+    },
+    "72": {
+      "filename": "./AFTRoot.code",
+      "line": 848
+    },
+    "88": {
+      "filename": "AFTRoot.sol",
+      "line": 290
+    },
+    "96": {
+      "filename": "./AFTRoot.code",
+      "line": 854
+    },
+    "112": {
+      "filename": "./AFTRoot.code",
+      "line": 857
+    },
+    "120": {
+      "filename": "./AFTRoot.code",
+      "line": 858
+    },
+    "136": {
+      "filename": "./AFTRoot.code",
+      "line": 859
+    },
+    "144": {
+      "filename": "./AFTRoot.code",
+      "line": 860
+    },
+    "152": {
+      "filename": "./AFTRoot.code",
+      "line": 861
+    },
+    "168": {
+      "filename": "./AFTRoot.code",
+      "line": 862
+    },
+    "184": {
+      "filename": "./AFTRoot.code",
+      "line": 863
+    },
+    "192": {
+      "filename": "./AFTRoot.code",
+      "line": 864
+    },
+    "200": {
+      "filename": "./AFTRoot.code",
+      "line": 865
+    },
+    "208": {
+      "filename": "./AFTRoot.code",
+      "line": 866
+    },
+    "232": {
+      "filename": "./AFTRoot.code",
+      "line": 867
+    },
+    "240": {
+      "filename": "./AFTRoot.code",
+      "line": 868
+    },
+    "248": {
+      "filename": "./AFTRoot.code",
+      "line": 869
+    },
+    "272": {
+      "filename": "./AFTRoot.code",
+      "line": 870
+    },
+    "288": {
+      "filename": "./AFTRoot.code",
+      "line": 871
+    },
+    "296": {
+      "filename": "./AFTRoot.code",
+      "line": 872
+    },
+    "344": {
+      "filename": "./AFTRoot.code",
+      "line": 873
+    },
+    "360": {
+      "filename": "./AFTRoot.code",
+      "line": 874
+    },
+    "376": {
+      "filename": "./AFTRoot.code",
+      "line": 875
+    },
+    "384": {
+      "filename": "./AFTRoot.code",
+      "line": 876
+    },
+    "392": {
+      "filename": "./AFTRoot.code",
+      "line": 877
+    },
+    "400": {
+      "filename": "./AFTRoot.code",
+      "line": 878
+    },
+    "408": {
+      "filename": "./AFTRoot.code",
+      "line": 879
+    },
+    "416": {
+      "filename": "./AFTRoot.code",
+      "line": 880
+    },
+    "424": {
+      "filename": "./AFTRoot.code",
+      "line": 881
+    },
+    "440": {
+      "filename": "./AFTRoot.code",
+      "line": 883
+    },
+    "448": {
+      "filename": "./AFTRoot.code",
+      "line": 884
+    },
+    "464": {
+      "filename": "./AFTRoot.code",
+      "line": 886
+    },
+    "472": {
+      "filename": "./AFTRoot.code",
+      "line": 887
+    },
+    "488": {
+      "filename": "./AFTRoot.code",
+      "line": 890
+    }
+  },
+  "e58141041c1a9b5b73e00d3a3b1492fdd06a6d10a68e2aca1764cc53624900bb": {
+    "0": {
+      "filename": "./AFTRoot.code",
+      "line": 1864
+    },
+    "8": {
+      "filename": "./AFTRoot.code",
+      "line": 1865
+    },
+    "24": {
+      "filename": "./AFTRoot.code",
+      "line": 1866
+    },
+    "40": {
+      "filename": "./AFTRoot.code",
+      "line": 1869
+    },
+    "48": {
+      "filename": "./AFTRoot.code",
+      "line": 1870
+    },
+    "96": {
+      "filename": "./AFTRoot.code",
+      "line": 1871
+    },
+    "104": {
+      "filename": "./AFTRoot.code",
+      "line": 1872
+    },
+    "120": {
+      "filename": "./AFTRoot.code",
+      "line": 1875
+    },
+    "128": {
+      "filename": "./AFTRoot.code",
+      "line": 1876
+    },
+    "176": {
+      "filename": "./AFTRoot.code",
+      "line": 1877
+    },
+    "184": {
+      "filename": "./AFTRoot.code",
+      "line": 1878
+    }
+  },
+  "e9e5b08e673e611d8c08a9e26ee041127b0214182769f41d2f307b6369752fb3": {
+    "0": {
+      "filename": "./AFTRoot.code",
+      "line": 2409
+    },
+    "24": {
+      "filename": "./AFTRoot.code",
+      "line": 2410
+    },
+    "40": {
+      "filename": "./AFTRoot.code",
+      "line": 2411
+    }
+  },
+  "ed37e3db1d5df3d802f5f3f0af19aece698a826b1e891a6d95cf17b60e89b19a": {
+    "0": {
+      "filename": "modifiers/modifiers.sol",
+      "line": 91
+    },
+    "8": {
+      "filename": "modifiers/modifiers.sol",
+      "line": 91
+    },
+    "24": {
+      "filename": "modifiers/modifiers.sol",
+      "line": 91
+    },
+    "32": {
+      "filename": "modifiers/modifiers.sol",
+      "line": 91
+    },
+    "40": {
+      "filename": "modifiers/modifiers.sol",
+      "line": 91
+    },
+    "48": {
+      "filename": "modifiers/modifiers.sol",
+      "line": 91
+    },
+    "64": {
+      "filename": "modifiers/modifiers.sol",
+      "line": 91
+    },
+    "72": {
+      "filename": "modifiers/modifiers.sol",
+      "line": 91
+    },
+    "88": {
+      "filename": "modifiers/modifiers.sol",
+      "line": 91
+    },
+    "96": {
+      "filename": "modifiers/modifiers.sol",
+      "line": 91
+    },
+    "104": {
+      "filename": "modifiers/modifiers.sol",
+      "line": 91
+    },
+    "120": {
+      "filename": "modifiers/modifiers.sol",
+      "line": 91
+    },
+    "136": {
+      "filename": "modifiers/modifiers.sol",
+      "line": 91
+    },
+    "152": {
+      "filename": "modifiers/modifiers.sol",
+      "line": 91
+    },
+    "168": {
+      "filename": "modifiers/modifiers.sol",
+      "line": 91
+    },
+    "184": {
+      "filename": "modifiers/modifiers.sol",
+      "line": 91
+    },
+    "200": {
+      "filename": "modifiers/modifiers.sol",
+      "line": 91
+    }
+  },
+  "ee728d2b183ea39356a76e294507ff744de54fd100c49150aa46f8f43b4d9c19": {
+    "0": {
+      "filename": "./AFTRoot.code",
+      "line": 1398
+    },
+    "8": {
+      "filename": "./AFTRoot.code",
+      "line": 1399
+    },
+    "24": {
+      "filename": "./AFTRoot.code",
+      "line": 1400
+    },
+    "48": {
+      "filename": "./AFTRoot.code",
+      "line": 1401
+    },
+    "64": {
+      "filename": "./AFTRoot.code",
+      "line": 1402
+    },
+    "72": {
+      "filename": "./AFTRoot.code",
+      "line": 1403
+    },
+    "88": {
+      "filename": "AFTRoot.sol",
+      "line": 157
+    },
+    "96": {
+      "filename": "AFTRoot.sol",
+      "line": 157
+    },
+    "104": {
+      "filename": "AFTRoot.sol",
+      "line": 157
+    },
+    "112": {
+      "filename": "AFTRoot.sol",
+      "line": 157
+    },
+    "120": {
+      "filename": "AFTRoot.sol",
+      "line": 157
+    },
+    "128": {
+      "filename": "AFTRoot.sol",
+      "line": 157
+    },
+    "136": {
+      "filename": "AFTRoot.sol",
+      "line": 157
+    },
+    "152": {
+      "filename": "AFTRoot.sol",
+      "line": 157
+    },
+    "168": {
+      "filename": "AFTRoot.sol",
+      "line": 157
+    },
+    "184": {
+      "filename": "AFTRoot.sol",
+      "line": 157
+    },
+    "192": {
+      "filename": "AFTRoot.sol",
+      "line": 157
+    },
+    "200": {
+      "filename": "AFTRoot.sol",
+      "line": 157
+    },
+    "208": {
+      "filename": "AFTRoot.sol",
+      "line": 157
+    },
+    "224": {
+      "filename": "AFTRoot.sol",
+      "line": 157
+    },
+    "232": {
+      "filename": "./AFTRoot.code",
+      "line": 1423
+    },
+    "248": {
+      "filename": "./AFTRoot.code",
+      "line": 1426
+    },
+    "264": {
+      "filename": "./AFTRoot.code",
+      "line": 1429
+    }
+  },
+  "f1d003b2dcfec2a927b8825bd543000b3ec6178242c9ed2ee320786735b35271": {
+    "0": {
+      "filename": "AFTRoot.sol",
+      "line": 308
+    },
+    "16": {
+      "filename": "AFTRoot.sol",
+      "line": 308
+    },
+    "32": {
+      "filename": "AFTRoot.sol",
+      "line": 308
+    },
+    "48": {
+      "filename": "AFTRoot.sol",
+      "line": 308
+    },
+    "64": {
+      "filename": "AFTRoot.sol",
+      "line": 308
+    }
+  },
+  "f24e1e7aa04d89aad2945816b6e9b921f2b3892da9ba53e2383c148351b96d0c": {
+    "0": {
+      "filename": "./AFTRoot.code",
+      "line": 2326
+    },
+    "16": {
+      "filename": "./AFTRoot.code",
+      "line": 2327
+    }
+  },
+  "f4712c4ccad02fc13d8744cd0235b7bb42245caf29588d8aae6d6e8db978dfa3": {},
+  "fafc137b3d14593cdcc8e3da832dbca63a3c8bfbadfe936bfab1300854438ade": {
+    "0": {
+      "filename": "./AFTRoot.code",
+      "line": 1827
+    },
+    "8": {
+      "filename": "./AFTRoot.code",
+      "line": 1828
+    },
+    "24": {
+      "filename": "./AFTRoot.code",
+      "line": 1829
+    },
+    "48": {
+      "filename": "./AFTRoot.code",
+      "line": 1830
+    },
+    "64": {
+      "filename": "./AFTRoot.code",
+      "line": 1831
+    },
+    "72": {
+      "filename": "./AFTRoot.code",
+      "line": 1832
+    },
+    "88": {
+      "filename": "AFTRoot.sol",
+      "line": 90
+    },
+    "96": {
+      "filename": "AFTRoot.sol",
+      "line": 90
+    },
+    "104": {
+      "filename": "AFTRoot.sol",
+      "line": 90
+    },
+    "112": {
+      "filename": "AFTRoot.sol",
+      "line": 90
+    },
+    "120": {
+      "filename": "AFTRoot.sol",
+      "line": 90
+    },
+    "128": {
+      "filename": "AFTRoot.sol",
+      "line": 90
+    },
+    "136": {
+      "filename": "AFTRoot.sol",
+      "line": 90
+    },
+    "152": {
+      "filename": "AFTRoot.sol",
+      "line": 90
+    },
+    "160": {
+      "filename": "./AFTRoot.code",
+      "line": 1846
+    },
+    "176": {
+      "filename": "./AFTRoot.code",
+      "line": 1849
+    },
+    "192": {
+      "filename": "./AFTRoot.code",
+      "line": 1852
+    }
+  },
+  "ffdf6c4b562ba0bfd44533715a9752673acca065a8a9f9039b2cd38ae6841b98": {
+    "0": {
+      "filename": "AFTRoot.sol",
+      "line": 176
+    },
+    "16": {
+      "filename": "AFTRoot.sol",
+      "line": 178
+    },
+    "24": {
+      "filename": "AFTRoot.sol",
+      "line": 178
+    },
+    "32": {
+      "filename": "AFTRoot.sol",
+      "line": 178
+    },
+    "80": {
+      "filename": "AFTRoot.sol",
+      "line": 178
+    },
+    "96": {
+      "filename": "AFTRoot.sol",
+      "line": 178
+    },
+    "104": {
+      "filename": "AFTRoot.sol",
+      "line": 179
+    },
+    "136": {
+      "filename": "AFTRoot.sol",
+      "line": 179
+    },
+    "152": {
+      "filename": "AFTRoot.sol",
+      "line": 179
+    },
+    "160": {
+      "filename": "AFTRoot.sol",
+      "line": 179
+    },
+    "176": {
+      "filename": "AFTRoot.sol",
+      "line": 179
+    },
+    "184": {
+      "filename": "AFTRoot.sol",
+      "line": 179
+    },
+    "200": {
+      "filename": "AFTRoot.sol",
+      "line": 181
+    },
+    "208": {
+      "filename": "AFTRoot.sol",
+      "line": 181
+    },
+    "224": {
+      "filename": "AFTRoot.sol",
+      "line": 184
+    },
+    "240": {
+      "filename": "AFTRoot.sol",
+      "line": 185
+    },
+    "256": {
+      "filename": "AFTRoot.sol",
+      "line": 185
+    },
+    "264": {
+      "filename": "AFTRoot.sol",
+      "line": 185
+    },
+    "280": {
+      "filename": "AFTRoot.sol",
+      "line": 185
+    },
+    "288": {
+      "filename": "AFTRoot.sol",
+      "line": 185
+    },
+    "304": {
+      "filename": "AFTRoot.sol",
+      "line": 185
+    },
+    "312": {
+      "filename": "AFTRoot.sol",
+      "line": 185
+    },
+    "328": {
+      "filename": "AFTRoot.sol",
+      "line": 185
+    },
+    "336": {
+      "filename": "AFTRoot.sol",
+      "line": 186
+    },
+    "344": {
+      "filename": "AFTRoot.sol",
+      "line": 186
+    },
+    "392": {
+      "filename": "AFTRoot.sol",
+      "line": 186
+    },
+    "400": {
+      "filename": "AFTRoot.sol",
+      "line": 186
+    },
+    "408": {
+      "filename": "AFTRoot.sol",
+      "line": 186
+    },
+    "416": {
+      "filename": "AFTRoot.sol",
+      "line": 186
+    },
+    "464": {
+      "filename": "./AFTRoot.code",
+      "line": 1350
+    },
+    "472": {
+      "filename": "AFTRoot.sol",
+      "line": 187
+    },
+    "480": {
+      "filename": "AFTRoot.sol",
+      "line": 188
+    },
+    "488": {
+      "filename": "AFTRoot.sol",
+      "line": 188
+    },
+    "504": {
+      "filename": "AFTRoot.sol",
+      "line": 188
+    },
+    "512": {
+      "filename": "AFTRoot.sol",
+      "line": 189
+    },
+    "520": {
+      "filename": "AFTRoot.sol",
+      "line": 189
+    },
+    "528": {
+      "filename": "AFTRoot.sol",
+      "line": 189
+    },
+    "536": {
+      "filename": "AFTRoot.sol",
+      "line": 189
+    },
+    "544": {
+      "filename": "AFTRoot.sol",
+      "line": 189
+    },
+    "552": {
+      "filename": "AFTRoot.sol",
+      "line": 189
+    },
+    "568": {
+      "filename": "AFTRoot.sol",
+      "line": 189
+    },
+    "576": {
+      "filename": "AFTRoot.sol",
+      "line": 189
+    },
+    "592": {
+      "filename": "AFTRoot.sol",
+      "line": 189
+    },
+    "608": {
+      "filename": "./AFTRoot.code",
+      "line": 1369
+    },
+    "616": {
+      "filename": "AFTRoot.sol",
+      "line": 191
+    },
+    "632": {
+      "filename": "AFTRoot.sol",
+      "line": 191
+    },
+    "640": {
+      "filename": "AFTRoot.sol",
+      "line": 191
+    },
+    "648": {
+      "filename": "AFTRoot.sol",
+      "line": 191
+    },
+    "656": {
+      "filename": "AFTRoot.sol",
+      "line": 191
+    },
+    "664": {
+      "filename": "AFTRoot.sol",
+      "line": 191
+    },
+    "688": {
+      "filename": "AFTRoot.sol",
+      "line": 191
+    },
+    "704": {
+      "filename": "AFTRoot.sol",
+      "line": 191
+    },
+    "728": {
+      "filename": "AFTRoot.sol",
+      "line": 191
+    },
+    "736": {
+      "filename": "AFTRoot.sol",
+      "line": 191
+    },
+    "744": {
+      "filename": "AFTRoot.sol",
+      "line": 191
+    },
+    "760": {
+      "filename": "AFTRoot.sol",
+      "line": 191
+    },
+    "776": {
+      "filename": "AFTRoot.sol",
+      "line": 191
+    },
+    "824": {
+      "filename": "AFTRoot.sol",
+      "line": 191
+    },
+    "848": {
+      "filename": "AFTRoot.sol",
+      "line": 191
+    },
+    "864": {
+      "filename": "AFTRoot.sol",
+      "line": 191
+    },
+    "872": {
+      "filename": "AFTRoot.sol",
+      "line": 191
+    },
+    "880": {
+      "filename": "AFTRoot.sol",
+      "line": 191
+    },
+    "896": {
+      "filename": "./AFTRoot.code",
+      "line": 1390
+    },
+    "912": {
+      "filename": "./AFTRoot.code",
+      "line": 1392
+    },
+    "920": {
+      "filename": "./AFTRoot.code",
+      "line": 1394
     }
   }
 }
