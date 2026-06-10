@@ -63,6 +63,7 @@ contract BondingCurve is IAFTReceiver, IAFTExcesses, IAFTWalletAddressReceiver {
     // ─── R-04: Static vars MUST precede all state vars ───────────────────────
     address static public _tokenRoot;    // unique per deploy — makes each BondingCurve address distinct
     uint256 static public _supplyCap;    // max token supply for this launch, in nano-token units
+    address static public _factory;      // the launch factory that deployed this curve
 
     // ─── State ────────────────────────────────────────────────────────────────
     uint256 public reserveBalance;       // tracked SHELL balance (nano)
@@ -174,9 +175,10 @@ contract BondingCurve is IAFTReceiver, IAFTExcesses, IAFTWalletAddressReceiver {
         bytes _creationFeeTxHash,
         address _feeRecipient,
         bool _pumpForever,
-        uint256 _slopeDivisor
+        uint256 _slopeDivisor,
+        address _ackiSwapFactory
     ) {
-        require(msg.sender == _tokenRoot, 101, "Only TokenRoot can deploy");
+        require(msg.sender == _factory, 101, "Only Factory can deploy");
         require(_tokenRootAddr == _tokenRoot, 104, "tokenRootAddr must match static _tokenRoot");
         require(_supplyCap > 0, 105, "Supply cap must be set");
         require(_feeRecipient != address(0), 106, "Fee recipient cannot be zero address");
@@ -190,6 +192,7 @@ contract BondingCurve is IAFTReceiver, IAFTExcesses, IAFTWalletAddressReceiver {
         creationFeeTxHash = _creationFeeTxHash;
         pumpForever = _pumpForever;
         slopeDivisor = _slopeDivisor > 0 ? _slopeDivisor : 10_000_000_000_000;
+        factoryAddress = _ackiSwapFactory;
         isAmm = false;
     }
 

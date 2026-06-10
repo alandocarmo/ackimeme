@@ -576,6 +576,7 @@ export async function deployTokenEcosystem({
         initial_data: {
           _tokenRoot: tokenRootAddress,
           _supplyCap: maxTokenSupply,
+          _factory: factoryAddress,
         },
       },
       signer: { type: "None" } // C2: Usando signer None para que pubkey = 0, igual a LaunchFactory

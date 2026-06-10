@@ -109,7 +109,8 @@ contract LaunchFactory {
             contr: BondingCurve,
             varInit: {
                 _tokenRoot: tokenRootAddr,
-                _supplyCap: supplyCap
+                _supplyCap: supplyCap,
+                _factory: address(this)
             },
             code: bondingCurveCode
         });
@@ -129,7 +130,8 @@ contract LaunchFactory {
             creationFeeTxHash,
             feeRecipient,
             pumpForever,
-            slopeDivisor
+            slopeDivisor,
+            ackiSwapFactory
         );
 
         // 4. Deploy TokenRoot with BondingCurve as the permanent Admin
@@ -150,11 +152,6 @@ contract LaunchFactory {
         emit TokenLaunched(tokenRootAddr, bondingCurveAddr, creator, name, symbol);
 
         // 5. Post-Deploy Configuration
-        // M1: Set AckiSwapFactory on the curve so it knows where to migrate
-        if (ackiSwapFactory != address(0)) {
-            BondingCurve(bondingCurveAddr).setFactory{value: 0.1 ton, flag: 1}(ackiSwapFactory);
-        }
-
         // A1: Initialize the AFT wallet for the curve so it can sell/burn
         // Needs 2 SHELL for gas according to AFT rules.
         mapping(uint32 => varuint32) initCc;

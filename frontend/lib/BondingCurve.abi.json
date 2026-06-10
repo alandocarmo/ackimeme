@@ -13,7 +13,8 @@
 				{"name":"_creationFeeTxHash","type":"bytes"},
 				{"name":"_feeRecipient","type":"address"},
 				{"name":"_pumpForever","type":"bool"},
-				{"name":"_slopeDivisor","type":"uint256"}
+				{"name":"_slopeDivisor","type":"uint256"},
+				{"name":"_ackiSwapFactory","type":"address"}
 			],
 			"outputs": [
 			]
@@ -256,6 +257,14 @@
 			],
 			"outputs": [
 				{"name":"_supplyCap","type":"uint256"}
+			]
+		},
+		{
+			"name": "_factory",
+			"inputs": [
+			],
+			"outputs": [
+				{"name":"_factory","type":"address"}
 			]
 		},
 		{
@@ -526,6 +535,7 @@
 		{"init":false,"name":"_constructorFlag","type":"bool"},
 		{"init":true,"name":"_tokenRoot","type":"address"},
 		{"init":true,"name":"_supplyCap","type":"uint256"},
+		{"init":true,"name":"_factory","type":"address"},
 		{"init":false,"name":"reserveBalance","type":"uint256"},
 		{"init":false,"name":"totalSupply","type":"uint256"},
 		{"init":false,"name":"isAmm","type":"bool"},

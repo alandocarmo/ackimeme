@@ -34,6 +34,14 @@
 			]
 		},
 		{
+			"name": "setAckiSwapFactory",
+			"inputs": [
+				{"name":"_ackiSwapFactory","type":"address"}
+			],
+			"outputs": [
+			]
+		},
+		{
 			"name": "deployTokenAndCurve",
 			"inputs": [
 				{"name":"name","type":"string"},
@@ -70,6 +78,14 @@
 			],
 			"outputs": [
 				{"name":"launchCount","type":"uint32"}
+			]
+		},
+		{
+			"name": "ackiSwapFactory",
+			"inputs": [
+			],
+			"outputs": [
+				{"name":"ackiSwapFactory","type":"address"}
 			]
 		},
 		{
@@ -118,6 +134,7 @@
 		{"init":false,"name":"owner","type":"address"},
 		{"init":false,"name":"feeRecipient","type":"address"},
 		{"init":false,"name":"launchCount","type":"uint32"},
+		{"init":false,"name":"ackiSwapFactory","type":"address"},
 		{"init":false,"name":"tokenRootCode","type":"cell"},
 		{"init":false,"name":"bondingCurveCode","type":"cell"},
 		{"init":false,"name":"tokenWalletCode","type":"cell"}
