@@ -12,8 +12,7 @@ contract DappConfig {
         tvm.accept();
     }
 
-    /// @notice Called by the Acki Nacki network to replenish contracts under this Dapp ID
-    function getTokens(address target) external view {
+    function getTokens(address target) external {
         tvm.accept();
         // Replenishes the target's execution gas (VMSHELL) up to the amount.
         // This is funded silently by the DappConfig's own VMSHELL balance.

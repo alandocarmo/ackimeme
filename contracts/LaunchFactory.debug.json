@@ -8,213 +8,285 @@
   "06a162670a678b4bda4a190e305ef6edd00d80e47610eae4057ba4b7ac4ea3b4": {
     "0": {
       "filename": "./LaunchFactory.code",
-      "line": 491
+      "line": 490
     },
     "8": {
       "filename": "./LaunchFactory.code",
-      "line": 492
+      "line": 491
     },
     "16": {
       "filename": "./LaunchFactory.code",
-      "line": 493
+      "line": 492
     },
     "32": {
       "filename": "./LaunchFactory.code",
-      "line": 496
+      "line": 495
     },
     "48": {
       "filename": "./LaunchFactory.code",
-      "line": 497
+      "line": 496
     },
     "56": {
       "filename": "./LaunchFactory.code",
-      "line": 498
+      "line": 497
     },
     "72": {
       "filename": "./LaunchFactory.code",
-      "line": 499
+      "line": 498
     },
     "232": {
       "filename": "./LaunchFactory.code",
-      "line": 500
+      "line": 499
     },
     "240": {
       "filename": "./LaunchFactory.code",
-      "line": 501
+      "line": 500
     },
     "248": {
       "filename": "./LaunchFactory.code",
-      "line": 502
+      "line": 501
     },
     "256": {
       "filename": "./LaunchFactory.code",
-      "line": 503
+      "line": 502
     },
     "264": {
       "filename": "./LaunchFactory.code",
-      "line": 504
+      "line": 503
     },
     "272": {
       "filename": "./LaunchFactory.code",
-      "line": 505
+      "line": 504
     },
     "288": {
       "filename": "./LaunchFactory.code",
-      "line": 507
+      "line": 506
     },
     "296": {
       "filename": "./LaunchFactory.code",
-      "line": 508
+      "line": 507
+    }
+  },
+  "0946f8a64db7cd0c27b92d5e53761c2037d2b5beb47538828bf13e5a6dce4b73": {
+    "0": {
+      "filename": "./LaunchFactory.code",
+      "line": 686
+    },
+    "8": {
+      "filename": "./LaunchFactory.code",
+      "line": 687
+    },
+    "56": {
+      "filename": "./LaunchFactory.code",
+      "line": 688
+    },
+    "64": {
+      "filename": "./LaunchFactory.code",
+      "line": 689
+    },
+    "80": {
+      "filename": "./LaunchFactory.code",
+      "line": 714
+    },
+    "88": {
+      "filename": "./LaunchFactory.code",
+      "line": 715
+    },
+    "136": {
+      "filename": "./LaunchFactory.code",
+      "line": 716
+    },
+    "144": {
+      "filename": "./LaunchFactory.code",
+      "line": 717
+    },
+    "160": {
+      "filename": "./LaunchFactory.code",
+      "line": 737
+    },
+    "168": {
+      "filename": "./LaunchFactory.code",
+      "line": 738
+    },
+    "216": {
+      "filename": "./LaunchFactory.code",
+      "line": 739
+    },
+    "224": {
+      "filename": "./LaunchFactory.code",
+      "line": 740
+    },
+    "240": {
+      "filename": "./LaunchFactory.code",
+      "line": 754
+    },
+    "248": {
+      "filename": "./LaunchFactory.code",
+      "line": 755
+    },
+    "296": {
+      "filename": "./LaunchFactory.code",
+      "line": 756
+    },
+    "304": {
+      "filename": "./LaunchFactory.code",
+      "line": 757
+    }
+  },
+  "0cab9ad6c2110d46597309b769777436cf89fb98b55d35871f3be4c3b289c8f1": {
+    "0": {
+      "filename": "LaunchFactory.sol",
+      "line": 72
     }
   },
   "0fee6f8f4ae86559803115f4fbd45eec1948a68530d6b3106253cec1d2bb312c": {
     "0": {
       "filename": "./LaunchFactory.code",
-      "line": 533
+      "line": 532
     },
     "8": {
       "filename": "./LaunchFactory.code",
-      "line": 534
+      "line": 533
     },
     "16": {
       "filename": "./LaunchFactory.code",
-      "line": 535
+      "line": 534
     },
     "32": {
       "filename": "./LaunchFactory.code",
-      "line": 538
+      "line": 537
     },
     "48": {
       "filename": "./LaunchFactory.code",
-      "line": 539
+      "line": 538
     },
     "56": {
       "filename": "./LaunchFactory.code",
-      "line": 540
+      "line": 539
     },
     "72": {
       "filename": "./LaunchFactory.code",
-      "line": 541
+      "line": 540
     },
     "232": {
       "filename": "./LaunchFactory.code",
-      "line": 542
+      "line": 541
     },
     "240": {
       "filename": "./LaunchFactory.code",
-      "line": 543
+      "line": 542
     },
     "248": {
       "filename": "./LaunchFactory.code",
-      "line": 544
+      "line": 543
     },
     "256": {
       "filename": "./LaunchFactory.code",
-      "line": 545
+      "line": 544
     },
     "264": {
       "filename": "./LaunchFactory.code",
-      "line": 546
+      "line": 545
     },
     "272": {
       "filename": "./LaunchFactory.code",
-      "line": 547
+      "line": 546
     },
     "288": {
       "filename": "./LaunchFactory.code",
-      "line": 549
+      "line": 548
     },
     "296": {
       "filename": "./LaunchFactory.code",
-      "line": 550
+      "line": 549
     }
   },
   "149ceedd74fdaee80b9f33f902ced120e449ebce174523867b6732fb66ad141f": {
     "0": {
       "filename": "./LaunchFactory.code",
-      "line": 512
+      "line": 511
     },
     "8": {
       "filename": "./LaunchFactory.code",
-      "line": 513
+      "line": 512
     },
     "16": {
       "filename": "./LaunchFactory.code",
-      "line": 514
+      "line": 513
     },
     "32": {
       "filename": "./LaunchFactory.code",
-      "line": 517
+      "line": 516
     },
     "48": {
       "filename": "./LaunchFactory.code",
-      "line": 518
+      "line": 517
     },
     "56": {
       "filename": "./LaunchFactory.code",
-      "line": 519
+      "line": 518
     },
     "72": {
       "filename": "./LaunchFactory.code",
-      "line": 520
+      "line": 519
     },
     "232": {
       "filename": "./LaunchFactory.code",
-      "line": 521
+      "line": 520
     },
     "240": {
       "filename": "./LaunchFactory.code",
-      "line": 522
+      "line": 521
     },
     "248": {
       "filename": "./LaunchFactory.code",
-      "line": 523
+      "line": 522
     },
     "264": {
       "filename": "./LaunchFactory.code",
-      "line": 524
+      "line": 523
     },
     "272": {
       "filename": "./LaunchFactory.code",
-      "line": 525
+      "line": 524
     },
     "280": {
       "filename": "./LaunchFactory.code",
-      "line": 526
+      "line": 525
     },
     "296": {
       "filename": "./LaunchFactory.code",
-      "line": 528
+      "line": 527
     },
     "304": {
       "filename": "./LaunchFactory.code",
-      "line": 529
+      "line": 528
     }
   },
   "15018fe203329a27fb0e8494830a0932e86e4a26920c55f38404a71dfba2e13e": {
     "0": {
       "filename": "./LaunchFactory.code",
-      "line": 570
+      "line": 569
     },
     "8": {
       "filename": "./LaunchFactory.code",
-      "line": 571
+      "line": 570
     },
     "24": {
       "filename": "./LaunchFactory.code",
-      "line": 572
+      "line": 571
     },
     "48": {
       "filename": "./LaunchFactory.code",
-      "line": 573
+      "line": 572
     },
     "64": {
       "filename": "./LaunchFactory.code",
-      "line": 574
+      "line": 573
     },
     "72": {
       "filename": "./LaunchFactory.code",
-      "line": 575
+      "line": 574
     },
     "88": {
       "filename": "LaunchFactory.sol",
@@ -250,15 +322,15 @@
     },
     "160": {
       "filename": "./LaunchFactory.code",
-      "line": 589
+      "line": 588
     },
     "176": {
       "filename": "./LaunchFactory.code",
-      "line": 592
+      "line": 591
     },
     "192": {
       "filename": "./LaunchFactory.code",
-      "line": 595
+      "line": 594
     }
   },
   "167cbcddb50e29cce7c28a14df73bae947a561cc10d9c38c298a1e02278eb4e6": {
@@ -397,717 +469,151 @@
       "line": 46
     }
   },
-  "1ee3a60ff6b5861c508dc46697027bd2e982dc7062ffc1dff50ad3de9daddf46": {
-    "0": {
-      "filename": "./LaunchFactory.code",
-      "line": 901
-    },
-    "8": {
-      "filename": "./LaunchFactory.code",
-      "line": 911
-    },
-    "24": {
-      "filename": "./LaunchFactory.code",
-      "line": 912
-    },
-    "32": {
-      "filename": "./LaunchFactory.code",
-      "line": 913
-    },
-    "48": {
-      "filename": "./LaunchFactory.code",
-      "line": 916
-    },
-    "56": {
-      "filename": "./LaunchFactory.code",
-      "line": 917
-    },
-    "72": {
-      "filename": "./LaunchFactory.code",
-      "line": 918
-    },
-    "88": {
-      "filename": "./LaunchFactory.code",
-      "line": 921
-    },
-    "96": {
-      "filename": "./LaunchFactory.code",
-      "line": 922
-    },
-    "112": {
-      "filename": "./LaunchFactory.code",
-      "line": 923
-    },
-    "128": {
-      "filename": "./LaunchFactory.code",
-      "line": 926
-    }
-  },
   "20718c767478f31225918414594cc481444dea84b7b3d15cf0fefde8c32bd1b0": {
     "0": {
       "filename": "./LaunchFactory.code",
-      "line": 620
+      "line": 619
     },
     "8": {
+      "filename": "./LaunchFactory.code",
+      "line": 620
+    },
+    "16": {
       "filename": "./LaunchFactory.code",
       "line": 621
     },
-    "16": {
-      "filename": "./LaunchFactory.code",
-      "line": 622
-    },
     "32": {
+      "filename": "./LaunchFactory.code",
+      "line": 624
+    },
+    "48": {
       "filename": "./LaunchFactory.code",
       "line": 625
     },
-    "48": {
+    "56": {
       "filename": "./LaunchFactory.code",
       "line": 626
     },
-    "56": {
+    "72": {
       "filename": "./LaunchFactory.code",
       "line": 627
     },
-    "72": {
+    "232": {
       "filename": "./LaunchFactory.code",
       "line": 628
     },
-    "232": {
+    "240": {
       "filename": "./LaunchFactory.code",
       "line": 629
     },
-    "240": {
+    "248": {
       "filename": "./LaunchFactory.code",
       "line": 630
     },
-    "248": {
+    "256": {
       "filename": "./LaunchFactory.code",
       "line": 631
     },
-    "256": {
+    "264": {
       "filename": "./LaunchFactory.code",
       "line": 632
     },
-    "264": {
+    "272": {
       "filename": "./LaunchFactory.code",
       "line": 633
     },
-    "272": {
-      "filename": "./LaunchFactory.code",
-      "line": 634
-    },
     "288": {
       "filename": "./LaunchFactory.code",
-      "line": 636
+      "line": 635
     },
     "296": {
       "filename": "./LaunchFactory.code",
-      "line": 637
+      "line": 636
     }
   },
   "2a1d796b884479afef592548c24f949747b56914d00712864bf5ed5fbcc76e03": {},
-  "2de3e8282e7d27513389afdb158b6ff0c0a488fb7132576f1445503e71f6971a": {
-    "0": {
-      "filename": "./LaunchFactory.code",
-      "line": 447
-    },
-    "8": {
-      "filename": "./LaunchFactory.code",
-      "line": 448
-    },
-    "24": {
-      "filename": "./LaunchFactory.code",
-      "line": 449
-    },
-    "48": {
-      "filename": "./LaunchFactory.code",
-      "line": 450
-    },
-    "64": {
-      "filename": "./LaunchFactory.code",
-      "line": 451
-    },
-    "72": {
-      "filename": "./LaunchFactory.code",
-      "line": 452
-    },
-    "88": {
-      "filename": "LaunchFactory.sol",
-      "line": 58
-    },
-    "96": {
-      "filename": "LaunchFactory.sol",
-      "line": 58
-    },
-    "104": {
-      "filename": "LaunchFactory.sol",
-      "line": 58
-    },
-    "112": {
-      "filename": "LaunchFactory.sol",
-      "line": 58
-    },
-    "120": {
-      "filename": "LaunchFactory.sol",
-      "line": 58
-    },
-    "136": {
-      "filename": "LaunchFactory.sol",
-      "line": 58
-    },
-    "144": {
-      "filename": "LaunchFactory.sol",
-      "line": 58
-    },
-    "152": {
-      "filename": "LaunchFactory.sol",
-      "line": 58
-    },
-    "160": {
-      "filename": "LaunchFactory.sol",
-      "line": 58
-    },
-    "168": {
-      "filename": "LaunchFactory.sol",
-      "line": 58
-    },
-    "176": {
-      "filename": "LaunchFactory.sol",
-      "line": 58
-    },
-    "184": {
-      "filename": "LaunchFactory.sol",
-      "line": 58
-    },
-    "200": {
-      "filename": "LaunchFactory.sol",
-      "line": 58
-    },
-    "208": {
-      "filename": "LaunchFactory.sol",
-      "line": 58
-    },
-    "224": {
-      "filename": "LaunchFactory.sol",
-      "line": 58
-    },
-    "240": {
-      "filename": "LaunchFactory.sol",
-      "line": 58
-    },
-    "248": {
-      "filename": "LaunchFactory.sol",
-      "line": 58
-    },
-    "264": {
-      "filename": "LaunchFactory.sol",
-      "line": 58
-    },
-    "272": {
-      "filename": "LaunchFactory.sol",
-      "line": 58
-    },
-    "280": {
-      "filename": "LaunchFactory.sol",
-      "line": 58
-    },
-    "288": {
-      "filename": "LaunchFactory.sol",
-      "line": 58
-    },
-    "304": {
-      "filename": "LaunchFactory.sol",
-      "line": 58
-    },
-    "312": {
-      "filename": "./LaunchFactory.code",
-      "line": 481
-    },
-    "328": {
-      "filename": "./LaunchFactory.code",
-      "line": 484
-    },
-    "344": {
-      "filename": "./LaunchFactory.code",
-      "line": 487
-    }
-  },
-  "3a2651ba19dc510d3fffa12707a8662dcd354a75f875e5cd1befb204cd1df45b": {
-    "0": {
-      "filename": "./LaunchFactory.code",
-      "line": 691
-    },
-    "8": {
-      "filename": "./LaunchFactory.code",
-      "line": 692
-    },
-    "24": {
-      "filename": "./LaunchFactory.code",
-      "line": 693
-    },
-    "40": {
-      "filename": "./LaunchFactory.code",
-      "line": 696
-    },
-    "48": {
-      "filename": "./LaunchFactory.code",
-      "line": 697
-    },
-    "96": {
-      "filename": "./LaunchFactory.code",
-      "line": 698
-    },
-    "104": {
-      "filename": "./LaunchFactory.code",
-      "line": 699
-    },
-    "120": {
-      "filename": "./LaunchFactory.code",
-      "line": 702
-    },
-    "128": {
-      "filename": "./LaunchFactory.code",
-      "line": 703
-    },
-    "176": {
-      "filename": "./LaunchFactory.code",
-      "line": 704
-    },
-    "184": {
-      "filename": "./LaunchFactory.code",
-      "line": 705
-    },
-    "200": {
-      "filename": "./LaunchFactory.code",
-      "line": 708
-    },
-    "208": {
-      "filename": "./LaunchFactory.code",
-      "line": 709
-    },
-    "256": {
-      "filename": "./LaunchFactory.code",
-      "line": 710
-    },
-    "264": {
-      "filename": "./LaunchFactory.code",
-      "line": 711
-    }
-  },
-  "3c155f4f0059df61d49399b88f2587efbb3bed0ea2c0060c94871a1d4f97d77c": {
-    "0": {
-      "filename": "./LaunchFactory.code",
-      "line": 822
-    },
-    "16": {
-      "filename": "./LaunchFactory.code",
-      "line": 823
-    },
-    "24": {
-      "filename": "./LaunchFactory.code",
-      "line": 824
-    },
-    "48": {
-      "filename": "./LaunchFactory.code",
-      "line": 825
-    },
-    "64": {
-      "filename": "./LaunchFactory.code",
-      "line": 826
-    },
-    "88": {
-      "filename": "./LaunchFactory.code",
-      "line": 827
-    },
-    "104": {
-      "filename": "./LaunchFactory.code",
-      "line": 828
-    },
-    "112": {
-      "filename": "./LaunchFactory.code",
-      "line": 829
-    },
-    "120": {
-      "filename": "./LaunchFactory.code",
-      "line": 830
-    },
-    "136": {
-      "filename": "./LaunchFactory.code",
-      "line": 831
-    },
-    "152": {
-      "filename": "./LaunchFactory.code",
-      "line": 832
-    },
-    "160": {
-      "filename": "./LaunchFactory.code",
-      "line": 833
-    },
-    "176": {
-      "filename": "./LaunchFactory.code",
-      "line": 834
-    },
-    "200": {
-      "filename": "./LaunchFactory.code",
-      "line": 835
-    },
-    "208": {
-      "filename": "./LaunchFactory.code",
-      "line": 836
-    },
-    "216": {
-      "filename": "./LaunchFactory.code",
-      "line": 837
-    },
-    "232": {
-      "filename": "./LaunchFactory.code",
-      "line": 838
-    },
-    "248": {
-      "filename": "./LaunchFactory.code",
-      "line": 842
-    },
-    "256": {
-      "filename": "./LaunchFactory.code",
-      "line": 843
-    },
-    "280": {
-      "filename": "./LaunchFactory.code",
-      "line": 844
-    },
-    "296": {
-      "filename": "./LaunchFactory.code",
-      "line": 845
-    },
-    "304": {
-      "filename": "./LaunchFactory.code",
-      "line": 846
-    },
-    "320": {
-      "filename": "./LaunchFactory.code",
-      "line": 850
-    },
-    "328": {
-      "filename": "./LaunchFactory.code",
-      "line": 851
-    },
-    "344": {
-      "filename": "./LaunchFactory.code",
-      "line": 854
-    }
-  },
-  "4575af1f4d4b3e24482a3aad1c636cf1ef8a155409bd3b1248b9d0e8e83e418f": {
-    "0": {
-      "filename": "./LaunchFactory.code",
-      "line": 764
-    },
-    "8": {
-      "filename": "./LaunchFactory.code",
-      "line": 767
-    },
-    "24": {
-      "filename": "./LaunchFactory.code",
-      "line": 768
-    },
-    "32": {
-      "filename": "./LaunchFactory.code",
-      "line": 769
-    },
-    "48": {
-      "filename": "./LaunchFactory.code",
-      "line": 772
-    },
-    "64": {
-      "filename": "./LaunchFactory.code",
-      "line": 773
-    },
-    "72": {
-      "filename": "./LaunchFactory.code",
-      "line": 774
-    },
-    "88": {
-      "filename": "./LaunchFactory.code",
-      "line": 775
-    },
-    "104": {
-      "filename": "./LaunchFactory.code",
-      "line": 776
-    },
-    "120": {
-      "filename": "./LaunchFactory.code",
-      "line": 777
-    },
-    "128": {
-      "filename": "./LaunchFactory.code",
-      "line": 778
-    },
-    "144": {
-      "filename": "./LaunchFactory.code",
-      "line": 779
-    },
-    "152": {
-      "filename": "./LaunchFactory.code",
-      "line": 780
-    },
-    "160": {
-      "filename": "./LaunchFactory.code",
-      "line": 781
-    },
-    "168": {
-      "filename": "./LaunchFactory.code",
-      "line": 782
-    },
-    "176": {
-      "filename": "./LaunchFactory.code",
-      "line": 783
-    },
-    "192": {
-      "filename": "./LaunchFactory.code",
-      "line": 784
-    },
-    "200": {
-      "filename": "./LaunchFactory.code",
-      "line": 785
-    },
-    "216": {
-      "filename": "./LaunchFactory.code",
-      "line": 786
-    },
-    "224": {
-      "filename": "./LaunchFactory.code",
-      "line": 787
-    },
-    "232": {
-      "filename": "./LaunchFactory.code",
-      "line": 788
-    },
-    "248": {
-      "filename": "./LaunchFactory.code",
-      "line": 789
-    },
-    "264": {
-      "filename": "./LaunchFactory.code",
-      "line": 791
-    },
-    "272": {
-      "filename": "./LaunchFactory.code",
-      "line": 792
-    },
-    "280": {
-      "filename": "./LaunchFactory.code",
-      "line": 793
-    },
-    "296": {
-      "filename": "./LaunchFactory.code",
-      "line": 795
-    },
-    "304": {
-      "filename": "./LaunchFactory.code",
-      "line": 796
-    },
-    "320": {
-      "filename": "./LaunchFactory.code",
-      "line": 797
-    },
-    "336": {
-      "filename": "./LaunchFactory.code",
-      "line": 799
-    },
-    "344": {
-      "filename": "./LaunchFactory.code",
-      "line": 800
-    },
-    "360": {
-      "filename": "./LaunchFactory.code",
-      "line": 801
-    },
-    "368": {
-      "filename": "./LaunchFactory.code",
-      "line": 802
-    },
-    "384": {
-      "filename": "./LaunchFactory.code",
-      "line": 804
-    },
-    "392": {
-      "filename": "./LaunchFactory.code",
-      "line": 805
-    },
-    "408": {
-      "filename": "./LaunchFactory.code",
-      "line": 806
-    },
-    "416": {
-      "filename": "stdlib.sol",
-      "line": 22
-    },
-    "432": {
-      "filename": "stdlib.sol",
-      "line": 22
-    },
-    "440": {
-      "filename": "stdlib.sol",
-      "line": 22
-    },
-    "448": {
-      "filename": "stdlib.sol",
-      "line": 22
-    },
-    "464": {
-      "filename": "stdlib.sol",
-      "line": 23
-    },
-    "472": {
-      "filename": "stdlib.sol",
-      "line": 23
-    },
-    "488": {
-      "filename": "stdlib.sol",
-      "line": 23
-    },
-    "512": {
-      "filename": "stdlib.sol",
-      "line": 23
-    },
-    "520": {
-      "filename": "stdlib.sol",
-      "line": 23
-    },
-    "560": {
-      "filename": "stdlib.sol",
-      "line": 23
-    },
-    "568": {
-      "filename": "stdlib.sol",
-      "line": 23
-    },
-    "576": {
-      "filename": "stdlib.sol",
-      "line": 23
-    },
-    "592": {
-      "filename": "stdlib.sol",
-      "line": 24
-    },
-    "608": {
-      "filename": "./LaunchFactory.code",
-      "line": 808
-    },
-    "624": {
-      "filename": "./LaunchFactory.code",
-      "line": 809
-    },
-    "632": {
-      "filename": "./LaunchFactory.code",
-      "line": 810
-    },
-    "648": {
-      "filename": "./LaunchFactory.code",
-      "line": 811
-    },
-    "656": {
-      "filename": "./LaunchFactory.code",
-      "line": 812
-    },
-    "672": {
-      "filename": "./LaunchFactory.code",
-      "line": 813
-    },
-    "688": {
-      "filename": "./LaunchFactory.code",
-      "line": 814
-    },
-    "696": {
-      "filename": "./LaunchFactory.code",
-      "line": 815
-    },
-    "712": {
-      "filename": "./LaunchFactory.code",
-      "line": 818
-    }
-  },
   "54a4321b7af8a9d1c33ad3e11f96b8aa9684c91f8f1e8164964e26c3b04fe4b2": {
     "0": {
       "filename": "./LaunchFactory.code",
-      "line": 719
+      "line": 718
     },
     "8": {
       "filename": "./LaunchFactory.code",
-      "line": 720
+      "line": 719
     },
     "56": {
       "filename": "./LaunchFactory.code",
-      "line": 721
+      "line": 720
     },
     "64": {
       "filename": "./LaunchFactory.code",
-      "line": 722
+      "line": 721
     },
     "80": {
       "filename": "./LaunchFactory.code",
-      "line": 725
+      "line": 724
     },
     "88": {
       "filename": "./LaunchFactory.code",
-      "line": 726
+      "line": 725
     },
     "136": {
       "filename": "./LaunchFactory.code",
-      "line": 727
+      "line": 726
     },
     "144": {
       "filename": "./LaunchFactory.code",
-      "line": 728
+      "line": 727
     },
     "160": {
       "filename": "./LaunchFactory.code",
-      "line": 731
+      "line": 730
     },
     "168": {
       "filename": "./LaunchFactory.code",
-      "line": 732
+      "line": 731
     },
     "216": {
       "filename": "./LaunchFactory.code",
-      "line": 733
+      "line": 732
     },
     "224": {
       "filename": "./LaunchFactory.code",
-      "line": 734
+      "line": 733
     }
   },
   "55a79dc34828edcbd4c87cddcbda54be26e5b41d35e2c77056ebe2698c1ca167": {
     "0": {
       "filename": "./LaunchFactory.code",
-      "line": 742
+      "line": 741
     },
     "8": {
       "filename": "./LaunchFactory.code",
-      "line": 743
+      "line": 742
     },
     "56": {
       "filename": "./LaunchFactory.code",
-      "line": 744
+      "line": 743
     },
     "64": {
       "filename": "./LaunchFactory.code",
-      "line": 745
+      "line": 744
     },
     "80": {
       "filename": "./LaunchFactory.code",
-      "line": 748
+      "line": 747
     },
     "88": {
       "filename": "./LaunchFactory.code",
-      "line": 749
+      "line": 748
     },
     "136": {
       "filename": "./LaunchFactory.code",
-      "line": 750
+      "line": 749
     },
     "144": {
       "filename": "./LaunchFactory.code",
-      "line": 751
+      "line": 750
     }
   },
   "59c27cc4804152d8499bc4a917f35872446e7ceb90ff521cc488c93a6caa0316": {
@@ -1316,332 +822,6 @@
       "line": 146
     }
   },
-  "5e199812cd9f81ff34bf55945a1fa7de8862f1dbe875e99ce573467a58eb5f33": {
-    "0": {
-      "filename": "LaunchFactory.sol",
-      "line": 69
-    },
-    "8": {
-      "filename": "LaunchFactory.sol",
-      "line": 69
-    },
-    "16": {
-      "filename": "LaunchFactory.sol",
-      "line": 69
-    },
-    "32": {
-      "filename": "LaunchFactory.sol",
-      "line": 69
-    },
-    "40": {
-      "filename": "LaunchFactory.sol",
-      "line": 69
-    },
-    "88": {
-      "filename": "LaunchFactory.sol",
-      "line": 69
-    },
-    "96": {
-      "filename": "LaunchFactory.sol",
-      "line": 69
-    },
-    "120": {
-      "filename": "LaunchFactory.sol",
-      "line": 72
-    },
-    "136": {
-      "filename": "LaunchFactory.sol",
-      "line": 74
-    },
-    "152": {
-      "filename": "LaunchFactory.sol",
-      "line": 74
-    },
-    "160": {
-      "filename": "LaunchFactory.sol",
-      "line": 74
-    },
-    "176": {
-      "filename": "LaunchFactory.sol",
-      "line": 74
-    },
-    "192": {
-      "filename": "LaunchFactory.sol",
-      "line": 87
-    },
-    "200": {
-      "filename": "LaunchFactory.sol",
-      "line": 87
-    },
-    "208": {
-      "filename": "LaunchFactory.sol",
-      "line": 87
-    },
-    "216": {
-      "filename": "LaunchFactory.sol",
-      "line": 87
-    },
-    "224": {
-      "filename": "LaunchFactory.sol",
-      "line": 87
-    },
-    "240": {
-      "filename": "LaunchFactory.sol",
-      "line": 87
-    },
-    "248": {
-      "filename": "LaunchFactory.sol",
-      "line": 87
-    },
-    "264": {
-      "filename": "LaunchFactory.sol",
-      "line": 87
-    },
-    "280": {
-      "filename": "LaunchFactory.sol",
-      "line": 87
-    },
-    "296": {
-      "filename": "LaunchFactory.sol",
-      "line": 87
-    },
-    "304": {
-      "filename": "LaunchFactory.sol",
-      "line": 87
-    },
-    "328": {
-      "filename": "LaunchFactory.sol",
-      "line": 87
-    },
-    "344": {
-      "filename": "LaunchFactory.sol",
-      "line": 87
-    },
-    "352": {
-      "filename": "LaunchFactory.sol",
-      "line": 87
-    },
-    "360": {
-      "filename": "LaunchFactory.sol",
-      "line": 87
-    },
-    "368": {
-      "filename": "LaunchFactory.sol",
-      "line": 87
-    },
-    "384": {
-      "filename": "LaunchFactory.sol",
-      "line": 87
-    },
-    "400": {
-      "filename": "LaunchFactory.sol",
-      "line": 87
-    },
-    "408": {
-      "filename": "LaunchFactory.sol",
-      "line": 87
-    },
-    "416": {
-      "filename": "LaunchFactory.sol",
-      "line": 87
-    },
-    "432": {
-      "filename": "LaunchFactory.sol",
-      "line": 87
-    },
-    "440": {
-      "filename": "LaunchFactory.sol",
-      "line": 87
-    },
-    "448": {
-      "filename": "LaunchFactory.sol",
-      "line": 87
-    },
-    "464": {
-      "filename": "LaunchFactory.sol",
-      "line": 87
-    },
-    "480": {
-      "filename": "LaunchFactory.sol",
-      "line": 87
-    },
-    "488": {
-      "filename": "LaunchFactory.sol",
-      "line": 87
-    },
-    "496": {
-      "filename": "LaunchFactory.sol",
-      "line": 87
-    },
-    "504": {
-      "filename": "LaunchFactory.sol",
-      "line": 87
-    },
-    "512": {
-      "filename": "LaunchFactory.sol",
-      "line": 87
-    },
-    "520": {
-      "filename": "LaunchFactory.sol",
-      "line": 87
-    },
-    "536": {
-      "filename": "LaunchFactory.sol",
-      "line": 87
-    },
-    "544": {
-      "filename": "LaunchFactory.sol",
-      "line": 87
-    },
-    "568": {
-      "filename": "LaunchFactory.sol",
-      "line": 87
-    },
-    "584": {
-      "filename": "LaunchFactory.sol",
-      "line": 87
-    },
-    "600": {
-      "filename": "LaunchFactory.sol",
-      "line": 87
-    },
-    "616": {
-      "filename": "LaunchFactory.sol",
-      "line": 87
-    },
-    "624": {
-      "filename": "LaunchFactory.sol",
-      "line": 98
-    },
-    "632": {
-      "filename": "LaunchFactory.sol",
-      "line": 98
-    },
-    "648": {
-      "filename": "LaunchFactory.sol",
-      "line": 98
-    },
-    "656": {
-      "filename": "LaunchFactory.sol",
-      "line": 98
-    },
-    "688": {
-      "filename": "LaunchFactory.sol",
-      "line": 98
-    },
-    "704": {
-      "filename": "LaunchFactory.sol",
-      "line": 98
-    },
-    "712": {
-      "filename": "LaunchFactory.sol",
-      "line": 98
-    },
-    "720": {
-      "filename": "LaunchFactory.sol",
-      "line": 101
-    },
-    "728": {
-      "filename": "LaunchFactory.sol",
-      "line": 101
-    },
-    "736": {
-      "filename": "LaunchFactory.sol",
-      "line": 101
-    },
-    "752": {
-      "filename": "LaunchFactory.sol",
-      "line": 101
-    },
-    "760": {
-      "filename": "LaunchFactory.sol",
-      "line": 101
-    },
-    "768": {
-      "filename": "LaunchFactory.sol",
-      "line": 101
-    },
-    "776": {
-      "filename": "LaunchFactory.sol",
-      "line": 101
-    },
-    "784": {
-      "filename": "LaunchFactory.sol",
-      "line": 101
-    },
-    "792": {
-      "filename": "LaunchFactory.sol",
-      "line": 101
-    },
-    "808": {
-      "filename": "LaunchFactory.sol",
-      "line": 101
-    },
-    "816": {
-      "filename": "LaunchFactory.sol",
-      "line": 101
-    },
-    "824": {
-      "filename": "LaunchFactory.sol",
-      "line": 101
-    },
-    "840": {
-      "filename": "LaunchFactory.sol",
-      "line": 101
-    },
-    "848": {
-      "filename": "LaunchFactory.sol",
-      "line": 101
-    },
-    "864": {
-      "filename": "LaunchFactory.sol",
-      "line": 101
-    },
-    "872": {
-      "filename": "LaunchFactory.sol",
-      "line": 101
-    },
-    "880": {
-      "filename": "LaunchFactory.sol",
-      "line": 101
-    },
-    "896": {
-      "filename": "LaunchFactory.sol",
-      "line": 101
-    },
-    "904": {
-      "filename": "LaunchFactory.sol",
-      "line": 101
-    },
-    "912": {
-      "filename": "LaunchFactory.sol",
-      "line": 101
-    },
-    "928": {
-      "filename": "LaunchFactory.sol",
-      "line": 101
-    },
-    "944": {
-      "filename": "LaunchFactory.sol",
-      "line": 101
-    },
-    "952": {
-      "filename": "LaunchFactory.sol",
-      "line": 101
-    },
-    "968": {
-      "filename": "LaunchFactory.sol",
-      "line": 101
-    },
-    "976": {
-      "filename": "LaunchFactory.sol",
-      "line": 101
-    },
-    "1000": {
-      "filename": "LaunchFactory.sol",
-      "line": 101
-    }
-  },
   "5e948193279740183fdeaf63c5f0cd733d9aea924ba00f1535e0461ee76c57b4": {
     "0": {
       "filename": "./LaunchFactory.code",
@@ -1743,7 +923,7 @@
   "61ab4641fa30d9310391025086eec65d200d79268e1b7cd402565e01ba64be3c": {
     "0": {
       "filename": "./LaunchFactory.code",
-      "line": 765
+      "line": 764
     }
   },
   "63eedec100dde29900eabb709a5cf398a19e4e7ce97accfe7bb7e3b0fbcfe36e": {
@@ -2261,63 +1441,63 @@
   "7f84fb29e7e8b9efc25f4f83cb520d87ab6d1f28518c2460ee3b2883783cce58": {
     "0": {
       "filename": "./LaunchFactory.code",
-      "line": 599
+      "line": 598
     },
     "8": {
       "filename": "./LaunchFactory.code",
-      "line": 600
+      "line": 599
     },
     "16": {
       "filename": "./LaunchFactory.code",
-      "line": 601
+      "line": 600
     },
     "32": {
       "filename": "./LaunchFactory.code",
-      "line": 604
+      "line": 603
     },
     "48": {
       "filename": "./LaunchFactory.code",
-      "line": 605
+      "line": 604
     },
     "56": {
       "filename": "./LaunchFactory.code",
-      "line": 606
+      "line": 605
     },
     "72": {
       "filename": "./LaunchFactory.code",
-      "line": 607
+      "line": 606
     },
     "232": {
       "filename": "./LaunchFactory.code",
-      "line": 608
+      "line": 607
     },
     "240": {
       "filename": "./LaunchFactory.code",
-      "line": 609
+      "line": 608
     },
     "248": {
       "filename": "./LaunchFactory.code",
-      "line": 610
+      "line": 609
     },
     "256": {
       "filename": "./LaunchFactory.code",
-      "line": 611
+      "line": 610
     },
     "264": {
       "filename": "./LaunchFactory.code",
-      "line": 612
+      "line": 611
     },
     "272": {
       "filename": "./LaunchFactory.code",
-      "line": 613
+      "line": 612
     },
     "288": {
       "filename": "./LaunchFactory.code",
-      "line": 615
+      "line": 614
     },
     "296": {
       "filename": "./LaunchFactory.code",
-      "line": 616
+      "line": 615
     }
   },
   "865dc950eeb77a35bd29e44fb17bebd54112a89fbad3b07144af10c0a35de568": {
@@ -2369,27 +1549,27 @@
   "8e4c1560ee2d94b9aa3da92c5734e41eb1666afd9a3307b03353bc55aa0779f9": {
     "0": {
       "filename": "./LaunchFactory.code",
-      "line": 663
+      "line": 662
     },
     "8": {
       "filename": "./LaunchFactory.code",
-      "line": 664
+      "line": 663
     },
     "24": {
       "filename": "./LaunchFactory.code",
-      "line": 665
+      "line": 664
     },
     "48": {
       "filename": "./LaunchFactory.code",
-      "line": 666
+      "line": 665
     },
     "64": {
       "filename": "./LaunchFactory.code",
-      "line": 667
+      "line": 666
     },
     "72": {
       "filename": "./LaunchFactory.code",
-      "line": 668
+      "line": 667
     },
     "88": {
       "filename": "LaunchFactory.sol",
@@ -2409,24 +1589,18 @@
     },
     "120": {
       "filename": "./LaunchFactory.code",
-      "line": 677
+      "line": 676
     },
     "136": {
       "filename": "./LaunchFactory.code",
-      "line": 680
+      "line": 679
     },
     "152": {
       "filename": "./LaunchFactory.code",
-      "line": 683
+      "line": 682
     }
   },
   "96a296d224f285c67bee93c30f8a309157f0daa35dc5b87e410b78630a09cfc7": {},
-  "971df636e33b27e0b234dd064b5fb434e94b06a221b8ab9d7eca35b4f2b1a3c7": {
-    "0": {
-      "filename": "LaunchFactory.sol",
-      "line": 69
-    }
-  },
   "9c6ad0dfd4914fe6f179c269be5bcca5910491c3e1a1d0850f2aa6dc65fa0f49": {
     "0": {
       "filename": "LaunchFactory.sol",
@@ -2457,98 +1631,240 @@
       "line": 53
     }
   },
-  "9ea5dde69e26f4991117ed3d312598b1297caf3f293c3dd51a642e2e2669d6e3": {
+  "a1bf49a73bae01db74916eb47689cfd30dab1b5d65f6a332b88327c24e4229c3": {
     "0": {
       "filename": "./LaunchFactory.code",
-      "line": 687
+      "line": 763
     },
     "8": {
       "filename": "./LaunchFactory.code",
-      "line": 688
+      "line": 766
     },
-    "56": {
+    "24": {
       "filename": "./LaunchFactory.code",
-      "line": 689
+      "line": 767
+    },
+    "32": {
+      "filename": "./LaunchFactory.code",
+      "line": 768
+    },
+    "48": {
+      "filename": "./LaunchFactory.code",
+      "line": 771
     },
     "64": {
       "filename": "./LaunchFactory.code",
-      "line": 690
+      "line": 772
     },
-    "80": {
+    "72": {
       "filename": "./LaunchFactory.code",
-      "line": 715
+      "line": 773
     },
     "88": {
       "filename": "./LaunchFactory.code",
-      "line": 716
+      "line": 774
     },
-    "136": {
+    "104": {
       "filename": "./LaunchFactory.code",
-      "line": 717
+      "line": 775
+    },
+    "120": {
+      "filename": "./LaunchFactory.code",
+      "line": 776
+    },
+    "128": {
+      "filename": "./LaunchFactory.code",
+      "line": 777
     },
     "144": {
       "filename": "./LaunchFactory.code",
-      "line": 718
+      "line": 778
+    },
+    "152": {
+      "filename": "./LaunchFactory.code",
+      "line": 779
     },
     "160": {
       "filename": "./LaunchFactory.code",
-      "line": 738
+      "line": 780
     },
     "168": {
       "filename": "./LaunchFactory.code",
-      "line": 739
+      "line": 781
+    },
+    "176": {
+      "filename": "./LaunchFactory.code",
+      "line": 782
+    },
+    "192": {
+      "filename": "./LaunchFactory.code",
+      "line": 783
+    },
+    "200": {
+      "filename": "./LaunchFactory.code",
+      "line": 784
     },
     "216": {
       "filename": "./LaunchFactory.code",
-      "line": 740
+      "line": 785
     },
     "224": {
       "filename": "./LaunchFactory.code",
-      "line": 741
+      "line": 786
     },
-    "240": {
+    "232": {
       "filename": "./LaunchFactory.code",
-      "line": 755
+      "line": 787
     },
     "248": {
       "filename": "./LaunchFactory.code",
-      "line": 756
+      "line": 788
+    },
+    "264": {
+      "filename": "./LaunchFactory.code",
+      "line": 790
+    },
+    "272": {
+      "filename": "./LaunchFactory.code",
+      "line": 791
+    },
+    "280": {
+      "filename": "./LaunchFactory.code",
+      "line": 792
     },
     "296": {
       "filename": "./LaunchFactory.code",
-      "line": 757
+      "line": 794
     },
     "304": {
       "filename": "./LaunchFactory.code",
-      "line": 758
-    }
-  },
-  "a33a15d75d335b8cf9adc46a667309af7de2797cc75d5ac9aef5de246276fd29": {
-    "0": {
-      "filename": "./LaunchFactory.code",
-      "line": 897
+      "line": 795
     },
-    "1": {
+    "320": {
       "filename": "./LaunchFactory.code",
-      "line": 898
+      "line": 796
     },
-    "2": {
+    "336": {
       "filename": "./LaunchFactory.code",
-      "line": 899
+      "line": 798
     },
-    "3": {
+    "344": {
       "filename": "./LaunchFactory.code",
-      "line": 928
+      "line": 799
     },
-    "4": {
+    "360": {
       "filename": "./LaunchFactory.code",
-      "line": 932
+      "line": 800
+    },
+    "368": {
+      "filename": "./LaunchFactory.code",
+      "line": 801
+    },
+    "384": {
+      "filename": "./LaunchFactory.code",
+      "line": 803
+    },
+    "392": {
+      "filename": "./LaunchFactory.code",
+      "line": 804
+    },
+    "408": {
+      "filename": "./LaunchFactory.code",
+      "line": 805
+    },
+    "416": {
+      "filename": "stdlib.sol",
+      "line": 22
+    },
+    "432": {
+      "filename": "stdlib.sol",
+      "line": 22
+    },
+    "440": {
+      "filename": "stdlib.sol",
+      "line": 22
+    },
+    "448": {
+      "filename": "stdlib.sol",
+      "line": 22
+    },
+    "464": {
+      "filename": "stdlib.sol",
+      "line": 23
+    },
+    "472": {
+      "filename": "stdlib.sol",
+      "line": 23
+    },
+    "488": {
+      "filename": "stdlib.sol",
+      "line": 23
+    },
+    "512": {
+      "filename": "stdlib.sol",
+      "line": 23
+    },
+    "520": {
+      "filename": "stdlib.sol",
+      "line": 23
+    },
+    "560": {
+      "filename": "stdlib.sol",
+      "line": 23
+    },
+    "568": {
+      "filename": "stdlib.sol",
+      "line": 23
+    },
+    "576": {
+      "filename": "stdlib.sol",
+      "line": 23
+    },
+    "592": {
+      "filename": "stdlib.sol",
+      "line": 24
+    },
+    "608": {
+      "filename": "./LaunchFactory.code",
+      "line": 807
+    },
+    "624": {
+      "filename": "./LaunchFactory.code",
+      "line": 808
+    },
+    "632": {
+      "filename": "./LaunchFactory.code",
+      "line": 809
+    },
+    "648": {
+      "filename": "./LaunchFactory.code",
+      "line": 810
+    },
+    "656": {
+      "filename": "./LaunchFactory.code",
+      "line": 811
+    },
+    "672": {
+      "filename": "./LaunchFactory.code",
+      "line": 812
+    },
+    "688": {
+      "filename": "./LaunchFactory.code",
+      "line": 813
+    },
+    "696": {
+      "filename": "./LaunchFactory.code",
+      "line": 814
+    },
+    "712": {
+      "filename": "./LaunchFactory.code",
+      "line": 817
     }
   },
   "a8706c6358fecfba3c31d885dcf337fed67609c22ebf972396a9aca8faf7a108": {
     "0": {
       "filename": "./LaunchFactory.code",
-      "line": 908
+      "line": 907
     }
   },
   "b0358e4ee8a7583494a8e24872accc50039281a69cba6155ba8cfbcf8c6f1536": {
@@ -2645,28 +1961,324 @@
       "line": 72
     }
   },
-  "e9e5b08e673e611d8c08a9e26ee041127b0214182769f41d2f307b6369752fb3": {
+  "bb5c75c3066d5adda491e87c42f320f697ae60b37eb051267b04de1068e4a4f9": {
     "0": {
       "filename": "./LaunchFactory.code",
-      "line": 902
+      "line": 900
+    },
+    "8": {
+      "filename": "./LaunchFactory.code",
+      "line": 910
     },
     "24": {
       "filename": "./LaunchFactory.code",
-      "line": 903
+      "line": 911
+    },
+    "32": {
+      "filename": "./LaunchFactory.code",
+      "line": 912
+    },
+    "48": {
+      "filename": "./LaunchFactory.code",
+      "line": 915
+    },
+    "56": {
+      "filename": "./LaunchFactory.code",
+      "line": 916
+    },
+    "72": {
+      "filename": "./LaunchFactory.code",
+      "line": 917
+    },
+    "88": {
+      "filename": "./LaunchFactory.code",
+      "line": 920
+    },
+    "96": {
+      "filename": "./LaunchFactory.code",
+      "line": 921
+    },
+    "112": {
+      "filename": "./LaunchFactory.code",
+      "line": 922
+    },
+    "128": {
+      "filename": "./LaunchFactory.code",
+      "line": 925
+    }
+  },
+  "c8019346af2c260c8eb5a6cb7971e4e11fc359e7a787b6ef1339136381c2d63d": {
+    "0": {
+      "filename": "./LaunchFactory.code",
+      "line": 821
+    },
+    "16": {
+      "filename": "./LaunchFactory.code",
+      "line": 822
+    },
+    "24": {
+      "filename": "./LaunchFactory.code",
+      "line": 823
+    },
+    "48": {
+      "filename": "./LaunchFactory.code",
+      "line": 824
+    },
+    "64": {
+      "filename": "./LaunchFactory.code",
+      "line": 825
+    },
+    "88": {
+      "filename": "./LaunchFactory.code",
+      "line": 826
+    },
+    "104": {
+      "filename": "./LaunchFactory.code",
+      "line": 827
+    },
+    "112": {
+      "filename": "./LaunchFactory.code",
+      "line": 828
+    },
+    "120": {
+      "filename": "./LaunchFactory.code",
+      "line": 829
+    },
+    "136": {
+      "filename": "./LaunchFactory.code",
+      "line": 830
+    },
+    "152": {
+      "filename": "./LaunchFactory.code",
+      "line": 831
+    },
+    "160": {
+      "filename": "./LaunchFactory.code",
+      "line": 832
+    },
+    "176": {
+      "filename": "./LaunchFactory.code",
+      "line": 833
+    },
+    "200": {
+      "filename": "./LaunchFactory.code",
+      "line": 834
+    },
+    "208": {
+      "filename": "./LaunchFactory.code",
+      "line": 835
+    },
+    "216": {
+      "filename": "./LaunchFactory.code",
+      "line": 836
+    },
+    "232": {
+      "filename": "./LaunchFactory.code",
+      "line": 837
+    },
+    "248": {
+      "filename": "./LaunchFactory.code",
+      "line": 841
+    },
+    "256": {
+      "filename": "./LaunchFactory.code",
+      "line": 842
+    },
+    "280": {
+      "filename": "./LaunchFactory.code",
+      "line": 843
+    },
+    "296": {
+      "filename": "./LaunchFactory.code",
+      "line": 844
+    },
+    "304": {
+      "filename": "./LaunchFactory.code",
+      "line": 845
+    },
+    "320": {
+      "filename": "./LaunchFactory.code",
+      "line": 849
+    },
+    "328": {
+      "filename": "./LaunchFactory.code",
+      "line": 850
+    },
+    "344": {
+      "filename": "./LaunchFactory.code",
+      "line": 853
+    }
+  },
+  "dd6a79ac58dcdcd2647b15f79e8a590d1d73a443894a492d223ac1a84bfd8452": {
+    "0": {
+      "filename": "./LaunchFactory.code",
+      "line": 446
+    },
+    "8": {
+      "filename": "./LaunchFactory.code",
+      "line": 447
+    },
+    "24": {
+      "filename": "./LaunchFactory.code",
+      "line": 448
+    },
+    "48": {
+      "filename": "./LaunchFactory.code",
+      "line": 449
+    },
+    "64": {
+      "filename": "./LaunchFactory.code",
+      "line": 450
+    },
+    "72": {
+      "filename": "./LaunchFactory.code",
+      "line": 451
+    },
+    "88": {
+      "filename": "LaunchFactory.sol",
+      "line": 58
+    },
+    "96": {
+      "filename": "LaunchFactory.sol",
+      "line": 58
+    },
+    "104": {
+      "filename": "LaunchFactory.sol",
+      "line": 58
+    },
+    "112": {
+      "filename": "LaunchFactory.sol",
+      "line": 58
+    },
+    "120": {
+      "filename": "LaunchFactory.sol",
+      "line": 58
+    },
+    "136": {
+      "filename": "LaunchFactory.sol",
+      "line": 58
+    },
+    "144": {
+      "filename": "LaunchFactory.sol",
+      "line": 58
+    },
+    "152": {
+      "filename": "LaunchFactory.sol",
+      "line": 58
+    },
+    "160": {
+      "filename": "LaunchFactory.sol",
+      "line": 58
+    },
+    "168": {
+      "filename": "LaunchFactory.sol",
+      "line": 58
+    },
+    "176": {
+      "filename": "LaunchFactory.sol",
+      "line": 58
+    },
+    "184": {
+      "filename": "LaunchFactory.sol",
+      "line": 58
+    },
+    "200": {
+      "filename": "LaunchFactory.sol",
+      "line": 58
+    },
+    "208": {
+      "filename": "LaunchFactory.sol",
+      "line": 58
+    },
+    "224": {
+      "filename": "LaunchFactory.sol",
+      "line": 58
+    },
+    "240": {
+      "filename": "LaunchFactory.sol",
+      "line": 58
+    },
+    "248": {
+      "filename": "LaunchFactory.sol",
+      "line": 58
+    },
+    "264": {
+      "filename": "LaunchFactory.sol",
+      "line": 58
+    },
+    "272": {
+      "filename": "LaunchFactory.sol",
+      "line": 58
+    },
+    "280": {
+      "filename": "LaunchFactory.sol",
+      "line": 58
+    },
+    "288": {
+      "filename": "LaunchFactory.sol",
+      "line": 58
+    },
+    "304": {
+      "filename": "LaunchFactory.sol",
+      "line": 58
+    },
+    "312": {
+      "filename": "./LaunchFactory.code",
+      "line": 480
+    },
+    "328": {
+      "filename": "./LaunchFactory.code",
+      "line": 483
+    },
+    "344": {
+      "filename": "./LaunchFactory.code",
+      "line": 486
+    }
+  },
+  "e541ba8fe821fbad4356db1b32f2ca0c502ef9cc788becf4f43d0144c1068580": {
+    "0": {
+      "filename": "./LaunchFactory.code",
+      "line": 896
+    },
+    "1": {
+      "filename": "./LaunchFactory.code",
+      "line": 897
+    },
+    "2": {
+      "filename": "./LaunchFactory.code",
+      "line": 898
+    },
+    "3": {
+      "filename": "./LaunchFactory.code",
+      "line": 927
+    },
+    "4": {
+      "filename": "./LaunchFactory.code",
+      "line": 931
+    }
+  },
+  "e9e5b08e673e611d8c08a9e26ee041127b0214182769f41d2f307b6369752fb3": {
+    "0": {
+      "filename": "./LaunchFactory.code",
+      "line": 901
+    },
+    "24": {
+      "filename": "./LaunchFactory.code",
+      "line": 902
     },
     "40": {
       "filename": "./LaunchFactory.code",
-      "line": 904
+      "line": 903
     }
   },
   "f24e1e7aa04d89aad2945816b6e9b921f2b3892da9ba53e2383c148351b96d0c": {
     "0": {
       "filename": "./LaunchFactory.code",
-      "line": 839
+      "line": 838
     },
     "16": {
       "filename": "./LaunchFactory.code",
-      "line": 840
+      "line": 839
     }
   },
   "f5154db87758a4bbc294dcbba4a34e32566b392168b4534a81d7748b26f02657": {
@@ -2803,5 +2415,389 @@
       "line": 120
     }
   },
-  "f789d0adc49998fa884bd67b68b3c60317f6e5afb3d0ba7809ba3498c705e637": {}
+  "f789d0adc49998fa884bd67b68b3c60317f6e5afb3d0ba7809ba3498c705e637": {},
+  "f86f429a82232049c6429bc27db5f5344147c2fd556192f2ce712b00f33e79ef": {
+    "0": {
+      "filename": "./LaunchFactory.code",
+      "line": 690
+    },
+    "8": {
+      "filename": "./LaunchFactory.code",
+      "line": 691
+    },
+    "24": {
+      "filename": "./LaunchFactory.code",
+      "line": 692
+    },
+    "40": {
+      "filename": "./LaunchFactory.code",
+      "line": 695
+    },
+    "48": {
+      "filename": "./LaunchFactory.code",
+      "line": 696
+    },
+    "96": {
+      "filename": "./LaunchFactory.code",
+      "line": 697
+    },
+    "104": {
+      "filename": "./LaunchFactory.code",
+      "line": 698
+    },
+    "120": {
+      "filename": "./LaunchFactory.code",
+      "line": 701
+    },
+    "128": {
+      "filename": "./LaunchFactory.code",
+      "line": 702
+    },
+    "176": {
+      "filename": "./LaunchFactory.code",
+      "line": 703
+    },
+    "184": {
+      "filename": "./LaunchFactory.code",
+      "line": 704
+    },
+    "200": {
+      "filename": "./LaunchFactory.code",
+      "line": 707
+    },
+    "208": {
+      "filename": "./LaunchFactory.code",
+      "line": 708
+    },
+    "256": {
+      "filename": "./LaunchFactory.code",
+      "line": 709
+    },
+    "264": {
+      "filename": "./LaunchFactory.code",
+      "line": 710
+    }
+  },
+  "fbb39566f23f4aafc7b5a3a72bc4daff277083ecb5e9471a1b5c8f4600b25a56": {
+    "0": {
+      "filename": "LaunchFactory.sol",
+      "line": 69
+    },
+    "16": {
+      "filename": "LaunchFactory.sol",
+      "line": 72
+    },
+    "24": {
+      "filename": "LaunchFactory.sol",
+      "line": 72
+    },
+    "40": {
+      "filename": "LaunchFactory.sol",
+      "line": 72
+    },
+    "56": {
+      "filename": "LaunchFactory.sol",
+      "line": 72
+    },
+    "104": {
+      "filename": "LaunchFactory.sol",
+      "line": 72
+    },
+    "112": {
+      "filename": "LaunchFactory.sol",
+      "line": 72
+    },
+    "136": {
+      "filename": "LaunchFactory.sol",
+      "line": 74
+    },
+    "152": {
+      "filename": "LaunchFactory.sol",
+      "line": 74
+    },
+    "160": {
+      "filename": "LaunchFactory.sol",
+      "line": 74
+    },
+    "176": {
+      "filename": "LaunchFactory.sol",
+      "line": 74
+    },
+    "192": {
+      "filename": "LaunchFactory.sol",
+      "line": 87
+    },
+    "200": {
+      "filename": "LaunchFactory.sol",
+      "line": 87
+    },
+    "208": {
+      "filename": "LaunchFactory.sol",
+      "line": 87
+    },
+    "216": {
+      "filename": "LaunchFactory.sol",
+      "line": 87
+    },
+    "224": {
+      "filename": "LaunchFactory.sol",
+      "line": 87
+    },
+    "240": {
+      "filename": "LaunchFactory.sol",
+      "line": 87
+    },
+    "248": {
+      "filename": "LaunchFactory.sol",
+      "line": 87
+    },
+    "264": {
+      "filename": "LaunchFactory.sol",
+      "line": 87
+    },
+    "280": {
+      "filename": "LaunchFactory.sol",
+      "line": 87
+    },
+    "296": {
+      "filename": "LaunchFactory.sol",
+      "line": 87
+    },
+    "304": {
+      "filename": "LaunchFactory.sol",
+      "line": 87
+    },
+    "328": {
+      "filename": "LaunchFactory.sol",
+      "line": 87
+    },
+    "344": {
+      "filename": "LaunchFactory.sol",
+      "line": 87
+    },
+    "352": {
+      "filename": "LaunchFactory.sol",
+      "line": 87
+    },
+    "360": {
+      "filename": "LaunchFactory.sol",
+      "line": 87
+    },
+    "368": {
+      "filename": "LaunchFactory.sol",
+      "line": 87
+    },
+    "384": {
+      "filename": "LaunchFactory.sol",
+      "line": 87
+    },
+    "400": {
+      "filename": "LaunchFactory.sol",
+      "line": 87
+    },
+    "408": {
+      "filename": "LaunchFactory.sol",
+      "line": 87
+    },
+    "416": {
+      "filename": "LaunchFactory.sol",
+      "line": 87
+    },
+    "432": {
+      "filename": "LaunchFactory.sol",
+      "line": 87
+    },
+    "440": {
+      "filename": "LaunchFactory.sol",
+      "line": 87
+    },
+    "448": {
+      "filename": "LaunchFactory.sol",
+      "line": 87
+    },
+    "464": {
+      "filename": "LaunchFactory.sol",
+      "line": 87
+    },
+    "480": {
+      "filename": "LaunchFactory.sol",
+      "line": 87
+    },
+    "488": {
+      "filename": "LaunchFactory.sol",
+      "line": 87
+    },
+    "496": {
+      "filename": "LaunchFactory.sol",
+      "line": 87
+    },
+    "504": {
+      "filename": "LaunchFactory.sol",
+      "line": 87
+    },
+    "512": {
+      "filename": "LaunchFactory.sol",
+      "line": 87
+    },
+    "520": {
+      "filename": "LaunchFactory.sol",
+      "line": 87
+    },
+    "536": {
+      "filename": "LaunchFactory.sol",
+      "line": 87
+    },
+    "544": {
+      "filename": "LaunchFactory.sol",
+      "line": 87
+    },
+    "568": {
+      "filename": "LaunchFactory.sol",
+      "line": 87
+    },
+    "584": {
+      "filename": "LaunchFactory.sol",
+      "line": 87
+    },
+    "600": {
+      "filename": "LaunchFactory.sol",
+      "line": 87
+    },
+    "616": {
+      "filename": "LaunchFactory.sol",
+      "line": 87
+    },
+    "624": {
+      "filename": "LaunchFactory.sol",
+      "line": 98
+    },
+    "632": {
+      "filename": "LaunchFactory.sol",
+      "line": 98
+    },
+    "648": {
+      "filename": "LaunchFactory.sol",
+      "line": 98
+    },
+    "656": {
+      "filename": "LaunchFactory.sol",
+      "line": 98
+    },
+    "688": {
+      "filename": "LaunchFactory.sol",
+      "line": 98
+    },
+    "704": {
+      "filename": "LaunchFactory.sol",
+      "line": 98
+    },
+    "712": {
+      "filename": "LaunchFactory.sol",
+      "line": 98
+    },
+    "720": {
+      "filename": "LaunchFactory.sol",
+      "line": 101
+    },
+    "728": {
+      "filename": "LaunchFactory.sol",
+      "line": 101
+    },
+    "736": {
+      "filename": "LaunchFactory.sol",
+      "line": 101
+    },
+    "752": {
+      "filename": "LaunchFactory.sol",
+      "line": 101
+    },
+    "760": {
+      "filename": "LaunchFactory.sol",
+      "line": 101
+    },
+    "768": {
+      "filename": "LaunchFactory.sol",
+      "line": 101
+    },
+    "776": {
+      "filename": "LaunchFactory.sol",
+      "line": 101
+    },
+    "784": {
+      "filename": "LaunchFactory.sol",
+      "line": 101
+    },
+    "792": {
+      "filename": "LaunchFactory.sol",
+      "line": 101
+    },
+    "808": {
+      "filename": "LaunchFactory.sol",
+      "line": 101
+    },
+    "816": {
+      "filename": "LaunchFactory.sol",
+      "line": 101
+    },
+    "824": {
+      "filename": "LaunchFactory.sol",
+      "line": 101
+    },
+    "840": {
+      "filename": "LaunchFactory.sol",
+      "line": 101
+    },
+    "848": {
+      "filename": "LaunchFactory.sol",
+      "line": 101
+    },
+    "864": {
+      "filename": "LaunchFactory.sol",
+      "line": 101
+    },
+    "872": {
+      "filename": "LaunchFactory.sol",
+      "line": 101
+    },
+    "880": {
+      "filename": "LaunchFactory.sol",
+      "line": 101
+    },
+    "896": {
+      "filename": "LaunchFactory.sol",
+      "line": 101
+    },
+    "904": {
+      "filename": "LaunchFactory.sol",
+      "line": 101
+    },
+    "912": {
+      "filename": "LaunchFactory.sol",
+      "line": 101
+    },
+    "928": {
+      "filename": "LaunchFactory.sol",
+      "line": 101
+    },
+    "944": {
+      "filename": "LaunchFactory.sol",
+      "line": 101
+    },
+    "952": {
+      "filename": "LaunchFactory.sol",
+      "line": 101
+    },
+    "968": {
+      "filename": "LaunchFactory.sol",
+      "line": 101
+    },
+    "976": {
+      "filename": "LaunchFactory.sol",
+      "line": 101
+    },
+    "1000": {
+      "filename": "LaunchFactory.sol",
+      "line": 101
+    }
+  }
 }

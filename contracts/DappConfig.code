@@ -41,12 +41,12 @@
 }
 
 .fragment getTokens_450efe21_internal, {
-	.loc DappConfig.sol, 17
+	.loc DappConfig.sol, 16
 	ACCEPT
-	.loc DappConfig.sol, 20
+	.loc DappConfig.sol, 19
 	PUSHINT 10000000000
 	MINTSHELL
-	.loc DappConfig.sol, 21
+	.loc DappConfig.sol, 20
 	PUSHINT 10000000000
 	SWAP
 	NEWC
@@ -71,7 +71,7 @@
 	IFREF {
 		.inline c4_to_c7
 	}
-	.loc DappConfig.sol, 16
+	.loc DappConfig.sol, 15
 	OVER
 	PUSHCONT {
 		LDREF
@@ -85,7 +85,7 @@
 	CALLREF {
 		.inline getTokens_450efe21_internal
 	}
-	IFREF {
+	CALLREF {
 		.inline c7_to_c4
 	}
 	THROW 0

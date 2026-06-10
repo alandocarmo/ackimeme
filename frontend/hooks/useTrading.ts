@@ -133,7 +133,8 @@ export function useTrading(session: Session | null, token: Launch | null, onchai
         const finalBaseCostNano = baseCostNano;
         const finalFeeNano = (finalBaseCostNano * currentFeeBps) / BigInt("10000");
         const mintGasShell = BigInt(6 * 10**9); // 6 SHELL for AFT minting
-        const maxShellNano = finalBaseCostNano + finalFeeNano + mintGasShell;
+        const gasToConvert = BigInt(1 * 10**9); // 1 SHELL to convert to VMSHELL
+        const maxShellNano = finalBaseCostNano + finalFeeNano + mintGasShell + gasToConvert;
 
         const tx = await bcContract.methods.buy({
           tokenAmount: expectedNanoTokens.toString(),

@@ -65,11 +65,11 @@ contract LaunchFactory {
         bool pumpForever,
         uint256 slopeDivisor
     ) external {
-        // Assume gas is provided via msg.value. We need enough VMSHELL for two deployments.
-        require(msg.value >= 2.5 ton, 102, "Insufficient gas for launch (send at least 2.5 SHELL)");
-        
         // This is a cross-dapp call from the user to the Factory. We accept the gas.
         tvm.accept();
+
+        // Assume gas is provided via prefunding (address(this).balance). We need enough VMSHELL for two deployments.
+        require(address(this).balance >= 2.5 ton, 102, "Insufficient gas for launch (Factory must be prefunded)");
 
         launchCount++;
 

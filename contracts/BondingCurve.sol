@@ -334,8 +334,9 @@ contract BondingCurve is IAFTReceiver, IAFTExcesses, IAFTWalletAddressReceiver {
         uint256 totalCostWithFeeAndGas = cost + platformFee + creatorFee + mintGasShell;
 
         // C-03: Convert some of the Extra Currency (SHELL) silently to execution gas (VMSHELL)
-        uint256 gasToConvert = 1 ton; // 1 SHELL to 1 VMSHELL
+        uint256 gasToConvert = getGasToConvert();
         require(receivedShell >= totalCostWithFeeAndGas + gasToConvert, 203, "Insufficient SHELL sent (cost + fee + gas + gasConversion)");
+        require(totalCostWithFeeAndGas + gasToConvert <= maxShellIn, 208, "Slippage protection triggered");
         gosh.cnvrtshellq(uint64(gasToConvert));
 
         // Update state — only base cost goes to reserve (fee is separate)
@@ -672,5 +673,10 @@ contract BondingCurve is IAFTReceiver, IAFTExcesses, IAFTWalletAddressReceiver {
     /// @notice Returns the SHELL gas required for minting
     function getMintGasShell() public pure returns (uint256) {
         return 6 * 10**9;
+    }
+
+    /// @notice Returns the SHELL gas required for VMSHELL conversion during buys
+    function getGasToConvert() public pure returns (uint256) {
+        return 1 ton; // 1 SHELL
     }
 }

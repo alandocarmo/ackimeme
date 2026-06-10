@@ -561,7 +561,7 @@ export async function deployTokenEcosystem({
           _decimals: TOKEN_DECIMALS
         },
       },
-      signer // Usando o signer real
+      signer: { type: "None" } // Usando signer None para que pubkey = 0, combinando com tvm.buildStateInit da LaunchFactory
     });
     tokenRootAddress = predictedTokenRootAddress;
 
@@ -578,7 +578,7 @@ export async function deployTokenEcosystem({
           _supplyCap: maxTokenSupply,
         },
       },
-      signer // C2: Usando o signer real na predição para evitar divergência de pubkey
+      signer: { type: "None" } // C2: Usando signer None para que pubkey = 0, igual a LaunchFactory
     });
     bondingCurveAddress = predictedBondingCurveAddress;
 
