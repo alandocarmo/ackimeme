@@ -137,7 +137,8 @@ export async function syncOnchainData(): Promise<void> {
           
           // [New] Index Recent Trades
           try {
-            const trades = await getRecentBondingCurveTrades(launch.bondingCurveAddress);
+            // Paginação: Usando apenas a primeira página para o sync recorrente
+            const { trades } = await getRecentBondingCurveTrades(launch.bondingCurveAddress);
             // Prepare trades (oldest first for chronological ordering)
             const preparedTrades = trades.reverse().map((trade: any) => ({
               ...trade,

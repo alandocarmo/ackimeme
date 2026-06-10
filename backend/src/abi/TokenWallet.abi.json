@@ -98,7 +98,123 @@
 			]
 		}
 	],
-	"events": [],
+	"events": [
+		{
+			"name": "AFTMinted",
+			"inputs": [
+				{"name":"queryId","type":"uint64"},
+				{"name":"owner","type":"address"},
+				{"name":"amount","type":"uint128"},
+				{"name":"totalSupplyAfter","type":"uint128"},
+				{"name":"forwardPayloadHash","type":"uint256"},
+				{"name":"mintedAt","type":"uint64"}
+			],
+			"outputs": [
+			]
+		},
+		{
+			"name": "AFTTransferred",
+			"inputs": [
+				{"name":"queryId","type":"uint64"},
+				{"name":"fromOwner","type":"address"},
+				{"name":"toOwner","type":"address"},
+				{"name":"amount","type":"uint128"},
+				{"name":"notifiedReceiver","type":"bool"},
+				{"name":"forwardPayloadHash","type":"uint256"},
+				{"name":"transferredAt","type":"uint64"}
+			],
+			"outputs": [
+			]
+		},
+		{
+			"name": "AFTBurned",
+			"inputs": [
+				{"name":"queryId","type":"uint64"},
+				{"name":"owner","type":"address"},
+				{"name":"amount","type":"uint128"},
+				{"name":"totalSupplyAfter","type":"uint128"},
+				{"name":"burnedAt","type":"uint64"}
+			],
+			"outputs": [
+			]
+		},
+		{
+			"name": "AFTMintRolledBack",
+			"inputs": [
+				{"name":"queryId","type":"uint64"},
+				{"name":"amount","type":"uint128"},
+				{"name":"totalSupplyAfter","type":"uint128"},
+				{"name":"rolledBackAt","type":"uint64"}
+			],
+			"outputs": [
+			]
+		},
+		{
+			"name": "RootConfigured",
+			"inputs": [
+				{"name":"name","type":"string"},
+				{"name":"symbol","type":"string"},
+				{"name":"decimals","type":"uint128"},
+				{"name":"admin","type":"address"},
+				{"name":"mintable","type":"bool"},
+				{"name":"configuredAt","type":"uint64"}
+			],
+			"outputs": [
+			]
+		},
+		{
+			"name": "WalletAddressProvided",
+			"inputs": [
+				{"name":"queryId","type":"uint64"},
+				{"name":"requester","type":"address"},
+				{"name":"owner","type":"address"},
+				{"name":"wallet","type":"address"},
+				{"name":"includeOwnerAddress","type":"bool"},
+				{"name":"providedAt","type":"uint64"}
+			],
+			"outputs": [
+			]
+		},
+		{
+			"name": "MintClosed",
+			"inputs": [
+				{"name":"admin","type":"address"},
+				{"name":"closedAt","type":"uint64"}
+			],
+			"outputs": [
+			]
+		},
+		{
+			"name": "PendingAdminSet",
+			"inputs": [
+				{"name":"admin","type":"address"},
+				{"name":"pendingAdmin","type":"address"},
+				{"name":"setAt","type":"uint64"}
+			],
+			"outputs": [
+			]
+		},
+		{
+			"name": "AdminAccepted",
+			"inputs": [
+				{"name":"oldAdmin","type":"address"},
+				{"name":"newAdmin","type":"address"},
+				{"name":"acceptedAt","type":"uint64"}
+			],
+			"outputs": [
+			]
+		},
+		{
+			"name": "ContentUpdated",
+			"inputs": [
+				{"name":"admin","type":"address"},
+				{"name":"contentHash","type":"uint256"},
+				{"name":"updatedAt","type":"uint64"}
+			],
+			"outputs": [
+			]
+		}
+	],
 	"fields": [
 		{"init":true,"name":"_pubkey","type":"uint256"},
 		{"init":false,"name":"_constructorFlag","type":"bool"},

@@ -115,7 +115,7 @@ contract BondingCurve is IAFTReceiver, IAFTExcesses, IAFTWalletAddressReceiver {
     // ─── AFT Wallet Discovery ─────────────────────────────────────────────────
     function initAftWallet() public {
         require(myAftWallet == address(0), 236, "Already initialized");
-        require(msg.value >= 0.5 ton, 212, "Insufficient VMSHELL execution gas");
+        tvm.accept();
         uint256 shellReceived = uint256(msg.currencies[SHELL_CURRENCY_ID]);
         require(shellReceived >= 2 * 1e9, 203, "Send 2 SHELL for discovery gas");
         
@@ -286,19 +286,11 @@ contract BondingCurve is IAFTReceiver, IAFTExcesses, IAFTWalletAddressReceiver {
         require(!isAmm, 109, "Already migrated to AMM");
         require(thresholdReachedAt > 0, 231, "Threshold timestamp not recorded");
         require(block.timestamp >= thresholdReachedAt + FORCE_MIGRATION_DELAY, 232, "Must wait after threshold before forcing migration");
-        _ensureExecutionGas();
+        tvm.accept();
         _migrateToAmm();
     }
 
-    // H-02: Fixed _ensureExecutionGas to require sufficient gas instead of being a no-op
-    function _ensureExecutionGas() private pure {
-        if (address(this).balance > MIN_EXECUTION_GAS) {
-            return;
-        }
-        // BondingCurve cannot call gosh.mintshell() (only DappID contracts with DappConfig can).
-        // Instead, enforce that the caller provided enough gas via msg.value.
-        require(msg.value >= MIN_EXECUTION_GAS, 227, "Insufficient gas: contract balance low and msg.value too small");
-    }
+    // H-02: Removed _ensureExecutionGas since gas is handled via tvm.accept() and DappConfig.
 
     // ─── C-02: Buy via msg.currencies[2] (SHELL ECC cross-DappID) ────────────
     // Users send SHELL as Extra Currency (cc[2]) in internal messages.
@@ -307,7 +299,7 @@ contract BondingCurve is IAFTReceiver, IAFTExcesses, IAFTWalletAddressReceiver {
     // Trade fee: 1% total (0.7% platform + 0.3% creator).
     function buy(uint256 tokenAmount, uint256 maxShellIn) public whenNotPaused {
         require(!isAmm, 250, "BondingCurve trading ended. Use AckiSwap!");
-        _ensureExecutionGas();
+        tvm.accept();
         // V-AM-01: Reject transactions that accidentally/maliciously include NACKL or USDC
         // instead of SHELL. Without this check, a confusion attack could credit the
         // buyer with tokens while the BondingCurve receives the wrong ECC currency.
@@ -341,13 +333,10 @@ contract BondingCurve is IAFTReceiver, IAFTExcesses, IAFTWalletAddressReceiver {
         uint256 mintGasShell = 6 * 10**9; // 6 SHELL for AFT deploy
         uint256 totalCostWithFeeAndGas = cost + platformFee + creatorFee + mintGasShell;
 
-        require(totalCostWithFeeAndGas <= maxShellIn, 208, "Slippage protection triggered: cost+fee+gas exceeds maxShellIn");
-        require(receivedShell >= totalCostWithFeeAndGas, 203, "Insufficient SHELL sent (cost + fee + gas)");
-
-        // Cross-Dapp calls arrive with msg.value/VMSHELL representing execution gas.
-        // We ensure the buyer provides enough VMSHELL instead of paying from the contract.
-        require(msg.value >= 0.5 ton, 212, "Insufficient VMSHELL execution gas attached");
-        require(address(this).balance >= 0.2 ton, 213, "BondingCurve VMSHELL reserve unavailable");
+        // C-03: Convert some of the Extra Currency (SHELL) silently to execution gas (VMSHELL)
+        uint256 gasToConvert = 1 ton; // 1 SHELL to 1 VMSHELL
+        require(receivedShell >= totalCostWithFeeAndGas + gasToConvert, 203, "Insufficient SHELL sent (cost + fee + gas + gasConversion)");
+        gosh.cnvrtshellq(uint64(gasToConvert));
 
         // Update state — only base cost goes to reserve (fee is separate)
         totalSupply += tokenAmount;
@@ -380,7 +369,8 @@ contract BondingCurve is IAFTReceiver, IAFTExcesses, IAFTWalletAddressReceiver {
         pendingCreatorFeeByNonce[nonce] = creatorFee;
 
         // Refund immediate excess SHELL (Extra Currency) back to buyer
-        uint256 immediateExcess = receivedShell > totalCostWithFeeAndGas ? receivedShell - totalCostWithFeeAndGas : 0;
+        uint256 totalRequired = totalCostWithFeeAndGas + gasToConvert;
+        uint256 immediateExcess = receivedShell > totalRequired ? receivedShell - totalRequired : 0;
         if (immediateExcess > 0) {
             mapping(uint32 => varuint32) refundCurrencies;
             refundCurrencies[SHELL_CURRENCY_ID] = varuint32(immediateExcess);
@@ -406,7 +396,7 @@ contract BondingCurve is IAFTReceiver, IAFTExcesses, IAFTWalletAddressReceiver {
         TvmCell forwardPayload
     ) external override whenNotPaused nonReentrant functionID(0x7362d09c) {
         require(!isAmm, 250, "BondingCurve trading ended. Use AckiSwap!");
-        _ensureExecutionGas();
+        tvm.accept();
         require(myAftWallet != address(0), 235, "AFT Wallet not initialized yet");
         require(msg.sender == myAftWallet, 103, "Only my AFT Wallet can notify transfer");
 
@@ -417,12 +407,9 @@ contract BondingCurve is IAFTReceiver, IAFTExcesses, IAFTWalletAddressReceiver {
             minShellOut = s.load(uint128);
         }
 
-        // Audit #3: Anti-rug Creator Lock.
-        if (isAmm && sender == owner && migratedAt > 0) {
-            require(block.timestamp >= migratedAt + LOCK_PERIOD, 223, "Creator tokens are locked for 30 days after AMM migration");
-        }
+        // Audit #3: Anti-rug Creator Lock was dead code since isAmm is false here.
+        // Creator lock should be implemented in a dedicated Vesting contract.
 
-        require(msg.value >= 0.3 ton, 221, "Insufficient gas for sell execution");
         require(amount <= maxSellPerTx(), 222, "Amount exceeds max sell limit");
 
         uint256 grossReturn = getSellReturn(amount);
@@ -531,7 +518,6 @@ contract BondingCurve is IAFTReceiver, IAFTExcesses, IAFTWalletAddressReceiver {
             address(this)
         );
 
-        emit MigratedToInternalAmm(liquidityToMove, migratedAt);
         emit FeeReduced(getTradeFeeBps());
     }
 
@@ -543,6 +529,8 @@ contract BondingCurve is IAFTReceiver, IAFTExcesses, IAFTWalletAddressReceiver {
         
         uint128 shellLiquidity = uint128(reserveBalance);
         uint128 tokensToMove = uint128(_supplyCap - totalSupply);
+
+        emit MigratedToInternalAmm(shellLiquidity, migratedAt);
         
         // 1. Initialize Pair's Wallet Discovery
         mapping(uint32 => varuint32) ccInit;
@@ -621,7 +609,7 @@ contract BondingCurve is IAFTReceiver, IAFTExcesses, IAFTWalletAddressReceiver {
     // Direct bounce from ITokenRoot.mint means TokenRoot did not accept the mint.
     // Later wallet-level failures are reported through onMintFailed().
     onBounce(TvmSlice body) external {
-        _ensureExecutionGas();
+        tvm.accept();
         require(msg.sender == _tokenRoot, 150, "Bounce not from TokenRoot");
         if (body.bits() < 64) return;
         
@@ -668,11 +656,21 @@ contract BondingCurve is IAFTReceiver, IAFTExcesses, IAFTWalletAddressReceiver {
         require(msg.sender == feeRecipient, 111, "Only platform (feeRecipient) can rescue");
         require(to != address(0), 233, "Rescue recipient cannot be zero");
 
-        if (amount > 0) {
+        uint256 currentBalance = uint256(address(this).currencies[SHELL_CURRENCY_ID]);
+        require(currentBalance > reserveBalance, 234, "No excess shell to rescue");
+        uint256 excess = currentBalance - reserveBalance;
+        uint256 safeAmount = amount < excess ? amount : excess;
+
+        if (safeAmount > 0) {
             mapping(uint32 => varuint32) rescueCurrencies;
-            rescueCurrencies[SHELL_CURRENCY_ID] = varuint32(amount);
+            rescueCurrencies[SHELL_CURRENCY_ID] = varuint32(safeAmount);
             to.transfer({ value: 0.05 ton, flag: 1, bounce: false, currencies: rescueCurrencies });
-            emit ExcessShellRescued(to, amount);
+            emit ExcessShellRescued(to, safeAmount);
         }
+    }
+
+    /// @notice Returns the SHELL gas required for minting
+    function getMintGasShell() public pure returns (uint256) {
+        return 6 * 10**9;
     }
 }

@@ -1,0 +1,125 @@
+{
+	"ABI version": 2,
+	"version": "2.4",
+	"header": ["pubkey", "time", "expire"],
+	"functions": [
+		{
+			"name": "constructor",
+			"inputs": [
+				{"name":"_owner","type":"address"},
+				{"name":"_feeRecipient","type":"address"},
+				{"name":"_tokenRootCode","type":"cell"},
+				{"name":"_bondingCurveCode","type":"cell"},
+				{"name":"_tokenWalletCode","type":"cell"}
+			],
+			"outputs": [
+			]
+		},
+		{
+			"name": "updateCodes",
+			"inputs": [
+				{"name":"_tokenRootCode","type":"cell"},
+				{"name":"_bondingCurveCode","type":"cell"},
+				{"name":"_tokenWalletCode","type":"cell"}
+			],
+			"outputs": [
+			]
+		},
+		{
+			"name": "setFeeRecipient",
+			"inputs": [
+				{"name":"_feeRecipient","type":"address"}
+			],
+			"outputs": [
+			]
+		},
+		{
+			"name": "deployTokenAndCurve",
+			"inputs": [
+				{"name":"name","type":"string"},
+				{"name":"symbol","type":"string"},
+				{"name":"decimals","type":"uint8"},
+				{"name":"supplyCap","type":"uint256"},
+				{"name":"creator","type":"address"},
+				{"name":"creationFeeTxHash","type":"bytes"},
+				{"name":"pumpForever","type":"bool"},
+				{"name":"slopeDivisor","type":"uint256"}
+			],
+			"outputs": [
+			]
+		},
+		{
+			"name": "owner",
+			"inputs": [
+			],
+			"outputs": [
+				{"name":"owner","type":"address"}
+			]
+		},
+		{
+			"name": "feeRecipient",
+			"inputs": [
+			],
+			"outputs": [
+				{"name":"feeRecipient","type":"address"}
+			]
+		},
+		{
+			"name": "launchCount",
+			"inputs": [
+			],
+			"outputs": [
+				{"name":"launchCount","type":"uint32"}
+			]
+		},
+		{
+			"name": "tokenRootCode",
+			"inputs": [
+			],
+			"outputs": [
+				{"name":"tokenRootCode","type":"cell"}
+			]
+		},
+		{
+			"name": "bondingCurveCode",
+			"inputs": [
+			],
+			"outputs": [
+				{"name":"bondingCurveCode","type":"cell"}
+			]
+		},
+		{
+			"name": "tokenWalletCode",
+			"inputs": [
+			],
+			"outputs": [
+				{"name":"tokenWalletCode","type":"cell"}
+			]
+		}
+	],
+	"events": [
+		{
+			"name": "TokenLaunched",
+			"inputs": [
+				{"name":"tokenRoot","type":"address"},
+				{"name":"bondingCurve","type":"address"},
+				{"name":"creator","type":"address"},
+				{"name":"name","type":"string"},
+				{"name":"symbol","type":"string"}
+			],
+			"outputs": [
+			]
+		}
+	],
+	"fields": [
+		{"init":true,"name":"_pubkey","type":"uint256"},
+		{"init":false,"name":"_timestamp","type":"uint64"},
+		{"init":false,"name":"_constructorFlag","type":"bool"},
+		{"init":false,"name":"owner","type":"address"},
+		{"init":false,"name":"feeRecipient","type":"address"},
+		{"init":false,"name":"launchCount","type":"uint32"},
+		{"init":false,"name":"tokenRootCode","type":"cell"},
+		{"init":false,"name":"bondingCurveCode","type":"cell"},
+		{"init":false,"name":"tokenWalletCode","type":"cell"}
+	]
+}

@@ -1,0 +1,932 @@
+.fragment c4_to_c7, {
+	PUSHROOT
+	CTOS
+	LDU 256 ; pubkey c4
+	LDU 64 ; pubkey timestamp c4
+	LDU 1 ; ctor flag
+	LDMSGADDR
+	LDREF
+	ENDS
+	CTOS
+	LDMSGADDR
+	LDU 32
+	LDREF
+	LDREF
+	LDREF
+	ENDS
+	SETGLOB 15
+	SETGLOB 14
+	SETGLOB 13
+	SETGLOB 12
+	SETGLOB 11
+	SETGLOB 10
+	SETGLOB 6
+	SETGLOB 3
+	SETGLOB 2
+}
+
+.fragment bondingCurveCode, {
+	DROP
+	ENDS
+	CALLREF {
+		.inline c4_to_c7
+	}
+	GETGLOB 14
+	OVER
+	PUSHCONT {
+		PUSHSLICE xc0000000000000000000000000c369b29e
+		NEWC
+		STSLICE
+		STREF
+		ENDC
+		PUSHINT 0
+		SENDRAWMSG
+	}
+	IF
+	THROW 0
+}
+
+.fragment c7_to_c4, {
+	GETGLOB 15
+	GETGLOB 14
+	GETGLOB 13
+	GETGLOB 12
+	GETGLOB 11
+	GETGLOB 10
+	GETGLOB 3
+	GETGLOB 2
+	NEWC
+	STU 256
+	STU 64
+	STONE
+	STSLICE
+	ROLLREV 5
+	NEWC
+	STSLICE
+	STU 32
+	STREF
+	STREF
+	STREF
+	STBREFR
+	ENDC
+	POPROOT
+}
+
+.fragment constructor, {
+	DROP
+	GETGLOB 2
+	ISNULL
+	IFREF {
+		.inline c4_to_c7
+	}
+	GETGLOB 6
+	THROWIF 51
+	OVER
+	PUSHCONT {
+		LDREF
+		ENDS
+		CTOS
+	}
+	IF
+	LDMSGADDR
+	LDREF
+	ENDS
+	CTOS
+	LDMSGADDR
+	LDREF
+	LDREF
+	LDREF
+	ENDS
+	.loc LaunchFactory.sol, 29
+	ACCEPT
+	.loc LaunchFactory.sol, 30
+	ROLL 4
+	SETGLOB 10
+	.loc LaunchFactory.sol, 31
+	ROLL 3
+	SETGLOB 11
+	.loc LaunchFactory.sol, 32
+	ROT
+	SETGLOB 13
+	.loc LaunchFactory.sol, 33
+	SWAP
+	SETGLOB 14
+	.loc LaunchFactory.sol, 34
+	SETGLOB 15
+	.loc LaunchFactory.sol, 0
+	CALLREF {
+		.inline c7_to_c4
+	}
+	THROW 0
+}
+
+.fragment deployTokenAndCurve_c5a0307c_internal, {
+	.loc LaunchFactory.sol, 69
+	PUSHREF {
+		.blob x496e73756666696369656e742067617320666f72206c61756e6368202873656e64206174206c6561737420322e35205348454c4c29
+	}
+	DEPTH
+	ADDCONST -2
+	PICK
+	PUSHINT 2500000000
+	GEQ
+	THROWARGIFNOT 102
+	.loc LaunchFactory.sol, 72
+	ACCEPT
+	.loc LaunchFactory.sol, 74
+	GETGLOB 12
+	INC
+	UFITS 32
+	SETGLOB 12
+	.loc LaunchFactory.sol, 87
+	PUSHREF {
+	}
+	DUP
+	PUSHINT 0
+	DUP
+	PUSHSLICE x2_
+	DUP
+	ROLL 11
+	PUSH2 S12, S13
+	MYADDR
+	NEWC
+	PUSHINT 257
+	STZEROES
+	STSLICE
+	STREF
+	STREF
+	STU 128
+	ROLLREV 6
+	NEWC
+	STSLICE
+	ROLLREV 5
+	NEWC
+	STSLICE
+	STI 1
+	STU 128
+	STREF
+	STREF
+	STBREFR
+	STBREFR
+	ENDC
+	GETGLOB 13
+	NEWC
+	STSLICECONST x2_
+	STDICT
+	STDICT
+	STZERO
+	ENDC
+	.loc LaunchFactory.sol, 98
+	DUP
+	HASHCU
+	NEWC
+	STSLICECONST x801_
+	STU 256
+	ENDC
+	CTOS
+	.loc LaunchFactory.sol, 101
+	PUSHINT 0
+	NULL
+	PUSHSLICE x2_
+	PUSHINT 0
+	NULL
+	PUSHINT 0
+	DUP
+	NULL
+	BLKPUSH 3, 0
+	PUSHINT 0
+	PUSHREF {
+	}
+	BLKPUSH 2, 0
+	PUSHINT 0
+	PUSHSLICE x2_
+	DUP
+	PUSHINT 0
+	PUSHSLICE x2_
+	DUP
+	PUSHINT 0
+	BLKPUSH 2, 0
+	PUSHINT 30
+	ROLLX
+	PUSH S25
+	NEWC
+	PUSHINT 321
+	STZEROES
+	STSLICE
+	PUSHINT 25
+	ROLLREVX
+	NEWC
+	STU 256
+	STU 256
+	STU 256
+	STI 1
+	PUSHINT 21
+	ROLLREVX
+	NEWC
+	STSLICE
+	PUSHINT 20
+	ROLLREVX
+	NEWC
+	STSLICE
+	STU 32
+	PUSHINT 18
+	ROLLREVX
+	NEWC
+	STSLICE
+	PUSHINT 17
+	ROLLREVX
+	NEWC
+	STSLICE
+	STI 1
+	STREF
+	STREF
+	STREF
+	STI 1
+	ROLLREV 11
+	NEWC
+	STDICT
+	STDICT
+	STDICT
+	ROLLREV 8
+	NEWC
+	STDICT
+	STI 1
+	STU 256
+	STDICT
+	STU 32
+	STSLICE
+	STDICT
+	STU 32
+	STBREFR
+	STBREFR
+	STBREFR
+	STBREFR
+	STBREFR
+	STBREFR
+	STBREFR
+	ENDC
+	GETGLOB 14
+	NEWC
+	STSLICECONST x2_
+	STDICT
+	STDICT
+	STZERO
+	ENDC
+	.loc LaunchFactory.sol, 110
+	DUP
+	HASHCU
+	NEWC
+	STSLICECONST x801_
+	STU 256
+	ENDC
+	CTOS
+	.loc LaunchFactory.sol, 113
+	BLKSWAP 2, 4
+	SWAP
+	GETGLOB 11
+	ROLL 7
+	PUSH3 S9, S10, S6
+	PUSH S11
+	ROLL 9
+	DUP
+	HASHCU
+	NEWC
+	STSLICECONST x801_
+	STU 256
+	NEWC
+	STSLICECONST x62_
+	STB
+	PUSHSLICE x43b9aca000000000000000000000000000007_
+	STSLICER
+	OVER
+	CALLREF {
+		CTOS
+		LDI 1
+		SWAP
+		PUSHCONT {
+			LDI 5
+			NIP
+		}
+		IF
+		LDI 1
+		SWAP
+		PUSHCONT {
+			LDI 2
+			NIP
+		}
+		IF
+		LDDICT
+		LDDICT
+		LDDICT
+		ENDS
+		BLKDROP 3
+	}
+	STREF
+	STONE
+	ROLLREV 8
+	NEWC
+	STSLICECONST x00000001
+	STSLICE
+	ROLLREV 7
+	NEWC
+	STSLICE
+	STREF
+	STREF
+	STREF
+	ROLLREV 3
+	NEWC
+	STSLICE
+	STI 1
+	STU 256
+	STBREFR
+	STBREFR
+	STBREFR
+	ENDC
+	PUSHINT 1
+	SENDRAWMSG
+	.loc LaunchFactory.sol, 130
+	PUSHINT 0
+	PUSHREFSLICE {
+		.blob x8000000000000000000000000000000000000000000000000000000000000000001_
+	}
+	GETGLOB 15
+	PUSHREF {
+	}
+	TRUE
+	PUSH S5
+	ROLL 8
+	DUP
+	HASHCU
+	NEWC
+	STSLICECONST x801_
+	STU 256
+	NEWC
+	STSLICECONST x62_
+	STB
+	PUSHSLICE x43b9aca000000000000000000000000000007_
+	STSLICER
+	OVER
+	CALLREF {
+		CTOS
+		LDI 1
+		SWAP
+		PUSHCONT {
+			LDI 5
+			NIP
+		}
+		IF
+		LDI 1
+		SWAP
+		PUSHCONT {
+			LDI 2
+			NIP
+		}
+		IF
+		LDDICT
+		LDDICT
+		LDDICT
+		ENDS
+		BLKDROP 3
+	}
+	STREF
+	STONE
+	ROLLREV 6
+	NEWC
+	STSLICECONST x00000001
+	STSLICE
+	STI 1
+	STREF
+	STREF
+	ROTREV
+	NEWC
+	STSLICE
+	STU 128
+	STBREFR
+	STBREFR
+	ENDC
+	PUSHINT 1
+	SENDRAWMSG
+	.loc LaunchFactory.sol, 143
+	SWAP
+	XCHG S3, S4
+	PUSHSLICE xc0000000000000000000000001
+	NEWC
+	STSLICE
+	ROLLREV 5
+	NEWC
+	STSLICECONST x03dd72a5
+	STSLICE
+	ROLLREV 4
+	NEWC
+	STSLICE
+	ROLLREV 3
+	NEWC
+	STSLICE
+	STREF
+	STREF
+	STBREFR
+	STBREFR
+	STBREFR
+	ENDC
+	PUSHINT 0
+	SENDRAWMSG
+	.loc LaunchFactory.sol, 146
+	GETGLOB 9
+	NEWC
+	STSLICECONST x42_
+	STSLICE
+	PUSHINT 115
+	STZEROES
+	ENDC
+	PUSHPOW2 7
+	SENDRAWMSG
+	.loc LaunchFactory.sol, 0
+}
+
+.fragment deployTokenAndCurve, {
+	DROP
+	GETGLOB 6
+	THROWIFNOT 76
+	GETGLOB 2
+	ISNULL
+	IFREF {
+		.inline c4_to_c7
+	}
+	.loc LaunchFactory.sol, 58
+	OVER
+	PUSHCONT {
+		LDREF
+		LDREF
+		LDU 8
+		LDREF
+		ENDS
+		CTOS
+	}
+	PUSHCONT {
+		LDREF
+		LDREF
+		LDU 8
+	}
+	IFELSE
+	LDU 256
+	LDMSGADDR
+	LDREF
+	LDI 1
+	LDREF
+	ENDS
+	CTOS
+	LDU 256
+	ENDS
+	.loc LaunchFactory.sol, 0
+	CALLREF {
+		.inline deployTokenAndCurve_c5a0307c_internal
+	}
+	CALLREF {
+		.inline c7_to_c4
+	}
+	THROW 0
+}
+
+.fragment feeRecipient, {
+	DROP
+	ENDS
+	CALLREF {
+		.inline c4_to_c7
+	}
+	GETGLOB 11
+	OVER
+	PUSHCONT {
+		PUSHSLICE xc0000000000000000000000000b7fc5cc9
+		NEWC
+		STSLICE
+		STSLICE
+		ENDC
+		PUSHINT 0
+		SENDRAWMSG
+	}
+	IF
+	THROW 0
+}
+
+.fragment launchCount, {
+	DROP
+	ENDS
+	CALLREF {
+		.inline c4_to_c7
+	}
+	GETGLOB 12
+	OVER
+	PUSHCONT {
+		PUSHSLICE xc0000000000000000000000000c49c3e24
+		NEWC
+		STSLICE
+		STU 32
+		ENDC
+		PUSHINT 0
+		SENDRAWMSG
+	}
+	IF
+	THROW 0
+}
+
+.fragment owner, {
+	DROP
+	ENDS
+	CALLREF {
+		.inline c4_to_c7
+	}
+	GETGLOB 10
+	OVER
+	PUSHCONT {
+		PUSHSLICE xc0000000000000000000000000df0bcfde
+		NEWC
+		STSLICE
+		STSLICE
+		ENDC
+		PUSHINT 0
+		SENDRAWMSG
+	}
+	IF
+	THROW 0
+}
+
+.fragment setFeeRecipient_e74b981b_internal, {
+	.loc LaunchFactory.sol, 51
+	PUSHREF {
+		.blob x4f6e6c79206f776e6572
+	}
+	GETGLOB 9
+	GETGLOB 10
+	SDEQ
+	THROWARGIFNOT 101
+	.loc LaunchFactory.sol, 52
+	ACCEPT
+	.loc LaunchFactory.sol, 53
+	SETGLOB 11
+	.loc LaunchFactory.sol, 0
+}
+
+.fragment setFeeRecipient, {
+	DROP
+	GETGLOB 6
+	THROWIFNOT 76
+	GETGLOB 2
+	ISNULL
+	IFREF {
+		.inline c4_to_c7
+	}
+	.loc LaunchFactory.sol, 50
+	OVER
+	PUSHCONT {
+		LDREF
+		ENDS
+		CTOS
+	}
+	IF
+	LDMSGADDR
+	ENDS
+	.loc LaunchFactory.sol, 0
+	CALLREF {
+		.inline setFeeRecipient_e74b981b_internal
+	}
+	CALLREF {
+		.inline c7_to_c4
+	}
+	THROW 0
+}
+
+.fragment tokenRootCode, {
+	DROP
+	ENDS
+	CALLREF {
+		.inline c4_to_c7
+	}
+	GETGLOB 13
+	OVER
+	PUSHCONT {
+		PUSHSLICE xc0000000000000000000000000d1691837
+		NEWC
+		STSLICE
+		STREF
+		ENDC
+		PUSHINT 0
+		SENDRAWMSG
+	}
+	IF
+	THROW 0
+}
+
+.fragment tokenWalletCode, {
+	DROP
+	ENDS
+	CALLREF {
+		.inline c4_to_c7
+	}
+	GETGLOB 15
+	OVER
+	PUSHCONT {
+		PUSHSLICE xc0000000000000000000000000e544457a
+		NEWC
+		STSLICE
+		STREF
+		ENDC
+		PUSHINT 0
+		SENDRAWMSG
+	}
+	IF
+	THROW 0
+}
+
+.fragment updateCodes_ac636a9a_internal, {
+	.loc LaunchFactory.sol, 43
+	PUSHREF {
+		.blob x4f6e6c79206f776e6572
+	}
+	GETGLOB 9
+	GETGLOB 10
+	SDEQ
+	THROWARGIFNOT 101
+	.loc LaunchFactory.sol, 44
+	ACCEPT
+	.loc LaunchFactory.sol, 45
+	ROT
+	SETGLOB 13
+	.loc LaunchFactory.sol, 46
+	SWAP
+	SETGLOB 14
+	.loc LaunchFactory.sol, 47
+	SETGLOB 15
+	.loc LaunchFactory.sol, 0
+}
+
+.fragment updateCodes, {
+	DROP
+	GETGLOB 6
+	THROWIFNOT 76
+	GETGLOB 2
+	ISNULL
+	IFREF {
+		.inline c4_to_c7
+	}
+	.loc LaunchFactory.sol, 38
+	LDREF
+	LDREF
+	LDREF
+	ENDS
+	.loc LaunchFactory.sol, 0
+	CALLREF {
+		.inline updateCodes_ac636a9a_internal
+	}
+	CALLREF {
+		.inline c7_to_c4
+	}
+	THROW 0
+}
+
+.fragment public_function_selector, {
+	DUP
+	PUSHINT 939285705
+	LEQ
+	IFJMPREF {
+		DUP
+		EQINT 1
+		IFJMPREF {
+			.inline constructor
+		}
+		DUP
+		PUSHINT 270037203
+		EQUAL
+		IFJMPREF {
+			.inline setFeeRecipient
+		}
+		DUP
+		PUSHINT 553621124
+		EQUAL
+		IFJMPREF {
+			.inline deployTokenAndCurve
+		}
+		DUP
+		PUSHINT 939285705
+		EQUAL
+		IFJMPREF {
+			.inline feeRecipient
+		}
+	}
+	DUP
+	PUSHINT 1365841975
+	LEQ
+	IFJMPREF {
+		DUP
+		PUSHINT 1131000478
+		EQUAL
+		IFJMPREF {
+			.inline bondingCurveCode
+		}
+		DUP
+		PUSHINT 1151090212
+		EQUAL
+		IFJMPREF {
+			.inline launchCount
+		}
+		DUP
+		PUSHINT 1365841975
+		EQUAL
+		IFJMPREF {
+			.inline tokenRootCode
+		}
+	}
+	DUP
+	PUSHINT 1698973050
+	LEQ
+	IFJMPREF {
+		DUP
+		PUSHINT 1594609630
+		EQUAL
+		IFJMPREF {
+			.inline owner
+		}
+		DUP
+		PUSHINT 1698973050
+		EQUAL
+		IFJMPREF {
+			.inline tokenWalletCode
+		}
+	}
+	DUP
+	PUSHINT 1821713066
+	EQUAL
+	IFJMPREF {
+		.inline updateCodes
+	}
+}
+
+.fragment main_external, {
+	PUSHREFSLICE {
+		.blob x8000000000000000000000000000000000000000000000000000000000000000001_
+	}
+	SETGLOB 9
+	OVER
+	CALLREF {
+		.inline c4_to_c7
+	}
+	LDU 1 ; haveSign msgSlice
+	SWAP
+	PUSHCONT {
+		PUSHPOW2 9
+		LDSLICEX
+		DUP
+		MYADDR
+		NEWC
+		STSLICE
+		STSLICE
+		ENDC
+		HASHCU
+		SWAP
+		LDU 1 ; signatureSlice hashMsgSlice hasPubkey msgSlice
+		SWAP
+		PUSHCONT {
+			LDU 256 ; signatureSlice hashMsgSlice pubkey msgSlice
+			XCHG2 S3, S3
+		}
+		PUSHCONT {
+			XCHG S2
+			GETGLOB 2
+		}
+		IFELSE
+		CHKSIGNU
+		THROWIFNOT 40
+	}
+	PUSHCONT {
+		LDU 1 ; hasPubkey msgSlice
+		SWAP
+		THROWIF 58
+	}
+	IFELSE
+	LDU 64 ; timestamp msgSlice
+	SWAP
+	.inline __replayProtection
+	LDU 32 ; expireAt msgSlice
+	SWAP
+	NOW ; msgSlice expireAt now
+	GREATER ; msgSlice expireAt>now
+	THROWIFNOT 57
+	LDU 32 ; funcId body
+	SWAP
+	CALLREF {
+		.inline public_function_selector
+	}
+	THROW 60
+}
+
+.fragment main_internal, {
+	PUSHROOT
+	CTOS
+	PUSHINT 320
+	SDSKIPFIRST
+	PLDI 1
+	SETGLOB 6
+	PUSH S2
+	CTOS
+	LDU 4 ; bounced tail
+	LDMSGADDR ; bounced src tail
+	DROP
+	SETGLOB 9
+	MODPOW2 1
+	IFRET
+	OVER
+	SEMPTY ; isEmpty
+	IFJMPREF {
+		GETGLOB 6
+		THROWIFNOT 76
+	}
+	OVER
+	LDUQ 32  ; [funcId] body' ok
+	THROWIFNOT 60
+	OVER
+	IFNOTJMPREF {
+		GETGLOB 6
+		THROWIFNOT 76
+	}
+	SWAP
+	CALLREF {
+		.inline public_function_selector
+	}
+	THROW 60
+}
+
+.fragment default_data_cell, {
+	PUSHREF {
+	}
+	BLKPUSH 2, 0
+	PUSHINT 0
+	PUSHSLICE x2_
+	NEWC
+	PUSHINT 323
+	STZEROES
+	ROLLREV 5
+	NEWC
+	STSLICE
+	STU 32
+	STREF
+	STREF
+	STREF
+	STBREFR
+	ENDC
+}
+
+.fragment upd_only_time_in_c4, {
+	PUSHROOT
+	CTOS
+	LDU 256
+	LDU 64
+	NIP
+	GETGLOB 3
+	ROT
+	NEWC
+	STU 256
+	STU 64
+	STSLICE
+	ENDC
+	POPROOT
+}
+
+.fragment onTickTock, {
+}
+
+; The code below forms a value of the StateInit type.
+.blob x4_ ; split_depth = nothing
+.blob x4_ ; special = nothing
+.blob xc_ ; code = just
+.cell { ; code cell
+	PUSHREFCONT {
+		DICTPUSHCONST 32
+		DICTUGETJMPZ
+		THROW 78
+		.code-dict-cell 32, {
+		}
+		.cell { ; version
+			.blob x736f6c20302e37392e33 ; sol 0.79.3
+		}
+	}
+	POPCTR c3
+	DUP
+	IFNOTJMPREF {
+		.inline main_internal
+	}
+	DUP
+	EQINT -1
+	IFJMPREF {
+		.inline main_external
+	}
+	DUP
+	EQINT -2
+	IFJMPREF {
+		.inline onTickTock
+	}
+	THROW 11
+}
+.blob xc_ ; data = just
+.cell { 
+	.inline-computed-cell default_data_cell, 0
+}
+.blob x4_ ; library = hme_empty

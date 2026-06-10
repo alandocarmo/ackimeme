@@ -76,22 +76,12 @@ function verifyDetachedSignature({ message, signature, publicKey }: VerifyDetach
     const signatureBuffer = decodeBuffer(signature, "Signature");
     const keyObject = buildEd25519PublicKey(publicKey);
 
-    const rawValid = crypto.verify(
+    return crypto.verify(
       null,
       Buffer.from(message, "utf8"),
       keyObject,
       signatureBuffer,
     );
-    if (rawValid) return true;
-
-    const hashedMessage = crypto.createHash("sha256").update(Buffer.from(message, "utf8")).digest();
-    const hashedValid = crypto.verify(
-      null,
-      hashedMessage,
-      keyObject,
-      signatureBuffer,
-    );
-    return hashedValid;
   } catch (err) {
     return false;
   }
@@ -508,7 +498,6 @@ export async function processQrWebhook({ sessionId, walletAddress, publicKey, si
       },
     });
 
-    // Mark as done so the frontend polling can pick it up
     sessionData.status = 'done';
     sessionData.sessionToken = session.token;
     await redisClient.setEx(sessionKey, 5 * 60, JSON.stringify(sessionData));

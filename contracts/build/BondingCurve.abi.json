@@ -227,6 +227,14 @@
 			]
 		},
 		{
+			"name": "getMintGasShell",
+			"inputs": [
+			],
+			"outputs": [
+				{"name":"value0","type":"uint256"}
+			]
+		},
+		{
 			"name": "_tokenRoot",
 			"inputs": [
 			],

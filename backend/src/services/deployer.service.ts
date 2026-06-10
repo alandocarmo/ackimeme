@@ -218,7 +218,7 @@ async function resolveDeployerKeyPair(): Promise<{ public: string; secret: strin
 async function waitForFutureAddressFunding(address: string, minGasBalanceNano: string): Promise<boolean> {
   const attempts = Number(process.env.DEPLOY_FUNDING_CONFIRM_ATTEMPTS || DEFAULT_DEPLOY_FUNDING_ATTEMPTS);
   for (let i = 0; i < attempts; i += 1) {
-    const gasBalanceNano = await getAccountEccBalanceNano(address, 2);
+    const gasBalanceNano = await getAccountBalanceNano(address);
     if (gasBalanceNano >= BigInt(minGasBalanceNano)) {
       return true;
     }
@@ -267,7 +267,7 @@ async function prefundFutureContractAddress(address: string, signer: any, onChai
           value: messageValueNano,
           cc: { [SHELL_CURRENCY_ID]: prefundShellNano },
           bounce: false,
-          flags: 1,
+          flags: 16,
           payload,
         },
       },
@@ -544,32 +544,31 @@ export async function deployTokenEcosystem({
 
     console.log(`[Deployer] Preparando deploy para: ${name} (${symbol})`);
 
-    // ── Passo 1: Deploy do TokenRoot ───────────────────────────────────────
-    const walletTvc = loadContractFiles("TokenWallet").tvc;
-    const { code: walletCodeCell } = await client.boc.get_code_from_tvc({ tvc: walletTvc });
-
-    tokenRootAddress = await deployContract({
-      contractName: "TokenRoot",
-      constructorInput: {
-        admin: creatorWallet,
-        mintable: true,
-        content: "",
-        walletCode: walletCodeCell,
-        initialOwner: "0:0000000000000000000000000000000000000000000000000000000000000000",
-        initialSupply: 0
+    // ── Passo 1: Predizer Endereços (TokenRoot e BondingCurve) ─────────────
+    const trAbi = loadContractFiles("TokenRoot").abi;
+    const trTvc = loadContractFiles("TokenRoot").tvc;
+    
+    // Predizer TokenRoot
+    const factoryAddress = process.env.LAUNCH_FACTORY_ADDRESS || "0:0000000000000000000000000000000000000000000000000000000000000000";
+    const { address: predictedTokenRootAddress } = await client.abi.encode_message({
+      abi: abiContract(trAbi),
+      deploy_set: {
+        tvc: trTvc,
+        initial_data: {
+          _deployer: factoryAddress,
+          _name: name,
+          _symbol: symbol,
+          _decimals: TOKEN_DECIMALS
+        },
       },
-      initialData: { deployNonce },
-      signer,
-      label: "TokenRoot",
-      onAddressPredicted: (address) => {
-        tokenRootAddress = address;
-      },
-      onChainAttempt: markChainAttempted,
+      signer // Usando o signer real
     });
+    tokenRootAddress = predictedTokenRootAddress;
 
-    // ── Passo 2: Predizer/Deploy do BondingCurve (Mensagem Interna) ────────
+    // Predizer BondingCurve
     const { abi: bcAbi, tvc: bcTvc } = loadContractFiles("BondingCurve");
     const feeRecipient = String(config.feeWallet || "").trim();
+    
     const { address: predictedBondingCurveAddress } = await client.abi.encode_message({
       abi: abiContract(bcAbi),
       deploy_set: {
@@ -579,84 +578,49 @@ export async function deployTokenEcosystem({
           _supplyCap: maxTokenSupply,
         },
       },
-      call_set: {
-        function_name: "constructor",
-        input: {
-          _owner: creatorWallet,
-          _tokenRootAddr: tokenRootAddress,
-          _name: name,
-          _symbol: symbol,
-          _creationFeeTxHash: paymentTxHash || "genesis",
-          _feeRecipient: feeRecipient,
-          _pumpForever: pumpForever,
-          _slopeDivisor: finalNanoDivisor
-        }
-      },
-      signer: { type: "None" }
+      signer // C2: Usando o signer real na predição para evitar divergência de pubkey
     });
     bondingCurveAddress = predictedBondingCurveAddress;
 
+    // ── Passo 2: Interagir com a LaunchFactory ───────────────────────────────
     if (ENABLE_ONCHAIN_DEPLOY) {
-      console.log(`[Deployer] Atualizando TokenRoot com BondingCurve code e deployando (DappID)...`);
-      const trAbi = loadContractFiles("TokenRoot").abi;
-
-      console.log(`[Deployer] Realizando deploy direto da BondingCurve (StateInit)...`);
-      markChainAttempted();
-      
-      await deployContract({
-        contractName: "BondingCurve",
-        constructorInput: {
-          _owner: creatorWallet,
-          _tokenRootAddr: tokenRootAddress,
-          _name: name,
-          _symbol: symbol,
-          _creationFeeTxHash: paymentTxHash || "genesis",
-          _feeRecipient: feeRecipient,
-          _pumpForever: Boolean(pumpForever),
-          _slopeDivisor: finalNanoDivisor
-        },
-        initialData: {
-          _tokenRoot: tokenRootAddress,
-          _supplyCap: maxTokenSupply,
-        },
-        signer,
-        label: "BondingCurve"
-      });
-      const factoryAddress = process.env.ACKISWAP_FACTORY_ADDRESS;
-      if (factoryAddress && !isPlaceholder(factoryAddress)) {
-        console.log(`[Deployer] Vinculando Factory na BondingCurve...`);
-        await client.processing.process_message({
-          message_encode_params: {
-            address: bondingCurveAddress,
-            abi: abiContract(bcAbi),
-            call_set: {
-              function_name: "setFactory",
-              input: { _factory: factoryAddress }
-            },
-            signer
-          },
-          send_events: false
-        });
-
-        console.log(`[Deployer] Aprovando BondingCurve na Factory...`);
-        const factoryAbi = loadContractFiles("AckiSwapFactory").abi;
-        await client.processing.process_message({
-          message_encode_params: {
-            address: factoryAddress,
-            abi: abiContract(factoryAbi),
-            call_set: {
-              function_name: "approveBondingCurve",
-              input: { bc: bondingCurveAddress }
-            },
-            signer
-          },
-          send_events: false
-        });
-      } else {
-        console.warn(`[Deployer] ACKISWAP_FACTORY_ADDRESS ausente, a curva de bonding vai falhar ao tentar migrar para AMM!`);
+      const factoryAddress = process.env.LAUNCH_FACTORY_ADDRESS;
+      if (!factoryAddress || isPlaceholder(factoryAddress)) {
+        throw new Error("LAUNCH_FACTORY_ADDRESS ausente no .env. Impossível realizar deploy via Factory.");
       }
 
-      console.log(`[Deployer] Mensagem interna disparada. Delegando monitoramento on-chain para o sync.service.ts...`);
+      console.log(`[Deployer] Acionando LaunchFactory (${factoryAddress}) para deploy unificado do Dapp ID...`);
+      markChainAttempted();
+      
+      const factoryAbi = loadContractFiles("LaunchFactory").abi;
+
+      await prefundFutureContractAddress(factoryAddress, signer, markChainAttempted);
+
+      // We call deployTokenAndCurve on the LaunchFactory
+      await client.processing.process_message({
+        message_encode_params: {
+          address: factoryAddress,
+          abi: abiContract(factoryAbi),
+          call_set: {
+            function_name: "deployTokenAndCurve",
+            input: {
+              name,
+              symbol,
+              decimals: TOKEN_DECIMALS,
+              supplyCap: maxTokenSupply,
+              creator: creatorWallet,
+              creationFeeTxHash: paymentTxHash || "genesis",
+              pumpForever: Boolean(pumpForever),
+              slopeDivisor: finalNanoDivisor
+            }
+          },
+          signer
+        },
+        send_events: false
+      });
+
+      console.log(`[Deployer] LaunchFactory chamada com sucesso. Endereços preditos: TokenRoot=${tokenRootAddress}, BondingCurve=${bondingCurveAddress}`);
+      console.log(`[Deployer] Monitoramento on-chain assumirá daqui para confirmar o deploy na rede.`);
     }
 
     // Determinar status baseado no flag de deploy

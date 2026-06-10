@@ -17,28 +17,47 @@ COPY . .
 
 # Compile all contracts automatically
 CMD ["sh", "-c", "\
+mkdir -p build && \
 echo '=== Compiling AFTWallet.sol ===' && \
 solc AFTWallet.sol --tvm-version gosh 2>&1 && \
-mv AFTWallet.abi.json TokenWallet.abi.json && \
-mv AFTWallet.tvc TokenWallet.tvc && \
+mv AFTWallet.abi.json build/TokenWallet.abi.json && \
+mv AFTWallet.tvc build/TokenWallet.tvc && \
 echo '' && \
 echo '=== Compiling AFTRoot.sol ===' && \
 solc AFTRoot.sol --tvm-version gosh 2>&1 && \
-mv AFTRoot.abi.json TokenRoot.abi.json && \
-mv AFTRoot.tvc TokenRoot.tvc && \
+mv AFTRoot.abi.json build/TokenRoot.abi.json && \
+mv AFTRoot.tvc build/TokenRoot.tvc && \
 echo '' && \
 echo '=== Compiling BondingCurve.sol ===' && \
 solc BondingCurve.sol --tvm-version gosh 2>&1 && \
+mv BondingCurve.abi.json build/ && \
+mv BondingCurve.tvc build/ && \
 echo '' && \
 echo '=== Compiling USDCShellRouter.sol ===' && \
 solc USDCShellRouter.sol --tvm-version gosh 2>&1 && \
+mv USDCShellRouter.abi.json build/ && \
+mv USDCShellRouter.tvc build/ && \
 echo '' && \
 echo '=== Compiling AckiSwapFactory.sol ===' && \
 solc amm/AckiSwapFactory.sol --tvm-version gosh 2>&1 && \
+mv amm/AckiSwapFactory.abi.json build/ 2>/dev/null || mv AckiSwapFactory.abi.json build/ && \
+mv amm/AckiSwapFactory.tvc build/ 2>/dev/null || mv AckiSwapFactory.tvc build/ && \
 echo '' && \
 echo '=== Compiling AckiSwapPair.sol ===' && \
 solc amm/AckiSwapPair.sol --tvm-version gosh 2>&1 && \
+mv amm/AckiSwapPair.abi.json build/ 2>/dev/null || mv AckiSwapPair.abi.json build/ && \
+mv amm/AckiSwapPair.tvc build/ 2>/dev/null || mv AckiSwapPair.tvc build/ && \
+echo '' && \
+echo '=== Compiling DappConfig.sol ===' && \
+solc DappConfig.sol --tvm-version gosh 2>&1 && \
+mv DappConfig.abi.json build/ && \
+mv DappConfig.tvc build/ && \
+echo '' && \
+echo '=== Compiling LaunchFactory.sol ===' && \
+solc LaunchFactory.sol --tvm-version gosh 2>&1 && \
+mv LaunchFactory.abi.json build/ && \
+mv LaunchFactory.tvc build/ && \
 echo '' && \
 echo '=== Compilation complete ===' && \
-ls -la *.abi.json *.tvc 2>/dev/null \
+ls -la build/*.abi.json build/*.tvc 2>/dev/null \
 "]

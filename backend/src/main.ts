@@ -640,26 +640,6 @@ app.post("/auth/logout", async (req: Request, res: Response) => {
 
 app.use("/admin/security", requireSecurityAdmin, securityEngine);
 
-app.get("/tokens/viral", async (req: Request, res: Response) => {
-  try {
-    const launches = await listPublicLaunches(10);
-    res.json({
-      success: true,
-      ranking: launches.map((launch: any) => ({
-        id: launch.id,
-        name: launch.launchRequest?.coin?.name || "",
-        symbol: launch.launchRequest?.coin?.symbol || "",
-        riskScore: launch.riskProfile?.score || 0,
-        createdAt: launch.createdAt,
-        status: launch.status,
-      })),
-      source: "database",
-    });
-  } catch (err: any) {
-    res.status(500).json({ error: 'Erro interno do servidor.' });
-  }
-});
-
 app.post("/verify-payment", paymentLimiter, requireSession, validate(VerifyPaymentSchema), async (req: Request, res: Response) => {
   try {
     const walletFromBody =

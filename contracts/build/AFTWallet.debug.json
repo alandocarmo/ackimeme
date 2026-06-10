@@ -1,0 +1,5251 @@
+{
+  "080fa756df93ff1a60805574eb5b10aea98efafdae19daaeed55751883f8807c": {
+    "0": {
+      "filename": "modifiers/modifiers.sol",
+      "line": 130
+    },
+    "16": {
+      "filename": "modifiers/modifiers.sol",
+      "line": 131
+    },
+    "32": {
+      "filename": "modifiers/modifiers.sol",
+      "line": 131
+    },
+    "48": {
+      "filename": "modifiers/modifiers.sol",
+      "line": 131
+    }
+  },
+  "123d27b54df920b1cabea58f7e4c72f93663e819eafe6dbd9ca59c63094bd797": {
+    "0": {
+      "filename": "./AFTWallet.code",
+      "line": 1723
+    },
+    "16": {
+      "filename": "./AFTWallet.code",
+      "line": 1724
+    },
+    "24": {
+      "filename": "./AFTWallet.code",
+      "line": 1725
+    },
+    "40": {
+      "filename": "./AFTWallet.code",
+      "line": 1726
+    },
+    "56": {
+      "filename": "./AFTWallet.code",
+      "line": 1727
+    },
+    "80": {
+      "filename": "./AFTWallet.code",
+      "line": 1728
+    },
+    "96": {
+      "filename": "./AFTWallet.code",
+      "line": 1729
+    },
+    "104": {
+      "filename": "./AFTWallet.code",
+      "line": 1730
+    },
+    "112": {
+      "filename": "./AFTWallet.code",
+      "line": 1731
+    },
+    "128": {
+      "filename": "./AFTWallet.code",
+      "line": 1732
+    },
+    "144": {
+      "filename": "./AFTWallet.code",
+      "line": 1733
+    },
+    "152": {
+      "filename": "./AFTWallet.code",
+      "line": 1734
+    },
+    "168": {
+      "filename": "./AFTWallet.code",
+      "line": 1735
+    },
+    "192": {
+      "filename": "./AFTWallet.code",
+      "line": 1736
+    },
+    "208": {
+      "filename": "./AFTWallet.code",
+      "line": 1742
+    },
+    "216": {
+      "filename": "./AFTWallet.code",
+      "line": 1743
+    },
+    "232": {
+      "filename": "./AFTWallet.code",
+      "line": 1744
+    },
+    "248": {
+      "filename": "./AFTWallet.code",
+      "line": 1748
+    },
+    "256": {
+      "filename": "./AFTWallet.code",
+      "line": 1749
+    },
+    "280": {
+      "filename": "./AFTWallet.code",
+      "line": 1750
+    },
+    "296": {
+      "filename": "./AFTWallet.code",
+      "line": 1751
+    },
+    "304": {
+      "filename": "./AFTWallet.code",
+      "line": 1752
+    },
+    "320": {
+      "filename": "./AFTWallet.code",
+      "line": 1756
+    },
+    "328": {
+      "filename": "./AFTWallet.code",
+      "line": 1757
+    },
+    "344": {
+      "filename": "./AFTWallet.code",
+      "line": 1760
+    }
+  },
+  "167cbcddb50e29cce7c28a14df73bae947a561cc10d9c38c298a1e02278eb4e6": {
+    "0": {
+      "filename": "AFTWallet.sol",
+      "line": 315
+    },
+    "8": {
+      "filename": "AFTWallet.sol",
+      "line": 315
+    },
+    "24": {
+      "filename": "AFTWallet.sol",
+      "line": 315
+    },
+    "32": {
+      "filename": "AFTWallet.sol",
+      "line": 315
+    },
+    "40": {
+      "filename": "AFTWallet.sol",
+      "line": 315
+    },
+    "56": {
+      "filename": "AFTWallet.sol",
+      "line": 315
+    },
+    "64": {
+      "filename": "AFTWallet.sol",
+      "line": 315
+    },
+    "72": {
+      "filename": "AFTWallet.sol",
+      "line": 315
+    },
+    "88": {
+      "filename": "AFTWallet.sol",
+      "line": 315
+    },
+    "96": {
+      "filename": "AFTWallet.sol",
+      "line": 315
+    },
+    "104": {
+      "filename": "AFTWallet.sol",
+      "line": 315
+    },
+    "120": {
+      "filename": "AFTWallet.sol",
+      "line": 315
+    },
+    "128": {
+      "filename": "AFTWallet.sol",
+      "line": 315
+    },
+    "136": {
+      "filename": "AFTWallet.sol",
+      "line": 315
+    },
+    "152": {
+      "filename": "AFTWallet.sol",
+      "line": 315
+    },
+    "168": {
+      "filename": "AFTWallet.sol",
+      "line": 315
+    },
+    "184": {
+      "filename": "AFTWallet.sol",
+      "line": 315
+    },
+    "192": {
+      "filename": "AFTWallet.sol",
+      "line": 315
+    }
+  },
+  "16a91ffa2c69065812672f0eff1693131bd99ceb5e97201be29b01d5118687db": {
+    "0": {
+      "filename": "./AFTWallet.code",
+      "line": 1820
+    },
+    "8": {
+      "filename": "./AFTWallet.code",
+      "line": 1830
+    },
+    "24": {
+      "filename": "./AFTWallet.code",
+      "line": 1831
+    },
+    "32": {
+      "filename": "./AFTWallet.code",
+      "line": 1832
+    },
+    "48": {
+      "filename": "./AFTWallet.code",
+      "line": 1835
+    },
+    "56": {
+      "filename": "./AFTWallet.code",
+      "line": 1836
+    },
+    "72": {
+      "filename": "./AFTWallet.code",
+      "line": 1837
+    },
+    "88": {
+      "filename": "./AFTWallet.code",
+      "line": 1840
+    },
+    "96": {
+      "filename": "./AFTWallet.code",
+      "line": 1841
+    },
+    "112": {
+      "filename": "./AFTWallet.code",
+      "line": 1842
+    },
+    "128": {
+      "filename": "./AFTWallet.code",
+      "line": 1845
+    }
+  },
+  "16da7800cc37e718a2c306c2f92aacda805168d4609ee293937b567991a1c049": {
+    "0": {
+      "filename": "modifiers/modifiers.sol",
+      "line": 136
+    },
+    "16": {
+      "filename": "modifiers/modifiers.sol",
+      "line": 137
+    },
+    "24": {
+      "filename": "modifiers/modifiers.sol",
+      "line": 137
+    },
+    "40": {
+      "filename": "modifiers/modifiers.sol",
+      "line": 137
+    },
+    "56": {
+      "filename": "modifiers/modifiers.sol",
+      "line": 137
+    },
+    "64": {
+      "filename": "modifiers/modifiers.sol",
+      "line": 137
+    },
+    "72": {
+      "filename": "modifiers/modifiers.sol",
+      "line": 139
+    },
+    "88": {
+      "filename": "modifiers/modifiers.sol",
+      "line": 139
+    },
+    "104": {
+      "filename": "modifiers/modifiers.sol",
+      "line": 140
+    },
+    "112": {
+      "filename": "modifiers/modifiers.sol",
+      "line": 140
+    },
+    "120": {
+      "filename": "modifiers/modifiers.sol",
+      "line": 140
+    },
+    "136": {
+      "filename": "modifiers/modifiers.sol",
+      "line": 140
+    },
+    "144": {
+      "filename": "modifiers/modifiers.sol",
+      "line": 141
+    },
+    "152": {
+      "filename": "modifiers/modifiers.sol",
+      "line": 141
+    },
+    "160": {
+      "filename": "modifiers/modifiers.sol",
+      "line": 141
+    },
+    "176": {
+      "filename": "modifiers/modifiers.sol",
+      "line": 142
+    },
+    "184": {
+      "filename": "modifiers/modifiers.sol",
+      "line": 142
+    },
+    "192": {
+      "filename": "modifiers/modifiers.sol",
+      "line": 142
+    },
+    "208": {
+      "filename": "modifiers/modifiers.sol",
+      "line": 142
+    },
+    "216": {
+      "filename": "modifiers/modifiers.sol",
+      "line": 142
+    },
+    "224": {
+      "filename": "modifiers/modifiers.sol",
+      "line": 142
+    },
+    "232": {
+      "filename": "modifiers/modifiers.sol",
+      "line": 142
+    },
+    "248": {
+      "filename": "modifiers/modifiers.sol",
+      "line": 142
+    },
+    "256": {
+      "filename": "modifiers/modifiers.sol",
+      "line": 142
+    },
+    "272": {
+      "filename": "./AFTWallet.code",
+      "line": 81
+    },
+    "280": {
+      "filename": "modifiers/modifiers.sol",
+      "line": 144
+    },
+    "288": {
+      "filename": "modifiers/modifiers.sol",
+      "line": 144
+    },
+    "304": {
+      "filename": "modifiers/modifiers.sol",
+      "line": 144
+    },
+    "312": {
+      "filename": "modifiers/modifiers.sol",
+      "line": 144
+    },
+    "328": {
+      "filename": "modifiers/modifiers.sol",
+      "line": 144
+    },
+    "336": {
+      "filename": "modifiers/modifiers.sol",
+      "line": 144
+    },
+    "352": {
+      "filename": "modifiers/modifiers.sol",
+      "line": 144
+    },
+    "360": {
+      "filename": "modifiers/modifiers.sol",
+      "line": 144
+    },
+    "376": {
+      "filename": "modifiers/modifiers.sol",
+      "line": 144
+    },
+    "384": {
+      "filename": "modifiers/modifiers.sol",
+      "line": 144
+    },
+    "400": {
+      "filename": "modifiers/modifiers.sol",
+      "line": 144
+    },
+    "408": {
+      "filename": "modifiers/modifiers.sol",
+      "line": 144
+    },
+    "424": {
+      "filename": "modifiers/modifiers.sol",
+      "line": 144
+    },
+    "432": {
+      "filename": "modifiers/modifiers.sol",
+      "line": 144
+    },
+    "448": {
+      "filename": "modifiers/modifiers.sol",
+      "line": 146
+    },
+    "456": {
+      "filename": "modifiers/modifiers.sol",
+      "line": 146
+    },
+    "472": {
+      "filename": "modifiers/modifiers.sol",
+      "line": 146
+    },
+    "480": {
+      "filename": "modifiers/modifiers.sol",
+      "line": 146
+    },
+    "496": {
+      "filename": "modifiers/modifiers.sol",
+      "line": 146
+    },
+    "504": {
+      "filename": "modifiers/modifiers.sol",
+      "line": 146
+    },
+    "520": {
+      "filename": "modifiers/modifiers.sol",
+      "line": 146
+    },
+    "536": {
+      "filename": "modifiers/modifiers.sol",
+      "line": 146
+    },
+    "544": {
+      "filename": "modifiers/modifiers.sol",
+      "line": 146
+    },
+    "560": {
+      "filename": "modifiers/modifiers.sol",
+      "line": 146
+    }
+  },
+  "1a7ff5a4c7a39dd89778d3a055c668bbbef9f6d3248bb2bd1569c6c3afb3b889": {
+    "0": {
+      "filename": "./AFTWallet.code",
+      "line": 1005
+    },
+    "8": {
+      "filename": "./AFTWallet.code",
+      "line": 1006
+    },
+    "24": {
+      "filename": "./AFTWallet.code",
+      "line": 1007
+    },
+    "48": {
+      "filename": "AFTWallet.sol",
+      "line": 353
+    },
+    "56": {
+      "filename": "./AFTWallet.code",
+      "line": 1011
+    },
+    "72": {
+      "filename": "./AFTWallet.code",
+      "line": 1014
+    },
+    "80": {
+      "filename": "./AFTWallet.code",
+      "line": 1015
+    },
+    "96": {
+      "filename": "./AFTWallet.code",
+      "line": 1016
+    },
+    "104": {
+      "filename": "./AFTWallet.code",
+      "line": 1017
+    },
+    "112": {
+      "filename": "./AFTWallet.code",
+      "line": 1018
+    },
+    "128": {
+      "filename": "./AFTWallet.code",
+      "line": 1019
+    },
+    "144": {
+      "filename": "./AFTWallet.code",
+      "line": 1020
+    },
+    "152": {
+      "filename": "./AFTWallet.code",
+      "line": 1021
+    },
+    "160": {
+      "filename": "./AFTWallet.code",
+      "line": 1022
+    },
+    "168": {
+      "filename": "./AFTWallet.code",
+      "line": 1023
+    },
+    "192": {
+      "filename": "./AFTWallet.code",
+      "line": 1024
+    },
+    "200": {
+      "filename": "./AFTWallet.code",
+      "line": 1025
+    },
+    "248": {
+      "filename": "./AFTWallet.code",
+      "line": 1026
+    },
+    "272": {
+      "filename": "./AFTWallet.code",
+      "line": 1027
+    },
+    "288": {
+      "filename": "./AFTWallet.code",
+      "line": 1028
+    },
+    "296": {
+      "filename": "./AFTWallet.code",
+      "line": 1029
+    },
+    "304": {
+      "filename": "./AFTWallet.code",
+      "line": 1030
+    },
+    "320": {
+      "filename": "./AFTWallet.code",
+      "line": 1032
+    },
+    "328": {
+      "filename": "./AFTWallet.code",
+      "line": 1033
+    },
+    "336": {
+      "filename": "./AFTWallet.code",
+      "line": 1035
+    },
+    "344": {
+      "filename": "./AFTWallet.code",
+      "line": 1036
+    },
+    "360": {
+      "filename": "./AFTWallet.code",
+      "line": 1039
+    }
+  },
+  "23f4f5d56f049c577932c57c702e78a677bc018e766e365dabfa1bb2a9a6b6ad": {
+    "0": {
+      "filename": "./AFTWallet.code",
+      "line": 706
+    },
+    "16": {
+      "filename": "./AFTWallet.code",
+      "line": 707
+    },
+    "32": {
+      "filename": "./AFTWallet.code",
+      "line": 708
+    },
+    "48": {
+      "filename": "./AFTWallet.code",
+      "line": 709
+    },
+    "64": {
+      "filename": "./AFTWallet.code",
+      "line": 710
+    },
+    "72": {
+      "filename": "./AFTWallet.code",
+      "line": 711
+    },
+    "88": {
+      "filename": "./AFTWallet.code",
+      "line": 712
+    },
+    "104": {
+      "filename": "./AFTWallet.code",
+      "line": 713
+    },
+    "112": {
+      "filename": "./AFTWallet.code",
+      "line": 714
+    },
+    "120": {
+      "filename": "./AFTWallet.code",
+      "line": 715
+    },
+    "128": {
+      "filename": "./AFTWallet.code",
+      "line": 716
+    },
+    "136": {
+      "filename": "./AFTWallet.code",
+      "line": 717
+    },
+    "152": {
+      "filename": "./AFTWallet.code",
+      "line": 718
+    },
+    "160": {
+      "filename": "./AFTWallet.code",
+      "line": 719
+    },
+    "168": {
+      "filename": "./AFTWallet.code",
+      "line": 720
+    }
+  },
+  "2ed428a647ecfcd788ff85c38db78e97cdd43f30d4f8abcca8267bb3ef950d7c": {
+    "0": {
+      "filename": "modifiers/modifiers.sol",
+      "line": 121
+    },
+    "16": {
+      "filename": "modifiers/modifiers.sol",
+      "line": 121
+    },
+    "32": {
+      "filename": "modifiers/modifiers.sol",
+      "line": 122
+    },
+    "40": {
+      "filename": "modifiers/modifiers.sol",
+      "line": 122
+    },
+    "48": {
+      "filename": "modifiers/modifiers.sol",
+      "line": 122
+    },
+    "72": {
+      "filename": "modifiers/modifiers.sol",
+      "line": 123
+    },
+    "80": {
+      "filename": "modifiers/modifiers.sol",
+      "line": 123
+    },
+    "88": {
+      "filename": "modifiers/modifiers.sol",
+      "line": 123
+    },
+    "104": {
+      "filename": "modifiers/modifiers.sol",
+      "line": 123
+    },
+    "112": {
+      "filename": "modifiers/modifiers.sol",
+      "line": 125
+    },
+    "128": {
+      "filename": "modifiers/modifiers.sol",
+      "line": 125
+    },
+    "144": {
+      "filename": "modifiers/modifiers.sol",
+      "line": 125
+    },
+    "160": {
+      "filename": "modifiers/modifiers.sol",
+      "line": 125
+    },
+    "176": {
+      "filename": "modifiers/modifiers.sol",
+      "line": 125
+    },
+    "200": {
+      "filename": "modifiers/modifiers.sol",
+      "line": 125
+    }
+  },
+  "33aba946cf1b20b689d5cb5f001b93112399038843bd5f12fa269c9c905d8362": {
+    "0": {
+      "filename": "AFTWallet.sol",
+      "line": 183
+    },
+    "8": {
+      "filename": "AFTWallet.sol",
+      "line": 183
+    },
+    "24": {
+      "filename": "AFTWallet.sol",
+      "line": 184
+    },
+    "32": {
+      "filename": "AFTWallet.sol",
+      "line": 184
+    },
+    "40": {
+      "filename": "AFTWallet.sol",
+      "line": 185
+    },
+    "48": {
+      "filename": "AFTWallet.sol",
+      "line": 185
+    },
+    "56": {
+      "filename": "AFTWallet.sol",
+      "line": 185
+    },
+    "72": {
+      "filename": "AFTWallet.sol",
+      "line": 185
+    },
+    "80": {
+      "filename": "AFTWallet.sol",
+      "line": 188
+    },
+    "88": {
+      "filename": "AFTWallet.sol",
+      "line": 188
+    },
+    "104": {
+      "filename": "AFTWallet.sol",
+      "line": 188
+    },
+    "128": {
+      "filename": "AFTWallet.sol",
+      "line": 188
+    },
+    "136": {
+      "filename": "AFTWallet.sol",
+      "line": 188
+    },
+    "144": {
+      "filename": "AFTWallet.sol",
+      "line": 188
+    },
+    "192": {
+      "filename": "AFTWallet.sol",
+      "line": 188
+    },
+    "208": {
+      "filename": "AFTWallet.sol",
+      "line": 188
+    },
+    "224": {
+      "filename": "AFTWallet.sol",
+      "line": 188
+    },
+    "232": {
+      "filename": "AFTWallet.sol",
+      "line": 188
+    },
+    "240": {
+      "filename": "AFTWallet.sol",
+      "line": 188
+    },
+    "248": {
+      "filename": "AFTWallet.sol",
+      "line": 188
+    },
+    "264": {
+      "filename": "AFTWallet.sol",
+      "line": 188
+    },
+    "272": {
+      "filename": "AFTWallet.sol",
+      "line": 188
+    },
+    "280": {
+      "filename": "AFTWallet.sol",
+      "line": 191
+    },
+    "288": {
+      "filename": "AFTWallet.sol",
+      "line": 191
+    },
+    "304": {
+      "filename": "AFTWallet.sol",
+      "line": 191
+    },
+    "312": {
+      "filename": "AFTWallet.sol",
+      "line": 191
+    },
+    "328": {
+      "filename": "AFTWallet.sol",
+      "line": 191
+    },
+    "344": {
+      "filename": "AFTWallet.sol",
+      "line": 191
+    },
+    "360": {
+      "filename": "AFTWallet.sol",
+      "line": 191
+    },
+    "376": {
+      "filename": "AFTWallet.sol",
+      "line": 191
+    },
+    "384": {
+      "filename": "AFTWallet.sol",
+      "line": 191
+    },
+    "432": {
+      "filename": "AFTWallet.sol",
+      "line": 191
+    },
+    "448": {
+      "filename": "AFTWallet.sol",
+      "line": 191
+    },
+    "456": {
+      "filename": "AFTWallet.sol",
+      "line": 191
+    },
+    "472": {
+      "filename": "AFTWallet.sol",
+      "line": 191
+    },
+    "480": {
+      "filename": "AFTWallet.sol",
+      "line": 191
+    },
+    "488": {
+      "filename": "AFTWallet.sol",
+      "line": 191
+    },
+    "504": {
+      "filename": "AFTWallet.sol",
+      "line": 191
+    },
+    "520": {
+      "filename": "AFTWallet.sol",
+      "line": 191
+    },
+    "536": {
+      "filename": "AFTWallet.sol",
+      "line": 191
+    },
+    "544": {
+      "filename": "AFTWallet.sol",
+      "line": 191
+    },
+    "552": {
+      "filename": "AFTWallet.sol",
+      "line": 191
+    },
+    "568": {
+      "filename": "AFTWallet.sol",
+      "line": 191
+    },
+    "576": {
+      "filename": "AFTWallet.sol",
+      "line": 191
+    },
+    "584": {
+      "filename": "AFTWallet.sol",
+      "line": 194
+    },
+    "592": {
+      "filename": "AFTWallet.sol",
+      "line": 194
+    },
+    "600": {
+      "filename": "AFTWallet.sol",
+      "line": 194
+    },
+    "608": {
+      "filename": "AFTWallet.sol",
+      "line": 194
+    },
+    "616": {
+      "filename": "AFTWallet.sol",
+      "line": 194
+    },
+    "664": {
+      "filename": "AFTWallet.sol",
+      "line": 194
+    },
+    "680": {
+      "filename": "AFTWallet.sol",
+      "line": 194
+    }
+  },
+  "340382cad541936b05e90b54df020bece44f1ccc5c76c7560983a9f54c4286ad": {
+    "0": {
+      "filename": "modifiers/modifiers.sol",
+      "line": 110
+    },
+    "16": {
+      "filename": "modifiers/modifiers.sol",
+      "line": 110
+    },
+    "32": {
+      "filename": "modifiers/modifiers.sol",
+      "line": 111
+    },
+    "40": {
+      "filename": "modifiers/modifiers.sol",
+      "line": 111
+    },
+    "48": {
+      "filename": "modifiers/modifiers.sol",
+      "line": 111
+    },
+    "72": {
+      "filename": "modifiers/modifiers.sol",
+      "line": 112
+    },
+    "80": {
+      "filename": "modifiers/modifiers.sol",
+      "line": 112
+    },
+    "88": {
+      "filename": "modifiers/modifiers.sol",
+      "line": 112
+    },
+    "104": {
+      "filename": "modifiers/modifiers.sol",
+      "line": 112
+    },
+    "112": {
+      "filename": "modifiers/modifiers.sol",
+      "line": 113
+    },
+    "128": {
+      "filename": "modifiers/modifiers.sol",
+      "line": 113
+    },
+    "136": {
+      "filename": "modifiers/modifiers.sol",
+      "line": 114
+    },
+    "152": {
+      "filename": "modifiers/modifiers.sol",
+      "line": 115
+    },
+    "168": {
+      "filename": "modifiers/modifiers.sol",
+      "line": 116
+    },
+    "192": {
+      "filename": "modifiers/modifiers.sol",
+      "line": 117
+    }
+  },
+  "3594d1b935f12fbf5a17555a0ef0906c220f86a332a040b6f35f19ea663f4021": {
+    "0": {
+      "filename": "AFTWallet.sol",
+      "line": 245
+    },
+    "16": {
+      "filename": "AFTWallet.sol",
+      "line": 246
+    },
+    "24": {
+      "filename": "AFTWallet.sol",
+      "line": 246
+    },
+    "32": {
+      "filename": "AFTWallet.sol",
+      "line": 246
+    },
+    "40": {
+      "filename": "AFTWallet.sol",
+      "line": 246
+    },
+    "56": {
+      "filename": "AFTWallet.sol",
+      "line": 246
+    },
+    "72": {
+      "filename": "AFTWallet.sol",
+      "line": 247
+    },
+    "80": {
+      "filename": "AFTWallet.sol",
+      "line": 247
+    },
+    "96": {
+      "filename": "AFTWallet.sol",
+      "line": 248
+    },
+    "104": {
+      "filename": "AFTWallet.sol",
+      "line": 248
+    },
+    "152": {
+      "filename": "AFTWallet.sol",
+      "line": 248
+    },
+    "160": {
+      "filename": "AFTWallet.sol",
+      "line": 248
+    },
+    "208": {
+      "filename": "AFTWallet.sol",
+      "line": 248
+    },
+    "216": {
+      "filename": "AFTWallet.sol",
+      "line": 248
+    },
+    "232": {
+      "filename": "AFTWallet.sol",
+      "line": 249
+    },
+    "240": {
+      "filename": "AFTWallet.sol",
+      "line": 249
+    },
+    "248": {
+      "filename": "AFTWallet.sol",
+      "line": 249
+    },
+    "256": {
+      "filename": "AFTWallet.sol",
+      "line": 249
+    },
+    "264": {
+      "filename": "AFTWallet.sol",
+      "line": 249
+    },
+    "280": {
+      "filename": "AFTWallet.sol",
+      "line": 249
+    },
+    "288": {
+      "filename": "AFTWallet.sol",
+      "line": 249
+    },
+    "304": {
+      "filename": "AFTWallet.sol",
+      "line": 249
+    },
+    "320": {
+      "filename": "AFTWallet.sol",
+      "line": 249
+    },
+    "328": {
+      "filename": "AFTWallet.sol",
+      "line": 250
+    },
+    "344": {
+      "filename": "AFTWallet.sol",
+      "line": 250
+    },
+    "352": {
+      "filename": "AFTWallet.sol",
+      "line": 250
+    },
+    "360": {
+      "filename": "AFTWallet.sol",
+      "line": 250
+    },
+    "376": {
+      "filename": "AFTWallet.sol",
+      "line": 250
+    },
+    "384": {
+      "filename": "AFTWallet.sol",
+      "line": 250
+    },
+    "392": {
+      "filename": "AFTWallet.sol",
+      "line": 250
+    },
+    "416": {
+      "filename": "AFTWallet.sol",
+      "line": 250
+    },
+    "432": {
+      "filename": "AFTWallet.sol",
+      "line": 250
+    },
+    "456": {
+      "filename": "AFTWallet.sol",
+      "line": 250
+    },
+    "464": {
+      "filename": "AFTWallet.sol",
+      "line": 250
+    },
+    "472": {
+      "filename": "AFTWallet.sol",
+      "line": 250
+    },
+    "488": {
+      "filename": "AFTWallet.sol",
+      "line": 250
+    },
+    "504": {
+      "filename": "AFTWallet.sol",
+      "line": 250
+    },
+    "552": {
+      "filename": "AFTWallet.sol",
+      "line": 250
+    },
+    "576": {
+      "filename": "AFTWallet.sol",
+      "line": 250
+    },
+    "592": {
+      "filename": "AFTWallet.sol",
+      "line": 250
+    },
+    "600": {
+      "filename": "AFTWallet.sol",
+      "line": 250
+    },
+    "608": {
+      "filename": "AFTWallet.sol",
+      "line": 250
+    },
+    "624": {
+      "filename": "AFTWallet.sol",
+      "line": 256
+    },
+    "632": {
+      "filename": "AFTWallet.sol",
+      "line": 256
+    },
+    "640": {
+      "filename": "AFTWallet.sol",
+      "line": 256
+    },
+    "656": {
+      "filename": "AFTWallet.sol",
+      "line": 256
+    },
+    "664": {
+      "filename": "AFTWallet.sol",
+      "line": 246
+    },
+    "672": {
+      "filename": "AFTWallet.sol",
+      "line": 246
+    },
+    "688": {
+      "filename": "./AFTWallet.code",
+      "line": 551
+    },
+    "704": {
+      "filename": "./AFTWallet.code",
+      "line": 552
+    },
+    "712": {
+      "filename": "./AFTWallet.code",
+      "line": 555
+    },
+    "720": {
+      "filename": "./AFTWallet.code",
+      "line": 557
+    },
+    "736": {
+      "filename": "./AFTWallet.code",
+      "line": 558
+    }
+  },
+  "3ad1ac5440df9b384df3e03e040632979aeae44499ad183c7d36d09f33e4453d": {
+    "0": {
+      "filename": "./AFTWallet.code",
+      "line": 1376
+    },
+    "8": {
+      "filename": "./AFTWallet.code",
+      "line": 1379
+    },
+    "24": {
+      "filename": "./AFTWallet.code",
+      "line": 1380
+    },
+    "32": {
+      "filename": "./AFTWallet.code",
+      "line": 1381
+    },
+    "48": {
+      "filename": "./AFTWallet.code",
+      "line": 1384
+    },
+    "64": {
+      "filename": "./AFTWallet.code",
+      "line": 1385
+    },
+    "72": {
+      "filename": "./AFTWallet.code",
+      "line": 1386
+    },
+    "88": {
+      "filename": "./AFTWallet.code",
+      "line": 1387
+    },
+    "104": {
+      "filename": "./AFTWallet.code",
+      "line": 1388
+    },
+    "120": {
+      "filename": "./AFTWallet.code",
+      "line": 1389
+    },
+    "128": {
+      "filename": "./AFTWallet.code",
+      "line": 1390
+    },
+    "144": {
+      "filename": "./AFTWallet.code",
+      "line": 1391
+    },
+    "152": {
+      "filename": "./AFTWallet.code",
+      "line": 1392
+    },
+    "160": {
+      "filename": "./AFTWallet.code",
+      "line": 1393
+    },
+    "168": {
+      "filename": "./AFTWallet.code",
+      "line": 1394
+    },
+    "176": {
+      "filename": "./AFTWallet.code",
+      "line": 1395
+    },
+    "192": {
+      "filename": "./AFTWallet.code",
+      "line": 1396
+    },
+    "200": {
+      "filename": "./AFTWallet.code",
+      "line": 1397
+    },
+    "216": {
+      "filename": "./AFTWallet.code",
+      "line": 1398
+    },
+    "224": {
+      "filename": "./AFTWallet.code",
+      "line": 1399
+    },
+    "232": {
+      "filename": "./AFTWallet.code",
+      "line": 1400
+    },
+    "248": {
+      "filename": "./AFTWallet.code",
+      "line": 1401
+    },
+    "264": {
+      "filename": "./AFTWallet.code",
+      "line": 1403
+    },
+    "272": {
+      "filename": "./AFTWallet.code",
+      "line": 1404
+    },
+    "280": {
+      "filename": "./AFTWallet.code",
+      "line": 1405
+    },
+    "296": {
+      "filename": "./AFTWallet.code",
+      "line": 1407
+    },
+    "304": {
+      "filename": "./AFTWallet.code",
+      "line": 1408
+    },
+    "320": {
+      "filename": "./AFTWallet.code",
+      "line": 1409
+    },
+    "336": {
+      "filename": "./AFTWallet.code",
+      "line": 1411
+    },
+    "344": {
+      "filename": "./AFTWallet.code",
+      "line": 1412
+    },
+    "360": {
+      "filename": "./AFTWallet.code",
+      "line": 1413
+    },
+    "368": {
+      "filename": "./AFTWallet.code",
+      "line": 1414
+    },
+    "384": {
+      "filename": "./AFTWallet.code",
+      "line": 1416
+    },
+    "392": {
+      "filename": "./AFTWallet.code",
+      "line": 1417
+    },
+    "408": {
+      "filename": "modifiers/modifiers.sol",
+      "line": 163
+    },
+    "424": {
+      "filename": "modifiers/modifiers.sol",
+      "line": 163
+    },
+    "440": {
+      "filename": "modifiers/modifiers.sol",
+      "line": 163
+    },
+    "456": {
+      "filename": "modifiers/modifiers.sol",
+      "line": 164
+    },
+    "472": {
+      "filename": "modifiers/modifiers.sol",
+      "line": 164
+    },
+    "480": {
+      "filename": "modifiers/modifiers.sol",
+      "line": 165
+    },
+    "488": {
+      "filename": "modifiers/modifiers.sol",
+      "line": 165
+    },
+    "504": {
+      "filename": "modifiers/modifiers.sol",
+      "line": 165
+    },
+    "512": {
+      "filename": "modifiers/modifiers.sol",
+      "line": 165
+    },
+    "528": {
+      "filename": "modifiers/modifiers.sol",
+      "line": 166
+    },
+    "536": {
+      "filename": "modifiers/modifiers.sol",
+      "line": 166
+    },
+    "552": {
+      "filename": "modifiers/modifiers.sol",
+      "line": 166
+    },
+    "576": {
+      "filename": "modifiers/modifiers.sol",
+      "line": 166
+    },
+    "584": {
+      "filename": "modifiers/modifiers.sol",
+      "line": 166
+    },
+    "600": {
+      "filename": "modifiers/modifiers.sol",
+      "line": 166
+    },
+    "608": {
+      "filename": "modifiers/modifiers.sol",
+      "line": 166
+    },
+    "632": {
+      "filename": "modifiers/modifiers.sol",
+      "line": 167
+    },
+    "640": {
+      "filename": "./AFTWallet.code",
+      "line": 1441
+    },
+    "656": {
+      "filename": "./AFTWallet.code",
+      "line": 1442
+    },
+    "664": {
+      "filename": "./AFTWallet.code",
+      "line": 1443
+    },
+    "680": {
+      "filename": "./AFTWallet.code",
+      "line": 1446
+    }
+  },
+  "3e8124cf6307ae7d66ed96e941309593e1a297adb729efb4247553b63c638ec2": {
+    "0": {
+      "filename": "./AFTWallet.code",
+      "line": 1320
+    },
+    "8": {
+      "filename": "./AFTWallet.code",
+      "line": 1321
+    },
+    "24": {
+      "filename": "./AFTWallet.code",
+      "line": 1322
+    },
+    "40": {
+      "filename": "./AFTWallet.code",
+      "line": 1325
+    },
+    "48": {
+      "filename": "./AFTWallet.code",
+      "line": 1326
+    },
+    "96": {
+      "filename": "./AFTWallet.code",
+      "line": 1327
+    },
+    "104": {
+      "filename": "./AFTWallet.code",
+      "line": 1328
+    },
+    "120": {
+      "filename": "./AFTWallet.code",
+      "line": 1331
+    },
+    "128": {
+      "filename": "./AFTWallet.code",
+      "line": 1332
+    },
+    "176": {
+      "filename": "./AFTWallet.code",
+      "line": 1333
+    },
+    "184": {
+      "filename": "./AFTWallet.code",
+      "line": 1334
+    },
+    "200": {
+      "filename": "./AFTWallet.code",
+      "line": 1337
+    },
+    "208": {
+      "filename": "./AFTWallet.code",
+      "line": 1338
+    },
+    "256": {
+      "filename": "./AFTWallet.code",
+      "line": 1339
+    },
+    "264": {
+      "filename": "./AFTWallet.code",
+      "line": 1340
+    }
+  },
+  "3ec5a89643c7179915598621e06cdb1c2fd1258531dda72bdd361c2269de3b02": {},
+  "3f29e0cefccbdbe108b194e18f4c2f7ec6cf6d02d8e255bcbd5c450eaa6b2672": {
+    "0": {
+      "filename": "modifiers/modifiers.sol",
+      "line": 101
+    },
+    "8": {
+      "filename": "modifiers/modifiers.sol",
+      "line": 101
+    },
+    "24": {
+      "filename": "modifiers/modifiers.sol",
+      "line": 101
+    },
+    "40": {
+      "filename": "modifiers/modifiers.sol",
+      "line": 101
+    },
+    "56": {
+      "filename": "modifiers/modifiers.sol",
+      "line": 101
+    },
+    "72": {
+      "filename": "modifiers/modifiers.sol",
+      "line": 101
+    },
+    "88": {
+      "filename": "modifiers/modifiers.sol",
+      "line": 101
+    },
+    "96": {
+      "filename": "modifiers/modifiers.sol",
+      "line": 101
+    },
+    "112": {
+      "filename": "modifiers/modifiers.sol",
+      "line": 101
+    },
+    "120": {
+      "filename": "modifiers/modifiers.sol",
+      "line": 101
+    },
+    "128": {
+      "filename": "modifiers/modifiers.sol",
+      "line": 101
+    }
+  },
+  "3ff5b0d9a23fead5c7b8dfed4141ff615936edc5ba2c0b444a5761a8319185ad": {
+    "0": {
+      "filename": "AFTWallet.sol",
+      "line": 315
+    },
+    "16": {
+      "filename": "AFTWallet.sol",
+      "line": 315
+    },
+    "24": {
+      "filename": "AFTWallet.sol",
+      "line": 315
+    },
+    "32": {
+      "filename": "AFTWallet.sol",
+      "line": 315
+    },
+    "40": {
+      "filename": "AFTWallet.sol",
+      "line": 315
+    },
+    "48": {
+      "filename": "AFTWallet.sol",
+      "line": 315
+    },
+    "56": {
+      "filename": "AFTWallet.sol",
+      "line": 315
+    },
+    "64": {
+      "filename": "AFTWallet.sol",
+      "line": 315
+    },
+    "80": {
+      "filename": "./AFTWallet.code",
+      "line": 1679
+    }
+  },
+  "41a620037404d237d892a1843c46ec1473835e00c4baf9259e88721cf687e5f3": {
+    "0": {
+      "filename": "AFTWallet.sol",
+      "line": 272
+    },
+    "8": {
+      "filename": "AFTWallet.sol",
+      "line": 272
+    },
+    "16": {
+      "filename": "AFTWallet.sol",
+      "line": 272
+    },
+    "24": {
+      "filename": "AFTWallet.sol",
+      "line": 273
+    },
+    "32": {
+      "filename": "AFTWallet.sol",
+      "line": 273
+    },
+    "48": {
+      "filename": "AFTWallet.sol",
+      "line": 273
+    },
+    "64": {
+      "filename": "AFTWallet.sol",
+      "line": 273
+    },
+    "80": {
+      "filename": "AFTWallet.sol",
+      "line": 273
+    },
+    "96": {
+      "filename": "AFTWallet.sol",
+      "line": 273
+    },
+    "104": {
+      "filename": "AFTWallet.sol",
+      "line": 273
+    },
+    "112": {
+      "filename": "AFTWallet.sol",
+      "line": 273
+    },
+    "120": {
+      "filename": "AFTWallet.sol",
+      "line": 273
+    },
+    "136": {
+      "filename": "AFTWallet.sol",
+      "line": 273
+    },
+    "144": {
+      "filename": "AFTWallet.sol",
+      "line": 273
+    },
+    "152": {
+      "filename": "AFTWallet.sol",
+      "line": 273
+    },
+    "160": {
+      "filename": "AFTWallet.sol",
+      "line": 273
+    },
+    "176": {
+      "filename": "AFTWallet.sol",
+      "line": 273
+    },
+    "192": {
+      "filename": "AFTWallet.sol",
+      "line": 273
+    },
+    "200": {
+      "filename": "AFTWallet.sol",
+      "line": 273
+    },
+    "208": {
+      "filename": "AFTWallet.sol",
+      "line": 273
+    },
+    "224": {
+      "filename": "AFTWallet.sol",
+      "line": 287
+    },
+    "232": {
+      "filename": "AFTWallet.sol",
+      "line": 287
+    },
+    "240": {
+      "filename": "AFTWallet.sol",
+      "line": 287
+    },
+    "256": {
+      "filename": "AFTWallet.sol",
+      "line": 287
+    },
+    "264": {
+      "filename": "AFTWallet.sol",
+      "line": 287
+    },
+    "288": {
+      "filename": "AFTWallet.sol",
+      "line": 287
+    },
+    "304": {
+      "filename": "AFTWallet.sol",
+      "line": 287
+    },
+    "312": {
+      "filename": "AFTWallet.sol",
+      "line": 287
+    },
+    "320": {
+      "filename": "AFTWallet.sol",
+      "line": 287
+    },
+    "328": {
+      "filename": "AFTWallet.sol",
+      "line": 287
+    },
+    "336": {
+      "filename": "AFTWallet.sol",
+      "line": 287
+    },
+    "352": {
+      "filename": "AFTWallet.sol",
+      "line": 287
+    },
+    "360": {
+      "filename": "AFTWallet.sol",
+      "line": 287
+    },
+    "368": {
+      "filename": "AFTWallet.sol",
+      "line": 287
+    },
+    "384": {
+      "filename": "AFTWallet.sol",
+      "line": 287
+    },
+    "392": {
+      "filename": "AFTWallet.sol",
+      "line": 287
+    },
+    "416": {
+      "filename": "AFTWallet.sol",
+      "line": 287
+    },
+    "432": {
+      "filename": "AFTWallet.sol",
+      "line": 287
+    },
+    "448": {
+      "filename": "AFTWallet.sol",
+      "line": 287
+    },
+    "464": {
+      "filename": "AFTWallet.sol",
+      "line": 287
+    },
+    "472": {
+      "filename": "AFTWallet.sol",
+      "line": 292
+    },
+    "496": {
+      "filename": "AFTWallet.sol",
+      "line": 292
+    },
+    "504": {
+      "filename": "AFTWallet.sol",
+      "line": 292
+    },
+    "520": {
+      "filename": "AFTWallet.sol",
+      "line": 292
+    },
+    "536": {
+      "filename": "AFTWallet.sol",
+      "line": 292
+    },
+    "544": {
+      "filename": "AFTWallet.sol",
+      "line": 292
+    },
+    "592": {
+      "filename": "AFTWallet.sol",
+      "line": 292
+    },
+    "608": {
+      "filename": "AFTWallet.sol",
+      "line": 292
+    },
+    "624": {
+      "filename": "AFTWallet.sol",
+      "line": 292
+    },
+    "632": {
+      "filename": "AFTWallet.sol",
+      "line": 292
+    },
+    "648": {
+      "filename": "AFTWallet.sol",
+      "line": 292
+    },
+    "656": {
+      "filename": "AFTWallet.sol",
+      "line": 292
+    },
+    "664": {
+      "filename": "AFTWallet.sol",
+      "line": 292
+    },
+    "680": {
+      "filename": "AFTWallet.sol",
+      "line": 292
+    },
+    "688": {
+      "filename": "AFTWallet.sol",
+      "line": 292
+    },
+    "696": {
+      "filename": "AFTWallet.sol",
+      "line": 292
+    },
+    "712": {
+      "filename": "AFTWallet.sol",
+      "line": 292
+    },
+    "720": {
+      "filename": "AFTWallet.sol",
+      "line": 292
+    },
+    "728": {
+      "filename": "AFTWallet.sol",
+      "line": 292
+    },
+    "736": {
+      "filename": "AFTWallet.sol",
+      "line": 292
+    },
+    "744": {
+      "filename": "AFTWallet.sol",
+      "line": 298
+    },
+    "760": {
+      "filename": "AFTWallet.sol",
+      "line": 298
+    },
+    "768": {
+      "filename": "AFTWallet.sol",
+      "line": 298
+    },
+    "784": {
+      "filename": "AFTWallet.sol",
+      "line": 298
+    },
+    "792": {
+      "filename": "AFTWallet.sol",
+      "line": 298
+    },
+    "808": {
+      "filename": "AFTWallet.sol",
+      "line": 299
+    },
+    "840": {
+      "filename": "AFTWallet.sol",
+      "line": 299
+    },
+    "856": {
+      "filename": "AFTWallet.sol",
+      "line": 299
+    },
+    "904": {
+      "filename": "AFTWallet.sol",
+      "line": 299
+    },
+    "912": {
+      "filename": "AFTWallet.sol",
+      "line": 299
+    },
+    "928": {
+      "filename": "AFTWallet.sol",
+      "line": 299
+    },
+    "936": {
+      "filename": "AFTWallet.sol",
+      "line": 299
+    }
+  },
+  "44b7116728754381712a629b8a7daf2f15a448f2739c4659d1ac2739549eeeb4": {
+    "0": {
+      "filename": "AFTWallet.sol",
+      "line": 132
+    },
+    "16": {
+      "filename": "AFTWallet.sol",
+      "line": 132
+    },
+    "24": {
+      "filename": "AFTWallet.sol",
+      "line": 132
+    },
+    "40": {
+      "filename": "AFTWallet.sol",
+      "line": 133
+    },
+    "48": {
+      "filename": "AFTWallet.sol",
+      "line": 134
+    },
+    "56": {
+      "filename": "AFTWallet.sol",
+      "line": 134
+    },
+    "72": {
+      "filename": "AFTWallet.sol",
+      "line": 134
+    },
+    "80": {
+      "filename": "AFTWallet.sol",
+      "line": 134
+    },
+    "88": {
+      "filename": "AFTWallet.sol",
+      "line": 134
+    },
+    "96": {
+      "filename": "AFTWallet.sol",
+      "line": 134
+    },
+    "104": {
+      "filename": "AFTWallet.sol",
+      "line": 134
+    },
+    "112": {
+      "filename": "AFTWallet.sol",
+      "line": 134
+    },
+    "120": {
+      "filename": "AFTWallet.sol",
+      "line": 134
+    },
+    "136": {
+      "filename": "AFTWallet.sol",
+      "line": 134
+    },
+    "144": {
+      "filename": "AFTWallet.sol",
+      "line": 134
+    },
+    "160": {
+      "filename": "AFTWallet.sol",
+      "line": 134
+    },
+    "176": {
+      "filename": "./AFTWallet.code",
+      "line": 649
+    },
+    "184": {
+      "filename": "AFTWallet.sol",
+      "line": 136
+    },
+    "192": {
+      "filename": "AFTWallet.sol",
+      "line": 136
+    },
+    "208": {
+      "filename": "AFTWallet.sol",
+      "line": 136
+    },
+    "224": {
+      "filename": "AFTWallet.sol",
+      "line": 136
+    },
+    "232": {
+      "filename": "AFTWallet.sol",
+      "line": 136
+    },
+    "280": {
+      "filename": "AFTWallet.sol",
+      "line": 136
+    },
+    "296": {
+      "filename": "AFTWallet.sol",
+      "line": 136
+    },
+    "304": {
+      "filename": "AFTWallet.sol",
+      "line": 136
+    },
+    "312": {
+      "filename": "AFTWallet.sol",
+      "line": 136
+    },
+    "336": {
+      "filename": "AFTWallet.sol",
+      "line": 136
+    },
+    "352": {
+      "filename": "AFTWallet.sol",
+      "line": 136
+    },
+    "376": {
+      "filename": "AFTWallet.sol",
+      "line": 136
+    },
+    "384": {
+      "filename": "AFTWallet.sol",
+      "line": 136
+    },
+    "392": {
+      "filename": "AFTWallet.sol",
+      "line": 136
+    },
+    "408": {
+      "filename": "AFTWallet.sol",
+      "line": 136
+    },
+    "424": {
+      "filename": "AFTWallet.sol",
+      "line": 136
+    },
+    "432": {
+      "filename": "AFTWallet.sol",
+      "line": 136
+    },
+    "456": {
+      "filename": "AFTWallet.sol",
+      "line": 136
+    },
+    "472": {
+      "filename": "AFTWallet.sol",
+      "line": 136
+    },
+    "480": {
+      "filename": "AFTWallet.sol",
+      "line": 136
+    },
+    "528": {
+      "filename": "AFTWallet.sol",
+      "line": 136
+    },
+    "544": {
+      "filename": "AFTWallet.sol",
+      "line": 136
+    },
+    "560": {
+      "filename": "AFTWallet.sol",
+      "line": 136
+    },
+    "568": {
+      "filename": "AFTWallet.sol",
+      "line": 136
+    },
+    "576": {
+      "filename": "AFTWallet.sol",
+      "line": 136
+    },
+    "584": {
+      "filename": "AFTWallet.sol",
+      "line": 136
+    },
+    "592": {
+      "filename": "AFTWallet.sol",
+      "line": 136
+    },
+    "600": {
+      "filename": "AFTWallet.sol",
+      "line": 136
+    },
+    "608": {
+      "filename": "AFTWallet.sol",
+      "line": 136
+    },
+    "616": {
+      "filename": "AFTWallet.sol",
+      "line": 136
+    },
+    "624": {
+      "filename": "AFTWallet.sol",
+      "line": 136
+    },
+    "640": {
+      "filename": "./AFTWallet.code",
+      "line": 683
+    }
+  },
+  "46dde5db14bdc8859d7c44f586eb96343cb25685134b93e9e5e22c3d8f729d4a": {
+    "0": {
+      "filename": "AFTWallet.sol",
+      "line": 303
+    },
+    "16": {
+      "filename": "AFTWallet.sol",
+      "line": 303
+    },
+    "24": {
+      "filename": "AFTWallet.sol",
+      "line": 303
+    },
+    "32": {
+      "filename": "AFTWallet.sol",
+      "line": 303
+    },
+    "40": {
+      "filename": "AFTWallet.sol",
+      "line": 304
+    },
+    "56": {
+      "filename": "AFTWallet.sol",
+      "line": 304
+    },
+    "72": {
+      "filename": "AFTWallet.sol",
+      "line": 304
+    },
+    "80": {
+      "filename": "AFTWallet.sol",
+      "line": 304
+    },
+    "96": {
+      "filename": "AFTWallet.sol",
+      "line": 304
+    },
+    "112": {
+      "filename": "AFTWallet.sol",
+      "line": 305
+    },
+    "128": {
+      "filename": "AFTWallet.sol",
+      "line": 305
+    },
+    "136": {
+      "filename": "./AFTWallet.code",
+      "line": 1575
+    },
+    "144": {
+      "filename": "AFTWallet.sol",
+      "line": 310
+    },
+    "160": {
+      "filename": "AFTWallet.sol",
+      "line": 311
+    },
+    "176": {
+      "filename": "AFTWallet.sol",
+      "line": 311
+    },
+    "184": {
+      "filename": "AFTWallet.sol",
+      "line": 311
+    },
+    "200": {
+      "filename": "AFTWallet.sol",
+      "line": 311
+    },
+    "208": {
+      "filename": "AFTWallet.sol",
+      "line": 311
+    },
+    "224": {
+      "filename": "AFTWallet.sol",
+      "line": 311
+    },
+    "232": {
+      "filename": "AFTWallet.sol",
+      "line": 311
+    },
+    "248": {
+      "filename": "AFTWallet.sol",
+      "line": 311
+    },
+    "256": {
+      "filename": "AFTWallet.sol",
+      "line": 311
+    },
+    "264": {
+      "filename": "AFTWallet.sol",
+      "line": 312
+    },
+    "272": {
+      "filename": "AFTWallet.sol",
+      "line": 313
+    },
+    "280": {
+      "filename": "AFTWallet.sol",
+      "line": 313
+    },
+    "296": {
+      "filename": "AFTWallet.sol",
+      "line": 313
+    },
+    "304": {
+      "filename": "AFTWallet.sol",
+      "line": 313
+    },
+    "312": {
+      "filename": "AFTWallet.sol",
+      "line": 313
+    },
+    "320": {
+      "filename": "AFTWallet.sol",
+      "line": 313
+    },
+    "328": {
+      "filename": "AFTWallet.sol",
+      "line": 313
+    },
+    "336": {
+      "filename": "AFTWallet.sol",
+      "line": 313
+    },
+    "344": {
+      "filename": "AFTWallet.sol",
+      "line": 313
+    },
+    "360": {
+      "filename": "AFTWallet.sol",
+      "line": 313
+    },
+    "368": {
+      "filename": "AFTWallet.sol",
+      "line": 313
+    },
+    "384": {
+      "filename": "AFTWallet.sol",
+      "line": 313
+    },
+    "400": {
+      "filename": "./AFTWallet.code",
+      "line": 1609
+    },
+    "408": {
+      "filename": "AFTWallet.sol",
+      "line": 315
+    },
+    "424": {
+      "filename": "AFTWallet.sol",
+      "line": 315
+    },
+    "440": {
+      "filename": "AFTWallet.sol",
+      "line": 315
+    },
+    "456": {
+      "filename": "AFTWallet.sol",
+      "line": 315
+    },
+    "472": {
+      "filename": "AFTWallet.sol",
+      "line": 315
+    },
+    "488": {
+      "filename": "AFTWallet.sol",
+      "line": 315
+    },
+    "496": {
+      "filename": "AFTWallet.sol",
+      "line": 315
+    },
+    "512": {
+      "filename": "AFTWallet.sol",
+      "line": 315
+    },
+    "520": {
+      "filename": "AFTWallet.sol",
+      "line": 315
+    },
+    "552": {
+      "filename": "AFTWallet.sol",
+      "line": 315
+    },
+    "568": {
+      "filename": "AFTWallet.sol",
+      "line": 315
+    },
+    "584": {
+      "filename": "AFTWallet.sol",
+      "line": 315
+    },
+    "600": {
+      "filename": "AFTWallet.sol",
+      "line": 315
+    },
+    "648": {
+      "filename": "AFTWallet.sol",
+      "line": 315
+    },
+    "664": {
+      "filename": "AFTWallet.sol",
+      "line": 315
+    },
+    "672": {
+      "filename": "AFTWallet.sol",
+      "line": 315
+    },
+    "696": {
+      "filename": "AFTWallet.sol",
+      "line": 315
+    },
+    "712": {
+      "filename": "AFTWallet.sol",
+      "line": 315
+    },
+    "720": {
+      "filename": "AFTWallet.sol",
+      "line": 315
+    },
+    "736": {
+      "filename": "AFTWallet.sol",
+      "line": 315
+    },
+    "752": {
+      "filename": "AFTWallet.sol",
+      "line": 315
+    },
+    "760": {
+      "filename": "AFTWallet.sol",
+      "line": 315
+    },
+    "784": {
+      "filename": "AFTWallet.sol",
+      "line": 315
+    },
+    "792": {
+      "filename": "AFTWallet.sol",
+      "line": 315
+    },
+    "808": {
+      "filename": "AFTWallet.sol",
+      "line": 315
+    },
+    "816": {
+      "filename": "AFTWallet.sol",
+      "line": 315
+    },
+    "832": {
+      "filename": "AFTWallet.sol",
+      "line": 315
+    },
+    "848": {
+      "filename": "AFTWallet.sol",
+      "line": 315
+    },
+    "856": {
+      "filename": "AFTWallet.sol",
+      "line": 315
+    },
+    "904": {
+      "filename": "AFTWallet.sol",
+      "line": 315
+    },
+    "920": {
+      "filename": "AFTWallet.sol",
+      "line": 315
+    },
+    "936": {
+      "filename": "AFTWallet.sol",
+      "line": 315
+    },
+    "944": {
+      "filename": "AFTWallet.sol",
+      "line": 315
+    },
+    "960": {
+      "filename": "AFTWallet.sol",
+      "line": 315
+    },
+    "968": {
+      "filename": "AFTWallet.sol",
+      "line": 315
+    },
+    "976": {
+      "filename": "AFTWallet.sol",
+      "line": 315
+    },
+    "992": {
+      "filename": "AFTWallet.sol",
+      "line": 315
+    },
+    "1000": {
+      "filename": "AFTWallet.sol",
+      "line": 315
+    }
+  },
+  "486316d74149553125ec7315585fa8978337f0ce36e700bac4dfbfdb73f98106": {
+    "0": {
+      "filename": "./AFTWallet.code",
+      "line": 1316
+    },
+    "8": {
+      "filename": "./AFTWallet.code",
+      "line": 1317
+    },
+    "56": {
+      "filename": "./AFTWallet.code",
+      "line": 1318
+    },
+    "64": {
+      "filename": "./AFTWallet.code",
+      "line": 1319
+    },
+    "80": {
+      "filename": "./AFTWallet.code",
+      "line": 1344
+    },
+    "88": {
+      "filename": "./AFTWallet.code",
+      "line": 1345
+    },
+    "136": {
+      "filename": "./AFTWallet.code",
+      "line": 1346
+    },
+    "144": {
+      "filename": "./AFTWallet.code",
+      "line": 1347
+    },
+    "160": {
+      "filename": "./AFTWallet.code",
+      "line": 1361
+    },
+    "168": {
+      "filename": "./AFTWallet.code",
+      "line": 1362
+    },
+    "216": {
+      "filename": "./AFTWallet.code",
+      "line": 1363
+    },
+    "224": {
+      "filename": "./AFTWallet.code",
+      "line": 1364
+    },
+    "240": {
+      "filename": "./AFTWallet.code",
+      "line": 1367
+    },
+    "248": {
+      "filename": "./AFTWallet.code",
+      "line": 1368
+    },
+    "296": {
+      "filename": "./AFTWallet.code",
+      "line": 1369
+    },
+    "304": {
+      "filename": "./AFTWallet.code",
+      "line": 1370
+    }
+  },
+  "49bb42dea1dce2743c641b04183ece6f42b608f1403ac92fe2dfe3e18fb15d31": {
+    "0": {
+      "filename": "./AFTWallet.code",
+      "line": 1816
+    },
+    "1": {
+      "filename": "./AFTWallet.code",
+      "line": 1817
+    },
+    "2": {
+      "filename": "./AFTWallet.code",
+      "line": 1818
+    },
+    "3": {
+      "filename": "./AFTWallet.code",
+      "line": 1847
+    },
+    "4": {
+      "filename": "./AFTWallet.code",
+      "line": 1851
+    }
+  },
+  "5387be36b02bd6bb398b615e0426fe80a17fb82d83792b03e5096b7533b07fec": {
+    "0": {
+      "filename": "AFTWallet.sol",
+      "line": 339
+    },
+    "16": {
+      "filename": "AFTWallet.sol",
+      "line": 339
+    },
+    "32": {
+      "filename": "AFTWallet.sol",
+      "line": 339
+    }
+  },
+  "5ca573f2863bed6e9e52b044c779d8967f21a1dcf0779da94cd428a21841bc98": {
+    "0": {
+      "filename": "./AFTWallet.code",
+      "line": 955
+    },
+    "8": {
+      "filename": "./AFTWallet.code",
+      "line": 956
+    },
+    "24": {
+      "filename": "./AFTWallet.code",
+      "line": 957
+    },
+    "48": {
+      "filename": "AFTWallet.sol",
+      "line": 348
+    },
+    "56": {
+      "filename": "./AFTWallet.code",
+      "line": 961
+    },
+    "72": {
+      "filename": "./AFTWallet.code",
+      "line": 964
+    },
+    "80": {
+      "filename": "./AFTWallet.code",
+      "line": 965
+    },
+    "96": {
+      "filename": "./AFTWallet.code",
+      "line": 966
+    },
+    "104": {
+      "filename": "./AFTWallet.code",
+      "line": 967
+    },
+    "112": {
+      "filename": "./AFTWallet.code",
+      "line": 968
+    },
+    "128": {
+      "filename": "./AFTWallet.code",
+      "line": 969
+    },
+    "144": {
+      "filename": "./AFTWallet.code",
+      "line": 970
+    },
+    "152": {
+      "filename": "./AFTWallet.code",
+      "line": 971
+    },
+    "160": {
+      "filename": "./AFTWallet.code",
+      "line": 972
+    },
+    "168": {
+      "filename": "./AFTWallet.code",
+      "line": 973
+    },
+    "192": {
+      "filename": "./AFTWallet.code",
+      "line": 974
+    },
+    "200": {
+      "filename": "./AFTWallet.code",
+      "line": 975
+    },
+    "216": {
+      "filename": "./AFTWallet.code",
+      "line": 976
+    },
+    "232": {
+      "filename": "./AFTWallet.code",
+      "line": 977
+    },
+    "240": {
+      "filename": "./AFTWallet.code",
+      "line": 978
+    },
+    "288": {
+      "filename": "./AFTWallet.code",
+      "line": 979
+    },
+    "304": {
+      "filename": "./AFTWallet.code",
+      "line": 980
+    },
+    "320": {
+      "filename": "./AFTWallet.code",
+      "line": 981
+    },
+    "336": {
+      "filename": "./AFTWallet.code",
+      "line": 982
+    },
+    "344": {
+      "filename": "./AFTWallet.code",
+      "line": 983
+    },
+    "352": {
+      "filename": "./AFTWallet.code",
+      "line": 984
+    },
+    "368": {
+      "filename": "./AFTWallet.code",
+      "line": 986
+    },
+    "376": {
+      "filename": "./AFTWallet.code",
+      "line": 987
+    },
+    "392": {
+      "filename": "./AFTWallet.code",
+      "line": 989
+    },
+    "400": {
+      "filename": "./AFTWallet.code",
+      "line": 990
+    },
+    "416": {
+      "filename": "./AFTWallet.code",
+      "line": 993
+    }
+  },
+  "5cef6a8940b8f9f308b6eedbba7f798b3ae8d7362e14baa8301d38650820614e": {
+    "0": {
+      "filename": "./AFTWallet.code",
+      "line": 1737
+    },
+    "8": {
+      "filename": "./AFTWallet.code",
+      "line": 1738
+    },
+    "24": {
+      "filename": "./AFTWallet.code",
+      "line": 1739
+    },
+    "32": {
+      "filename": "./AFTWallet.code",
+      "line": 1450
+    },
+    "48": {
+      "filename": "./AFTWallet.code",
+      "line": 1451
+    },
+    "72": {
+      "filename": "./AFTWallet.code",
+      "line": 1452
+    },
+    "88": {
+      "filename": "./AFTWallet.code",
+      "line": 1453
+    },
+    "96": {
+      "filename": "./AFTWallet.code",
+      "line": 1454
+    },
+    "112": {
+      "filename": "./AFTWallet.code",
+      "line": 1457
+    },
+    "128": {
+      "filename": "AFTWallet.sol",
+      "line": 264
+    },
+    "144": {
+      "filename": "AFTWallet.sol",
+      "line": 266
+    },
+    "160": {
+      "filename": "AFTWallet.sol",
+      "line": 267
+    },
+    "176": {
+      "filename": "AFTWallet.sol",
+      "line": 268
+    },
+    "192": {
+      "filename": "AFTWallet.sol",
+      "line": 268
+    },
+    "208": {
+      "filename": "AFTWallet.sol",
+      "line": 270
+    },
+    "216": {
+      "filename": "AFTWallet.sol",
+      "line": 270
+    },
+    "224": {
+      "filename": "AFTWallet.sol",
+      "line": 270
+    },
+    "272": {
+      "filename": "AFTWallet.sol",
+      "line": 270
+    },
+    "280": {
+      "filename": "AFTWallet.sol",
+      "line": 270
+    },
+    "296": {
+      "filename": "./AFTWallet.code",
+      "line": 1681
+    },
+    "312": {
+      "filename": "./AFTWallet.code",
+      "line": 1682
+    },
+    "320": {
+      "filename": "./AFTWallet.code",
+      "line": 1683
+    },
+    "336": {
+      "filename": "./AFTWallet.code",
+      "line": 1684
+    },
+    "344": {
+      "filename": "AFTWallet.sol",
+      "line": 324
+    },
+    "360": {
+      "filename": "AFTWallet.sol",
+      "line": 324
+    },
+    "368": {
+      "filename": "AFTWallet.sol",
+      "line": 324
+    },
+    "376": {
+      "filename": "AFTWallet.sol",
+      "line": 324
+    },
+    "392": {
+      "filename": "AFTWallet.sol",
+      "line": 324
+    },
+    "408": {
+      "filename": "AFTWallet.sol",
+      "line": 324
+    },
+    "424": {
+      "filename": "AFTWallet.sol",
+      "line": 324
+    },
+    "432": {
+      "filename": "AFTWallet.sol",
+      "line": 324
+    },
+    "480": {
+      "filename": "AFTWallet.sol",
+      "line": 324
+    },
+    "488": {
+      "filename": "AFTWallet.sol",
+      "line": 324
+    },
+    "496": {
+      "filename": "AFTWallet.sol",
+      "line": 326
+    },
+    "512": {
+      "filename": "AFTWallet.sol",
+      "line": 326
+    },
+    "520": {
+      "filename": "AFTWallet.sol",
+      "line": 326
+    },
+    "528": {
+      "filename": "AFTWallet.sol",
+      "line": 326
+    },
+    "544": {
+      "filename": "AFTWallet.sol",
+      "line": 326
+    },
+    "560": {
+      "filename": "./AFTWallet.code",
+      "line": 1705
+    },
+    "568": {
+      "filename": "./AFTWallet.code",
+      "line": 1707
+    },
+    "576": {
+      "filename": "./AFTWallet.code",
+      "line": 1710
+    },
+    "584": {
+      "filename": "./AFTWallet.code",
+      "line": 1711
+    },
+    "592": {
+      "filename": "./AFTWallet.code",
+      "line": 1712
+    },
+    "608": {
+      "filename": "AFTWallet.sol",
+      "line": 263
+    },
+    "616": {
+      "filename": "./AFTWallet.code",
+      "line": 1717
+    }
+  },
+  "5f5a038e9781d7be6cf44d42e28dd8ca39d603a946fafb24ba1a2eb517d49298": {
+    "0": {
+      "filename": "AFTWallet.sol",
+      "line": 354
+    }
+  },
+  "60cf115aa0d1f66a173afb649eefd062fe59a9f370648126b17cdc6b49c9de6d": {},
+  "61ab4641fa30d9310391025086eec65d200d79268e1b7cd402565e01ba64be3c": {
+    "0": {
+      "filename": "./AFTWallet.code",
+      "line": 1377
+    }
+  },
+  "657f11ce8a0844f688cac87d8fcd8c4e8e148869fa346d7dbf201a26026e3fcc": {
+    "0": {
+      "filename": "AFTWallet.sol",
+      "line": 57
+    },
+    "8": {
+      "filename": "AFTWallet.sol",
+      "line": 57
+    },
+    "24": {
+      "filename": "AFTWallet.sol",
+      "line": 57
+    },
+    "32": {
+      "filename": "AFTWallet.sol",
+      "line": 57
+    },
+    "56": {
+      "filename": "AFTWallet.sol",
+      "line": 66
+    },
+    "72": {
+      "filename": "AFTWallet.sol",
+      "line": 66
+    },
+    "88": {
+      "filename": "AFTWallet.sol",
+      "line": 66
+    },
+    "104": {
+      "filename": "AFTWallet.sol",
+      "line": 66
+    },
+    "128": {
+      "filename": "AFTWallet.sol",
+      "line": 67
+    },
+    "136": {
+      "filename": "AFTWallet.sol",
+      "line": 67
+    },
+    "152": {
+      "filename": "AFTWallet.sol",
+      "line": 67
+    },
+    "176": {
+      "filename": "AFTWallet.sol",
+      "line": 68
+    },
+    "192": {
+      "filename": "AFTWallet.sol",
+      "line": 68
+    },
+    "200": {
+      "filename": "AFTWallet.sol",
+      "line": 68
+    },
+    "208": {
+      "filename": "AFTWallet.sol",
+      "line": 68
+    },
+    "232": {
+      "filename": "AFTWallet.sol",
+      "line": 70
+    },
+    "240": {
+      "filename": "AFTWallet.sol",
+      "line": 70
+    },
+    "248": {
+      "filename": "AFTWallet.sol",
+      "line": 70
+    },
+    "264": {
+      "filename": "AFTWallet.sol",
+      "line": 70
+    },
+    "288": {
+      "filename": "AFTWallet.sol",
+      "line": 72
+    },
+    "304": {
+      "filename": "AFTWallet.sol",
+      "line": 73
+    },
+    "320": {
+      "filename": "AFTWallet.sol",
+      "line": 73
+    },
+    "336": {
+      "filename": "AFTWallet.sol",
+      "line": 73
+    },
+    "344": {
+      "filename": "AFTWallet.sol",
+      "line": 75
+    },
+    "352": {
+      "filename": "AFTWallet.sol",
+      "line": 75
+    },
+    "368": {
+      "filename": "AFTWallet.sol",
+      "line": 75
+    },
+    "384": {
+      "filename": "AFTWallet.sol",
+      "line": 78
+    },
+    "408": {
+      "filename": "AFTWallet.sol",
+      "line": 78
+    },
+    "416": {
+      "filename": "AFTWallet.sol",
+      "line": 78
+    },
+    "432": {
+      "filename": "AFTWallet.sol",
+      "line": 78
+    },
+    "448": {
+      "filename": "AFTWallet.sol",
+      "line": 78
+    },
+    "456": {
+      "filename": "AFTWallet.sol",
+      "line": 78
+    },
+    "504": {
+      "filename": "AFTWallet.sol",
+      "line": 78
+    },
+    "520": {
+      "filename": "AFTWallet.sol",
+      "line": 78
+    },
+    "536": {
+      "filename": "AFTWallet.sol",
+      "line": 78
+    },
+    "544": {
+      "filename": "AFTWallet.sol",
+      "line": 78
+    },
+    "560": {
+      "filename": "AFTWallet.sol",
+      "line": 78
+    },
+    "568": {
+      "filename": "AFTWallet.sol",
+      "line": 78
+    },
+    "576": {
+      "filename": "AFTWallet.sol",
+      "line": 78
+    },
+    "592": {
+      "filename": "AFTWallet.sol",
+      "line": 78
+    },
+    "600": {
+      "filename": "AFTWallet.sol",
+      "line": 78
+    },
+    "608": {
+      "filename": "AFTWallet.sol",
+      "line": 78
+    },
+    "624": {
+      "filename": "AFTWallet.sol",
+      "line": 78
+    },
+    "632": {
+      "filename": "AFTWallet.sol",
+      "line": 78
+    },
+    "640": {
+      "filename": "AFTWallet.sol",
+      "line": 78
+    },
+    "648": {
+      "filename": "AFTWallet.sol",
+      "line": 78
+    },
+    "656": {
+      "filename": "AFTWallet.sol",
+      "line": 84
+    },
+    "688": {
+      "filename": "AFTWallet.sol",
+      "line": 84
+    },
+    "704": {
+      "filename": "AFTWallet.sol",
+      "line": 84
+    },
+    "752": {
+      "filename": "AFTWallet.sol",
+      "line": 84
+    },
+    "760": {
+      "filename": "AFTWallet.sol",
+      "line": 84
+    },
+    "776": {
+      "filename": "AFTWallet.sol",
+      "line": 84
+    },
+    "784": {
+      "filename": "AFTWallet.sol",
+      "line": 84
+    },
+    "800": {
+      "filename": "AFTWallet.sol",
+      "line": 84
+    },
+    "808": {
+      "filename": "AFTWallet.sol",
+      "line": 84
+    }
+  },
+  "6cb7d667491ba250f93e101e5999727e8fba3bbcb7e874e6876e4aeb3ccb3c3c": {
+    "0": {
+      "filename": "AFTWallet.sol",
+      "line": 233
+    },
+    "16": {
+      "filename": "AFTWallet.sol",
+      "line": 236
+    },
+    "24": {
+      "filename": "AFTWallet.sol",
+      "line": 236
+    },
+    "40": {
+      "filename": "AFTWallet.sol",
+      "line": 236
+    },
+    "48": {
+      "filename": "AFTWallet.sol",
+      "line": 236
+    },
+    "64": {
+      "filename": "AFTWallet.sol",
+      "line": 236
+    },
+    "80": {
+      "filename": "AFTWallet.sol",
+      "line": 236
+    },
+    "96": {
+      "filename": "AFTWallet.sol",
+      "line": 236
+    },
+    "112": {
+      "filename": "AFTWallet.sol",
+      "line": 236
+    },
+    "120": {
+      "filename": "AFTWallet.sol",
+      "line": 236
+    },
+    "168": {
+      "filename": "AFTWallet.sol",
+      "line": 236
+    },
+    "184": {
+      "filename": "AFTWallet.sol",
+      "line": 236
+    },
+    "192": {
+      "filename": "AFTWallet.sol",
+      "line": 236
+    },
+    "200": {
+      "filename": "AFTWallet.sol",
+      "line": 236
+    },
+    "224": {
+      "filename": "AFTWallet.sol",
+      "line": 236
+    },
+    "240": {
+      "filename": "AFTWallet.sol",
+      "line": 236
+    },
+    "264": {
+      "filename": "AFTWallet.sol",
+      "line": 236
+    },
+    "272": {
+      "filename": "AFTWallet.sol",
+      "line": 236
+    },
+    "280": {
+      "filename": "AFTWallet.sol",
+      "line": 236
+    },
+    "296": {
+      "filename": "AFTWallet.sol",
+      "line": 236
+    },
+    "312": {
+      "filename": "AFTWallet.sol",
+      "line": 236
+    },
+    "320": {
+      "filename": "AFTWallet.sol",
+      "line": 236
+    },
+    "344": {
+      "filename": "AFTWallet.sol",
+      "line": 236
+    },
+    "360": {
+      "filename": "AFTWallet.sol",
+      "line": 236
+    },
+    "368": {
+      "filename": "AFTWallet.sol",
+      "line": 236
+    },
+    "416": {
+      "filename": "AFTWallet.sol",
+      "line": 236
+    },
+    "432": {
+      "filename": "AFTWallet.sol",
+      "line": 236
+    },
+    "440": {
+      "filename": "AFTWallet.sol",
+      "line": 236
+    },
+    "456": {
+      "filename": "AFTWallet.sol",
+      "line": 236
+    },
+    "464": {
+      "filename": "AFTWallet.sol",
+      "line": 236
+    },
+    "472": {
+      "filename": "AFTWallet.sol",
+      "line": 236
+    },
+    "488": {
+      "filename": "AFTWallet.sol",
+      "line": 236
+    },
+    "504": {
+      "filename": "AFTWallet.sol",
+      "line": 236
+    },
+    "520": {
+      "filename": "AFTWallet.sol",
+      "line": 236
+    },
+    "528": {
+      "filename": "AFTWallet.sol",
+      "line": 236
+    },
+    "536": {
+      "filename": "AFTWallet.sol",
+      "line": 236
+    },
+    "544": {
+      "filename": "AFTWallet.sol",
+      "line": 236
+    },
+    "552": {
+      "filename": "AFTWallet.sol",
+      "line": 236
+    },
+    "568": {
+      "filename": "./AFTWallet.code",
+      "line": 490
+    },
+    "576": {
+      "filename": "AFTWallet.sol",
+      "line": 245
+    }
+  },
+  "74fea7a08812f93acd7d6303937f663cad451a8dce0cbf82e1575cd5b12b16da": {
+    "0": {
+      "filename": "AFTWallet.sol",
+      "line": 203
+    },
+    "16": {
+      "filename": "AFTWallet.sol",
+      "line": 204
+    },
+    "64": {
+      "filename": "AFTWallet.sol",
+      "line": 204
+    },
+    "72": {
+      "filename": "AFTWallet.sol",
+      "line": 204
+    },
+    "88": {
+      "filename": "AFTWallet.sol",
+      "line": 204
+    },
+    "96": {
+      "filename": "AFTWallet.sol",
+      "line": 204
+    },
+    "112": {
+      "filename": "AFTWallet.sol",
+      "line": 204
+    },
+    "120": {
+      "filename": "AFTWallet.sol",
+      "line": 204
+    },
+    "136": {
+      "filename": "./AFTWallet.code",
+      "line": 353
+    },
+    "144": {
+      "filename": "AFTWallet.sol",
+      "line": 206
+    },
+    "152": {
+      "filename": "AFTWallet.sol",
+      "line": 206
+    },
+    "168": {
+      "filename": "AFTWallet.sol",
+      "line": 208
+    },
+    "176": {
+      "filename": "AFTWallet.sol",
+      "line": 208
+    },
+    "184": {
+      "filename": "AFTWallet.sol",
+      "line": 208
+    },
+    "200": {
+      "filename": "AFTWallet.sol",
+      "line": 208
+    },
+    "208": {
+      "filename": "AFTWallet.sol",
+      "line": 208
+    },
+    "224": {
+      "filename": "AFTWallet.sol",
+      "line": 208
+    },
+    "232": {
+      "filename": "AFTWallet.sol",
+      "line": 208
+    },
+    "248": {
+      "filename": "./AFTWallet.code",
+      "line": 369
+    },
+    "256": {
+      "filename": "AFTWallet.sol",
+      "line": 210
+    },
+    "264": {
+      "filename": "AFTWallet.sol",
+      "line": 210
+    },
+    "280": {
+      "filename": "AFTWallet.sol",
+      "line": 214
+    },
+    "296": {
+      "filename": "AFTWallet.sol",
+      "line": 215
+    },
+    "312": {
+      "filename": "AFTWallet.sol",
+      "line": 215
+    },
+    "320": {
+      "filename": "AFTWallet.sol",
+      "line": 215
+    },
+    "336": {
+      "filename": "AFTWallet.sol",
+      "line": 215
+    },
+    "344": {
+      "filename": "AFTWallet.sol",
+      "line": 215
+    },
+    "360": {
+      "filename": "AFTWallet.sol",
+      "line": 215
+    },
+    "368": {
+      "filename": "AFTWallet.sol",
+      "line": 215
+    },
+    "384": {
+      "filename": "AFTWallet.sol",
+      "line": 215
+    },
+    "392": {
+      "filename": "AFTWallet.sol",
+      "line": 215
+    },
+    "400": {
+      "filename": "AFTWallet.sol",
+      "line": 216
+    },
+    "408": {
+      "filename": "AFTWallet.sol",
+      "line": 218
+    },
+    "416": {
+      "filename": "AFTWallet.sol",
+      "line": 220
+    },
+    "440": {
+      "filename": "AFTWallet.sol",
+      "line": 220
+    },
+    "448": {
+      "filename": "AFTWallet.sol",
+      "line": 220
+    }
+  },
+  "785c03061dabe0c0d0ce42c9afbe781cdb019e93e6bd2c4ec9f15c1532fb118d": {
+    "0": {
+      "filename": "./AFTWallet.code",
+      "line": 1085
+    },
+    "8": {
+      "filename": "./AFTWallet.code",
+      "line": 1086
+    },
+    "24": {
+      "filename": "./AFTWallet.code",
+      "line": 1087
+    },
+    "48": {
+      "filename": "./AFTWallet.code",
+      "line": 1088
+    },
+    "64": {
+      "filename": "./AFTWallet.code",
+      "line": 1089
+    },
+    "72": {
+      "filename": "./AFTWallet.code",
+      "line": 1090
+    },
+    "88": {
+      "filename": "AFTWallet.sol",
+      "line": 147
+    },
+    "96": {
+      "filename": "AFTWallet.sol",
+      "line": 147
+    },
+    "104": {
+      "filename": "AFTWallet.sol",
+      "line": 147
+    },
+    "112": {
+      "filename": "AFTWallet.sol",
+      "line": 147
+    },
+    "120": {
+      "filename": "AFTWallet.sol",
+      "line": 147
+    },
+    "128": {
+      "filename": "AFTWallet.sol",
+      "line": 147
+    },
+    "136": {
+      "filename": "AFTWallet.sol",
+      "line": 147
+    },
+    "152": {
+      "filename": "AFTWallet.sol",
+      "line": 147
+    },
+    "168": {
+      "filename": "AFTWallet.sol",
+      "line": 147
+    },
+    "184": {
+      "filename": "AFTWallet.sol",
+      "line": 147
+    },
+    "192": {
+      "filename": "AFTWallet.sol",
+      "line": 147
+    },
+    "200": {
+      "filename": "AFTWallet.sol",
+      "line": 147
+    },
+    "208": {
+      "filename": "AFTWallet.sol",
+      "line": 147
+    },
+    "224": {
+      "filename": "AFTWallet.sol",
+      "line": 147
+    },
+    "232": {
+      "filename": "AFTWallet.sol",
+      "line": 147
+    },
+    "240": {
+      "filename": "AFTWallet.sol",
+      "line": 147
+    },
+    "248": {
+      "filename": "AFTWallet.sol",
+      "line": 147
+    },
+    "264": {
+      "filename": "AFTWallet.sol",
+      "line": 147
+    },
+    "280": {
+      "filename": "AFTWallet.sol",
+      "line": 147
+    },
+    "288": {
+      "filename": "AFTWallet.sol",
+      "line": 147
+    },
+    "296": {
+      "filename": "./AFTWallet.code",
+      "line": 1116
+    },
+    "312": {
+      "filename": "./AFTWallet.code",
+      "line": 1119
+    },
+    "328": {
+      "filename": "./AFTWallet.code",
+      "line": 1122
+    }
+  },
+  "7ae017b9155dd25b84de8147614351116abcd03dcf40c2d7a7e1bdb2c33b6674": {
+    "0": {
+      "filename": "./AFTWallet.code",
+      "line": 833
+    },
+    "8": {
+      "filename": "./AFTWallet.code",
+      "line": 834
+    },
+    "24": {
+      "filename": "./AFTWallet.code",
+      "line": 835
+    },
+    "48": {
+      "filename": "AFTWallet.sol",
+      "line": 343
+    },
+    "56": {
+      "filename": "AFTWallet.sol",
+      "line": 343
+    },
+    "64": {
+      "filename": "AFTWallet.sol",
+      "line": 343
+    },
+    "72": {
+      "filename": "AFTWallet.sol",
+      "line": 343
+    },
+    "80": {
+      "filename": "AFTWallet.sol",
+      "line": 343
+    },
+    "88": {
+      "filename": "AFTWallet.sol",
+      "line": 343
+    },
+    "96": {
+      "filename": "AFTWallet.sol",
+      "line": 343
+    },
+    "112": {
+      "filename": "AFTWallet.sol",
+      "line": 343
+    },
+    "120": {
+      "filename": "AFTWallet.sol",
+      "line": 343
+    },
+    "128": {
+      "filename": "./AFTWallet.code",
+      "line": 848
+    },
+    "144": {
+      "filename": "./AFTWallet.code",
+      "line": 851
+    },
+    "152": {
+      "filename": "./AFTWallet.code",
+      "line": 852
+    },
+    "168": {
+      "filename": "./AFTWallet.code",
+      "line": 853
+    },
+    "176": {
+      "filename": "./AFTWallet.code",
+      "line": 854
+    },
+    "184": {
+      "filename": "./AFTWallet.code",
+      "line": 855
+    },
+    "200": {
+      "filename": "./AFTWallet.code",
+      "line": 856
+    },
+    "216": {
+      "filename": "./AFTWallet.code",
+      "line": 857
+    },
+    "224": {
+      "filename": "./AFTWallet.code",
+      "line": 858
+    },
+    "232": {
+      "filename": "./AFTWallet.code",
+      "line": 859
+    },
+    "240": {
+      "filename": "./AFTWallet.code",
+      "line": 860
+    },
+    "264": {
+      "filename": "./AFTWallet.code",
+      "line": 861
+    },
+    "272": {
+      "filename": "./AFTWallet.code",
+      "line": 862
+    },
+    "320": {
+      "filename": "./AFTWallet.code",
+      "line": 863
+    },
+    "344": {
+      "filename": "./AFTWallet.code",
+      "line": 864
+    },
+    "360": {
+      "filename": "./AFTWallet.code",
+      "line": 865
+    },
+    "368": {
+      "filename": "./AFTWallet.code",
+      "line": 866
+    },
+    "376": {
+      "filename": "./AFTWallet.code",
+      "line": 867
+    },
+    "392": {
+      "filename": "./AFTWallet.code",
+      "line": 869
+    },
+    "400": {
+      "filename": "./AFTWallet.code",
+      "line": 870
+    },
+    "408": {
+      "filename": "./AFTWallet.code",
+      "line": 872
+    },
+    "416": {
+      "filename": "./AFTWallet.code",
+      "line": 873
+    },
+    "432": {
+      "filename": "./AFTWallet.code",
+      "line": 876
+    }
+  },
+  "86c3c0c050ac9a5f950f56a835f27858e3e1f2bade687279ed4e0aadf37b6cf0": {
+    "0": {
+      "filename": "modifiers/modifiers.sol",
+      "line": 91
+    },
+    "8": {
+      "filename": "modifiers/modifiers.sol",
+      "line": 91
+    },
+    "24": {
+      "filename": "modifiers/modifiers.sol",
+      "line": 91
+    },
+    "40": {
+      "filename": "modifiers/modifiers.sol",
+      "line": 91
+    },
+    "56": {
+      "filename": "modifiers/modifiers.sol",
+      "line": 91
+    },
+    "72": {
+      "filename": "modifiers/modifiers.sol",
+      "line": 91
+    },
+    "80": {
+      "filename": "modifiers/modifiers.sol",
+      "line": 91
+    },
+    "96": {
+      "filename": "modifiers/modifiers.sol",
+      "line": 91
+    },
+    "104": {
+      "filename": "modifiers/modifiers.sol",
+      "line": 91
+    },
+    "112": {
+      "filename": "modifiers/modifiers.sol",
+      "line": 91
+    }
+  },
+  "8a83c4b39f0a8cedb63095171c2b28b72414e7e6f312325b4fc7cff1d8ed6218": {
+    "0": {
+      "filename": "AFTWallet.sol",
+      "line": 349
+    },
+    "16": {
+      "filename": "AFTWallet.sol",
+      "line": 350
+    },
+    "24": {
+      "filename": "AFTWallet.sol",
+      "line": 350
+    },
+    "40": {
+      "filename": "AFTWallet.sol",
+      "line": 350
+    },
+    "48": {
+      "filename": "AFTWallet.sol",
+      "line": 350
+    },
+    "64": {
+      "filename": "AFTWallet.sol",
+      "line": 350
+    },
+    "72": {
+      "filename": "AFTWallet.sol",
+      "line": 350
+    }
+  },
+  "90b3bf17534812bf87dbde9541c8071a53c6f5f6f65d228daa41cb018d64e27b": {
+    "0": {
+      "filename": "./AFTWallet.code",
+      "line": 687
+    },
+    "16": {
+      "filename": "./AFTWallet.code",
+      "line": 688
+    },
+    "24": {
+      "filename": "./AFTWallet.code",
+      "line": 689
+    },
+    "40": {
+      "filename": "./AFTWallet.code",
+      "line": 690
+    },
+    "56": {
+      "filename": "./AFTWallet.code",
+      "line": 691
+    },
+    "72": {
+      "filename": "./AFTWallet.code",
+      "line": 692
+    },
+    "80": {
+      "filename": "./AFTWallet.code",
+      "line": 693
+    },
+    "88": {
+      "filename": "./AFTWallet.code",
+      "line": 694
+    },
+    "96": {
+      "filename": "./AFTWallet.code",
+      "line": 695
+    },
+    "112": {
+      "filename": "./AFTWallet.code",
+      "line": 696
+    },
+    "128": {
+      "filename": "./AFTWallet.code",
+      "line": 697
+    },
+    "136": {
+      "filename": "./AFTWallet.code",
+      "line": 698
+    },
+    "152": {
+      "filename": "./AFTWallet.code",
+      "line": 699
+    },
+    "168": {
+      "filename": "./AFTWallet.code",
+      "line": 700
+    },
+    "184": {
+      "filename": "./AFTWallet.code",
+      "line": 701
+    },
+    "200": {
+      "filename": "./AFTWallet.code",
+      "line": 702
+    }
+  },
+  "96a296d224f285c67bee93c30f8a309157f0daa35dc5b87e410b78630a09cfc7": {},
+  "a8706c6358fecfba3c31d885dcf337fed67609c22ebf972396a9aca8faf7a108": {
+    "0": {
+      "filename": "./AFTWallet.code",
+      "line": 1827
+    }
+  },
+  "ab15fb63dc52a6fcb9679150380bf2648f3f43d70c51cc0523376138ceb9a7da": {
+    "0": {
+      "filename": "./AFTWallet.code",
+      "line": 1278
+    },
+    "8": {
+      "filename": "./AFTWallet.code",
+      "line": 1279
+    },
+    "24": {
+      "filename": "./AFTWallet.code",
+      "line": 1280
+    },
+    "48": {
+      "filename": "./AFTWallet.code",
+      "line": 1281
+    },
+    "64": {
+      "filename": "./AFTWallet.code",
+      "line": 1282
+    },
+    "72": {
+      "filename": "./AFTWallet.code",
+      "line": 1283
+    },
+    "88": {
+      "filename": "AFTWallet.sol",
+      "line": 57
+    },
+    "96": {
+      "filename": "AFTWallet.sol",
+      "line": 57
+    },
+    "104": {
+      "filename": "AFTWallet.sol",
+      "line": 57
+    },
+    "112": {
+      "filename": "AFTWallet.sol",
+      "line": 57
+    },
+    "120": {
+      "filename": "AFTWallet.sol",
+      "line": 57
+    },
+    "128": {
+      "filename": "AFTWallet.sol",
+      "line": 57
+    },
+    "136": {
+      "filename": "AFTWallet.sol",
+      "line": 57
+    },
+    "152": {
+      "filename": "AFTWallet.sol",
+      "line": 57
+    },
+    "168": {
+      "filename": "AFTWallet.sol",
+      "line": 57
+    },
+    "184": {
+      "filename": "AFTWallet.sol",
+      "line": 57
+    },
+    "192": {
+      "filename": "AFTWallet.sol",
+      "line": 57
+    },
+    "200": {
+      "filename": "AFTWallet.sol",
+      "line": 57
+    },
+    "208": {
+      "filename": "AFTWallet.sol",
+      "line": 57
+    },
+    "224": {
+      "filename": "AFTWallet.sol",
+      "line": 57
+    },
+    "240": {
+      "filename": "AFTWallet.sol",
+      "line": 57
+    },
+    "256": {
+      "filename": "AFTWallet.sol",
+      "line": 57
+    },
+    "264": {
+      "filename": "AFTWallet.sol",
+      "line": 57
+    },
+    "272": {
+      "filename": "./AFTWallet.code",
+      "line": 1306
+    },
+    "288": {
+      "filename": "./AFTWallet.code",
+      "line": 1309
+    },
+    "304": {
+      "filename": "./AFTWallet.code",
+      "line": 1312
+    }
+  },
+  "acec62e12cf5dfcd9819392f379c53b2ac0ec20d9394e85424a16666d03cf9c6": {
+    "0": {
+      "filename": "./AFTWallet.code",
+      "line": 1348
+    },
+    "8": {
+      "filename": "./AFTWallet.code",
+      "line": 1349
+    },
+    "56": {
+      "filename": "./AFTWallet.code",
+      "line": 1350
+    },
+    "64": {
+      "filename": "./AFTWallet.code",
+      "line": 1351
+    },
+    "80": {
+      "filename": "./AFTWallet.code",
+      "line": 1354
+    },
+    "88": {
+      "filename": "./AFTWallet.code",
+      "line": 1355
+    },
+    "136": {
+      "filename": "./AFTWallet.code",
+      "line": 1356
+    },
+    "144": {
+      "filename": "./AFTWallet.code",
+      "line": 1357
+    }
+  },
+  "b05827b2c623b55f87183ae215c7e98de9917337278366395514ed279700e468": {
+    "0": {
+      "filename": "AFTWallet.sol",
+      "line": 87
+    },
+    "16": {
+      "filename": "AFTWallet.sol",
+      "line": 87
+    },
+    "24": {
+      "filename": "AFTWallet.sol",
+      "line": 87
+    },
+    "32": {
+      "filename": "AFTWallet.sol",
+      "line": 87
+    },
+    "56": {
+      "filename": "AFTWallet.sol",
+      "line": 91
+    },
+    "72": {
+      "filename": "AFTWallet.sol",
+      "line": 91
+    },
+    "80": {
+      "filename": "AFTWallet.sol",
+      "line": 91
+    },
+    "96": {
+      "filename": "AFTWallet.sol",
+      "line": 92
+    },
+    "104": {
+      "filename": "AFTWallet.sol",
+      "line": 93
+    },
+    "112": {
+      "filename": "AFTWallet.sol",
+      "line": 93
+    },
+    "128": {
+      "filename": "AFTWallet.sol",
+      "line": 93
+    },
+    "136": {
+      "filename": "AFTWallet.sol",
+      "line": 93
+    },
+    "144": {
+      "filename": "AFTWallet.sol",
+      "line": 93
+    },
+    "152": {
+      "filename": "AFTWallet.sol",
+      "line": 93
+    },
+    "160": {
+      "filename": "AFTWallet.sol",
+      "line": 93
+    },
+    "168": {
+      "filename": "AFTWallet.sol",
+      "line": 93
+    },
+    "176": {
+      "filename": "AFTWallet.sol",
+      "line": 93
+    },
+    "192": {
+      "filename": "AFTWallet.sol",
+      "line": 93
+    },
+    "200": {
+      "filename": "AFTWallet.sol",
+      "line": 93
+    },
+    "216": {
+      "filename": "AFTWallet.sol",
+      "line": 93
+    },
+    "232": {
+      "filename": "./AFTWallet.code",
+      "line": 1228
+    },
+    "240": {
+      "filename": "AFTWallet.sol",
+      "line": 96
+    },
+    "248": {
+      "filename": "AFTWallet.sol",
+      "line": 96
+    },
+    "264": {
+      "filename": "AFTWallet.sol",
+      "line": 97
+    },
+    "272": {
+      "filename": "AFTWallet.sol",
+      "line": 97
+    },
+    "288": {
+      "filename": "AFTWallet.sol",
+      "line": 97
+    },
+    "304": {
+      "filename": "AFTWallet.sol",
+      "line": 97
+    },
+    "320": {
+      "filename": "AFTWallet.sol",
+      "line": 97
+    },
+    "328": {
+      "filename": "AFTWallet.sol",
+      "line": 97
+    },
+    "344": {
+      "filename": "AFTWallet.sol",
+      "line": 97
+    },
+    "392": {
+      "filename": "AFTWallet.sol",
+      "line": 97
+    },
+    "408": {
+      "filename": "AFTWallet.sol",
+      "line": 97
+    },
+    "416": {
+      "filename": "AFTWallet.sol",
+      "line": 97
+    },
+    "424": {
+      "filename": "AFTWallet.sol",
+      "line": 97
+    },
+    "448": {
+      "filename": "AFTWallet.sol",
+      "line": 97
+    },
+    "464": {
+      "filename": "AFTWallet.sol",
+      "line": 97
+    },
+    "488": {
+      "filename": "AFTWallet.sol",
+      "line": 97
+    },
+    "496": {
+      "filename": "AFTWallet.sol",
+      "line": 97
+    },
+    "504": {
+      "filename": "AFTWallet.sol",
+      "line": 97
+    },
+    "520": {
+      "filename": "AFTWallet.sol",
+      "line": 97
+    },
+    "536": {
+      "filename": "AFTWallet.sol",
+      "line": 97
+    },
+    "544": {
+      "filename": "AFTWallet.sol",
+      "line": 97
+    },
+    "568": {
+      "filename": "AFTWallet.sol",
+      "line": 97
+    },
+    "584": {
+      "filename": "AFTWallet.sol",
+      "line": 97
+    },
+    "592": {
+      "filename": "AFTWallet.sol",
+      "line": 97
+    },
+    "640": {
+      "filename": "AFTWallet.sol",
+      "line": 97
+    },
+    "656": {
+      "filename": "AFTWallet.sol",
+      "line": 97
+    },
+    "672": {
+      "filename": "AFTWallet.sol",
+      "line": 97
+    },
+    "680": {
+      "filename": "AFTWallet.sol",
+      "line": 97
+    },
+    "696": {
+      "filename": "AFTWallet.sol",
+      "line": 97
+    },
+    "704": {
+      "filename": "AFTWallet.sol",
+      "line": 97
+    },
+    "712": {
+      "filename": "AFTWallet.sol",
+      "line": 97
+    },
+    "728": {
+      "filename": "AFTWallet.sol",
+      "line": 97
+    },
+    "736": {
+      "filename": "AFTWallet.sol",
+      "line": 97
+    },
+    "744": {
+      "filename": "AFTWallet.sol",
+      "line": 97
+    },
+    "760": {
+      "filename": "AFTWallet.sol",
+      "line": 97
+    },
+    "768": {
+      "filename": "AFTWallet.sol",
+      "line": 97
+    },
+    "776": {
+      "filename": "AFTWallet.sol",
+      "line": 97
+    },
+    "784": {
+      "filename": "AFTWallet.sol",
+      "line": 97
+    },
+    "792": {
+      "filename": "AFTWallet.sol",
+      "line": 97
+    },
+    "800": {
+      "filename": "AFTWallet.sol",
+      "line": 97
+    },
+    "808": {
+      "filename": "AFTWallet.sol",
+      "line": 97
+    }
+  },
+  "bbecdb56a07316e7867cfe0f0c6cebfccd135bd9270b1e1564ef2d35bf3aa592": {
+    "0": {
+      "filename": "./AFTWallet.code",
+      "line": 724
+    },
+    "8": {
+      "filename": "./AFTWallet.code",
+      "line": 725
+    },
+    "24": {
+      "filename": "./AFTWallet.code",
+      "line": 726
+    },
+    "48": {
+      "filename": "./AFTWallet.code",
+      "line": 727
+    },
+    "64": {
+      "filename": "./AFTWallet.code",
+      "line": 728
+    },
+    "72": {
+      "filename": "./AFTWallet.code",
+      "line": 729
+    },
+    "88": {
+      "filename": "AFTWallet.sol",
+      "line": 107
+    },
+    "96": {
+      "filename": "AFTWallet.sol",
+      "line": 107
+    },
+    "104": {
+      "filename": "AFTWallet.sol",
+      "line": 107
+    },
+    "112": {
+      "filename": "AFTWallet.sol",
+      "line": 107
+    },
+    "120": {
+      "filename": "AFTWallet.sol",
+      "line": 107
+    },
+    "128": {
+      "filename": "AFTWallet.sol",
+      "line": 107
+    },
+    "136": {
+      "filename": "AFTWallet.sol",
+      "line": 107
+    },
+    "152": {
+      "filename": "AFTWallet.sol",
+      "line": 107
+    },
+    "168": {
+      "filename": "AFTWallet.sol",
+      "line": 107
+    },
+    "184": {
+      "filename": "AFTWallet.sol",
+      "line": 107
+    },
+    "200": {
+      "filename": "AFTWallet.sol",
+      "line": 107
+    },
+    "208": {
+      "filename": "./AFTWallet.code",
+      "line": 746
+    },
+    "224": {
+      "filename": "./AFTWallet.code",
+      "line": 749
+    },
+    "240": {
+      "filename": "./AFTWallet.code",
+      "line": 752
+    }
+  },
+  "bdc56882a703790b25b184430e1d1921feabc8d890b8591d2c899a3f56d4c6b9": {
+    "0": {
+      "filename": "./AFTWallet.code",
+      "line": 888
+    },
+    "8": {
+      "filename": "./AFTWallet.code",
+      "line": 889
+    },
+    "24": {
+      "filename": "./AFTWallet.code",
+      "line": 890
+    },
+    "48": {
+      "filename": "./AFTWallet.code",
+      "line": 891
+    },
+    "64": {
+      "filename": "./AFTWallet.code",
+      "line": 892
+    },
+    "72": {
+      "filename": "./AFTWallet.code",
+      "line": 893
+    },
+    "88": {
+      "filename": "AFTWallet.sol",
+      "line": 334
+    },
+    "96": {
+      "filename": "./AFTWallet.code",
+      "line": 899
+    },
+    "112": {
+      "filename": "./AFTWallet.code",
+      "line": 902
+    },
+    "120": {
+      "filename": "./AFTWallet.code",
+      "line": 903
+    },
+    "136": {
+      "filename": "./AFTWallet.code",
+      "line": 904
+    },
+    "144": {
+      "filename": "./AFTWallet.code",
+      "line": 905
+    },
+    "152": {
+      "filename": "./AFTWallet.code",
+      "line": 906
+    },
+    "168": {
+      "filename": "./AFTWallet.code",
+      "line": 907
+    },
+    "184": {
+      "filename": "./AFTWallet.code",
+      "line": 908
+    },
+    "192": {
+      "filename": "./AFTWallet.code",
+      "line": 909
+    },
+    "200": {
+      "filename": "./AFTWallet.code",
+      "line": 910
+    },
+    "208": {
+      "filename": "./AFTWallet.code",
+      "line": 911
+    },
+    "232": {
+      "filename": "./AFTWallet.code",
+      "line": 912
+    },
+    "240": {
+      "filename": "./AFTWallet.code",
+      "line": 913
+    },
+    "248": {
+      "filename": "./AFTWallet.code",
+      "line": 914
+    },
+    "272": {
+      "filename": "./AFTWallet.code",
+      "line": 915
+    },
+    "288": {
+      "filename": "./AFTWallet.code",
+      "line": 916
+    },
+    "296": {
+      "filename": "./AFTWallet.code",
+      "line": 917
+    },
+    "344": {
+      "filename": "./AFTWallet.code",
+      "line": 918
+    },
+    "352": {
+      "filename": "./AFTWallet.code",
+      "line": 919
+    },
+    "360": {
+      "filename": "./AFTWallet.code",
+      "line": 920
+    },
+    "368": {
+      "filename": "./AFTWallet.code",
+      "line": 921
+    },
+    "376": {
+      "filename": "./AFTWallet.code",
+      "line": 922
+    },
+    "392": {
+      "filename": "./AFTWallet.code",
+      "line": 923
+    },
+    "400": {
+      "filename": "./AFTWallet.code",
+      "line": 924
+    },
+    "408": {
+      "filename": "./AFTWallet.code",
+      "line": 925
+    },
+    "416": {
+      "filename": "./AFTWallet.code",
+      "line": 926
+    },
+    "424": {
+      "filename": "./AFTWallet.code",
+      "line": 927
+    },
+    "440": {
+      "filename": "./AFTWallet.code",
+      "line": 929
+    },
+    "448": {
+      "filename": "./AFTWallet.code",
+      "line": 930
+    },
+    "464": {
+      "filename": "./AFTWallet.code",
+      "line": 932
+    },
+    "472": {
+      "filename": "./AFTWallet.code",
+      "line": 933
+    },
+    "488": {
+      "filename": "./AFTWallet.code",
+      "line": 936
+    }
+  },
+  "c0de63553cb951efa7eeb3707212167a69fec13c80539ceeb3632121d677eefe": {
+    "0": {
+      "filename": "AFTWallet.sol",
+      "line": 194
+    },
+    "16": {
+      "filename": "AFTWallet.sol",
+      "line": 194
+    },
+    "24": {
+      "filename": "AFTWallet.sol",
+      "line": 194
+    },
+    "32": {
+      "filename": "AFTWallet.sol",
+      "line": 199
+    },
+    "64": {
+      "filename": "AFTWallet.sol",
+      "line": 199
+    },
+    "80": {
+      "filename": "AFTWallet.sol",
+      "line": 200
+    },
+    "88": {
+      "filename": "AFTWallet.sol",
+      "line": 200
+    },
+    "104": {
+      "filename": "AFTWallet.sol",
+      "line": 201
+    },
+    "152": {
+      "filename": "AFTWallet.sol",
+      "line": 201
+    },
+    "160": {
+      "filename": "AFTWallet.sol",
+      "line": 201
+    },
+    "176": {
+      "filename": "AFTWallet.sol",
+      "line": 201
+    },
+    "184": {
+      "filename": "AFTWallet.sol",
+      "line": 201
+    },
+    "200": {
+      "filename": "AFTWallet.sol",
+      "line": 201
+    },
+    "208": {
+      "filename": "AFTWallet.sol",
+      "line": 201
+    },
+    "224": {
+      "filename": "./AFTWallet.code",
+      "line": 337
+    },
+    "232": {
+      "filename": "AFTWallet.sol",
+      "line": 203
+    }
+  },
+  "c16abafd0d2bf0b26a1e2e10d2dbc366f26c5d9b2965a38754fde08da696e849": {
+    "0": {
+      "filename": "AFTWallet.sol",
+      "line": 147
+    },
+    "8": {
+      "filename": "AFTWallet.sol",
+      "line": 147
+    },
+    "24": {
+      "filename": "AFTWallet.sol",
+      "line": 147
+    },
+    "32": {
+      "filename": "AFTWallet.sol",
+      "line": 147
+    },
+    "56": {
+      "filename": "AFTWallet.sol",
+      "line": 157
+    },
+    "72": {
+      "filename": "AFTWallet.sol",
+      "line": 158
+    },
+    "88": {
+      "filename": "AFTWallet.sol",
+      "line": 158
+    },
+    "104": {
+      "filename": "AFTWallet.sol",
+      "line": 158
+    },
+    "120": {
+      "filename": "AFTWallet.sol",
+      "line": 158
+    },
+    "128": {
+      "filename": "AFTWallet.sol",
+      "line": 158
+    },
+    "144": {
+      "filename": "AFTWallet.sol",
+      "line": 158
+    },
+    "160": {
+      "filename": "AFTWallet.sol",
+      "line": 158
+    },
+    "168": {
+      "filename": "AFTWallet.sol",
+      "line": 159
+    },
+    "184": {
+      "filename": "AFTWallet.sol",
+      "line": 159
+    },
+    "192": {
+      "filename": "AFTWallet.sol",
+      "line": 159
+    },
+    "208": {
+      "filename": "AFTWallet.sol",
+      "line": 159
+    },
+    "224": {
+      "filename": "AFTWallet.sol",
+      "line": 160
+    },
+    "232": {
+      "filename": "AFTWallet.sol",
+      "line": 160
+    },
+    "240": {
+      "filename": "AFTWallet.sol",
+      "line": 160
+    },
+    "264": {
+      "filename": "AFTWallet.sol",
+      "line": 162
+    },
+    "280": {
+      "filename": "AFTWallet.sol",
+      "line": 163
+    },
+    "296": {
+      "filename": "AFTWallet.sol",
+      "line": 163
+    },
+    "304": {
+      "filename": "AFTWallet.sol",
+      "line": 163
+    },
+    "312": {
+      "filename": "AFTWallet.sol",
+      "line": 163
+    },
+    "328": {
+      "filename": "AFTWallet.sol",
+      "line": 163
+    },
+    "344": {
+      "filename": "AFTWallet.sol",
+      "line": 165
+    }
+  },
+  "cc2ce0dce478ae705e5f0238b025f33075f10252c5f8e2470723b9a3fffd66b7": {
+    "0": {
+      "filename": "AFTWallet.sol",
+      "line": 107
+    },
+    "8": {
+      "filename": "AFTWallet.sol",
+      "line": 107
+    },
+    "16": {
+      "filename": "AFTWallet.sol",
+      "line": 107
+    },
+    "32": {
+      "filename": "AFTWallet.sol",
+      "line": 107
+    },
+    "40": {
+      "filename": "AFTWallet.sol",
+      "line": 107
+    },
+    "64": {
+      "filename": "AFTWallet.sol",
+      "line": 113
+    },
+    "80": {
+      "filename": "AFTWallet.sol",
+      "line": 113
+    },
+    "96": {
+      "filename": "AFTWallet.sol",
+      "line": 113
+    },
+    "112": {
+      "filename": "AFTWallet.sol",
+      "line": 113
+    },
+    "136": {
+      "filename": "AFTWallet.sol",
+      "line": 114
+    },
+    "144": {
+      "filename": "AFTWallet.sol",
+      "line": 114
+    },
+    "160": {
+      "filename": "AFTWallet.sol",
+      "line": 114
+    },
+    "184": {
+      "filename": "AFTWallet.sol",
+      "line": 115
+    },
+    "200": {
+      "filename": "AFTWallet.sol",
+      "line": 115
+    },
+    "208": {
+      "filename": "AFTWallet.sol",
+      "line": 115
+    },
+    "216": {
+      "filename": "AFTWallet.sol",
+      "line": 115
+    },
+    "240": {
+      "filename": "AFTWallet.sol",
+      "line": 117
+    },
+    "256": {
+      "filename": "AFTWallet.sol",
+      "line": 120
+    },
+    "272": {
+      "filename": "AFTWallet.sol",
+      "line": 120
+    },
+    "280": {
+      "filename": "AFTWallet.sol",
+      "line": 120
+    },
+    "288": {
+      "filename": "AFTWallet.sol",
+      "line": 120
+    },
+    "304": {
+      "filename": "AFTWallet.sol",
+      "line": 120
+    },
+    "320": {
+      "filename": "AFTWallet.sol",
+      "line": 122
+    },
+    "328": {
+      "filename": "AFTWallet.sol",
+      "line": 122
+    },
+    "344": {
+      "filename": "AFTWallet.sol",
+      "line": 122
+    },
+    "360": {
+      "filename": "AFTWallet.sol",
+      "line": 122
+    },
+    "368": {
+      "filename": "AFTWallet.sol",
+      "line": 122
+    },
+    "416": {
+      "filename": "AFTWallet.sol",
+      "line": 122
+    },
+    "432": {
+      "filename": "AFTWallet.sol",
+      "line": 122
+    },
+    "448": {
+      "filename": "AFTWallet.sol",
+      "line": 122
+    },
+    "456": {
+      "filename": "AFTWallet.sol",
+      "line": 122
+    },
+    "464": {
+      "filename": "AFTWallet.sol",
+      "line": 122
+    },
+    "472": {
+      "filename": "AFTWallet.sol",
+      "line": 122
+    },
+    "480": {
+      "filename": "AFTWallet.sol",
+      "line": 122
+    },
+    "488": {
+      "filename": "AFTWallet.sol",
+      "line": 122
+    },
+    "496": {
+      "filename": "AFTWallet.sol",
+      "line": 126
+    },
+    "528": {
+      "filename": "AFTWallet.sol",
+      "line": 126
+    },
+    "544": {
+      "filename": "AFTWallet.sol",
+      "line": 126
+    },
+    "592": {
+      "filename": "AFTWallet.sol",
+      "line": 126
+    },
+    "600": {
+      "filename": "AFTWallet.sol",
+      "line": 126
+    },
+    "616": {
+      "filename": "AFTWallet.sol",
+      "line": 126
+    },
+    "624": {
+      "filename": "AFTWallet.sol",
+      "line": 126
+    },
+    "640": {
+      "filename": "AFTWallet.sol",
+      "line": 126
+    },
+    "648": {
+      "filename": "AFTWallet.sol",
+      "line": 126
+    },
+    "664": {
+      "filename": "AFTWallet.sol",
+      "line": 129
+    },
+    "680": {
+      "filename": "AFTWallet.sol",
+      "line": 129
+    },
+    "688": {
+      "filename": "AFTWallet.sol",
+      "line": 129
+    },
+    "696": {
+      "filename": "AFTWallet.sol",
+      "line": 129
+    }
+  },
+  "cdbc73ed2354fc454ea2514b3698123e44e0279471cb5076277934ebdd419439": {
+    "0": {
+      "filename": "AFTWallet.sol",
+      "line": 344
+    },
+    "8": {
+      "filename": "AFTWallet.sol",
+      "line": 345
+    }
+  },
+  "e9e5b08e673e611d8c08a9e26ee041127b0214182769f41d2f307b6369752fb3": {
+    "0": {
+      "filename": "./AFTWallet.code",
+      "line": 1821
+    },
+    "24": {
+      "filename": "./AFTWallet.code",
+      "line": 1822
+    },
+    "40": {
+      "filename": "./AFTWallet.code",
+      "line": 1823
+    }
+  },
+  "ed37e3db1d5df3d802f5f3f0af19aece698a826b1e891a6d95cf17b60e89b19a": {
+    "0": {
+      "filename": "modifiers/modifiers.sol",
+      "line": 91
+    },
+    "8": {
+      "filename": "modifiers/modifiers.sol",
+      "line": 91
+    },
+    "24": {
+      "filename": "modifiers/modifiers.sol",
+      "line": 91
+    },
+    "32": {
+      "filename": "modifiers/modifiers.sol",
+      "line": 91
+    },
+    "40": {
+      "filename": "modifiers/modifiers.sol",
+      "line": 91
+    },
+    "48": {
+      "filename": "modifiers/modifiers.sol",
+      "line": 91
+    },
+    "64": {
+      "filename": "modifiers/modifiers.sol",
+      "line": 91
+    },
+    "72": {
+      "filename": "modifiers/modifiers.sol",
+      "line": 91
+    },
+    "88": {
+      "filename": "modifiers/modifiers.sol",
+      "line": 91
+    },
+    "96": {
+      "filename": "modifiers/modifiers.sol",
+      "line": 91
+    },
+    "104": {
+      "filename": "modifiers/modifiers.sol",
+      "line": 91
+    },
+    "120": {
+      "filename": "modifiers/modifiers.sol",
+      "line": 91
+    },
+    "136": {
+      "filename": "modifiers/modifiers.sol",
+      "line": 91
+    },
+    "152": {
+      "filename": "modifiers/modifiers.sol",
+      "line": 91
+    },
+    "168": {
+      "filename": "modifiers/modifiers.sol",
+      "line": 91
+    },
+    "184": {
+      "filename": "modifiers/modifiers.sol",
+      "line": 91
+    },
+    "200": {
+      "filename": "modifiers/modifiers.sol",
+      "line": 91
+    }
+  },
+  "ed4357ff1d0eb59dfb1301c345c80190dc48f25d7ee918951caf158c61ecef14": {
+    "0": {
+      "filename": "./AFTWallet.code",
+      "line": 756
+    },
+    "8": {
+      "filename": "./AFTWallet.code",
+      "line": 757
+    },
+    "24": {
+      "filename": "./AFTWallet.code",
+      "line": 758
+    },
+    "32": {
+      "filename": "./AFTWallet.code",
+      "line": 759
+    },
+    "48": {
+      "filename": "./AFTWallet.code",
+      "line": 762
+    },
+    "64": {
+      "filename": "./AFTWallet.code",
+      "line": 763
+    },
+    "80": {
+      "filename": "./AFTWallet.code",
+      "line": 764
+    },
+    "88": {
+      "filename": "./AFTWallet.code",
+      "line": 765
+    },
+    "96": {
+      "filename": "./AFTWallet.code",
+      "line": 766
+    },
+    "104": {
+      "filename": "./AFTWallet.code",
+      "line": 767
+    },
+    "112": {
+      "filename": "./AFTWallet.code",
+      "line": 768
+    },
+    "120": {
+      "filename": "./AFTWallet.code",
+      "line": 770
+    },
+    "128": {
+      "filename": "./AFTWallet.code",
+      "line": 771
+    },
+    "144": {
+      "filename": "./AFTWallet.code",
+      "line": 772
+    },
+    "160": {
+      "filename": "./AFTWallet.code",
+      "line": 773
+    },
+    "176": {
+      "filename": "./AFTWallet.code",
+      "line": 774
+    },
+    "184": {
+      "filename": "./AFTWallet.code",
+      "line": 775
+    },
+    "192": {
+      "filename": "./AFTWallet.code",
+      "line": 776
+    },
+    "200": {
+      "filename": "./AFTWallet.code",
+      "line": 777
+    },
+    "216": {
+      "filename": "./AFTWallet.code",
+      "line": 778
+    },
+    "224": {
+      "filename": "./AFTWallet.code",
+      "line": 779
+    },
+    "232": {
+      "filename": "./AFTWallet.code",
+      "line": 780
+    },
+    "240": {
+      "filename": "./AFTWallet.code",
+      "line": 781
+    },
+    "256": {
+      "filename": "./AFTWallet.code",
+      "line": 782
+    },
+    "272": {
+      "filename": "./AFTWallet.code",
+      "line": 783
+    },
+    "280": {
+      "filename": "./AFTWallet.code",
+      "line": 784
+    },
+    "288": {
+      "filename": "AFTWallet.sol",
+      "line": 41
+    },
+    "304": {
+      "filename": "AFTWallet.sol",
+      "line": 42
+    },
+    "320": {
+      "filename": "AFTWallet.sol",
+      "line": 42
+    },
+    "336": {
+      "filename": "AFTWallet.sol",
+      "line": 42
+    },
+    "352": {
+      "filename": "AFTWallet.sol",
+      "line": 42
+    },
+    "360": {
+      "filename": "AFTWallet.sol",
+      "line": 42
+    },
+    "376": {
+      "filename": "AFTWallet.sol",
+      "line": 42
+    },
+    "392": {
+      "filename": "AFTWallet.sol",
+      "line": 42
+    },
+    "400": {
+      "filename": "AFTWallet.sol",
+      "line": 43
+    },
+    "416": {
+      "filename": "AFTWallet.sol",
+      "line": 43
+    },
+    "424": {
+      "filename": "AFTWallet.sol",
+      "line": 43
+    },
+    "440": {
+      "filename": "AFTWallet.sol",
+      "line": 43
+    },
+    "456": {
+      "filename": "AFTWallet.sol",
+      "line": 44
+    },
+    "464": {
+      "filename": "AFTWallet.sol",
+      "line": 44
+    },
+    "472": {
+      "filename": "AFTWallet.sol",
+      "line": 44
+    },
+    "496": {
+      "filename": "AFTWallet.sol",
+      "line": 46
+    },
+    "512": {
+      "filename": "AFTWallet.sol",
+      "line": 47
+    },
+    "520": {
+      "filename": "AFTWallet.sol",
+      "line": 47
+    },
+    "536": {
+      "filename": "AFTWallet.sol",
+      "line": 48
+    },
+    "552": {
+      "filename": "./AFTWallet.code",
+      "line": 816
+    },
+    "568": {
+      "filename": "./AFTWallet.code",
+      "line": 819
+    }
+  },
+  "f24e1e7aa04d89aad2945816b6e9b921f2b3892da9ba53e2383c148351b96d0c": {
+    "0": {
+      "filename": "./AFTWallet.code",
+      "line": 1745
+    },
+    "16": {
+      "filename": "./AFTWallet.code",
+      "line": 1746
+    }
+  },
+  "f264ab77ed9a2db2f9c8bca2866e245001b2263f2105571a71850ad46c150a0c": {
+    "0": {
+      "filename": "AFTWallet.sol",
+      "line": 220
+    },
+    "16": {
+      "filename": "AFTWallet.sol",
+      "line": 221
+    },
+    "24": {
+      "filename": "AFTWallet.sol",
+      "line": 221
+    },
+    "32": {
+      "filename": "AFTWallet.sol",
+      "line": 221
+    },
+    "40": {
+      "filename": "AFTWallet.sol",
+      "line": 221
+    },
+    "48": {
+      "filename": "AFTWallet.sol",
+      "line": 221
+    },
+    "56": {
+      "filename": "AFTWallet.sol",
+      "line": 221
+    },
+    "72": {
+      "filename": "AFTWallet.sol",
+      "line": 221
+    },
+    "80": {
+      "filename": "AFTWallet.sol",
+      "line": 221
+    },
+    "96": {
+      "filename": "AFTWallet.sol",
+      "line": 221
+    },
+    "112": {
+      "filename": "AFTWallet.sol",
+      "line": 223
+    },
+    "128": {
+      "filename": "AFTWallet.sol",
+      "line": 223
+    },
+    "144": {
+      "filename": "AFTWallet.sol",
+      "line": 223
+    },
+    "160": {
+      "filename": "AFTWallet.sol",
+      "line": 223
+    },
+    "168": {
+      "filename": "AFTWallet.sol",
+      "line": 223
+    },
+    "216": {
+      "filename": "AFTWallet.sol",
+      "line": 223
+    },
+    "232": {
+      "filename": "AFTWallet.sol",
+      "line": 223
+    },
+    "240": {
+      "filename": "AFTWallet.sol",
+      "line": 223
+    },
+    "248": {
+      "filename": "AFTWallet.sol",
+      "line": 223
+    },
+    "272": {
+      "filename": "AFTWallet.sol",
+      "line": 223
+    },
+    "288": {
+      "filename": "AFTWallet.sol",
+      "line": 223
+    },
+    "312": {
+      "filename": "AFTWallet.sol",
+      "line": 223
+    },
+    "320": {
+      "filename": "AFTWallet.sol",
+      "line": 223
+    },
+    "328": {
+      "filename": "AFTWallet.sol",
+      "line": 223
+    },
+    "344": {
+      "filename": "AFTWallet.sol",
+      "line": 223
+    },
+    "360": {
+      "filename": "AFTWallet.sol",
+      "line": 223
+    },
+    "368": {
+      "filename": "AFTWallet.sol",
+      "line": 223
+    },
+    "392": {
+      "filename": "AFTWallet.sol",
+      "line": 223
+    },
+    "408": {
+      "filename": "AFTWallet.sol",
+      "line": 223
+    },
+    "416": {
+      "filename": "AFTWallet.sol",
+      "line": 223
+    },
+    "464": {
+      "filename": "AFTWallet.sol",
+      "line": 223
+    },
+    "480": {
+      "filename": "AFTWallet.sol",
+      "line": 223
+    },
+    "496": {
+      "filename": "AFTWallet.sol",
+      "line": 223
+    },
+    "504": {
+      "filename": "AFTWallet.sol",
+      "line": 223
+    },
+    "512": {
+      "filename": "AFTWallet.sol",
+      "line": 223
+    },
+    "520": {
+      "filename": "AFTWallet.sol",
+      "line": 223
+    },
+    "528": {
+      "filename": "AFTWallet.sol",
+      "line": 223
+    },
+    "536": {
+      "filename": "AFTWallet.sol",
+      "line": 223
+    },
+    "552": {
+      "filename": "AFTWallet.sol",
+      "line": 229
+    },
+    "560": {
+      "filename": "AFTWallet.sol",
+      "line": 229
+    },
+    "568": {
+      "filename": "AFTWallet.sol",
+      "line": 230
+    },
+    "584": {
+      "filename": "AFTWallet.sol",
+      "line": 230
+    },
+    "592": {
+      "filename": "AFTWallet.sol",
+      "line": 230
+    },
+    "608": {
+      "filename": "AFTWallet.sol",
+      "line": 230
+    },
+    "616": {
+      "filename": "./AFTWallet.code",
+      "line": 446
+    },
+    "624": {
+      "filename": "AFTWallet.sol",
+      "line": 233
+    }
+  },
+  "f81650276050ea8827d9b724c8a3f525ae3f6350a66613c0b71936755345d30c": {
+    "0": {
+      "filename": "AFTWallet.sol",
+      "line": 360
+    },
+    "8": {
+      "filename": "AFTWallet.sol",
+      "line": 360
+    },
+    "16": {
+      "filename": "AFTWallet.sol",
+      "line": 360
+    },
+    "32": {
+      "filename": "AFTWallet.sol",
+      "line": 360
+    },
+    "40": {
+      "filename": "AFTWallet.sol",
+      "line": 360
+    },
+    "64": {
+      "filename": "AFTWallet.sol",
+      "line": 360
+    },
+    "80": {
+      "filename": "AFTWallet.sol",
+      "line": 360
+    },
+    "88": {
+      "filename": "AFTWallet.sol",
+      "line": 360
+    },
+    "96": {
+      "filename": "AFTWallet.sol",
+      "line": 360
+    },
+    "104": {
+      "filename": "AFTWallet.sol",
+      "line": 360
+    },
+    "112": {
+      "filename": "AFTWallet.sol",
+      "line": 360
+    },
+    "128": {
+      "filename": "AFTWallet.sol",
+      "line": 360
+    },
+    "136": {
+      "filename": "AFTWallet.sol",
+      "line": 360
+    },
+    "144": {
+      "filename": "AFTWallet.sol",
+      "line": 360
+    },
+    "160": {
+      "filename": "AFTWallet.sol",
+      "line": 360
+    },
+    "168": {
+      "filename": "AFTWallet.sol",
+      "line": 360
+    },
+    "192": {
+      "filename": "AFTWallet.sol",
+      "line": 360
+    },
+    "208": {
+      "filename": "AFTWallet.sol",
+      "line": 360
+    },
+    "224": {
+      "filename": "AFTWallet.sol",
+      "line": 360
+    },
+    "240": {
+      "filename": "AFTWallet.sol",
+      "line": 360
+    },
+    "248": {
+      "filename": "AFTWallet.sol",
+      "line": 365
+    },
+    "264": {
+      "filename": "AFTWallet.sol",
+      "line": 365
+    },
+    "272": {
+      "filename": "AFTWallet.sol",
+      "line": 365
+    },
+    "304": {
+      "filename": "AFTWallet.sol",
+      "line": 365
+    },
+    "320": {
+      "filename": "AFTWallet.sol",
+      "line": 365
+    },
+    "328": {
+      "filename": "AFTWallet.sol",
+      "line": 365
+    }
+  }
+}

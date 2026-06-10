@@ -472,12 +472,24 @@ export async function getAccountPublicKey(address: any) {
     // Fallback: tentar extrair via TVM SDK se nekoton não conseguiu
     if (!publicKey && info.boc && sdkClient) {
       try {
-        const parsed = await sdkClient.boc.parse_account({ boc: info.boc });
-        const parsedData = parsed.parsed;
-        if (parsedData && parsedData.id) {
-            // Fallback not fully implemented for standard multisig
+        const walletAbiPath = path.join(__dirname, "../abi/UpdateCustodianMultisigWallet.abi.json");
+        const walletAbi = JSON.parse(fs.readFileSync(walletAbiPath, "utf-8"));
+        
+        const runRes = await sdkClient.tvm.run_tvm({
+          message: (await sdkClient.boc.encode_boc({ builder: [] })).boc,
+          account: info.boc,
+          abi: abiContract(walletAbi),
+          function_name: "getCustodians",
+          return_updated_account: false
+        });
+        
+        if (runRes && runRes.decoded && runRes.decoded.output && runRes.decoded.output.custodians) {
+          const custodians = runRes.decoded.output.custodians;
+          if (custodians.length > 0 && custodians[0].owner_pubkey) {
+            publicKey = String(BigInt(custodians[0].owner_pubkey).toString(16)).padStart(64, '0');
+          }
         }
-      } catch {
+      } catch (e) {
         // preserve undefined or extracted pubkey, do not overwrite to ""
       }
     }
@@ -544,12 +556,16 @@ export async function getAccountState(address: any) {
 /**
  * Busca transações recentes na BondingCurve para indexar Trades (Buy/Sell)
  */
-export async function getRecentBondingCurveTrades(address: any) {
+export async function getRecentBondingCurveTrades(address: any, afterCursor: string | null = null) {
   const query = `
-    query getTrades($address: String!) {
+    query getTrades($address: String!, $after: String) {
       blockchain {
         account(address: $address) {
-          transactions(first: 20) {
+          transactions(first: 20, after: $after) {
+            pageInfo {
+              endCursor
+              hasNextPage
+            }
             edges {
               node {
                 id
@@ -567,8 +583,10 @@ export async function getRecentBondingCurveTrades(address: any) {
     }
   `;
   try {
-    const data = await gql(query, { address });
-    const edges = data?.blockchain?.account?.transactions?.edges || [];
+    const data = await gql(query, { address, after: afterCursor });
+    const connection = data?.blockchain?.account?.transactions;
+    const edges = connection?.edges || [];
+    const pageInfo = connection?.pageInfo || {};
     const trades = [];
     
     for (const edge of edges) {
@@ -613,10 +631,10 @@ export async function getRecentBondingCurveTrades(address: any) {
         }
       }
     }
-    return trades;
+    return { trades, pageInfo };
   } catch (err: any) {
     console.error(`[GraphQL] Error fetching trades for ${address}:`, err.message);
-    return [];
+    return { trades: [], pageInfo: {} };
   }
 }
 
