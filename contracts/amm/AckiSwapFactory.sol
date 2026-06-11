@@ -13,6 +13,7 @@ contract AckiSwapFactory {
     TvmCell static _pairCode;
     
     address public feeRecipient;
+    address public launchFactory;
 
     mapping(address => bool) public approvedBondingCurves;
 
@@ -32,8 +33,15 @@ contract AckiSwapFactory {
         feeRecipient = _feeRecipient;
     }
 
-    function approveBondingCurve(address bc) external {
+    function setLaunchFactory(address _launchFactory) external {
         require(msg.pubkey() == tvm.pubkey(), 100);
+        require(_launchFactory != address(0), 101, "LaunchFactory cannot be zero");
+        tvm.accept();
+        launchFactory = _launchFactory;
+    }
+
+    function approveBondingCurve(address bc) external {
+        require(msg.pubkey() == tvm.pubkey() || msg.sender == launchFactory, 100);
         tvm.accept();
         approvedBondingCurves[bc] = true;
     }

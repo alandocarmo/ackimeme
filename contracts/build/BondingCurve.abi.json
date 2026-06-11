@@ -197,6 +197,13 @@
 			]
 		},
 		{
+			"name": "onPairReady",
+			"inputs": [
+			],
+			"outputs": [
+			]
+		},
+		{
 			"name": "pause",
 			"inputs": [
 			],

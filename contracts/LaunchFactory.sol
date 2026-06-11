@@ -143,9 +143,12 @@ contract LaunchFactory {
 
         // 5. Post-Deploy Configuration
         // A1: Initialize the AFT wallet for the curve so it can sell/burn
-        // Needs 2 SHELL for gas according to AFT rules.
+        // 5. Initialize AFT Wallet for BondingCurve
         mapping(uint32 => varuint32) initCc;
         initCc[2] = varuint32(2_000_000_000); // 2 SHELL (assuming SHELL_CURRENCY_ID=2)
         BondingCurve(bondingCurveAddr).initAftWallet{value: 0.2 ton, currencies: initCc, flag: 1}();
+
+        // 6. Approve the BondingCurve in the AckiSwapFactory
+        IAckiSwapFactory(ammFactory).approveBondingCurve{value: 0.1 ton, flag: 1}(bondingCurveAddr);
     }
 }

@@ -1,2565 +1,707 @@
 {
-  "0491823aea2cf6fb750975a27df2736f16f66208cb411f0ea831ed81ba048a5d": {
+  "01af3d81de9f0c53b94772f3e670119ae976f3ce90c2228dade96da00d883cf3": {
     "0": {
       "filename": "amm/AckiSwapPair.sol",
-      "line": 42
-    }
-  },
-  "0651c6a31c3b29bb7ddf8783d9488d1af640c31d108e0f8ef43e07fee1f62dcd": {
-    "0": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 152
+      "line": 78
     },
-    "8": {
+    "16": {
       "filename": "amm/AckiSwapPair.sol",
-      "line": 152
+      "line": 78
     },
     "24": {
       "filename": "amm/AckiSwapPair.sol",
-      "line": 152
+      "line": 78
     },
     "40": {
       "filename": "amm/AckiSwapPair.sol",
-      "line": 152
+      "line": 78
     },
     "64": {
       "filename": "amm/AckiSwapPair.sol",
-      "line": 152
+      "line": 79
     },
     "80": {
       "filename": "amm/AckiSwapPair.sol",
-      "line": 153
+      "line": 79
     },
     "96": {
       "filename": "amm/AckiSwapPair.sol",
-      "line": 153
+      "line": 79
     },
-    "104": {
+    "112": {
       "filename": "amm/AckiSwapPair.sol",
-      "line": 153
+      "line": 79
     },
-    "120": {
+    "136": {
       "filename": "amm/AckiSwapPair.sol",
-      "line": 156
-    },
-    "128": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 156
+      "line": 81
     },
     "152": {
       "filename": "amm/AckiSwapPair.sol",
-      "line": 156
+      "line": 83
     },
     "160": {
       "filename": "amm/AckiSwapPair.sol",
-      "line": 156
+      "line": 84
+    },
+    "168": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 85
     },
     "176": {
       "filename": "amm/AckiSwapPair.sol",
-      "line": 157
+      "line": 85
     },
-    "184": {
+    "192": {
       "filename": "amm/AckiSwapPair.sol",
-      "line": 157
-    },
-    "200": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 157
+      "line": 85
     },
     "208": {
       "filename": "amm/AckiSwapPair.sol",
-      "line": 157
+      "line": 85
+    },
+    "216": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 86
     },
     "224": {
       "filename": "amm/AckiSwapPair.sol",
-      "line": 158
+      "line": 86
     },
     "240": {
       "filename": "amm/AckiSwapPair.sol",
-      "line": 158
+      "line": 86
+    },
+    "248": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 86
+    },
+    "256": {
+      "filename": "./AckiSwapPair.code",
+      "line": 467
     },
     "264": {
       "filename": "amm/AckiSwapPair.sol",
-      "line": 158
+      "line": 89
     },
-    "272": {
+    "280": {
       "filename": "amm/AckiSwapPair.sol",
-      "line": 158
+      "line": 89
     },
     "288": {
       "filename": "amm/AckiSwapPair.sol",
-      "line": 158
+      "line": 89
     },
     "296": {
       "filename": "amm/AckiSwapPair.sol",
-      "line": 158
+      "line": 89
     },
-    "304": {
+    "312": {
       "filename": "amm/AckiSwapPair.sol",
-      "line": 158
+      "line": 89
     },
     "320": {
       "filename": "amm/AckiSwapPair.sol",
-      "line": 159
+      "line": 89
     },
     "336": {
       "filename": "amm/AckiSwapPair.sol",
-      "line": 161
+      "line": 92
     },
     "344": {
       "filename": "amm/AckiSwapPair.sol",
-      "line": 161
+      "line": 92
     },
     "360": {
       "filename": "amm/AckiSwapPair.sol",
-      "line": 161
+      "line": 93
     },
     "368": {
       "filename": "amm/AckiSwapPair.sol",
-      "line": 161
+      "line": 93
+    },
+    "384": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 95
     },
     "392": {
       "filename": "amm/AckiSwapPair.sol",
-      "line": 162
+      "line": 95
     },
-    "400": {
+    "408": {
       "filename": "amm/AckiSwapPair.sol",
-      "line": 162
-    },
-    "416": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 162
+      "line": 95
     },
     "424": {
       "filename": "amm/AckiSwapPair.sol",
-      "line": 162
-    },
-    "448": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 164
-    },
-    "464": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 164
-    },
-    "472": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 164
-    },
-    "480": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 164
-    },
-    "496": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 164
-    },
-    "512": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 165
-    },
-    "528": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 165
-    },
-    "536": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 165
-    },
-    "544": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 165
-    },
-    "560": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 165
-    },
-    "576": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 167
+      "line": 95
     },
     "584": {
       "filename": "amm/AckiSwapPair.sol",
-      "line": 167
+      "line": 95
+    },
+    "592": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 95
     },
     "600": {
       "filename": "amm/AckiSwapPair.sol",
-      "line": 167
+      "line": 95
     },
-    "608": {
+    "616": {
       "filename": "amm/AckiSwapPair.sol",
-      "line": 167
+      "line": 95
     },
-    "624": {
+    "632": {
       "filename": "amm/AckiSwapPair.sol",
-      "line": 167
+      "line": 95
+    },
+    "648": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 95
+    },
+    "656": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 95
+    },
+    "664": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 95
+    },
+    "680": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 97
+    },
+    "688": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 97
+    },
+    "696": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 97
+    },
+    "712": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 97
+    },
+    "728": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 98
+    },
+    "736": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 99
     },
     "744": {
       "filename": "amm/AckiSwapPair.sol",
-      "line": 167
+      "line": 99
     },
     "752": {
       "filename": "amm/AckiSwapPair.sol",
-      "line": 167
+      "line": 99
     },
     "760": {
       "filename": "amm/AckiSwapPair.sol",
-      "line": 167
-    },
-    "776": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 167
+      "line": 99
     },
     "784": {
       "filename": "amm/AckiSwapPair.sol",
-      "line": 167
+      "line": 99
+    },
+    "792": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 99
+    },
+    "800": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 99
+    },
+    "816": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 99
     },
     "832": {
       "filename": "amm/AckiSwapPair.sol",
-      "line": 167
+      "line": 99
     },
-    "840": {
+    "848": {
       "filename": "amm/AckiSwapPair.sol",
-      "line": 167
+      "line": 99
     },
-    "856": {
+    "864": {
       "filename": "amm/AckiSwapPair.sol",
-      "line": 167
+      "line": 99
     },
     "872": {
       "filename": "amm/AckiSwapPair.sol",
-      "line": 167
+      "line": 99
     },
     "888": {
       "filename": "amm/AckiSwapPair.sol",
-      "line": 167
+      "line": 99
     },
-    "896": {
+    "904": {
+      "filename": "./AckiSwapPair.code",
+      "line": 519
+    }
+  },
+  "0491823aea2cf6fb750975a27df2736f16f66208cb411f0ea831ed81ba048a5d": {
+    "0": {
       "filename": "amm/AckiSwapPair.sol",
-      "line": 167
-    },
-    "912": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 167
-    },
-    "920": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 167
-    },
-    "928": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 167
-    },
-    "936": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 167
-    },
-    "952": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 171
-    },
-    "960": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 172
-    },
-    "968": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 172
-    },
-    "976": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 172
-    },
-    "992": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 172
-    },
-    "1000": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 172
+      "line": 46
     }
   },
   "079d26156d9c6d9c4f132684403bc31619d3aeeafb66c50a4481a2bdf1dc05f9": {
     "0": {
       "filename": "amm/AckiSwapPair.sol",
-      "line": 167
+      "line": 172
     }
   },
   "0b7e3add44dd1a593d0359d7ffbc89d3a1463da68cb843e38082eeba37f70251": {
     "0": {
       "filename": "./AckiSwapPair.code",
-      "line": 174
+      "line": 171
     },
     "16": {
+      "filename": "./AckiSwapPair.code",
+      "line": 172
+    },
+    "24": {
+      "filename": "./AckiSwapPair.code",
+      "line": 173
+    },
+    "40": {
+      "filename": "./AckiSwapPair.code",
+      "line": 174
+    },
+    "56": {
       "filename": "./AckiSwapPair.code",
       "line": 175
     },
-    "24": {
+    "72": {
       "filename": "./AckiSwapPair.code",
       "line": 176
     },
-    "40": {
+    "88": {
       "filename": "./AckiSwapPair.code",
       "line": 177
     },
-    "56": {
+    "96": {
       "filename": "./AckiSwapPair.code",
       "line": 178
     },
-    "72": {
+    "104": {
       "filename": "./AckiSwapPair.code",
       "line": 179
     },
-    "88": {
+    "112": {
       "filename": "./AckiSwapPair.code",
       "line": 180
     },
-    "96": {
+    "128": {
       "filename": "./AckiSwapPair.code",
       "line": 181
     },
-    "104": {
+    "136": {
       "filename": "./AckiSwapPair.code",
       "line": 182
     },
-    "112": {
+    "144": {
       "filename": "./AckiSwapPair.code",
       "line": 183
     },
-    "128": {
+    "152": {
       "filename": "./AckiSwapPair.code",
       "line": 184
     },
-    "136": {
+    "168": {
       "filename": "./AckiSwapPair.code",
       "line": 185
     },
-    "144": {
+    "184": {
       "filename": "./AckiSwapPair.code",
       "line": 186
     },
-    "152": {
+    "200": {
       "filename": "./AckiSwapPair.code",
       "line": 187
     },
-    "168": {
+    "208": {
       "filename": "./AckiSwapPair.code",
       "line": 188
     },
-    "184": {
+    "216": {
       "filename": "./AckiSwapPair.code",
       "line": 189
     },
-    "200": {
+    "224": {
       "filename": "./AckiSwapPair.code",
       "line": 190
     },
-    "208": {
+    "240": {
       "filename": "./AckiSwapPair.code",
       "line": 191
     },
-    "216": {
+    "248": {
       "filename": "./AckiSwapPair.code",
       "line": 192
     },
-    "224": {
+    "256": {
       "filename": "./AckiSwapPair.code",
       "line": 193
     },
-    "240": {
+    "264": {
       "filename": "./AckiSwapPair.code",
       "line": 194
     },
-    "248": {
+    "280": {
       "filename": "./AckiSwapPair.code",
       "line": 195
     },
-    "256": {
+    "296": {
       "filename": "./AckiSwapPair.code",
       "line": 196
     },
-    "264": {
+    "304": {
       "filename": "./AckiSwapPair.code",
       "line": 197
     },
-    "280": {
+    "320": {
       "filename": "./AckiSwapPair.code",
       "line": 198
     },
-    "296": {
+    "336": {
       "filename": "./AckiSwapPair.code",
       "line": 199
     },
-    "304": {
+    "352": {
       "filename": "./AckiSwapPair.code",
       "line": 200
     },
-    "320": {
+    "368": {
       "filename": "./AckiSwapPair.code",
       "line": 201
     },
-    "336": {
+    "384": {
       "filename": "./AckiSwapPair.code",
       "line": 202
     },
-    "352": {
+    "400": {
       "filename": "./AckiSwapPair.code",
       "line": 203
     },
-    "368": {
+    "416": {
       "filename": "./AckiSwapPair.code",
       "line": 204
     },
-    "384": {
+    "432": {
       "filename": "./AckiSwapPair.code",
       "line": 205
     },
-    "400": {
+    "448": {
       "filename": "./AckiSwapPair.code",
       "line": 206
     },
-    "416": {
-      "filename": "./AckiSwapPair.code",
-      "line": 207
-    },
-    "432": {
-      "filename": "./AckiSwapPair.code",
-      "line": 208
-    },
-    "448": {
-      "filename": "./AckiSwapPair.code",
-      "line": 209
-    },
     "464": {
       "filename": "./AckiSwapPair.code",
-      "line": 210
+      "line": 207
     }
   },
-  "13135185ec9b508a942bb998e3a9a703ab61ae44802e518a27a071679a98ab08": {
+  "0ff7fb0234a48c6dae0897af7782bb5f5d2a6f6ff098d8305b7302001d678773": {
     "0": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 130
+      "filename": "./AckiSwapPair.code",
+      "line": 561
+    },
+    "8": {
+      "filename": "./AckiSwapPair.code",
+      "line": 562
+    },
+    "24": {
+      "filename": "./AckiSwapPair.code",
+      "line": 563
     },
     "48": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 130
+      "filename": "./AckiSwapPair.code",
+      "line": 564
     },
-    "56": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 130
+    "64": {
+      "filename": "./AckiSwapPair.code",
+      "line": 565
     },
     "72": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 130
+      "filename": "./AckiSwapPair.code",
+      "line": 566
     },
     "88": {
       "filename": "amm/AckiSwapPair.sol",
-      "line": 130
+      "line": 72
+    },
+    "96": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 72
     },
     "104": {
       "filename": "amm/AckiSwapPair.sol",
-      "line": 130
+      "line": 72
     },
     "112": {
       "filename": "amm/AckiSwapPair.sol",
-      "line": 130
+      "line": 72
     },
     "120": {
       "filename": "amm/AckiSwapPair.sol",
-      "line": 130
+      "line": 72
+    },
+    "128": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 72
     },
     "136": {
       "filename": "amm/AckiSwapPair.sol",
-      "line": 130
-    },
-    "144": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 130
+      "line": 72
     },
     "152": {
       "filename": "amm/AckiSwapPair.sol",
-      "line": 130
-    },
-    "160": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 130
+      "line": 72
     },
     "168": {
       "filename": "amm/AckiSwapPair.sol",
-      "line": 130
+      "line": 72
     },
     "184": {
       "filename": "amm/AckiSwapPair.sol",
-      "line": 134
+      "line": 72
     },
     "192": {
       "filename": "amm/AckiSwapPair.sol",
-      "line": 134
+      "line": 72
     },
     "200": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 134
-    },
-    "208": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 134
+      "filename": "./AckiSwapPair.code",
+      "line": 583
     },
     "216": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 134
-    },
-    "232": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 134
-    },
-    "248": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 134
-    },
-    "256": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 134
-    },
-    "272": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 134
-    },
-    "288": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 135
-    },
-    "304": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 135
-    },
-    "312": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 135
-    },
-    "336": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 135
-    },
-    "344": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 135
-    },
-    "400": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 135
-    },
-    "416": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 135
-    },
-    "432": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 135
-    },
-    "448": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 135
-    },
-    "456": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 135
-    },
-    "464": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 135
-    },
-    "480": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 138
-    },
-    "488": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 139
-    },
-    "496": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 139
-    },
-    "504": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 139
-    },
-    "520": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 139
-    },
-    "536": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 139
-    },
-    "552": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 139
-    },
-    "560": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 139
-    },
-    "568": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 139
-    },
-    "584": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 139
-    },
-    "592": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 139
-    },
-    "616": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 139
-    },
-    "624": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 139
-    },
-    "632": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 139
-    },
-    "648": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 139
-    },
-    "656": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 139
-    },
-    "680": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 139
-    },
-    "696": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 139
-    },
-    "704": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 139
-    },
-    "752": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 139
-    },
-    "768": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 139
-    },
-    "784": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 139
-    },
-    "792": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 139
-    },
-    "808": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 139
-    },
-    "816": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 139
-    },
-    "824": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 139
-    },
-    "840": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 139
-    },
-    "856": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 139
-    },
-    "864": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 139
-    },
-    "872": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 139
-    },
-    "880": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 139
-    },
-    "888": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 139
-    },
-    "904": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 139
-    }
-  },
-  "1e567e51a1807c9f94baaa4f3d1ef49a559b0ea0acf26e559bed2c5ed87c86a2": {
-    "0": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 108
-    },
-    "16": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 108
-    },
-    "40": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 109
-    },
-    "48": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 109
-    },
-    "64": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 109
-    },
-    "80": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 109
-    },
-    "96": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 109
-    },
-    "112": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 109
-    },
-    "120": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 109
-    },
-    "136": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 109
-    },
-    "144": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 109
-    },
-    "152": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 109
-    },
-    "168": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 110
-    },
-    "176": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 110
-    },
-    "192": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 110
-    },
-    "216": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 112
-    },
-    "232": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 115
-    },
-    "240": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 115
-    },
-    "256": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 115
-    },
-    "272": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 115
-    },
-    "296": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 115
-    },
-    "312": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 116
-    },
-    "320": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 116
-    },
-    "328": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 116
-    },
-    "344": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 119
-    },
-    "352": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 119
-    },
-    "376": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 119
-    },
-    "384": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 119
-    },
-    "400": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 120
-    },
-    "408": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 120
-    },
-    "424": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 120
-    },
-    "432": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 120
-    },
-    "448": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 121
-    },
-    "464": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 121
-    },
-    "488": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 121
-    },
-    "496": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 121
-    },
-    "512": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 121
-    },
-    "520": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 121
-    },
-    "528": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 121
-    },
-    "544": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 122
-    },
-    "560": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 124
-    },
-    "568": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 124
-    },
-    "584": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 124
-    },
-    "592": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 124
-    },
-    "616": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 125
-    },
-    "624": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 125
-    },
-    "640": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 125
-    },
-    "648": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 125
-    },
-    "672": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 127
-    },
-    "688": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 127
-    },
-    "696": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 127
-    },
-    "704": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 127
-    },
-    "720": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 127
-    },
-    "736": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 128
-    },
-    "752": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 128
-    },
-    "760": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 128
-    },
-    "768": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 128
-    },
-    "784": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 128
-    },
-    "800": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 130
-    },
-    "808": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 130
-    },
-    "816": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 130
-    },
-    "824": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 130
-    },
-    "840": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 130
-    },
-    "856": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 130
-    },
-    "976": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 130
-    },
-    "984": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 130
-    },
-    "992": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 130
-    },
-    "1008": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 130
-    }
-  },
-  "1fb29e9a9d28bb137f3e93fd69009a8145c66a8c684c0b4b4260949dbedc411c": {
-    "0": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 172
-    },
-    "8": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 172
-    },
-    "24": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 172
-    },
-    "32": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 172
-    },
-    "56": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 172
-    },
-    "64": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 172
-    },
-    "232": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 172
-    },
-    "248": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 172
-    },
-    "264": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 172
-    },
-    "272": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 172
-    },
-    "320": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 172
-    },
-    "336": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 172
-    },
-    "352": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 172
-    },
-    "360": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 172
-    },
-    "376": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 172
-    },
-    "384": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 172
-    },
-    "392": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 172
-    },
-    "408": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 172
-    },
-    "424": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 172
-    },
-    "432": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 172
-    },
-    "440": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 172
-    },
-    "448": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 172
-    },
-    "456": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 172
-    },
-    "464": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 172
-    },
-    "480": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 183
-    },
-    "488": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 183
-    },
-    "496": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 183
-    },
-    "504": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 183
-    },
-    "520": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 183
-    },
-    "536": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 183
-    },
-    "544": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 183
-    },
-    "560": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 183
-    },
-    "576": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 184
-    },
-    "584": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 184
-    },
-    "592": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 184
-    },
-    "600": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 184
-    },
-    "624": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 184
-    },
-    "632": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 184
-    },
-    "640": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 184
-    },
-    "656": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 184
-    },
-    "672": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 184
-    },
-    "688": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 184
-    },
-    "704": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 184
-    },
-    "712": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 184
-    },
-    "728": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 184
-    }
-  },
-  "28d97a9bda0b45ae6a4b1a7943d6e316eafef72568324206594dab48ab377f0a": {
-    "0": {
       "filename": "./AckiSwapPair.code",
-      "line": 1229
-    },
-    "8": {
-      "filename": "./AckiSwapPair.code",
-      "line": 1239
-    },
-    "24": {
-      "filename": "./AckiSwapPair.code",
-      "line": 1240
-    },
-    "32": {
-      "filename": "./AckiSwapPair.code",
-      "line": 1241
-    },
-    "48": {
-      "filename": "./AckiSwapPair.code",
-      "line": 1244
-    },
-    "56": {
-      "filename": "./AckiSwapPair.code",
-      "line": 1245
-    },
-    "72": {
-      "filename": "./AckiSwapPair.code",
-      "line": 1246
-    },
-    "88": {
-      "filename": "./AckiSwapPair.code",
-      "line": 1249
-    },
-    "96": {
-      "filename": "./AckiSwapPair.code",
-      "line": 1250
-    },
-    "112": {
-      "filename": "./AckiSwapPair.code",
-      "line": 1251
-    },
-    "128": {
-      "filename": "./AckiSwapPair.code",
-      "line": 1254
-    }
-  },
-  "2b6ec637492129d189235573d41bd8089a8a6ef92c48c32fc351883daa338d51": {
-    "0": {
-      "filename": "./AckiSwapPair.code",
-      "line": 666
-    },
-    "8": {
-      "filename": "./AckiSwapPair.code",
-      "line": 667
-    },
-    "16": {
-      "filename": "./AckiSwapPair.code",
-      "line": 668
-    },
-    "32": {
-      "filename": "./AckiSwapPair.code",
-      "line": 671
-    },
-    "48": {
-      "filename": "./AckiSwapPair.code",
-      "line": 672
-    },
-    "56": {
-      "filename": "./AckiSwapPair.code",
-      "line": 673
-    },
-    "72": {
-      "filename": "./AckiSwapPair.code",
-      "line": 674
+      "line": 586
     },
     "232": {
       "filename": "./AckiSwapPair.code",
-      "line": 675
-    },
-    "240": {
-      "filename": "./AckiSwapPair.code",
-      "line": 676
-    },
-    "248": {
-      "filename": "./AckiSwapPair.code",
-      "line": 677
-    },
-    "264": {
-      "filename": "./AckiSwapPair.code",
-      "line": 678
-    },
-    "272": {
-      "filename": "./AckiSwapPair.code",
-      "line": 679
-    },
-    "280": {
-      "filename": "./AckiSwapPair.code",
-      "line": 680
-    },
-    "296": {
-      "filename": "./AckiSwapPair.code",
-      "line": 682
-    },
-    "304": {
-      "filename": "./AckiSwapPair.code",
-      "line": 683
+      "line": 589
     }
   },
-  "37677d91ad2a0c266d4041c7582ee03770ac255e6112e21225ff32a9a962d3c6": {
+  "147febf2d255d6e1c69da08fb1616462256d106a28353ce3f627a49862e1d13b": {
     "0": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 73
-    },
-    "16": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 73
-    },
-    "24": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 73
-    },
-    "40": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 73
-    },
-    "64": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 74
-    },
-    "80": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 74
-    },
-    "96": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 74
-    },
-    "112": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 74
-    },
-    "136": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 76
-    },
-    "152": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 78
-    },
-    "160": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 79
-    },
-    "168": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 80
-    },
-    "176": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 80
-    },
-    "192": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 80
-    },
-    "208": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 80
-    },
-    "216": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 81
-    },
-    "224": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 81
-    },
-    "240": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 81
-    },
-    "248": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 81
-    },
-    "256": {
-      "filename": "./AckiSwapPair.code",
-      "line": 470
-    },
-    "264": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 84
-    },
-    "280": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 84
-    },
-    "288": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 84
-    },
-    "296": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 84
-    },
-    "312": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 84
-    },
-    "320": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 84
-    },
-    "336": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 87
-    },
-    "344": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 87
-    },
-    "360": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 88
-    },
-    "368": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 88
-    },
-    "384": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 90
-    },
-    "392": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 90
-    },
-    "408": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 90
-    },
-    "424": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 90
-    },
-    "584": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 90
-    },
-    "592": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 90
-    },
-    "600": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 90
-    },
-    "616": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 90
-    },
-    "632": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 90
-    },
-    "648": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 90
-    },
-    "656": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 90
-    },
-    "664": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 90
-    },
-    "680": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 92
-    },
-    "688": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 92
-    },
-    "696": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 92
-    },
-    "712": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 92
-    },
-    "728": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 93
-    },
-    "736": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 94
-    },
-    "744": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 94
-    },
-    "752": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 94
-    },
-    "760": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 94
-    },
-    "784": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 94
-    },
-    "792": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 94
-    },
-    "800": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 94
-    },
-    "816": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 94
-    },
-    "832": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 94
-    },
-    "848": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 94
-    },
-    "864": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 94
-    },
-    "872": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 94
-    },
-    "888": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 94
-    },
-    "904": {
-      "filename": "./AckiSwapPair.code",
-      "line": 522
-    }
-  },
-  "47af87372e9178be07109a294ef67296dd69b6e0b86f17e0dc7ea3d0287de0a9": {
-    "0": {
-      "filename": "./AckiSwapPair.code",
-      "line": 930
-    },
-    "8": {
-      "filename": "./AckiSwapPair.code",
-      "line": 931
-    },
-    "24": {
-      "filename": "./AckiSwapPair.code",
-      "line": 932
-    },
-    "48": {
-      "filename": "./AckiSwapPair.code",
-      "line": 933
-    },
-    "64": {
       "filename": "./AckiSwapPair.code",
       "line": 934
     },
-    "72": {
+    "8": {
       "filename": "./AckiSwapPair.code",
       "line": 935
     },
-    "88": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 58
-    },
-    "96": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 58
-    },
-    "104": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 58
-    },
-    "112": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 58
-    },
-    "120": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 58
-    },
-    "128": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 58
-    },
-    "136": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 58
-    },
-    "152": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 58
-    },
-    "168": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 58
-    },
-    "176": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 58
-    },
-    "184": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 58
-    },
-    "192": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 58
-    },
-    "208": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 58
-    },
-    "216": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 58
-    },
-    "232": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 58
-    },
-    "240": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 58
-    },
-    "256": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 58
-    },
-    "264": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 58
-    },
-    "272": {
+    "24": {
       "filename": "./AckiSwapPair.code",
-      "line": 960
+      "line": 936
     },
-    "288": {
+    "48": {
       "filename": "./AckiSwapPair.code",
-      "line": 963
-    },
-    "304": {
-      "filename": "./AckiSwapPair.code",
-      "line": 966
-    }
-  },
-  "49912a78e85a26074e3a299354cd6bcacd688c644af60cb00bc9732d8404defa": {
-    "0": {
-      "filename": "./AckiSwapPair.code",
-      "line": 991
-    },
-    "8": {
-      "filename": "./AckiSwapPair.code",
-      "line": 992
-    },
-    "56": {
-      "filename": "./AckiSwapPair.code",
-      "line": 993
+      "line": 937
     },
     "64": {
       "filename": "./AckiSwapPair.code",
-      "line": 994
-    },
-    "80": {
-      "filename": "./AckiSwapPair.code",
-      "line": 1030
-    },
-    "88": {
-      "filename": "./AckiSwapPair.code",
-      "line": 1031
-    },
-    "136": {
-      "filename": "./AckiSwapPair.code",
-      "line": 1032
-    },
-    "144": {
-      "filename": "./AckiSwapPair.code",
-      "line": 1033
-    },
-    "160": {
-      "filename": "./AckiSwapPair.code",
-      "line": 1053
-    },
-    "168": {
-      "filename": "./AckiSwapPair.code",
-      "line": 1054
-    },
-    "216": {
-      "filename": "./AckiSwapPair.code",
-      "line": 1055
-    },
-    "224": {
-      "filename": "./AckiSwapPair.code",
-      "line": 1056
-    },
-    "240": {
-      "filename": "./AckiSwapPair.code",
-      "line": 1070
-    },
-    "248": {
-      "filename": "./AckiSwapPair.code",
-      "line": 1071
-    },
-    "296": {
-      "filename": "./AckiSwapPair.code",
-      "line": 1072
-    },
-    "304": {
-      "filename": "./AckiSwapPair.code",
-      "line": 1073
-    }
-  },
-  "4e525d40e48162ae7de6a6105a733b721f3b08464b03f96b759b165c5a126920": {
-    "0": {
-      "filename": "./AckiSwapPair.code",
-      "line": 274
-    },
-    "8": {
-      "filename": "./AckiSwapPair.code",
-      "line": 275
-    },
-    "24": {
-      "filename": "./AckiSwapPair.code",
-      "line": 276
-    },
-    "32": {
-      "filename": "./AckiSwapPair.code",
-      "line": 277
-    },
-    "48": {
-      "filename": "./AckiSwapPair.code",
-      "line": 280
-    },
-    "56": {
-      "filename": "./AckiSwapPair.code",
-      "line": 281
+      "line": 938
     },
     "72": {
       "filename": "./AckiSwapPair.code",
-      "line": 282
+      "line": 939
     },
     "88": {
-      "filename": "./AckiSwapPair.code",
-      "line": 283
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 62
+    },
+    "96": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 62
     },
     "104": {
-      "filename": "./AckiSwapPair.code",
-      "line": 284
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 62
     },
     "112": {
-      "filename": "./AckiSwapPair.code",
-      "line": 285
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 62
     },
     "120": {
-      "filename": "./AckiSwapPair.code",
-      "line": 286
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 62
     },
     "128": {
-      "filename": "./AckiSwapPair.code",
-      "line": 287
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 62
     },
     "136": {
-      "filename": "./AckiSwapPair.code",
-      "line": 288
-    },
-    "144": {
-      "filename": "./AckiSwapPair.code",
-      "line": 290
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 62
     },
     "152": {
-      "filename": "./AckiSwapPair.code",
-      "line": 291
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 62
     },
     "168": {
-      "filename": "./AckiSwapPair.code",
-      "line": 292
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 62
     },
     "176": {
       "filename": "amm/AckiSwapPair.sol",
-      "line": 26
+      "line": 62
+    },
+    "184": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 62
     },
     "192": {
       "filename": "amm/AckiSwapPair.sol",
-      "line": 26
+      "line": 62
     },
     "208": {
       "filename": "amm/AckiSwapPair.sol",
-      "line": 26
+      "line": 62
     },
-    "224": {
+    "216": {
       "filename": "amm/AckiSwapPair.sol",
-      "line": 26
-    },
-    "248": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 27
-    },
-    "264": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 28
-    },
-    "280": {
-      "filename": "./AckiSwapPair.code",
-      "line": 303
-    },
-    "296": {
-      "filename": "./AckiSwapPair.code",
-      "line": 306
-    }
-  },
-  "51c23e231b91e3aa1756ff45562cd14364249eb8230bcd5e0f6aea44bbb7d99f": {
-    "0": {
-      "filename": "./AckiSwapPair.code",
-      "line": 970
-    },
-    "8": {
-      "filename": "./AckiSwapPair.code",
-      "line": 971
-    },
-    "16": {
-      "filename": "./AckiSwapPair.code",
-      "line": 972
-    },
-    "32": {
-      "filename": "./AckiSwapPair.code",
-      "line": 975
-    },
-    "48": {
-      "filename": "./AckiSwapPair.code",
-      "line": 976
-    },
-    "56": {
-      "filename": "./AckiSwapPair.code",
-      "line": 977
-    },
-    "72": {
-      "filename": "./AckiSwapPair.code",
-      "line": 978
+      "line": 62
     },
     "232": {
-      "filename": "./AckiSwapPair.code",
-      "line": 979
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 62
     },
     "240": {
-      "filename": "./AckiSwapPair.code",
-      "line": 980
-    },
-    "248": {
-      "filename": "./AckiSwapPair.code",
-      "line": 981
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 62
     },
     "256": {
-      "filename": "./AckiSwapPair.code",
-      "line": 982
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 62
     },
     "264": {
-      "filename": "./AckiSwapPair.code",
-      "line": 983
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 62
     },
     "272": {
       "filename": "./AckiSwapPair.code",
-      "line": 984
+      "line": 964
     },
     "288": {
       "filename": "./AckiSwapPair.code",
-      "line": 986
+      "line": 967
     },
-    "296": {
+    "304": {
       "filename": "./AckiSwapPair.code",
-      "line": 987
+      "line": 970
     }
   },
-  "61ab4641fa30d9310391025086eec65d200d79268e1b7cd402565e01ba64be3c": {
+  "264217f8fd5e0d85b67d0b8325b1ba5c503c3297304f6d284194618d04f4c632": {
     "0": {
       "filename": "./AckiSwapPair.code",
-      "line": 1080
-    }
-  },
-  "6466de104b53862426f6d5a4967550dc9ac00313d8645bbb2f30bc37ef709f61": {
-    "0": {
+      "line": 521
+    },
+    "16": {
+      "filename": "./AckiSwapPair.code",
+      "line": 522
+    },
+    "32": {
+      "filename": "./AckiSwapPair.code",
+      "line": 523
+    },
+    "40": {
       "filename": "./AckiSwapPair.code",
       "line": 524
     },
-    "16": {
+    "56": {
       "filename": "./AckiSwapPair.code",
       "line": 525
     },
-    "32": {
+    "64": {
       "filename": "./AckiSwapPair.code",
       "line": 526
     },
-    "40": {
-      "filename": "./AckiSwapPair.code",
-      "line": 527
-    },
-    "56": {
-      "filename": "./AckiSwapPair.code",
-      "line": 528
-    },
-    "64": {
-      "filename": "./AckiSwapPair.code",
-      "line": 529
-    },
     "80": {
       "filename": "amm/AckiSwapPair.sol",
-      "line": 98
+      "line": 103
     },
     "88": {
       "filename": "amm/AckiSwapPair.sol",
-      "line": 98
+      "line": 103
     },
     "104": {
       "filename": "amm/AckiSwapPair.sol",
-      "line": 98
+      "line": 103
     },
     "120": {
       "filename": "amm/AckiSwapPair.sol",
-      "line": 98
+      "line": 103
     },
     "136": {
       "filename": "amm/AckiSwapPair.sol",
-      "line": 98
+      "line": 103
     },
     "144": {
       "filename": "amm/AckiSwapPair.sol",
-      "line": 98
+      "line": 103
     },
     "152": {
       "filename": "amm/AckiSwapPair.sol",
-      "line": 98
+      "line": 103
     },
     "168": {
       "filename": "amm/AckiSwapPair.sol",
-      "line": 98
+      "line": 103
     },
     "176": {
       "filename": "amm/AckiSwapPair.sol",
-      "line": 98
+      "line": 103
     },
     "184": {
       "filename": "amm/AckiSwapPair.sol",
-      "line": 99
+      "line": 104
     },
     "208": {
       "filename": "amm/AckiSwapPair.sol",
-      "line": 99
+      "line": 104
     },
     "216": {
       "filename": "amm/AckiSwapPair.sol",
-      "line": 99
+      "line": 104
     },
     "232": {
       "filename": "amm/AckiSwapPair.sol",
-      "line": 99
+      "line": 104
     },
     "248": {
       "filename": "amm/AckiSwapPair.sol",
-      "line": 102
+      "line": 107
     },
     "264": {
       "filename": "amm/AckiSwapPair.sol",
-      "line": 102
+      "line": 107
     },
     "272": {
       "filename": "amm/AckiSwapPair.sol",
-      "line": 102
+      "line": 107
     },
     "288": {
       "filename": "amm/AckiSwapPair.sol",
-      "line": 102
+      "line": 107
     },
     "296": {
       "filename": "amm/AckiSwapPair.sol",
-      "line": 102
+      "line": 107
     },
     "304": {
       "filename": "./AckiSwapPair.code",
-      "line": 560
+      "line": 557
     }
   },
-  "66253a5cebf065baa311b64fac48c89c3019ba1a8676a2b32315bcf7c6164343": {},
-  "770719cff6db48f460c0c40755233f8e477e64a17afc8fe27a317ce6b2fdb174": {
-    "0": {
-      "filename": "./AckiSwapPair.code",
-      "line": 214
-    },
-    "8": {
-      "filename": "./AckiSwapPair.code",
-      "line": 215
-    },
-    "16": {
-      "filename": "./AckiSwapPair.code",
-      "line": 216
-    },
-    "32": {
-      "filename": "./AckiSwapPair.code",
-      "line": 219
-    },
-    "48": {
-      "filename": "./AckiSwapPair.code",
-      "line": 220
-    },
-    "56": {
-      "filename": "./AckiSwapPair.code",
-      "line": 221
-    },
-    "72": {
-      "filename": "./AckiSwapPair.code",
-      "line": 222
-    },
-    "232": {
-      "filename": "./AckiSwapPair.code",
-      "line": 223
-    },
-    "240": {
-      "filename": "./AckiSwapPair.code",
-      "line": 224
-    },
-    "248": {
-      "filename": "./AckiSwapPair.code",
-      "line": 225
-    },
-    "256": {
-      "filename": "./AckiSwapPair.code",
-      "line": 226
-    },
-    "264": {
-      "filename": "./AckiSwapPair.code",
-      "line": 227
-    },
-    "272": {
-      "filename": "./AckiSwapPair.code",
-      "line": 228
-    },
-    "288": {
-      "filename": "./AckiSwapPair.code",
-      "line": 230
-    },
-    "296": {
-      "filename": "./AckiSwapPair.code",
-      "line": 231
-    }
-  },
-  "78c7b8183b675f0de1b4c93416034b21b87d43f265a7b1b8c6683616d7fbd77c": {
-    "0": {
-      "filename": "./AckiSwapPair.code",
-      "line": 687
-    },
-    "8": {
-      "filename": "./AckiSwapPair.code",
-      "line": 688
-    },
-    "16": {
-      "filename": "./AckiSwapPair.code",
-      "line": 689
-    },
-    "32": {
-      "filename": "./AckiSwapPair.code",
-      "line": 692
-    },
-    "48": {
-      "filename": "./AckiSwapPair.code",
-      "line": 693
-    },
-    "56": {
-      "filename": "./AckiSwapPair.code",
-      "line": 694
-    },
-    "72": {
-      "filename": "./AckiSwapPair.code",
-      "line": 695
-    },
-    "232": {
-      "filename": "./AckiSwapPair.code",
-      "line": 696
-    },
-    "240": {
-      "filename": "./AckiSwapPair.code",
-      "line": 697
-    },
-    "248": {
-      "filename": "./AckiSwapPair.code",
-      "line": 698
-    },
-    "264": {
-      "filename": "./AckiSwapPair.code",
-      "line": 699
-    },
-    "272": {
-      "filename": "./AckiSwapPair.code",
-      "line": 700
-    },
-    "280": {
-      "filename": "./AckiSwapPair.code",
-      "line": 701
-    },
-    "296": {
-      "filename": "./AckiSwapPair.code",
-      "line": 703
-    },
-    "304": {
-      "filename": "./AckiSwapPair.code",
-      "line": 704
-    }
-  },
-  "85c5d3ef5d1f95cc8097f567a0bea9e998ba358d4d10aef35b8c44120c2fc7dd": {
-    "0": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 189
-    },
-    "8": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 189
-    },
-    "16": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 189
-    },
-    "24": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 190
-    },
-    "40": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 190
-    },
-    "48": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 190
-    },
-    "64": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 190
-    },
-    "72": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 190
-    },
-    "96": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 190
-    },
-    "104": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 190
-    },
-    "112": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 190
-    },
-    "128": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 190
-    },
-    "136": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 190
-    },
-    "160": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 190
-    },
-    "176": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 190
-    },
-    "184": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 190
-    },
-    "232": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 190
-    },
-    "248": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 190
-    },
-    "264": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 190
-    },
-    "272": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 190
-    },
-    "288": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 190
-    },
-    "296": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 190
-    },
-    "304": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 190
-    },
-    "320": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 190
-    },
-    "336": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 190
-    },
-    "344": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 190
-    },
-    "352": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 190
-    },
-    "360": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 190
-    },
-    "368": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 190
-    },
-    "384": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 190
-    }
-  },
-  "85e28ab7a2f2fe0af6a461a87aa626150b54df8604a9bcd6862cefce7708c07c": {
-    "0": {
-      "filename": "./AckiSwapPair.code",
-      "line": 1034
-    },
-    "8": {
-      "filename": "./AckiSwapPair.code",
-      "line": 1035
-    },
-    "56": {
-      "filename": "./AckiSwapPair.code",
-      "line": 1036
-    },
-    "64": {
-      "filename": "./AckiSwapPair.code",
-      "line": 1037
-    },
-    "80": {
-      "filename": "./AckiSwapPair.code",
-      "line": 1040
-    },
-    "88": {
-      "filename": "./AckiSwapPair.code",
-      "line": 1041
-    },
-    "136": {
-      "filename": "./AckiSwapPair.code",
-      "line": 1042
-    },
-    "144": {
-      "filename": "./AckiSwapPair.code",
-      "line": 1043
-    },
-    "160": {
-      "filename": "./AckiSwapPair.code",
-      "line": 1046
-    },
-    "168": {
-      "filename": "./AckiSwapPair.code",
-      "line": 1047
-    },
-    "216": {
-      "filename": "./AckiSwapPair.code",
-      "line": 1048
-    },
-    "224": {
-      "filename": "./AckiSwapPair.code",
-      "line": 1049
-    }
-  },
-  "8c06922481cf1f1918c6c9f7782cd0f939e72ec949e1cc62520c4c213b4e4c66": {
-    "0": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 42
-    },
-    "8": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 42
-    },
-    "24": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 42
-    },
-    "40": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 42
-    },
-    "56": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 42
-    },
-    "80": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 43
-    },
-    "96": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 43
-    },
-    "104": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 43
-    },
-    "120": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 43
-    },
-    "144": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 45
-    },
-    "152": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 45
-    },
-    "168": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 45
-    },
-    "184": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 45
-    },
-    "200": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 45
-    },
-    "216": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 45
-    },
-    "224": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 45
-    },
-    "240": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 45
-    },
-    "248": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 45
-    },
-    "256": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 46
-    },
-    "264": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 46
-    },
-    "312": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 46
-    },
-    "320": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 46
-    },
-    "344": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 49
-    },
-    "360": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 49
-    },
-    "368": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 49
-    },
-    "376": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 49
-    },
-    "384": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 49
-    },
-    "400": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 49
-    },
-    "416": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 49
-    },
-    "424": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 49
-    },
-    "440": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 49
-    },
-    "456": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 51
-    },
-    "464": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 51
-    },
-    "480": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 51
-    },
-    "488": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 51
-    },
-    "504": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 51
-    },
-    "520": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 51
-    },
-    "528": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 51
-    },
-    "552": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 51
-    },
-    "560": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 51
-    },
-    "616": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 51
-    },
-    "632": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 51
-    },
-    "640": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 51
-    },
-    "664": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 51
-    },
-    "680": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 51
-    },
-    "688": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 51
-    },
-    "736": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 51
-    },
-    "752": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 51
-    },
-    "760": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 51
-    },
-    "776": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 51
-    },
-    "784": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 51
-    },
-    "792": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 51
-    },
-    "800": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 51
-    }
-  },
-  "9000017b8d25c76f014491ec24a85f8380277609bc3ab36f44ead7e636ec34e8": {
-    "0": {
-      "filename": "./AckiSwapPair.code",
-      "line": 419
-    },
-    "8": {
-      "filename": "./AckiSwapPair.code",
-      "line": 420
-    },
-    "16": {
-      "filename": "./AckiSwapPair.code",
-      "line": 421
-    },
-    "32": {
-      "filename": "./AckiSwapPair.code",
-      "line": 424
-    },
-    "48": {
-      "filename": "./AckiSwapPair.code",
-      "line": 425
-    },
-    "56": {
-      "filename": "./AckiSwapPair.code",
-      "line": 426
-    },
-    "72": {
-      "filename": "./AckiSwapPair.code",
-      "line": 427
-    },
-    "232": {
-      "filename": "./AckiSwapPair.code",
-      "line": 428
-    },
-    "240": {
-      "filename": "./AckiSwapPair.code",
-      "line": 429
-    },
-    "248": {
-      "filename": "./AckiSwapPair.code",
-      "line": 430
-    },
-    "264": {
-      "filename": "./AckiSwapPair.code",
-      "line": 431
-    },
-    "272": {
-      "filename": "./AckiSwapPair.code",
-      "line": 432
-    },
-    "280": {
-      "filename": "./AckiSwapPair.code",
-      "line": 433
-    },
-    "296": {
-      "filename": "./AckiSwapPair.code",
-      "line": 435
-    },
-    "304": {
-      "filename": "./AckiSwapPair.code",
-      "line": 436
-    }
-  },
-  "9173d06c130cc89ad73b786c8c4f4d1a1c525523508cea8252060edc8783bbb9": {
-    "0": {
-      "filename": "./AckiSwapPair.code",
-      "line": 999
-    },
-    "8": {
-      "filename": "./AckiSwapPair.code",
-      "line": 1000
-    },
-    "24": {
-      "filename": "./AckiSwapPair.code",
-      "line": 1001
-    },
-    "40": {
-      "filename": "./AckiSwapPair.code",
-      "line": 1004
-    },
-    "48": {
-      "filename": "./AckiSwapPair.code",
-      "line": 1005
-    },
-    "96": {
-      "filename": "./AckiSwapPair.code",
-      "line": 1006
-    },
-    "104": {
-      "filename": "./AckiSwapPair.code",
-      "line": 1007
-    }
-  },
-  "96a296d224f285c67bee93c30f8a309157f0daa35dc5b87e410b78630a09cfc7": {},
-  "9a26832e122c6402f3b76feb76b4af3858d8904dafe51f0aa6c66473be69d4b1": {
+  "28f3b844b5c42a6ea6542452b02b7a256d4a90dc9f11284357420b44e6f0b6c7": {
     "0": {
       "filename": "./AckiSwapPair.code",
       "line": 995
@@ -2578,450 +720,1730 @@
     },
     "80": {
       "filename": "./AckiSwapPair.code",
-      "line": 1011
+      "line": 1034
     },
     "88": {
       "filename": "./AckiSwapPair.code",
-      "line": 1012
+      "line": 1035
     },
     "136": {
       "filename": "./AckiSwapPair.code",
-      "line": 1013
+      "line": 1036
     },
     "144": {
       "filename": "./AckiSwapPair.code",
-      "line": 1014
+      "line": 1037
     },
     "160": {
       "filename": "./AckiSwapPair.code",
-      "line": 1017
+      "line": 1057
     },
     "168": {
       "filename": "./AckiSwapPair.code",
-      "line": 1018
+      "line": 1058
     },
     "216": {
       "filename": "./AckiSwapPair.code",
-      "line": 1019
+      "line": 1059
     },
     "224": {
       "filename": "./AckiSwapPair.code",
-      "line": 1020
+      "line": 1060
     },
     "240": {
       "filename": "./AckiSwapPair.code",
-      "line": 1023
+      "line": 1074
     },
     "248": {
       "filename": "./AckiSwapPair.code",
-      "line": 1024
+      "line": 1075
     },
     "296": {
       "filename": "./AckiSwapPair.code",
-      "line": 1025
+      "line": 1076
     },
     "304": {
       "filename": "./AckiSwapPair.code",
-      "line": 1026
+      "line": 1077
     }
   },
-  "9f4396379af41cb0a801c4d0e94ec8ef0768136c8b5793911fd503d064abe298": {},
-  "9f623861a866c1d5db1484cf08179b3dfe6052d403fbc9f27299bc5208d018c5": {
+  "2b6ec637492129d189235573d41bd8089a8a6ef92c48c32fc351883daa338d51": {
     "0": {
       "filename": "./AckiSwapPair.code",
-      "line": 1137
+      "line": 663
+    },
+    "8": {
+      "filename": "./AckiSwapPair.code",
+      "line": 664
     },
     "16": {
       "filename": "./AckiSwapPair.code",
-      "line": 1138
+      "line": 665
     },
-    "24": {
+    "32": {
       "filename": "./AckiSwapPair.code",
-      "line": 1139
+      "line": 668
     },
     "48": {
       "filename": "./AckiSwapPair.code",
-      "line": 1140
+      "line": 669
     },
-    "64": {
+    "56": {
       "filename": "./AckiSwapPair.code",
-      "line": 1141
+      "line": 670
     },
-    "88": {
+    "72": {
       "filename": "./AckiSwapPair.code",
-      "line": 1142
-    },
-    "104": {
-      "filename": "./AckiSwapPair.code",
-      "line": 1143
-    },
-    "112": {
-      "filename": "./AckiSwapPair.code",
-      "line": 1144
-    },
-    "120": {
-      "filename": "./AckiSwapPair.code",
-      "line": 1145
-    },
-    "136": {
-      "filename": "./AckiSwapPair.code",
-      "line": 1146
-    },
-    "152": {
-      "filename": "./AckiSwapPair.code",
-      "line": 1147
-    },
-    "160": {
-      "filename": "./AckiSwapPair.code",
-      "line": 1148
-    },
-    "176": {
-      "filename": "./AckiSwapPair.code",
-      "line": 1149
-    },
-    "200": {
-      "filename": "./AckiSwapPair.code",
-      "line": 1150
-    },
-    "208": {
-      "filename": "./AckiSwapPair.code",
-      "line": 1151
-    },
-    "216": {
-      "filename": "./AckiSwapPair.code",
-      "line": 1152
+      "line": 671
     },
     "232": {
       "filename": "./AckiSwapPair.code",
-      "line": 1153
+      "line": 672
+    },
+    "240": {
+      "filename": "./AckiSwapPair.code",
+      "line": 673
     },
     "248": {
       "filename": "./AckiSwapPair.code",
-      "line": 1157
+      "line": 674
     },
-    "256": {
+    "264": {
       "filename": "./AckiSwapPair.code",
-      "line": 1158
+      "line": 675
+    },
+    "272": {
+      "filename": "./AckiSwapPair.code",
+      "line": 676
     },
     "280": {
       "filename": "./AckiSwapPair.code",
-      "line": 1159
+      "line": 677
     },
     "296": {
       "filename": "./AckiSwapPair.code",
-      "line": 1160
+      "line": 679
     },
     "304": {
       "filename": "./AckiSwapPair.code",
+      "line": 680
+    }
+  },
+  "3446803e68a3316e7e7b36646f47de20a302c03355da364f574adebb91ef3b37": {
+    "0": {
+      "filename": "./AckiSwapPair.code",
+      "line": 1141
+    },
+    "16": {
+      "filename": "./AckiSwapPair.code",
+      "line": 1142
+    },
+    "24": {
+      "filename": "./AckiSwapPair.code",
+      "line": 1143
+    },
+    "48": {
+      "filename": "./AckiSwapPair.code",
+      "line": 1144
+    },
+    "64": {
+      "filename": "./AckiSwapPair.code",
+      "line": 1145
+    },
+    "88": {
+      "filename": "./AckiSwapPair.code",
+      "line": 1146
+    },
+    "104": {
+      "filename": "./AckiSwapPair.code",
+      "line": 1147
+    },
+    "112": {
+      "filename": "./AckiSwapPair.code",
+      "line": 1148
+    },
+    "120": {
+      "filename": "./AckiSwapPair.code",
+      "line": 1149
+    },
+    "136": {
+      "filename": "./AckiSwapPair.code",
+      "line": 1150
+    },
+    "152": {
+      "filename": "./AckiSwapPair.code",
+      "line": 1151
+    },
+    "160": {
+      "filename": "./AckiSwapPair.code",
+      "line": 1152
+    },
+    "176": {
+      "filename": "./AckiSwapPair.code",
+      "line": 1153
+    },
+    "200": {
+      "filename": "./AckiSwapPair.code",
+      "line": 1154
+    },
+    "208": {
+      "filename": "./AckiSwapPair.code",
+      "line": 1155
+    },
+    "216": {
+      "filename": "./AckiSwapPair.code",
+      "line": 1156
+    },
+    "232": {
+      "filename": "./AckiSwapPair.code",
+      "line": 1157
+    },
+    "248": {
+      "filename": "./AckiSwapPair.code",
       "line": 1161
     },
-    "320": {
+    "256": {
+      "filename": "./AckiSwapPair.code",
+      "line": 1162
+    },
+    "280": {
+      "filename": "./AckiSwapPair.code",
+      "line": 1163
+    },
+    "296": {
+      "filename": "./AckiSwapPair.code",
+      "line": 1164
+    },
+    "304": {
       "filename": "./AckiSwapPair.code",
       "line": 1165
     },
+    "320": {
+      "filename": "./AckiSwapPair.code",
+      "line": 1169
+    },
     "328": {
       "filename": "./AckiSwapPair.code",
-      "line": 1166
+      "line": 1170
     },
     "344": {
       "filename": "./AckiSwapPair.code",
-      "line": 1169
+      "line": 1173
+    }
+  },
+  "3bac306afb3d7701a29d10d02830139d5a870c247794e3613bfc11eafabca30d": {
+    "0": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 177
+    },
+    "24": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 177
+    },
+    "32": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 177
+    },
+    "200": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 177
+    },
+    "216": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 177
+    },
+    "232": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 177
+    },
+    "240": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 177
+    },
+    "288": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 177
+    },
+    "304": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 177
+    },
+    "320": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 177
+    },
+    "328": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 177
+    },
+    "344": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 177
+    },
+    "352": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 177
+    },
+    "360": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 177
+    },
+    "376": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 177
+    },
+    "392": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 177
+    },
+    "400": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 177
+    },
+    "408": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 177
+    },
+    "416": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 177
+    },
+    "424": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 177
+    },
+    "432": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 177
+    },
+    "448": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 188
+    },
+    "456": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 188
+    },
+    "464": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 188
+    },
+    "472": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 188
+    },
+    "488": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 188
+    },
+    "504": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 188
+    },
+    "512": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 188
+    },
+    "528": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 188
+    },
+    "544": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 189
+    },
+    "552": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 189
+    },
+    "560": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 189
+    },
+    "568": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 189
+    },
+    "592": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 189
+    },
+    "600": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 189
+    },
+    "608": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 189
+    },
+    "624": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 189
+    },
+    "640": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 189
+    },
+    "656": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 189
+    },
+    "672": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 189
+    },
+    "680": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 189
+    },
+    "696": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 189
+    }
+  },
+  "4e525d40e48162ae7de6a6105a733b721f3b08464b03f96b759b165c5a126920": {
+    "0": {
+      "filename": "./AckiSwapPair.code",
+      "line": 271
+    },
+    "8": {
+      "filename": "./AckiSwapPair.code",
+      "line": 272
+    },
+    "24": {
+      "filename": "./AckiSwapPair.code",
+      "line": 273
+    },
+    "32": {
+      "filename": "./AckiSwapPair.code",
+      "line": 274
+    },
+    "48": {
+      "filename": "./AckiSwapPair.code",
+      "line": 277
+    },
+    "56": {
+      "filename": "./AckiSwapPair.code",
+      "line": 278
+    },
+    "72": {
+      "filename": "./AckiSwapPair.code",
+      "line": 279
+    },
+    "88": {
+      "filename": "./AckiSwapPair.code",
+      "line": 280
+    },
+    "104": {
+      "filename": "./AckiSwapPair.code",
+      "line": 281
+    },
+    "112": {
+      "filename": "./AckiSwapPair.code",
+      "line": 282
+    },
+    "120": {
+      "filename": "./AckiSwapPair.code",
+      "line": 283
+    },
+    "128": {
+      "filename": "./AckiSwapPair.code",
+      "line": 284
+    },
+    "136": {
+      "filename": "./AckiSwapPair.code",
+      "line": 285
+    },
+    "144": {
+      "filename": "./AckiSwapPair.code",
+      "line": 287
+    },
+    "152": {
+      "filename": "./AckiSwapPair.code",
+      "line": 288
+    },
+    "168": {
+      "filename": "./AckiSwapPair.code",
+      "line": 289
+    },
+    "176": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 30
+    },
+    "192": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 30
+    },
+    "208": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 30
+    },
+    "224": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 30
+    },
+    "248": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 31
+    },
+    "264": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 32
+    },
+    "280": {
+      "filename": "./AckiSwapPair.code",
+      "line": 300
+    },
+    "296": {
+      "filename": "./AckiSwapPair.code",
+      "line": 303
+    }
+  },
+  "51c23e231b91e3aa1756ff45562cd14364249eb8230bcd5e0f6aea44bbb7d99f": {
+    "0": {
+      "filename": "./AckiSwapPair.code",
+      "line": 974
+    },
+    "8": {
+      "filename": "./AckiSwapPair.code",
+      "line": 975
+    },
+    "16": {
+      "filename": "./AckiSwapPair.code",
+      "line": 976
+    },
+    "32": {
+      "filename": "./AckiSwapPair.code",
+      "line": 979
+    },
+    "48": {
+      "filename": "./AckiSwapPair.code",
+      "line": 980
+    },
+    "56": {
+      "filename": "./AckiSwapPair.code",
+      "line": 981
+    },
+    "72": {
+      "filename": "./AckiSwapPair.code",
+      "line": 982
+    },
+    "232": {
+      "filename": "./AckiSwapPair.code",
+      "line": 983
+    },
+    "240": {
+      "filename": "./AckiSwapPair.code",
+      "line": 984
+    },
+    "248": {
+      "filename": "./AckiSwapPair.code",
+      "line": 985
+    },
+    "256": {
+      "filename": "./AckiSwapPair.code",
+      "line": 986
+    },
+    "264": {
+      "filename": "./AckiSwapPair.code",
+      "line": 987
+    },
+    "272": {
+      "filename": "./AckiSwapPair.code",
+      "line": 988
+    },
+    "288": {
+      "filename": "./AckiSwapPair.code",
+      "line": 990
+    },
+    "296": {
+      "filename": "./AckiSwapPair.code",
+      "line": 991
+    }
+  },
+  "560c79cd9d89b34211942865202d2a5d1be1ac1b047381fcc8675aa0d1404d90": {
+    "0": {
+      "filename": "./AckiSwapPair.code",
+      "line": 1229
+    },
+    "1": {
+      "filename": "./AckiSwapPair.code",
+      "line": 1230
+    },
+    "2": {
+      "filename": "./AckiSwapPair.code",
+      "line": 1231
+    },
+    "3": {
+      "filename": "./AckiSwapPair.code",
+      "line": 1260
+    },
+    "4": {
+      "filename": "./AckiSwapPair.code",
+      "line": 1264
+    }
+  },
+  "61ab4641fa30d9310391025086eec65d200d79268e1b7cd402565e01ba64be3c": {
+    "0": {
+      "filename": "./AckiSwapPair.code",
+      "line": 1084
+    }
+  },
+  "637cf154bf4b4a72e334e400a824712682c99131d0180538ea391b5c232344fa": {
+    "0": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 113
+    },
+    "16": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 113
+    },
+    "40": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 114
+    },
+    "48": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 114
+    },
+    "64": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 114
+    },
+    "80": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 114
+    },
+    "96": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 114
+    },
+    "112": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 114
+    },
+    "120": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 114
+    },
+    "136": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 114
+    },
+    "144": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 114
+    },
+    "152": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 114
+    },
+    "168": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 115
+    },
+    "176": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 115
+    },
+    "192": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 115
+    },
+    "216": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 117
+    },
+    "232": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 120
+    },
+    "240": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 120
+    },
+    "256": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 120
+    },
+    "272": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 120
+    },
+    "296": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 120
+    },
+    "312": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 121
+    },
+    "320": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 121
+    },
+    "328": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 121
+    },
+    "344": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 124
+    },
+    "352": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 124
+    },
+    "376": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 124
+    },
+    "384": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 125
+    },
+    "392": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 125
+    },
+    "408": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 125
+    },
+    "416": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 126
+    },
+    "432": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 126
+    },
+    "456": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 126
+    },
+    "464": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 126
+    },
+    "472": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 126
+    },
+    "480": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 127
+    },
+    "496": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 127
+    },
+    "512": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 129
+    },
+    "520": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 129
+    },
+    "536": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 129
+    },
+    "544": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 129
+    },
+    "568": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 130
+    },
+    "576": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 130
+    },
+    "592": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 130
+    },
+    "600": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 130
+    },
+    "624": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 132
+    },
+    "640": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 132
+    },
+    "648": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 132
+    },
+    "656": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 132
+    },
+    "672": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 132
+    },
+    "688": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 133
+    },
+    "704": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 133
+    },
+    "712": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 133
+    },
+    "720": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 133
+    },
+    "736": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 133
+    },
+    "752": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 135
+    },
+    "760": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 135
+    },
+    "768": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 135
+    },
+    "776": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 135
+    },
+    "792": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 135
+    },
+    "808": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 135
+    },
+    "928": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 135
+    },
+    "936": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 135
+    },
+    "944": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 135
+    },
+    "960": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 135
+    },
+    "968": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 135
+    }
+  },
+  "66253a5cebf065baa311b64fac48c89c3019ba1a8676a2b32315bcf7c6164343": {},
+  "6c4ed8efa18d1c47815844dd9ee6396337aac49f577bedc2bec5e8b7662face9": {
+    "0": {
+      "filename": "./AckiSwapPair.code",
+      "line": 1233
+    },
+    "8": {
+      "filename": "./AckiSwapPair.code",
+      "line": 1243
+    },
+    "24": {
+      "filename": "./AckiSwapPair.code",
+      "line": 1244
+    },
+    "32": {
+      "filename": "./AckiSwapPair.code",
+      "line": 1245
+    },
+    "48": {
+      "filename": "./AckiSwapPair.code",
+      "line": 1248
+    },
+    "56": {
+      "filename": "./AckiSwapPair.code",
+      "line": 1249
+    },
+    "72": {
+      "filename": "./AckiSwapPair.code",
+      "line": 1250
+    },
+    "88": {
+      "filename": "./AckiSwapPair.code",
+      "line": 1253
+    },
+    "96": {
+      "filename": "./AckiSwapPair.code",
+      "line": 1254
+    },
+    "112": {
+      "filename": "./AckiSwapPair.code",
+      "line": 1255
+    },
+    "128": {
+      "filename": "./AckiSwapPair.code",
+      "line": 1258
+    }
+  },
+  "770719cff6db48f460c0c40755233f8e477e64a17afc8fe27a317ce6b2fdb174": {
+    "0": {
+      "filename": "./AckiSwapPair.code",
+      "line": 211
+    },
+    "8": {
+      "filename": "./AckiSwapPair.code",
+      "line": 212
+    },
+    "16": {
+      "filename": "./AckiSwapPair.code",
+      "line": 213
+    },
+    "32": {
+      "filename": "./AckiSwapPair.code",
+      "line": 216
+    },
+    "48": {
+      "filename": "./AckiSwapPair.code",
+      "line": 217
+    },
+    "56": {
+      "filename": "./AckiSwapPair.code",
+      "line": 218
+    },
+    "72": {
+      "filename": "./AckiSwapPair.code",
+      "line": 219
+    },
+    "232": {
+      "filename": "./AckiSwapPair.code",
+      "line": 220
+    },
+    "240": {
+      "filename": "./AckiSwapPair.code",
+      "line": 221
+    },
+    "248": {
+      "filename": "./AckiSwapPair.code",
+      "line": 222
+    },
+    "256": {
+      "filename": "./AckiSwapPair.code",
+      "line": 223
+    },
+    "264": {
+      "filename": "./AckiSwapPair.code",
+      "line": 224
+    },
+    "272": {
+      "filename": "./AckiSwapPair.code",
+      "line": 225
+    },
+    "288": {
+      "filename": "./AckiSwapPair.code",
+      "line": 227
+    },
+    "296": {
+      "filename": "./AckiSwapPair.code",
+      "line": 228
+    }
+  },
+  "78c7b8183b675f0de1b4c93416034b21b87d43f265a7b1b8c6683616d7fbd77c": {
+    "0": {
+      "filename": "./AckiSwapPair.code",
+      "line": 684
+    },
+    "8": {
+      "filename": "./AckiSwapPair.code",
+      "line": 685
+    },
+    "16": {
+      "filename": "./AckiSwapPair.code",
+      "line": 686
+    },
+    "32": {
+      "filename": "./AckiSwapPair.code",
+      "line": 689
+    },
+    "48": {
+      "filename": "./AckiSwapPair.code",
+      "line": 690
+    },
+    "56": {
+      "filename": "./AckiSwapPair.code",
+      "line": 691
+    },
+    "72": {
+      "filename": "./AckiSwapPair.code",
+      "line": 692
+    },
+    "232": {
+      "filename": "./AckiSwapPair.code",
+      "line": 693
+    },
+    "240": {
+      "filename": "./AckiSwapPair.code",
+      "line": 694
+    },
+    "248": {
+      "filename": "./AckiSwapPair.code",
+      "line": 695
+    },
+    "264": {
+      "filename": "./AckiSwapPair.code",
+      "line": 696
+    },
+    "272": {
+      "filename": "./AckiSwapPair.code",
+      "line": 697
+    },
+    "280": {
+      "filename": "./AckiSwapPair.code",
+      "line": 698
+    },
+    "296": {
+      "filename": "./AckiSwapPair.code",
+      "line": 700
+    },
+    "304": {
+      "filename": "./AckiSwapPair.code",
+      "line": 701
+    }
+  },
+  "825eac015d69a9b61c9830d157c4f2fd9bdd006a7f5658f0eb4d89e5bd32a8ff": {
+    "0": {
+      "filename": "./AckiSwapPair.code",
+      "line": 881
+    },
+    "8": {
+      "filename": "./AckiSwapPair.code",
+      "line": 882
+    },
+    "24": {
+      "filename": "./AckiSwapPair.code",
+      "line": 883
+    },
+    "48": {
+      "filename": "./AckiSwapPair.code",
+      "line": 884
+    },
+    "64": {
+      "filename": "./AckiSwapPair.code",
+      "line": 885
+    },
+    "72": {
+      "filename": "./AckiSwapPair.code",
+      "line": 886
+    },
+    "88": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 112
+    },
+    "96": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 112
+    },
+    "104": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 112
+    },
+    "112": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 112
+    },
+    "120": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 112
+    },
+    "128": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 112
+    },
+    "136": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 112
+    },
+    "152": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 112
+    },
+    "168": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 112
+    },
+    "176": {
+      "filename": "./AckiSwapPair.code",
+      "line": 901
+    },
+    "192": {
+      "filename": "./AckiSwapPair.code",
+      "line": 904
+    },
+    "208": {
+      "filename": "./AckiSwapPair.code",
+      "line": 907
+    }
+  },
+  "85c5d3ef5d1f95cc8097f567a0bea9e998ba358d4d10aef35b8c44120c2fc7dd": {
+    "0": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 194
+    },
+    "8": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 194
+    },
+    "16": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 194
+    },
+    "24": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 195
+    },
+    "40": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 195
+    },
+    "48": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 195
+    },
+    "64": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 195
+    },
+    "72": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 195
+    },
+    "96": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 195
+    },
+    "104": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 195
+    },
+    "112": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 195
+    },
+    "128": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 195
+    },
+    "136": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 195
+    },
+    "160": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 195
+    },
+    "176": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 195
+    },
+    "184": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 195
+    },
+    "232": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 195
+    },
+    "248": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 195
+    },
+    "264": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 195
+    },
+    "272": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 195
+    },
+    "288": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 195
+    },
+    "296": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 195
+    },
+    "304": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 195
+    },
+    "320": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 195
+    },
+    "336": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 195
+    },
+    "344": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 195
+    },
+    "352": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 195
+    },
+    "360": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 195
+    },
+    "368": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 195
+    },
+    "384": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 195
+    }
+  },
+  "8c06922481cf1f1918c6c9f7782cd0f939e72ec949e1cc62520c4c213b4e4c66": {
+    "0": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 46
+    },
+    "8": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 46
+    },
+    "24": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 46
+    },
+    "40": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 46
+    },
+    "56": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 46
+    },
+    "80": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 47
+    },
+    "96": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 47
+    },
+    "104": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 47
+    },
+    "120": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 47
+    },
+    "144": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 49
+    },
+    "152": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 49
+    },
+    "168": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 49
+    },
+    "184": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 49
+    },
+    "200": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 49
+    },
+    "216": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 49
+    },
+    "224": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 49
+    },
+    "240": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 49
+    },
+    "248": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 49
+    },
+    "256": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 50
+    },
+    "264": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 50
+    },
+    "312": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 50
+    },
+    "320": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 50
+    },
+    "344": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 53
+    },
+    "360": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 53
+    },
+    "368": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 53
+    },
+    "376": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 53
+    },
+    "384": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 53
+    },
+    "400": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 53
+    },
+    "416": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 53
+    },
+    "424": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 53
+    },
+    "440": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 53
+    },
+    "456": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 55
+    },
+    "464": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 55
+    },
+    "480": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 55
+    },
+    "488": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 55
+    },
+    "504": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 55
+    },
+    "520": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 55
+    },
+    "528": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 55
+    },
+    "552": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 55
+    },
+    "560": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 55
+    },
+    "616": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 55
+    },
+    "632": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 55
+    },
+    "640": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 55
+    },
+    "664": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 55
+    },
+    "680": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 55
+    },
+    "688": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 55
+    },
+    "736": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 55
+    },
+    "752": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 55
+    },
+    "760": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 55
+    },
+    "776": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 55
+    },
+    "784": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 55
+    },
+    "792": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 55
+    },
+    "800": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 55
+    }
+  },
+  "9000017b8d25c76f014491ec24a85f8380277609bc3ab36f44ead7e636ec34e8": {
+    "0": {
+      "filename": "./AckiSwapPair.code",
+      "line": 416
+    },
+    "8": {
+      "filename": "./AckiSwapPair.code",
+      "line": 417
+    },
+    "16": {
+      "filename": "./AckiSwapPair.code",
+      "line": 418
+    },
+    "32": {
+      "filename": "./AckiSwapPair.code",
+      "line": 421
+    },
+    "48": {
+      "filename": "./AckiSwapPair.code",
+      "line": 422
+    },
+    "56": {
+      "filename": "./AckiSwapPair.code",
+      "line": 423
+    },
+    "72": {
+      "filename": "./AckiSwapPair.code",
+      "line": 424
+    },
+    "232": {
+      "filename": "./AckiSwapPair.code",
+      "line": 425
+    },
+    "240": {
+      "filename": "./AckiSwapPair.code",
+      "line": 426
+    },
+    "248": {
+      "filename": "./AckiSwapPair.code",
+      "line": 427
+    },
+    "264": {
+      "filename": "./AckiSwapPair.code",
+      "line": 428
+    },
+    "272": {
+      "filename": "./AckiSwapPair.code",
+      "line": 429
+    },
+    "280": {
+      "filename": "./AckiSwapPair.code",
+      "line": 430
+    },
+    "296": {
+      "filename": "./AckiSwapPair.code",
+      "line": 432
+    },
+    "304": {
+      "filename": "./AckiSwapPair.code",
+      "line": 433
+    }
+  },
+  "9173d06c130cc89ad73b786c8c4f4d1a1c525523508cea8252060edc8783bbb9": {
+    "0": {
+      "filename": "./AckiSwapPair.code",
+      "line": 1003
+    },
+    "8": {
+      "filename": "./AckiSwapPair.code",
+      "line": 1004
+    },
+    "24": {
+      "filename": "./AckiSwapPair.code",
+      "line": 1005
+    },
+    "40": {
+      "filename": "./AckiSwapPair.code",
+      "line": 1008
+    },
+    "48": {
+      "filename": "./AckiSwapPair.code",
+      "line": 1009
+    },
+    "96": {
+      "filename": "./AckiSwapPair.code",
+      "line": 1010
+    },
+    "104": {
+      "filename": "./AckiSwapPair.code",
+      "line": 1011
+    }
+  },
+  "96a296d224f285c67bee93c30f8a309157f0daa35dc5b87e410b78630a09cfc7": {},
+  "9f4396379af41cb0a801c4d0e94ec8ef0768136c8b5793911fd503d064abe298": {},
+  "a1cc016134747e8b1650fd677390f0fd875fe4d50eb054146f25ed675e086ac8": {
+    "0": {
+      "filename": "./AckiSwapPair.code",
+      "line": 999
+    },
+    "8": {
+      "filename": "./AckiSwapPair.code",
+      "line": 1000
+    },
+    "56": {
+      "filename": "./AckiSwapPair.code",
+      "line": 1001
+    },
+    "64": {
+      "filename": "./AckiSwapPair.code",
+      "line": 1002
+    },
+    "80": {
+      "filename": "./AckiSwapPair.code",
+      "line": 1015
+    },
+    "88": {
+      "filename": "./AckiSwapPair.code",
+      "line": 1016
+    },
+    "136": {
+      "filename": "./AckiSwapPair.code",
+      "line": 1017
+    },
+    "144": {
+      "filename": "./AckiSwapPair.code",
+      "line": 1018
+    },
+    "160": {
+      "filename": "./AckiSwapPair.code",
+      "line": 1021
+    },
+    "168": {
+      "filename": "./AckiSwapPair.code",
+      "line": 1022
+    },
+    "216": {
+      "filename": "./AckiSwapPair.code",
+      "line": 1023
+    },
+    "224": {
+      "filename": "./AckiSwapPair.code",
+      "line": 1024
+    },
+    "240": {
+      "filename": "./AckiSwapPair.code",
+      "line": 1027
+    },
+    "248": {
+      "filename": "./AckiSwapPair.code",
+      "line": 1028
+    },
+    "296": {
+      "filename": "./AckiSwapPair.code",
+      "line": 1029
+    },
+    "304": {
+      "filename": "./AckiSwapPair.code",
+      "line": 1030
     }
   },
   "a49e777420ac7f992df90056711827047385d71ffe2c609fa2eec8b73a5d39a1": {},
   "a8706c6358fecfba3c31d885dcf337fed67609c22ebf972396a9aca8faf7a108": {
     "0": {
       "filename": "./AckiSwapPair.code",
-      "line": 1236
+      "line": 1240
     }
   },
   "acae16f8d104ab47e76642159308a411134ef8fdec831d566e7f7ac11dd1e598": {},
-  "ae43d2a7a3304258f625444fdbea56b48fe5c10373ebce05eb3b3fac68834055": {
+  "ae5924c81231f987f3fafe6a4a9b862eec75eeb8187b1a1ce68fbe2ffcc8b0de": {
     "0": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 63
-    },
-    "8": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 63
-    },
-    "24": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 63
-    },
-    "40": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 63
-    },
-    "56": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 63
-    },
-    "80": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 64
-    },
-    "96": {
-      "filename": "./AckiSwapPair.code",
-      "line": 926
-    }
-  },
-  "b316c589a58451d34e381ae3434390db202f5e1769c063ba6078961b675319d0": {
-    "0": {
-      "filename": "./AckiSwapPair.code",
-      "line": 887
-    },
-    "8": {
-      "filename": "./AckiSwapPair.code",
-      "line": 888
-    },
-    "24": {
-      "filename": "./AckiSwapPair.code",
-      "line": 889
-    },
-    "48": {
-      "filename": "./AckiSwapPair.code",
-      "line": 890
-    },
-    "64": {
-      "filename": "./AckiSwapPair.code",
-      "line": 891
-    },
-    "72": {
-      "filename": "./AckiSwapPair.code",
-      "line": 892
-    },
-    "88": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 107
-    },
-    "96": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 107
-    },
-    "104": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 107
-    },
-    "112": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 107
-    },
-    "120": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 107
-    },
-    "128": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 107
-    },
-    "136": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 107
-    },
-    "152": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 107
-    },
-    "168": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 107
-    },
-    "176": {
-      "filename": "./AckiSwapPair.code",
-      "line": 907
-    },
-    "192": {
-      "filename": "./AckiSwapPair.code",
-      "line": 910
-    },
-    "208": {
-      "filename": "./AckiSwapPair.code",
-      "line": 913
-    }
-  },
-  "bf39e70bcdf0c92e6fc8e9d58f05dd906d2a550be9eacc2d628b3c800113b235": {
-    "0": {
-      "filename": "./AckiSwapPair.code",
-      "line": 645
-    },
-    "8": {
-      "filename": "./AckiSwapPair.code",
-      "line": 646
-    },
-    "24": {
-      "filename": "./AckiSwapPair.code",
-      "line": 647
-    },
-    "48": {
-      "filename": "./AckiSwapPair.code",
-      "line": 648
-    },
-    "64": {
-      "filename": "./AckiSwapPair.code",
-      "line": 649
-    },
-    "72": {
-      "filename": "./AckiSwapPair.code",
-      "line": 650
-    },
-    "88": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 35
-    },
-    "96": {
-      "filename": "./AckiSwapPair.code",
-      "line": 656
-    },
-    "112": {
-      "filename": "./AckiSwapPair.code",
-      "line": 659
-    },
-    "128": {
-      "filename": "./AckiSwapPair.code",
-      "line": 662
-    }
-  },
-  "c0a17c6951a1515c634c27f590bed3a673a21a6bec8d4f1a193f35939249fb70": {
-    "0": {
-      "filename": "./AckiSwapPair.code",
-      "line": 1079
-    },
-    "8": {
-      "filename": "./AckiSwapPair.code",
-      "line": 1082
-    },
-    "24": {
       "filename": "./AckiSwapPair.code",
       "line": 1083
     },
-    "32": {
+    "8": {
       "filename": "./AckiSwapPair.code",
-      "line": 1084
+      "line": 1086
     },
-    "48": {
+    "24": {
       "filename": "./AckiSwapPair.code",
       "line": 1087
     },
-    "64": {
+    "32": {
       "filename": "./AckiSwapPair.code",
       "line": 1088
     },
-    "72": {
-      "filename": "./AckiSwapPair.code",
-      "line": 1089
-    },
-    "88": {
-      "filename": "./AckiSwapPair.code",
-      "line": 1090
-    },
-    "104": {
+    "48": {
       "filename": "./AckiSwapPair.code",
       "line": 1091
     },
-    "120": {
+    "64": {
       "filename": "./AckiSwapPair.code",
       "line": 1092
     },
-    "128": {
+    "72": {
       "filename": "./AckiSwapPair.code",
       "line": 1093
     },
-    "144": {
+    "88": {
       "filename": "./AckiSwapPair.code",
       "line": 1094
     },
-    "152": {
+    "104": {
       "filename": "./AckiSwapPair.code",
       "line": 1095
     },
-    "160": {
+    "120": {
       "filename": "./AckiSwapPair.code",
       "line": 1096
     },
-    "168": {
+    "128": {
       "filename": "./AckiSwapPair.code",
       "line": 1097
     },
-    "176": {
+    "144": {
       "filename": "./AckiSwapPair.code",
       "line": 1098
     },
-    "192": {
+    "152": {
       "filename": "./AckiSwapPair.code",
       "line": 1099
     },
-    "200": {
+    "160": {
       "filename": "./AckiSwapPair.code",
       "line": 1100
     },
-    "216": {
+    "168": {
       "filename": "./AckiSwapPair.code",
       "line": 1101
     },
-    "224": {
+    "176": {
       "filename": "./AckiSwapPair.code",
       "line": 1102
     },
-    "232": {
+    "192": {
       "filename": "./AckiSwapPair.code",
       "line": 1103
     },
-    "248": {
+    "200": {
       "filename": "./AckiSwapPair.code",
       "line": 1104
     },
-    "264": {
+    "216": {
+      "filename": "./AckiSwapPair.code",
+      "line": 1105
+    },
+    "224": {
       "filename": "./AckiSwapPair.code",
       "line": 1106
     },
-    "272": {
+    "232": {
       "filename": "./AckiSwapPair.code",
       "line": 1107
     },
-    "280": {
+    "248": {
       "filename": "./AckiSwapPair.code",
       "line": 1108
     },
-    "296": {
+    "264": {
       "filename": "./AckiSwapPair.code",
       "line": 1110
     },
-    "304": {
+    "272": {
       "filename": "./AckiSwapPair.code",
       "line": 1111
     },
-    "320": {
+    "280": {
       "filename": "./AckiSwapPair.code",
       "line": 1112
     },
-    "336": {
+    "296": {
       "filename": "./AckiSwapPair.code",
       "line": 1114
     },
-    "344": {
+    "304": {
       "filename": "./AckiSwapPair.code",
       "line": 1115
     },
-    "360": {
+    "320": {
       "filename": "./AckiSwapPair.code",
       "line": 1116
     },
-    "368": {
+    "336": {
       "filename": "./AckiSwapPair.code",
-      "line": 1117
+      "line": 1118
     },
-    "384": {
+    "344": {
       "filename": "./AckiSwapPair.code",
       "line": 1119
     },
-    "392": {
+    "360": {
       "filename": "./AckiSwapPair.code",
       "line": 1120
     },
-    "408": {
+    "368": {
       "filename": "./AckiSwapPair.code",
       "line": 1121
+    },
+    "384": {
+      "filename": "./AckiSwapPair.code",
+      "line": 1123
+    },
+    "392": {
+      "filename": "./AckiSwapPair.code",
+      "line": 1124
+    },
+    "408": {
+      "filename": "./AckiSwapPair.code",
+      "line": 1125
     },
     "416": {
       "filename": "stdlib.sol",
@@ -3077,538 +2499,1128 @@
     },
     "608": {
       "filename": "./AckiSwapPair.code",
-      "line": 1123
+      "line": 1127
     },
     "624": {
       "filename": "./AckiSwapPair.code",
-      "line": 1124
+      "line": 1128
     },
     "632": {
       "filename": "./AckiSwapPair.code",
-      "line": 1125
+      "line": 1129
     },
     "648": {
       "filename": "./AckiSwapPair.code",
-      "line": 1126
+      "line": 1130
     },
     "656": {
       "filename": "./AckiSwapPair.code",
-      "line": 1127
+      "line": 1131
     },
     "672": {
       "filename": "./AckiSwapPair.code",
-      "line": 1128
+      "line": 1132
     },
     "688": {
       "filename": "./AckiSwapPair.code",
-      "line": 1129
+      "line": 1133
     },
     "696": {
       "filename": "./AckiSwapPair.code",
-      "line": 1130
+      "line": 1134
     },
     "712": {
       "filename": "./AckiSwapPair.code",
-      "line": 1133
+      "line": 1137
     }
   },
-  "c6cd12793b26f7bea8c038b620db303d9a4eb1abb0895b4a232d6f1658f32d20": {
+  "b34990334a32bf6568abc370231875044f8020ff7345079185f4a8609f22e627": {
+    "0": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 157
+    },
+    "8": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 157
+    },
+    "24": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 157
+    },
+    "40": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 157
+    },
+    "64": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 157
+    },
+    "80": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 158
+    },
+    "96": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 158
+    },
+    "104": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 158
+    },
+    "120": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 161
+    },
+    "128": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 161
+    },
+    "152": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 161
+    },
+    "160": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 162
+    },
+    "168": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 162
+    },
+    "184": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 162
+    },
+    "192": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 163
+    },
+    "208": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 163
+    },
+    "232": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 163
+    },
+    "240": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 163
+    },
+    "248": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 163
+    },
+    "256": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 164
+    },
+    "272": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 164
+    },
+    "288": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 166
+    },
+    "296": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 166
+    },
+    "312": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 166
+    },
+    "320": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 166
+    },
+    "344": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 167
+    },
+    "352": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 167
+    },
+    "368": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 167
+    },
+    "376": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 167
+    },
+    "400": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 169
+    },
+    "416": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 169
+    },
+    "424": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 169
+    },
+    "432": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 169
+    },
+    "448": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 169
+    },
+    "464": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 170
+    },
+    "480": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 170
+    },
+    "488": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 170
+    },
+    "496": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 170
+    },
+    "512": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 170
+    },
+    "528": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 172
+    },
+    "536": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 172
+    },
+    "552": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 172
+    },
+    "560": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 172
+    },
+    "576": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 172
+    },
+    "696": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 172
+    },
+    "704": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 172
+    },
+    "712": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 172
+    },
+    "728": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 172
+    },
+    "736": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 172
+    },
+    "784": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 172
+    },
+    "792": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 172
+    },
+    "808": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 172
+    },
+    "824": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 172
+    },
+    "840": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 172
+    },
+    "848": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 172
+    },
+    "864": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 172
+    },
+    "872": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 172
+    },
+    "880": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 172
+    },
+    "888": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 172
+    },
+    "904": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 176
+    },
+    "912": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 177
+    },
+    "920": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 177
+    },
+    "928": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 177
+    },
+    "944": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 177
+    },
+    "952": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 177
+    },
+    "968": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 177
+    },
+    "976": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 177
+    },
+    "992": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 177
+    }
+  },
+  "b6b6f98d807d726e4a48b0ab454cd484b7b2eb3738f90806de871cedde2eb3f3": {
     "0": {
       "filename": "./AckiSwapPair.code",
-      "line": 1225
+      "line": 1038
     },
-    "1": {
+    "8": {
       "filename": "./AckiSwapPair.code",
-      "line": 1226
+      "line": 1039
     },
-    "2": {
+    "56": {
       "filename": "./AckiSwapPair.code",
-      "line": 1227
+      "line": 1040
     },
-    "3": {
+    "64": {
       "filename": "./AckiSwapPair.code",
-      "line": 1256
+      "line": 1041
     },
-    "4": {
+    "80": {
       "filename": "./AckiSwapPair.code",
-      "line": 1260
+      "line": 1044
+    },
+    "88": {
+      "filename": "./AckiSwapPair.code",
+      "line": 1045
+    },
+    "136": {
+      "filename": "./AckiSwapPair.code",
+      "line": 1046
+    },
+    "144": {
+      "filename": "./AckiSwapPair.code",
+      "line": 1047
+    },
+    "160": {
+      "filename": "./AckiSwapPair.code",
+      "line": 1050
+    },
+    "168": {
+      "filename": "./AckiSwapPair.code",
+      "line": 1051
+    },
+    "216": {
+      "filename": "./AckiSwapPair.code",
+      "line": 1052
+    },
+    "224": {
+      "filename": "./AckiSwapPair.code",
+      "line": 1053
+    }
+  },
+  "bf39e70bcdf0c92e6fc8e9d58f05dd906d2a550be9eacc2d628b3c800113b235": {
+    "0": {
+      "filename": "./AckiSwapPair.code",
+      "line": 642
+    },
+    "8": {
+      "filename": "./AckiSwapPair.code",
+      "line": 643
+    },
+    "24": {
+      "filename": "./AckiSwapPair.code",
+      "line": 644
+    },
+    "48": {
+      "filename": "./AckiSwapPair.code",
+      "line": 645
+    },
+    "64": {
+      "filename": "./AckiSwapPair.code",
+      "line": 646
+    },
+    "72": {
+      "filename": "./AckiSwapPair.code",
+      "line": 647
+    },
+    "88": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 39
+    },
+    "96": {
+      "filename": "./AckiSwapPair.code",
+      "line": 653
+    },
+    "112": {
+      "filename": "./AckiSwapPair.code",
+      "line": 656
+    },
+    "128": {
+      "filename": "./AckiSwapPair.code",
+      "line": 659
+    }
+  },
+  "ce81748416e34001bbaa7a250ffe60622409729a624bfa69bf2b906138d897fa": {
+    "0": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 67
+    },
+    "8": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 67
+    },
+    "24": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 67
+    },
+    "40": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 67
+    },
+    "56": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 67
+    },
+    "80": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 68
+    },
+    "96": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 69
+    },
+    "104": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 69
+    },
+    "120": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 69
+    },
+    "128": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 69
+    },
+    "152": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 69
+    },
+    "160": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 69
+    },
+    "360": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 69
+    },
+    "376": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 69
+    },
+    "384": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 69
+    },
+    "392": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 69
     }
   },
   "d4379b9d176c7a92b526399f295064e2603f2d056a57949bf65101405efec4af": {
     "0": {
       "filename": "./AckiSwapPair.code",
-      "line": 235
+      "line": 232
     },
     "16": {
       "filename": "./AckiSwapPair.code",
-      "line": 236
+      "line": 233
     },
     "32": {
       "filename": "./AckiSwapPair.code",
-      "line": 237
+      "line": 234
     },
     "48": {
       "filename": "./AckiSwapPair.code",
-      "line": 238
+      "line": 235
     },
     "64": {
       "filename": "./AckiSwapPair.code",
-      "line": 239
+      "line": 236
     },
     "80": {
       "filename": "./AckiSwapPair.code",
-      "line": 240
+      "line": 237
     },
     "96": {
       "filename": "./AckiSwapPair.code",
-      "line": 241
+      "line": 238
     },
     "112": {
       "filename": "./AckiSwapPair.code",
-      "line": 242
+      "line": 239
     },
     "128": {
       "filename": "./AckiSwapPair.code",
-      "line": 243
+      "line": 240
     },
     "144": {
       "filename": "./AckiSwapPair.code",
-      "line": 244
+      "line": 241
     },
     "160": {
       "filename": "./AckiSwapPair.code",
-      "line": 245
+      "line": 242
     },
     "168": {
       "filename": "./AckiSwapPair.code",
-      "line": 246
+      "line": 243
     },
     "184": {
       "filename": "./AckiSwapPair.code",
-      "line": 247
+      "line": 244
     },
     "200": {
       "filename": "./AckiSwapPair.code",
-      "line": 248
+      "line": 245
     },
     "216": {
       "filename": "./AckiSwapPair.code",
-      "line": 249
+      "line": 246
     },
     "224": {
       "filename": "./AckiSwapPair.code",
-      "line": 250
+      "line": 247
     },
     "240": {
       "filename": "./AckiSwapPair.code",
-      "line": 251
+      "line": 248
     },
     "248": {
       "filename": "./AckiSwapPair.code",
-      "line": 252
+      "line": 249
     },
     "256": {
       "filename": "./AckiSwapPair.code",
-      "line": 253
+      "line": 250
     },
     "272": {
       "filename": "./AckiSwapPair.code",
-      "line": 254
+      "line": 251
     },
     "280": {
       "filename": "./AckiSwapPair.code",
-      "line": 255
+      "line": 252
     },
     "288": {
       "filename": "./AckiSwapPair.code",
-      "line": 256
+      "line": 253
     },
     "304": {
       "filename": "./AckiSwapPair.code",
-      "line": 257
+      "line": 254
     },
     "320": {
       "filename": "./AckiSwapPair.code",
-      "line": 258
+      "line": 255
     },
     "336": {
       "filename": "./AckiSwapPair.code",
-      "line": 259
+      "line": 256
     },
     "344": {
       "filename": "./AckiSwapPair.code",
-      "line": 260
+      "line": 257
     },
     "352": {
       "filename": "./AckiSwapPair.code",
-      "line": 261
+      "line": 258
     },
     "360": {
       "filename": "./AckiSwapPair.code",
-      "line": 262
+      "line": 259
     },
     "368": {
       "filename": "./AckiSwapPair.code",
-      "line": 263
+      "line": 260
     },
     "376": {
       "filename": "./AckiSwapPair.code",
-      "line": 264
+      "line": 261
     },
     "392": {
       "filename": "./AckiSwapPair.code",
-      "line": 265
+      "line": 262
     },
     "400": {
       "filename": "./AckiSwapPair.code",
-      "line": 266
+      "line": 263
     },
     "408": {
       "filename": "./AckiSwapPair.code",
-      "line": 267
+      "line": 264
     },
     "416": {
       "filename": "./AckiSwapPair.code",
-      "line": 268
+      "line": 265
     },
     "424": {
       "filename": "./AckiSwapPair.code",
-      "line": 269
+      "line": 266
     },
     "432": {
       "filename": "./AckiSwapPair.code",
-      "line": 270
+      "line": 267
     }
   },
   "d6aaf9027a2efe646f6fc2ae277d5af4f08db9043183e3a681d4f0b141ef9767": {
     "0": {
       "filename": "amm/AckiSwapPair.sol",
-      "line": 36
+      "line": 40
     },
     "8": {
       "filename": "amm/AckiSwapPair.sol",
-      "line": 36
+      "line": 40
     },
     "24": {
       "filename": "amm/AckiSwapPair.sol",
-      "line": 36
+      "line": 40
     },
     "40": {
       "filename": "amm/AckiSwapPair.sol",
-      "line": 36
+      "line": 40
     },
     "56": {
       "filename": "amm/AckiSwapPair.sol",
-      "line": 36
+      "line": 40
     },
     "80": {
       "filename": "amm/AckiSwapPair.sol",
-      "line": 37
-    },
-    "88": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 37
-    },
-    "104": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 37
-    },
-    "120": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 37
-    },
-    "136": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 37
-    },
-    "152": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 37
-    },
-    "160": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 37
-    },
-    "176": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 37
-    },
-    "184": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 37
-    },
-    "192": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 38
-    },
-    "208": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 38
-    },
-    "224": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 38
-    },
-    "232": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 38
-    },
-    "248": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 38
-    }
-  },
-  "e57b0e20834ba3c3e2017bdf644d59d8acc48d1515397848c484455967c6f5ad": {
-    "0": {
-      "filename": "./AckiSwapPair.code",
-      "line": 398
-    },
-    "8": {
-      "filename": "./AckiSwapPair.code",
-      "line": 399
-    },
-    "24": {
-      "filename": "./AckiSwapPair.code",
-      "line": 400
-    },
-    "48": {
-      "filename": "./AckiSwapPair.code",
-      "line": 401
-    },
-    "64": {
-      "filename": "./AckiSwapPair.code",
-      "line": 402
-    },
-    "72": {
-      "filename": "./AckiSwapPair.code",
-      "line": 403
+      "line": 41
     },
     "88": {
       "filename": "amm/AckiSwapPair.sol",
       "line": 41
     },
+    "104": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 41
+    },
+    "120": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 41
+    },
+    "136": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 41
+    },
+    "152": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 41
+    },
+    "160": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 41
+    },
+    "176": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 41
+    },
+    "184": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 41
+    },
+    "192": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 42
+    },
+    "208": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 42
+    },
+    "224": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 42
+    },
+    "232": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 42
+    },
+    "248": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 42
+    }
+  },
+  "e57b0e20834ba3c3e2017bdf644d59d8acc48d1515397848c484455967c6f5ad": {
+    "0": {
+      "filename": "./AckiSwapPair.code",
+      "line": 395
+    },
+    "8": {
+      "filename": "./AckiSwapPair.code",
+      "line": 396
+    },
+    "24": {
+      "filename": "./AckiSwapPair.code",
+      "line": 397
+    },
+    "48": {
+      "filename": "./AckiSwapPair.code",
+      "line": 398
+    },
+    "64": {
+      "filename": "./AckiSwapPair.code",
+      "line": 399
+    },
+    "72": {
+      "filename": "./AckiSwapPair.code",
+      "line": 400
+    },
+    "88": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 45
+    },
     "96": {
       "filename": "./AckiSwapPair.code",
-      "line": 409
+      "line": 406
     },
     "112": {
       "filename": "./AckiSwapPair.code",
-      "line": 412
+      "line": 409
     },
     "128": {
       "filename": "./AckiSwapPair.code",
-      "line": 415
+      "line": 412
     }
   },
   "e5d00cfec1c9ae03cd3c80aa98271b20feedada79877bade3e677a8bbea22e86": {
     "0": {
       "filename": "./AckiSwapPair.code",
-      "line": 1057
+      "line": 1061
     },
     "8": {
       "filename": "./AckiSwapPair.code",
-      "line": 1058
+      "line": 1062
     },
     "56": {
       "filename": "./AckiSwapPair.code",
-      "line": 1059
+      "line": 1063
     },
     "64": {
       "filename": "./AckiSwapPair.code",
-      "line": 1060
+      "line": 1064
     },
     "80": {
       "filename": "./AckiSwapPair.code",
-      "line": 1063
+      "line": 1067
     },
     "88": {
       "filename": "./AckiSwapPair.code",
-      "line": 1064
+      "line": 1068
     },
     "136": {
       "filename": "./AckiSwapPair.code",
-      "line": 1065
+      "line": 1069
     },
     "144": {
       "filename": "./AckiSwapPair.code",
-      "line": 1066
+      "line": 1070
     }
   },
   "e9e5b08e673e611d8c08a9e26ee041127b0214182769f41d2f307b6369752fb3": {
     "0": {
       "filename": "./AckiSwapPair.code",
-      "line": 1230
+      "line": 1234
     },
     "24": {
       "filename": "./AckiSwapPair.code",
-      "line": 1231
+      "line": 1235
     },
     "40": {
       "filename": "./AckiSwapPair.code",
-      "line": 1232
+      "line": 1236
     }
   },
   "eb58904b617945cdf4f33042169c462cd36cf1772a2229f06171fd899e920b7f": {},
   "ed37e3db1d5df3d802f5f3f0af19aece698a826b1e891a6d95cf17b60e89b19a": {
     "0": {
       "filename": "amm/AckiSwapPair.sol",
-      "line": 45
+      "line": 49
     },
     "8": {
       "filename": "amm/AckiSwapPair.sol",
-      "line": 45
+      "line": 49
     },
     "24": {
       "filename": "amm/AckiSwapPair.sol",
-      "line": 45
+      "line": 49
     },
     "32": {
       "filename": "amm/AckiSwapPair.sol",
-      "line": 45
+      "line": 49
     },
     "40": {
       "filename": "amm/AckiSwapPair.sol",
-      "line": 45
+      "line": 49
     },
     "48": {
       "filename": "amm/AckiSwapPair.sol",
-      "line": 45
+      "line": 49
     },
     "64": {
       "filename": "amm/AckiSwapPair.sol",
-      "line": 45
+      "line": 49
     },
     "72": {
       "filename": "amm/AckiSwapPair.sol",
-      "line": 45
+      "line": 49
     },
     "88": {
       "filename": "amm/AckiSwapPair.sol",
-      "line": 45
+      "line": 49
     },
     "96": {
       "filename": "amm/AckiSwapPair.sol",
-      "line": 45
+      "line": 49
     },
     "104": {
       "filename": "amm/AckiSwapPair.sol",
-      "line": 45
+      "line": 49
     },
     "120": {
       "filename": "amm/AckiSwapPair.sol",
-      "line": 45
+      "line": 49
     },
     "136": {
       "filename": "amm/AckiSwapPair.sol",
-      "line": 45
+      "line": 49
     },
     "152": {
       "filename": "amm/AckiSwapPair.sol",
-      "line": 45
+      "line": 49
     },
     "168": {
       "filename": "amm/AckiSwapPair.sol",
-      "line": 45
+      "line": 49
     },
     "184": {
       "filename": "amm/AckiSwapPair.sol",
-      "line": 45
+      "line": 49
     },
     "200": {
       "filename": "amm/AckiSwapPair.sol",
-      "line": 45
+      "line": 49
     }
   },
   "f24e1e7aa04d89aad2945816b6e9b921f2b3892da9ba53e2383c148351b96d0c": {
     "0": {
       "filename": "./AckiSwapPair.code",
-      "line": 1154
+      "line": 1158
     },
     "16": {
       "filename": "./AckiSwapPair.code",
-      "line": 1155
+      "line": 1159
     }
   },
-  "fae12319bf92be5abd64f33be956a2df7f0155deef0a8619a9360d185e57834d": {
+  "f965d047fe4c23a9850513e5dd5c6ba5862e2f9298718639b3bb7898bd090e77": {
     "0": {
-      "filename": "./AckiSwapPair.code",
-      "line": 564
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 135
     },
     "8": {
-      "filename": "./AckiSwapPair.code",
-      "line": 565
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 135
     },
     "24": {
-      "filename": "./AckiSwapPair.code",
-      "line": 566
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 135
     },
-    "48": {
-      "filename": "./AckiSwapPair.code",
-      "line": 567
+    "40": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 135
+    },
+    "56": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 135
     },
     "64": {
-      "filename": "./AckiSwapPair.code",
-      "line": 568
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 135
     },
     "72": {
-      "filename": "./AckiSwapPair.code",
-      "line": 569
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 135
     },
     "88": {
       "filename": "amm/AckiSwapPair.sol",
-      "line": 67
+      "line": 135
     },
     "96": {
       "filename": "amm/AckiSwapPair.sol",
-      "line": 67
+      "line": 135
     },
     "104": {
       "filename": "amm/AckiSwapPair.sol",
-      "line": 67
+      "line": 135
     },
     "112": {
       "filename": "amm/AckiSwapPair.sol",
-      "line": 67
+      "line": 135
     },
     "120": {
       "filename": "amm/AckiSwapPair.sol",
-      "line": 67
-    },
-    "128": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 67
+      "line": 135
     },
     "136": {
       "filename": "amm/AckiSwapPair.sol",
-      "line": 67
+      "line": 139
+    },
+    "144": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 139
     },
     "152": {
       "filename": "amm/AckiSwapPair.sol",
-      "line": 67
+      "line": 139
+    },
+    "160": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 139
     },
     "168": {
       "filename": "amm/AckiSwapPair.sol",
-      "line": 67
+      "line": 139
     },
     "184": {
       "filename": "amm/AckiSwapPair.sol",
-      "line": 67
-    },
-    "192": {
-      "filename": "amm/AckiSwapPair.sol",
-      "line": 67
+      "line": 139
     },
     "200": {
-      "filename": "./AckiSwapPair.code",
-      "line": 586
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 139
     },
-    "216": {
-      "filename": "./AckiSwapPair.code",
-      "line": 589
+    "208": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 139
     },
-    "232": {
-      "filename": "./AckiSwapPair.code",
-      "line": 592
+    "224": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 139
+    },
+    "240": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 140
+    },
+    "256": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 140
+    },
+    "264": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 140
+    },
+    "288": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 140
+    },
+    "296": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 140
+    },
+    "352": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 140
+    },
+    "368": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 140
+    },
+    "384": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 140
+    },
+    "400": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 140
+    },
+    "408": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 140
+    },
+    "416": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 140
+    },
+    "432": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 143
+    },
+    "440": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 144
+    },
+    "448": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 144
+    },
+    "456": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 144
+    },
+    "472": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 144
+    },
+    "488": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 144
+    },
+    "504": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 144
+    },
+    "512": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 144
+    },
+    "520": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 144
+    },
+    "536": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 144
+    },
+    "544": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 144
+    },
+    "568": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 144
+    },
+    "576": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 144
+    },
+    "584": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 144
+    },
+    "600": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 144
+    },
+    "608": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 144
+    },
+    "632": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 144
+    },
+    "648": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 144
+    },
+    "656": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 144
+    },
+    "704": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 144
+    },
+    "720": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 144
+    },
+    "736": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 144
+    },
+    "744": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 144
+    },
+    "760": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 144
+    },
+    "768": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 144
+    },
+    "776": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 144
+    },
+    "792": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 144
+    },
+    "808": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 144
+    },
+    "816": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 144
+    },
+    "824": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 144
+    },
+    "832": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 144
+    },
+    "840": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 144
+    },
+    "856": {
+      "filename": "amm/AckiSwapPair.sol",
+      "line": 144
     }
   }
 }

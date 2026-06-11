@@ -1,5 +1,5 @@
 .fragment approveBondingCurve_c608253a_internal, {
-	.loc amm/AckiSwapFactory.sol, 36
+	.loc amm/AckiSwapFactory.sol, 44
 	GETGLOB 5
 	DUP
 	ISNULL
@@ -10,17 +10,21 @@
 	IF
 	GETGLOB 2
 	EQUAL
-	THROWIFNOT 100
-	.loc amm/AckiSwapFactory.sol, 37
-	ACCEPT
-	.loc amm/AckiSwapFactory.sol, 38
+	GETGLOB 9
 	GETGLOB 13
+	SDEQ
+	OR
+	THROWIFNOT 100
+	.loc amm/AckiSwapFactory.sol, 45
+	ACCEPT
+	.loc amm/AckiSwapFactory.sol, 46
+	GETGLOB 14
 	NEWC
 	STONE
 	ROTREV
 	PUSHINT 267
 	DICTSETB
-	SETGLOB 13
+	SETGLOB 14
 	.loc amm/AckiSwapFactory.sol, 0
 }
 
@@ -36,8 +40,13 @@
 	ENDS
 	CTOS
 	LDMSGADDR
+	LDREF
+	ENDS
+	CTOS
+	LDMSGADDR
 	LDDICT
 	ENDS
+	SETGLOB 14
 	SETGLOB 13
 	SETGLOB 12
 	SETGLOB 11
@@ -48,6 +57,7 @@
 }
 
 .fragment c7_to_c4, {
+	GETGLOB 14
 	GETGLOB 13
 	GETGLOB 12
 	GETGLOB 11
@@ -60,10 +70,14 @@
 	STONE
 	STSLICE
 	STREF
+	ROLLREV 3
+	NEWC
+	STSLICE
 	ROTREV
 	NEWC
 	STSLICE
 	STDICT
+	STBREFR
 	STBREFR
 	ENDC
 	POPROOT
@@ -78,7 +92,7 @@
 	IFREF {
 		.inline c4_to_c7
 	}
-	.loc amm/AckiSwapFactory.sol, 35
+	.loc amm/AckiSwapFactory.sol, 43
 	OVER
 	PUSHCONT {
 		LDREF
@@ -104,7 +118,7 @@
 	CALLREF {
 		.inline c4_to_c7
 	}
-	GETGLOB 13
+	GETGLOB 14
 	OVER
 	PUSHCONT {
 		PUSHSLICE xc0000000000000000000000000f6592c12
@@ -137,7 +151,7 @@
 	IF
 	LDMSGADDR
 	ENDS
-	.loc amm/AckiSwapFactory.sol, 22
+	.loc amm/AckiSwapFactory.sol, 23
 	GETGLOB 5
 	DUP
 	ISNULL
@@ -149,7 +163,7 @@
 	GETGLOB 2
 	EQUAL
 	THROWIFNOT 100
-	.loc amm/AckiSwapFactory.sol, 23
+	.loc amm/AckiSwapFactory.sol, 24
 	PUSHREF {
 		.blob x46656520726563697069656e742063616e6e6f74206265207a65726f
 	}
@@ -160,9 +174,9 @@
 	SDEQ
 	NOT
 	THROWARGIFNOT 101
-	.loc amm/AckiSwapFactory.sol, 24
-	ACCEPT
 	.loc amm/AckiSwapFactory.sol, 25
+	ACCEPT
+	.loc amm/AckiSwapFactory.sol, 26
 	SETGLOB 12
 	.loc amm/AckiSwapFactory.sol, 0
 	CALLREF {
@@ -172,12 +186,12 @@
 }
 
 .fragment deployPair_eaf77cec_internal, {
-	.loc amm/AckiSwapFactory.sol, 42
+	.loc amm/AckiSwapFactory.sol, 50
 	PUSHREF {
 		.blob x4f6e6c7920617070726f76656420426f6e64696e674375727665732063616e206465706c6f79207061697273
 	}
 	GETGLOB 9
-	GETGLOB 13
+	GETGLOB 14
 	PUSHINT 267
 	DICTGET
 	ZEROSWAPIFNOT
@@ -186,9 +200,9 @@
 	}
 	IF
 	THROWARGIFNOT 102
-	.loc amm/AckiSwapFactory.sol, 43
+	.loc amm/AckiSwapFactory.sol, 51
 	ACCEPT
-	.loc amm/AckiSwapFactory.sol, 44
+	.loc amm/AckiSwapFactory.sol, 52
 	PUSHINT 0
 	PUSHSLICE x2_
 	DUP
@@ -228,7 +242,7 @@
 	STDICT
 	STZERO
 	ENDC
-	.loc amm/AckiSwapFactory.sol, 54
+	.loc amm/AckiSwapFactory.sol, 62
 	PUXCPU S1, S-1, S-1
 	HASHCU
 	NEWC
@@ -275,7 +289,7 @@
 	ENDC
 	PUSHINT 0
 	SENDRAWMSG
-	.loc amm/AckiSwapFactory.sol, 61
+	.loc amm/AckiSwapFactory.sol, 69
 	NOW
 	OVER
 	ROLL 4
@@ -295,14 +309,14 @@
 	ENDC
 	PUSHINT 0
 	SENDRAWMSG
-	.loc amm/AckiSwapFactory.sol, 63
+	.loc amm/AckiSwapFactory.sol, 71
 	OVER
 	PUSHREFSLICE {
 		.blob x8000000000000000000000000000000000000000000000000000000000000000001_
 	}
 	SDEQ
 	PUSHCONT {
-		.loc amm/AckiSwapFactory.sol, 64
+		.loc amm/AckiSwapFactory.sol, 72
 		PUSH2 S0, S1
 		NEWC
 		STSLICECONST x62_
@@ -333,7 +347,7 @@
 	IFREF {
 		.inline c4_to_c7
 	}
-	.loc amm/AckiSwapFactory.sol, 41
+	.loc amm/AckiSwapFactory.sol, 49
 	OVER
 	PUSHCONT {
 		LDREF
@@ -379,7 +393,7 @@
 }
 
 .fragment getPairAddress_85e694b6_internal, {
-	.loc amm/AckiSwapFactory.sol, 69
+	.loc amm/AckiSwapFactory.sol, 77
 	PUSHINT 0
 	PUSHSLICE x2_
 	DUP
@@ -419,7 +433,7 @@
 	STDICT
 	STZERO
 	ENDC
-	.loc amm/AckiSwapFactory.sol, 78
+	.loc amm/AckiSwapFactory.sol, 86
 	HASHCU
 	NEWC
 	STSLICECONST x801_
@@ -454,7 +468,7 @@
 	IFREF {
 		.inline c4_to_c7
 	}
-	.loc amm/AckiSwapFactory.sol, 68
+	.loc amm/AckiSwapFactory.sol, 76
 	OVER
 	PUSHCONT {
 		LDREF
@@ -500,8 +514,29 @@
 	THROW 0
 }
 
+.fragment launchFactory, {
+	DROP
+	ENDS
+	CALLREF {
+		.inline c4_to_c7
+	}
+	GETGLOB 13
+	OVER
+	PUSHCONT {
+		PUSHSLICE xc0000000000000000000000000bd788791
+		NEWC
+		STSLICE
+		STSLICE
+		ENDC
+		PUSHINT 0
+		SENDRAWMSG
+	}
+	IF
+	THROW 0
+}
+
 .fragment setFeeRecipient_e74b981b_internal, {
-	.loc amm/AckiSwapFactory.sol, 29
+	.loc amm/AckiSwapFactory.sol, 30
 	GETGLOB 5
 	DUP
 	ISNULL
@@ -513,7 +548,7 @@
 	GETGLOB 2
 	EQUAL
 	THROWIFNOT 100
-	.loc amm/AckiSwapFactory.sol, 30
+	.loc amm/AckiSwapFactory.sol, 31
 	PUSHREF {
 		.blob x46656520726563697069656e742063616e6e6f74206265207a65726f
 	}
@@ -524,9 +559,9 @@
 	SDEQ
 	NOT
 	THROWARGIFNOT 101
-	.loc amm/AckiSwapFactory.sol, 31
-	ACCEPT
 	.loc amm/AckiSwapFactory.sol, 32
+	ACCEPT
+	.loc amm/AckiSwapFactory.sol, 33
 	SETGLOB 12
 	.loc amm/AckiSwapFactory.sol, 0
 }
@@ -540,7 +575,7 @@
 	IFREF {
 		.inline c4_to_c7
 	}
-	.loc amm/AckiSwapFactory.sol, 28
+	.loc amm/AckiSwapFactory.sol, 29
 	OVER
 	PUSHCONT {
 		LDREF
@@ -560,9 +595,69 @@
 	THROW 0
 }
 
+.fragment setLaunchFactory_30f38cfb_internal, {
+	.loc amm/AckiSwapFactory.sol, 37
+	GETGLOB 5
+	DUP
+	ISNULL
+	PUSHCONT {
+		DROP
+		PUSHINT 0
+	}
+	IF
+	GETGLOB 2
+	EQUAL
+	THROWIFNOT 100
+	.loc amm/AckiSwapFactory.sol, 38
+	PUSHREF {
+		.blob x4c61756e6368466163746f72792063616e6e6f74206265207a65726f
+	}
+	OVER
+	PUSHREFSLICE {
+		.blob x8000000000000000000000000000000000000000000000000000000000000000001_
+	}
+	SDEQ
+	NOT
+	THROWARGIFNOT 101
+	.loc amm/AckiSwapFactory.sol, 39
+	ACCEPT
+	.loc amm/AckiSwapFactory.sol, 40
+	SETGLOB 13
+	.loc amm/AckiSwapFactory.sol, 0
+}
+
+.fragment setLaunchFactory, {
+	DROP
+	GETGLOB 6
+	THROWIFNOT 76
+	GETGLOB 2
+	ISNULL
+	IFREF {
+		.inline c4_to_c7
+	}
+	.loc amm/AckiSwapFactory.sol, 36
+	OVER
+	PUSHCONT {
+		LDREF
+		ENDS
+		CTOS
+	}
+	IF
+	LDMSGADDR
+	ENDS
+	.loc amm/AckiSwapFactory.sol, 0
+	CALLREF {
+		.inline setLaunchFactory_30f38cfb_internal
+	}
+	CALLREF {
+		.inline c7_to_c4
+	}
+	THROW 0
+}
+
 .fragment public_function_selector, {
 	DUP
-	PUSHINT 287813347
+	PUSHINT 927287899
 	LEQ
 	IFJMPREF {
 		DUP
@@ -582,35 +677,47 @@
 		IFJMPREF {
 			.inline deployPair
 		}
-	}
-	DUP
-	PUSHINT 939285705
-	LEQ
-	IFJMPREF {
 		DUP
 		PUSHINT 927287899
 		EQUAL
 		IFJMPREF {
 			.inline approveBondingCurve
 		}
+	}
+	DUP
+	PUSHINT 1674063179
+	LEQ
+	IFJMPREF {
 		DUP
 		PUSHINT 939285705
 		EQUAL
 		IFJMPREF {
 			.inline feeRecipient
 		}
-	}
-	DUP
-	PUSHINT 1674063179
-	EQUAL
-	IFJMPREF {
-		.inline getPairAddress
+		DUP
+		PUSHINT 1031309201
+		EQUAL
+		IFJMPREF {
+			.inline launchFactory
+		}
+		DUP
+		PUSHINT 1674063179
+		EQUAL
+		IFJMPREF {
+			.inline getPairAddress
+		}
 	}
 	DUP
 	PUSHINT 1985555474
 	EQUAL
 	IFJMPREF {
 		.inline approvedBondingCurves
+	}
+	DUP
+	PUSHINT 2113512245
+	EQUAL
+	IFJMPREF {
+		.inline setLaunchFactory
 	}
 }
 
@@ -713,16 +820,21 @@
 .fragment default_data_cell, {
 	NULL
 	PUSHSLICE x2_
+	DUP
 	PUSHREF {
 	}
 	NEWC
 	PUSHINT 323
 	STZEROES
 	STREF
+	ROLLREV 3
+	NEWC
+	STSLICE
 	ROTREV
 	NEWC
 	STSLICE
 	STDICT
+	STBREFR
 	STBREFR
 	ENDC
 }

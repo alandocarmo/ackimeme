@@ -6,6 +6,10 @@ import "../interfaces/IAFTWallet.sol";
 import "../interfaces/IAFTRoot.sol";
 import "../interfaces/IAFTWalletAddressReceiver.sol";
 
+interface IBondingCurve {
+    function onPairReady() external;
+}
+
 contract AckiSwapPair is IAFTWalletAddressReceiver {
     uint32 constant SHELL_CURRENCY_ID = 2;
     address static _factory;
@@ -62,6 +66,7 @@ contract AckiSwapPair is IAFTWalletAddressReceiver {
     ) external override functionID(0xd1735400) {
         require(msg.sender == _tokenRoot, 103);
         tokenWallet = walletAddress;
+        IBondingCurve(bondingCurve).onPairReady{value: 0.1 ton, flag: 1}();
     }
 
     function onAFTTransfer(
@@ -116,10 +121,10 @@ contract AckiSwapPair is IAFTWalletAddressReceiver {
         uint128 amountInAfterProtocolFee = amountIn - protocolFee;
 
         // Pool Fee: 0.25%
-        uint128 amountInWithPoolFee = amountInAfterProtocolFee * 9975;
-        uint128 numerator = amountInWithPoolFee * reserveToken;
-        uint128 denominator = (reserveShell * 10000) + amountInWithPoolFee;
-        uint128 amountOut = numerator / denominator;
+        uint256 amountInWithPoolFee = uint256(amountInAfterProtocolFee) * 9975;
+        uint256 numerator = amountInWithPoolFee * uint256(reserveToken);
+        uint256 denominator = (uint256(reserveShell) * 10000) + amountInWithPoolFee;
+        uint128 amountOut = uint128(numerator / denominator);
 
         require(amountOut >= minAmountOut, 105);
         require(amountOut < reserveToken, 106);
@@ -153,10 +158,10 @@ contract AckiSwapPair is IAFTWalletAddressReceiver {
         uint128 amountInAfterProtocolFee = amountIn - protocolFee;
 
         // Pool Fee: 0.25%
-        uint128 amountInWithPoolFee = amountInAfterProtocolFee * 9975;
-        uint128 numerator = amountInWithPoolFee * reserveShell;
-        uint128 denominator = (reserveToken * 10000) + amountInWithPoolFee;
-        uint128 amountOut = numerator / denominator;
+        uint256 amountInWithPoolFee = uint256(amountInAfterProtocolFee) * 9975;
+        uint256 numerator = amountInWithPoolFee * uint256(reserveShell);
+        uint256 denominator = (uint256(reserveToken) * 10000) + amountInWithPoolFee;
+        uint128 amountOut = uint128(numerator / denominator);
 
         require(amountOut >= minAmountOut, 105);
         require(amountOut < reserveShell, 106);

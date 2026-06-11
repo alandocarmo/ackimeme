@@ -20,6 +20,14 @@
 			]
 		},
 		{
+			"name": "setLaunchFactory",
+			"inputs": [
+				{"name":"_launchFactory","type":"address"}
+			],
+			"outputs": [
+			]
+		},
+		{
 			"name": "approveBondingCurve",
 			"inputs": [
 				{"name":"bc","type":"address"}
@@ -54,6 +62,14 @@
 			]
 		},
 		{
+			"name": "launchFactory",
+			"inputs": [
+			],
+			"outputs": [
+				{"name":"launchFactory","type":"address"}
+			]
+		},
+		{
 			"name": "approvedBondingCurves",
 			"inputs": [
 			],
@@ -81,6 +97,7 @@
 		{"init":true,"name":"_owner","type":"address"},
 		{"init":true,"name":"_pairCode","type":"cell"},
 		{"init":false,"name":"feeRecipient","type":"address"},
+		{"init":false,"name":"launchFactory","type":"address"},
 		{"init":false,"name":"approvedBondingCurves","type":"map(address,bool)"}
 	]
 }

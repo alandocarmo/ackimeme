@@ -10,6 +10,7 @@ import "./interfaces/IAFTWallet.sol";
 
 interface IAckiSwapFactory {
     function deployPair(address tokenRoot, address callbackTarget) external;
+    function approveBondingCurve(address bc) external;
 }
 
 interface IAckiSwapPair {
@@ -535,11 +536,18 @@ contract BondingCurve is IAFTReceiver, IAFTExcesses, IAFTWalletAddressReceiver {
         mapping(uint32 => varuint32) ccInit;
         ccInit[SHELL_CURRENCY_ID] = varuint32(2_500_000_000); // 2.5 SHELL
         IAckiSwapPair(pair).initAftWallet{value: 0.5 ton, currencies: ccInit, flag: 1}();
+    }
+
+    function onPairReady() external {
+        require(msg.sender == ammPairAddress, 103, "Only pair");
+        
+        uint128 shellLiquidity = uint128(reserveBalance);
+        uint128 tokensToMove = uint128(_supplyCap - totalSupply);
 
         // 2. Send SHELL liquidity
         mapping(uint32 => varuint32) ccLiq;
         ccLiq[SHELL_CURRENCY_ID] = varuint32(shellLiquidity);
-        IAckiSwapPair(pair).provideInitialShell{value: 0.1 ton, currencies: ccLiq, flag: 1}();
+        IAckiSwapPair(ammPairAddress).provideInitialShell{value: 0.1 ton, currencies: ccLiq, flag: 1}();
 
         // 3. Send Tokens liquidity
         TvmBuilder builder;
@@ -550,7 +558,7 @@ contract BondingCurve is IAFTReceiver, IAFTExcesses, IAFTWalletAddressReceiver {
         IAFTWallet(myAftWallet).transfer{value: 1 ton, flag: 1}(
             0,
             tokensToMove,
-            pair, // destinationOwner (Pair)
+            ammPairAddress, // destinationOwner (Pair)
             address(this), // responseDestination
             empty, // customPayload
             0.5 ton, // forwardShellAmount
