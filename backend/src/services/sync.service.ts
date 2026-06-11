@@ -102,7 +102,20 @@ export async function syncOnchainData(): Promise<void> {
             lockedLiquidity = ammOut.isAmm;
           }
 
+          let aftWalletOut = await runLocalGetter(bcState.boc, launch.bondingCurveAddress, bondingCurveAbiPath, "myAftWallet");
+          let hasAftWallet = false;
+          if (aftWalletOut && aftWalletOut.myAftWallet && aftWalletOut.myAftWallet !== "0:0000000000000000000000000000000000000000000000000000000000000000") {
+            hasAftWallet = true;
+          } else {
+             console.warn(`[SyncJob] BondingCurve ${launch.bondingCurveAddress} is missing myAftWallet! Race condition triggered. A manual retry of initAftWallet is required.`);
+          }
+
           let status = ["on_chain_pending_recovery", "deployment_queued"].includes(launch.status) ? "on_chain_deployed" : launch.status;
+          
+          if (!hasAftWallet && status === "on_chain_deployed") {
+             // Keep it as pending recovery so frontend knows it's not fully ready
+             status = "on_chain_pending_recovery";
+          }
 
           // Run Local Getters with TokenRoot BOC
           if (launch.tokenRootAddress) {

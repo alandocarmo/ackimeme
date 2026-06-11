@@ -34,9 +34,9 @@
 			]
 		},
 		{
-			"name": "setAckiSwapFactory",
+			"name": "setAmmFactory",
 			"inputs": [
-				{"name":"_ackiSwapFactory","type":"address"}
+				{"name":"_ammFactory","type":"address"}
 			],
 			"outputs": [
 			]
@@ -81,11 +81,11 @@
 			]
 		},
 		{
-			"name": "ackiSwapFactory",
+			"name": "ammFactory",
 			"inputs": [
 			],
 			"outputs": [
-				{"name":"ackiSwapFactory","type":"address"}
+				{"name":"ammFactory","type":"address"}
 			]
 		},
 		{
@@ -134,7 +134,7 @@
 		{"init":false,"name":"owner","type":"address"},
 		{"init":false,"name":"feeRecipient","type":"address"},
 		{"init":false,"name":"launchCount","type":"uint32"},
-		{"init":false,"name":"ackiSwapFactory","type":"address"},
+		{"init":false,"name":"ammFactory","type":"address"},
 		{"init":false,"name":"tokenRootCode","type":"cell"},
 		{"init":false,"name":"bondingCurveCode","type":"cell"},
 		{"init":false,"name":"tokenWalletCode","type":"cell"}

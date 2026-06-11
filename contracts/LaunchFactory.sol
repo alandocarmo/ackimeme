@@ -13,7 +13,7 @@ contract LaunchFactory {
     address public owner;
     address public feeRecipient;
     uint32 public launchCount;
-    address public ackiSwapFactory;
+    address public ammFactory;
 
     // TvmCells code of the contracts to be deployed
     TvmCell public tokenRootCode;
@@ -54,14 +54,13 @@ contract LaunchFactory {
         feeRecipient = _feeRecipient;
     }
 
-    function setAckiSwapFactory(address _ackiSwapFactory) external {
-        require(msg.sender == owner, 101, "Only owner");
+    function setAmmFactory(address _ammFactory) external {
+        require(msg.sender == owner, 101, "Only owner can set AckiSwapFactory");
         tvm.accept();
-        ackiSwapFactory = _ackiSwapFactory;
+        ammFactory = _ammFactory;
     }
 
     /// @notice Deploys the TokenRoot and BondingCurve via internal messages
-    /// Because this is an internal message, both contracts inherit LaunchFactory's Dapp ID.
     function deployTokenAndCurve(
         string name,
         string symbol,
@@ -72,7 +71,7 @@ contract LaunchFactory {
         bool pumpForever,
         uint256 slopeDivisor
     ) external {
-        // This is a cross-dapp call from the user to the Factory. We accept the gas.
+        require(msg.pubkey() == tvm.pubkey(), 100, "Only the factory platform can launch tokens");
         tvm.accept();
 
         // Assume gas is provided via prefunding (address(this).balance). We need enough VMSHELL for two deployments + messages.
@@ -80,16 +79,7 @@ contract LaunchFactory {
 
         launchCount++;
 
-        // 1. Compute BondingCurve address deterministically based on static vars
-        // We need the TokenRoot address first.
-        // Wait, TokenRoot depends on name, symbol, decimals, rootOwner.
-        // Wait, in Acki Nacki, address is determined by stateInit (code + static variables).
-        // Let's assume TokenRoot's static vars are:
-        // address static public rootOwner_;
-        // string static public name_;
-        // string static public symbol_;
-        // uint8 static public decimals_;
-        // address static public walletCode_;
+        // 1. Compute TokenRoot address deterministically based on static vars
 
         TvmCell rootStateInit = tvm.buildStateInit({
             contr: AFTRoot,
@@ -131,7 +121,7 @@ contract LaunchFactory {
             feeRecipient,
             pumpForever,
             slopeDivisor,
-            ackiSwapFactory
+            ammFactory
         );
 
         // 4. Deploy TokenRoot with BondingCurve as the permanent Admin
@@ -157,8 +147,5 @@ contract LaunchFactory {
         mapping(uint32 => varuint32) initCc;
         initCc[2] = varuint32(2_000_000_000); // 2 SHELL (assuming SHELL_CURRENCY_ID=2)
         BondingCurve(bondingCurveAddr).initAftWallet{value: 0.2 ton, currencies: initCc, flag: 1}();
-
-        // Return excess gas to sender
-        msg.sender.transfer({ value: 0, flag: 128, bounce: false });
     }
 }

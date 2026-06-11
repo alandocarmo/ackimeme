@@ -70,7 +70,7 @@ contract BondingCurve is IAFTReceiver, IAFTExcesses, IAFTWalletAddressReceiver {
     uint256 public totalSupply;
     bool public isAmm;                   // true after reaching threshold (x*y=k internal pool)
     address public ammPairAddress;
-    address public factoryAddress;
+    address public ammFactory;
     uint32 public migratedAt;            // timestamp of migration
     address public owner;                // token creator
     address public feeRecipient;         // platform fee wallet (receives 0.7% of each trade)
@@ -176,7 +176,7 @@ contract BondingCurve is IAFTReceiver, IAFTExcesses, IAFTWalletAddressReceiver {
         address _feeRecipient,
         bool _pumpForever,
         uint256 _slopeDivisor,
-        address _ackiSwapFactory
+        address _ammFactory
     ) {
         require(msg.sender == _factory, 101, "Only Factory can deploy");
         require(_tokenRootAddr == _tokenRoot, 104, "tokenRootAddr must match static _tokenRoot");
@@ -192,7 +192,7 @@ contract BondingCurve is IAFTReceiver, IAFTExcesses, IAFTWalletAddressReceiver {
         creationFeeTxHash = _creationFeeTxHash;
         pumpForever = _pumpForever;
         slopeDivisor = _slopeDivisor > 0 ? _slopeDivisor : 10_000_000_000_000;
-        factoryAddress = _ackiSwapFactory;
+        ammFactory = _ammFactory;
         isAmm = false;
     }
 
@@ -502,11 +502,6 @@ contract BondingCurve is IAFTReceiver, IAFTExcesses, IAFTWalletAddressReceiver {
         _clearMint(nonce);
     }
 
-    function setFactory(address _factory) external {
-        require(msg.sender == owner, 102);
-        factoryAddress = _factory;
-    }
-
     // ─── AMM Migration ───────────────────────────────────────────────────────
     function _migrateToAmm() private {
         uint128 liquidityToMove = uint128(reserveBalance);
@@ -516,8 +511,8 @@ contract BondingCurve is IAFTReceiver, IAFTExcesses, IAFTWalletAddressReceiver {
         uint256 tokenPool = _supplyCap - totalSupply;
         require(reserveBalance == 0 || tokenPool <= MAX_UINT128 / reserveBalance, 224, "AMM invariant overflow");
         
-        require(factoryAddress != address(0), 225, "Factory not set");
-        IAckiSwapFactory(factoryAddress).deployPair{value: 2000000000, bounce: true, flag: 1}(
+        require(ammFactory != address(0), 225, "Factory not set");
+        IAckiSwapFactory(ammFactory).deployPair{value: 2000000000, bounce: true, flag: 1}(
             _tokenRoot, 
             address(this)
         );
@@ -526,7 +521,7 @@ contract BondingCurve is IAFTReceiver, IAFTExcesses, IAFTWalletAddressReceiver {
     }
 
     function onPairDeployed(address pair) external {
-        require(msg.sender == factoryAddress, 103, "Only factory");
+        require(msg.sender == ammFactory, 103, "Only factory");
         isAmm = true;
         migratedAt = uint32(block.timestamp);
         ammPairAddress = pair;

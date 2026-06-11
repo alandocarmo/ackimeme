@@ -14,7 +14,7 @@
 				{"name":"_feeRecipient","type":"address"},
 				{"name":"_pumpForever","type":"bool"},
 				{"name":"_slopeDivisor","type":"uint256"},
-				{"name":"_ackiSwapFactory","type":"address"}
+				{"name":"_ammFactory","type":"address"}
 			],
 			"outputs": [
 			]
@@ -189,14 +189,6 @@
 			]
 		},
 		{
-			"name": "setFactory",
-			"inputs": [
-				{"name":"_factory","type":"address"}
-			],
-			"outputs": [
-			]
-		},
-		{
 			"name": "onPairDeployed",
 			"inputs": [
 				{"name":"pair","type":"address"}
@@ -300,11 +292,11 @@
 			]
 		},
 		{
-			"name": "factoryAddress",
+			"name": "ammFactory",
 			"inputs": [
 			],
 			"outputs": [
-				{"name":"factoryAddress","type":"address"}
+				{"name":"ammFactory","type":"address"}
 			]
 		},
 		{
@@ -540,7 +532,7 @@
 		{"init":false,"name":"totalSupply","type":"uint256"},
 		{"init":false,"name":"isAmm","type":"bool"},
 		{"init":false,"name":"ammPairAddress","type":"address"},
-		{"init":false,"name":"factoryAddress","type":"address"},
+		{"init":false,"name":"ammFactory","type":"address"},
 		{"init":false,"name":"migratedAt","type":"uint32"},
 		{"init":false,"name":"owner","type":"address"},
 		{"init":false,"name":"feeRecipient","type":"address"},
