@@ -483,6 +483,7 @@ contract BondingCurve is IAFTReceiver, IAFTExcesses, IAFTWalletAddressReceiver {
     // Called by TokenRoot when wallet deployment or receiveTokens fails after
     // TokenRoot.mint has already accepted the mint request.
     function onAFTExcesses(uint64 queryId) external override functionID(0xd53276db) {
+        require(msg.sender == _tokenRoot, 102);
         uint32 nonce = uint32(queryId);
         address buyer = mintIdToBuyer[nonce];
         if (buyer == address(0)) return; // not a tracked mint

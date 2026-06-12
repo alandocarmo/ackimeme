@@ -13,7 +13,7 @@ export function KingOfTheHill({ kingToken }: KingOfTheHillProps) {
   if (!kingToken) return null;
 
   const progress = kingToken.onchainData?.reserveBalance 
-    ? Math.min(100, (kingToken.onchainData.reserveBalance / 6900000) * 100) 
+    ? Math.min(100, (Number(kingToken.onchainData.reserveBalance) / 6900000000000000) * 100) 
     : 0;
 
   return (
@@ -36,8 +36,8 @@ export function KingOfTheHill({ kingToken }: KingOfTheHillProps) {
             👑 King of the Hill
           </div>
           <h2 style={{ fontSize: "28px", margin: 0, display: "flex", alignItems: "center", gap: "12px" }}>
-            {kingToken.metadata.image && (
-              <img src={kingToken.metadata.image} alt={kingToken.coin.symbol} style={{ width: "40px", height: "40px", borderRadius: "50%" }} />
+            {kingToken.coin.logoUrl && (
+              <img src={kingToken.coin.logoUrl} alt={kingToken.coin.symbol} style={{ width: "40px", height: "40px", borderRadius: "50%" }} />
             )}
             {kingToken.coin.name} <span style={{ color: "rgba(255,255,255,0.5)", fontSize: "18px" }}>${kingToken.coin.symbol}</span>
           </h2>

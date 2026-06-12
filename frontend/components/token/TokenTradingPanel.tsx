@@ -109,7 +109,7 @@ export function TokenTradingPanel({
     outline: "none",
   };
 
-  const isMigrated = token.onchainData?.reserveBalance && token.onchainData.reserveBalance >= 6900000;
+  const isMigrated = token.onchainData?.reserveBalance && Number(token.onchainData.reserveBalance) >= 6900000000000000;
 
   return (
     <aside style={{ width: "100%", maxWidth: "400px" }}>
@@ -148,8 +148,6 @@ export function TokenTradingPanel({
                 onChange={(e) => setPayCurrency(e.target.value)}
               >
                 <option value="SHELL">SHELL</option>
-                <option value="USDC">USDC (Zap)</option>
-                <option value="NACKL">NACKL (Zap)</option>
               </select>
             ) : (
               <span style={{ fontSize: "18px", fontWeight: 700 }}>{token.coin.symbol}</span>
@@ -240,7 +238,7 @@ export function TokenTradingPanel({
               ? t("detail_processing") 
               : token.onchainData?.deployStatus !== 'deployed'
                 ? t("info_pending")
-                : (tradeMode === "buy" ? `Zap In ${payCurrency}` : t("detail_execute_sell"))
+                : (tradeMode === "buy" ? t("detail_execute_buy") : t("detail_execute_sell"))
             }
           </button>
           

@@ -1069,41 +1069,38 @@ app.get("/launches/:id", requireValidUUID, async (req: Request, res: Response) =
     const found = await getLaunchById(req.params.id);
     if (!found) return res.status(404).json({ error: "Token não encontrado." });
     res.json({
-      success: true,
-      launch: {
-        id: found.id,
-        status: found.status,
-        createdAt: found.createdAt,
-        creatorWallet: found.launchRequest.creator.wallet,
-        coin: {
-          name: found.launchRequest.coin.name,
-          symbol: found.launchRequest.coin.symbol,
-          tagline: found.launchRequest.coin.tagline,
-          description: found.launchRequest.coin.description,
-          totalSupply: found.launchRequest.coin.totalSupply,
-          logoUrl: found.launchRequest.coin.logoUrl,
-        },
-        links: found.launchRequest.links || {},
-        protocol: found.launchRequest.protocol || {},
-        treasuryPayment: {
-          tokenSymbol: found.treasuryPayment.tokenSymbol,
-          amount: found.treasuryPayment.amount,
-        },
-        riskProfile: {
-          status: found.riskProfile.status,
-          score: found.riskProfile.score,
-        },
-        onchainData: {
-          ipfsHash: found.ipfsHash,
-          tokenRootAddress: found.tokenRootAddress,
-          bondingCurveAddress: found.bondingCurveAddress,
-          deployStatus: found.onchainData?.deployStatus || 
-                        (found.status === "on_chain_deployed" ? "deployed" : "pending"),
-          reserveBalance: found.onchainData?.reserveBalance || "0",
-          tokenSupply: found.onchainData?.tokenSupply || "0",
-          lockedLiquidity: found.onchainData?.lockedLiquidity || false,
-          updatedAt: found.onchainData?.updatedAt || null,
-        },
+      id: found.id,
+      status: found.status,
+      createdAt: found.createdAt,
+      creatorWallet: found.launchRequest.creator.wallet,
+      coin: {
+        name: found.launchRequest.coin.name,
+        symbol: found.launchRequest.coin.symbol,
+        tagline: found.launchRequest.coin.tagline,
+        description: found.launchRequest.coin.description,
+        totalSupply: found.launchRequest.coin.totalSupply,
+        logoUrl: found.launchRequest.coin.logoUrl,
+      },
+      links: found.launchRequest.links || {},
+      protocol: found.launchRequest.protocol || {},
+      treasuryPayment: {
+        tokenSymbol: found.treasuryPayment.tokenSymbol,
+        amount: found.treasuryPayment.amount,
+      },
+      riskProfile: {
+        status: found.riskProfile.status,
+        score: found.riskProfile.score,
+      },
+      onchainData: {
+        ipfsHash: found.ipfsHash,
+        tokenRootAddress: found.tokenRootAddress,
+        bondingCurveAddress: found.bondingCurveAddress,
+        deployStatus: found.onchainData?.deployStatus || 
+                      (found.status === "on_chain_deployed" ? "deployed" : "pending"),
+        reserveBalance: found.onchainData?.reserveBalance || "0",
+        tokenSupply: found.onchainData?.tokenSupply || "0",
+        lockedLiquidity: found.onchainData?.lockedLiquidity || false,
+        updatedAt: found.onchainData?.updatedAt || null,
       },
     });
   } catch (err: any) {

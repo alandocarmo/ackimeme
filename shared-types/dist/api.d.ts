@@ -76,4 +76,15 @@ export interface AppConfig {
         usdcRecipient: string;
         usdcDecimals: number;
     };
+    payment?: {
+        feeWallet: string;
+        creationFees: Array<{
+            tokenSymbol: string;
+            minimumAmount: number;
+        }>;
+        blockchainFee: {
+            tokenSymbol: string;
+            minimumCreatorBalance: number;
+        };
+    };
 }

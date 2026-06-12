@@ -45,6 +45,7 @@
 		},
 		{
 			"name": "onAFTTransfer",
+			"id": "0x7362D09C",
 			"inputs": [
 				{"name":"queryId","type":"uint64"},
 				{"name":"amount","type":"uint128"},

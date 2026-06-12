@@ -185,8 +185,8 @@ export default function Home() {
           <KingOfTheHill kingToken={
             // Find the token with highest reserve that hasn't migrated
             launches
-              .filter(l => (l.onchainData?.reserveBalance || 0) < 6900000)
-              .sort((a, b) => (b.onchainData?.reserveBalance || 0) - (a.onchainData?.reserveBalance || 0))[0] || null
+              .filter(l => Number(l.onchainData?.reserveBalance || 0) < 6900000000000000)
+              .sort((a, b) => Number(b.onchainData?.reserveBalance || 0) - Number(a.onchainData?.reserveBalance || 0))[0] || null
           } />
         </div>
 

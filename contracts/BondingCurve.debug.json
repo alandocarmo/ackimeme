@@ -44,7 +44,7 @@
   "04d7c79da1a13db3841d7c17aa990f5a2d7d251a89a1bd37583e96c117b75708": {
     "0": {
       "filename": "BondingCurve.sol",
-      "line": 525
+      "line": 526
     }
   },
   "07a343dd3f7328581f19f21a5f279c0d4edadf00b5751c77d961c3918fdc840e": {
@@ -53,60 +53,290 @@
       "line": 304
     }
   },
+  "09acbb7e6fa89eeda83cce6a4bf34c58e812d3a805739fcd7033e136194b5ee2": {
+    "0": {
+      "filename": "./BondingCurve.code",
+      "line": 4248
+    },
+    "8": {
+      "filename": "./BondingCurve.code",
+      "line": 4251
+    },
+    "24": {
+      "filename": "./BondingCurve.code",
+      "line": 4252
+    },
+    "32": {
+      "filename": "./BondingCurve.code",
+      "line": 4253
+    },
+    "48": {
+      "filename": "./BondingCurve.code",
+      "line": 4256
+    },
+    "64": {
+      "filename": "./BondingCurve.code",
+      "line": 4257
+    },
+    "72": {
+      "filename": "./BondingCurve.code",
+      "line": 4258
+    },
+    "88": {
+      "filename": "./BondingCurve.code",
+      "line": 4259
+    },
+    "104": {
+      "filename": "./BondingCurve.code",
+      "line": 4260
+    },
+    "120": {
+      "filename": "./BondingCurve.code",
+      "line": 4261
+    },
+    "128": {
+      "filename": "./BondingCurve.code",
+      "line": 4262
+    },
+    "144": {
+      "filename": "./BondingCurve.code",
+      "line": 4263
+    },
+    "152": {
+      "filename": "./BondingCurve.code",
+      "line": 4264
+    },
+    "160": {
+      "filename": "./BondingCurve.code",
+      "line": 4265
+    },
+    "168": {
+      "filename": "./BondingCurve.code",
+      "line": 4266
+    },
+    "176": {
+      "filename": "./BondingCurve.code",
+      "line": 4267
+    },
+    "192": {
+      "filename": "./BondingCurve.code",
+      "line": 4268
+    },
+    "200": {
+      "filename": "./BondingCurve.code",
+      "line": 4269
+    },
+    "216": {
+      "filename": "./BondingCurve.code",
+      "line": 4270
+    },
+    "224": {
+      "filename": "./BondingCurve.code",
+      "line": 4271
+    },
+    "232": {
+      "filename": "./BondingCurve.code",
+      "line": 4272
+    },
+    "248": {
+      "filename": "./BondingCurve.code",
+      "line": 4273
+    },
+    "264": {
+      "filename": "./BondingCurve.code",
+      "line": 4275
+    },
+    "272": {
+      "filename": "./BondingCurve.code",
+      "line": 4276
+    },
+    "280": {
+      "filename": "./BondingCurve.code",
+      "line": 4277
+    },
+    "296": {
+      "filename": "./BondingCurve.code",
+      "line": 4279
+    },
+    "304": {
+      "filename": "./BondingCurve.code",
+      "line": 4280
+    },
+    "320": {
+      "filename": "./BondingCurve.code",
+      "line": 4281
+    },
+    "336": {
+      "filename": "./BondingCurve.code",
+      "line": 4283
+    },
+    "344": {
+      "filename": "./BondingCurve.code",
+      "line": 4284
+    },
+    "360": {
+      "filename": "./BondingCurve.code",
+      "line": 4285
+    },
+    "368": {
+      "filename": "./BondingCurve.code",
+      "line": 4286
+    },
+    "384": {
+      "filename": "./BondingCurve.code",
+      "line": 4288
+    },
+    "392": {
+      "filename": "./BondingCurve.code",
+      "line": 4289
+    },
+    "408": {
+      "filename": "./BondingCurve.code",
+      "line": 4290
+    },
+    "416": {
+      "filename": "stdlib.sol",
+      "line": 22
+    },
+    "432": {
+      "filename": "stdlib.sol",
+      "line": 22
+    },
+    "440": {
+      "filename": "stdlib.sol",
+      "line": 22
+    },
+    "448": {
+      "filename": "stdlib.sol",
+      "line": 22
+    },
+    "464": {
+      "filename": "stdlib.sol",
+      "line": 23
+    },
+    "472": {
+      "filename": "stdlib.sol",
+      "line": 23
+    },
+    "488": {
+      "filename": "stdlib.sol",
+      "line": 23
+    },
+    "512": {
+      "filename": "stdlib.sol",
+      "line": 23
+    },
+    "520": {
+      "filename": "stdlib.sol",
+      "line": 23
+    },
+    "560": {
+      "filename": "stdlib.sol",
+      "line": 23
+    },
+    "568": {
+      "filename": "stdlib.sol",
+      "line": 23
+    },
+    "576": {
+      "filename": "stdlib.sol",
+      "line": 23
+    },
+    "592": {
+      "filename": "stdlib.sol",
+      "line": 24
+    },
+    "608": {
+      "filename": "./BondingCurve.code",
+      "line": 4292
+    },
+    "624": {
+      "filename": "./BondingCurve.code",
+      "line": 4293
+    },
+    "632": {
+      "filename": "./BondingCurve.code",
+      "line": 4294
+    },
+    "648": {
+      "filename": "./BondingCurve.code",
+      "line": 4295
+    },
+    "656": {
+      "filename": "./BondingCurve.code",
+      "line": 4296
+    },
+    "672": {
+      "filename": "./BondingCurve.code",
+      "line": 4297
+    },
+    "688": {
+      "filename": "./BondingCurve.code",
+      "line": 4298
+    },
+    "696": {
+      "filename": "./BondingCurve.code",
+      "line": 4299
+    },
+    "712": {
+      "filename": "./BondingCurve.code",
+      "line": 4302
+    }
+  },
   "0a37e2106198cd91e781c3a8e8fca5cabb6fa3baab4806be8506b6e3883d4111": {
     "0": {
       "filename": "BondingCurve.sol",
-      "line": 703
+      "line": 704
     }
   },
   "0c29a8a3c9e1a2a73744f03b6b239a687e4e10f1af082e3921a261dae1d11e85": {
     "0": {
       "filename": "./BondingCurve.code",
-      "line": 4077
+      "line": 4082
     },
     "8": {
       "filename": "./BondingCurve.code",
-      "line": 4078
+      "line": 4083
     },
     "56": {
       "filename": "./BondingCurve.code",
-      "line": 4079
+      "line": 4084
     },
     "64": {
       "filename": "./BondingCurve.code",
-      "line": 4080
+      "line": 4085
     },
     "80": {
       "filename": "./BondingCurve.code",
-      "line": 4083
+      "line": 4088
     },
     "88": {
       "filename": "./BondingCurve.code",
-      "line": 4084
+      "line": 4089
     },
     "136": {
       "filename": "./BondingCurve.code",
-      "line": 4085
+      "line": 4090
     },
     "144": {
       "filename": "./BondingCurve.code",
-      "line": 4086
+      "line": 4091
     },
     "160": {
       "filename": "./BondingCurve.code",
-      "line": 4089
+      "line": 4094
     },
     "168": {
       "filename": "./BondingCurve.code",
-      "line": 4090
+      "line": 4095
     },
     "216": {
       "filename": "./BondingCurve.code",
-      "line": 4091
+      "line": 4096
     },
     "224": {
       "filename": "./BondingCurve.code",
-      "line": 4092
+      "line": 4097
     }
   },
   "10b378057da590b10cc90b5de405e59e055508ba3d4d2c6688d8907b042f2758": {
@@ -299,195 +529,195 @@
   "1604d3530d346aeb51b58919a2503b13c83e7c82a139ccfa1e87dadc7e8d433f": {
     "0": {
       "filename": "./BondingCurve.code",
-      "line": 3945
+      "line": 3950
     },
     "8": {
       "filename": "./BondingCurve.code",
-      "line": 3946
+      "line": 3951
     },
     "56": {
       "filename": "./BondingCurve.code",
-      "line": 3947
+      "line": 3952
     },
     "64": {
       "filename": "./BondingCurve.code",
-      "line": 3948
+      "line": 3953
     },
     "80": {
       "filename": "./BondingCurve.code",
-      "line": 3951
+      "line": 3956
     },
     "88": {
       "filename": "./BondingCurve.code",
-      "line": 3952
+      "line": 3957
     },
     "136": {
       "filename": "./BondingCurve.code",
-      "line": 3953
+      "line": 3958
     },
     "144": {
       "filename": "./BondingCurve.code",
-      "line": 3954
+      "line": 3959
     },
     "160": {
       "filename": "./BondingCurve.code",
-      "line": 3957
+      "line": 3962
     },
     "168": {
       "filename": "./BondingCurve.code",
-      "line": 3958
+      "line": 3963
     },
     "216": {
       "filename": "./BondingCurve.code",
-      "line": 3959
+      "line": 3964
     },
     "224": {
       "filename": "./BondingCurve.code",
-      "line": 3960
+      "line": 3965
     },
     "240": {
       "filename": "./BondingCurve.code",
-      "line": 3963
+      "line": 3968
     },
     "248": {
       "filename": "./BondingCurve.code",
-      "line": 3964
+      "line": 3969
     },
     "296": {
       "filename": "./BondingCurve.code",
-      "line": 3965
+      "line": 3970
     },
     "304": {
       "filename": "./BondingCurve.code",
-      "line": 3966
+      "line": 3971
     }
   },
   "162f95355b364d344b116adb3da99150c0a071dc42688a88fc71917457261aa1": {
     "0": {
       "filename": "./BondingCurve.code",
-      "line": 3615
+      "line": 3620
     },
     "8": {
       "filename": "./BondingCurve.code",
-      "line": 3616
+      "line": 3621
     },
     "16": {
       "filename": "./BondingCurve.code",
-      "line": 3617
+      "line": 3622
     },
     "32": {
       "filename": "./BondingCurve.code",
-      "line": 3620
+      "line": 3625
     },
     "48": {
       "filename": "./BondingCurve.code",
-      "line": 3621
+      "line": 3626
     },
     "56": {
       "filename": "./BondingCurve.code",
-      "line": 3622
+      "line": 3627
     },
     "72": {
       "filename": "./BondingCurve.code",
-      "line": 3623
+      "line": 3628
     },
     "232": {
       "filename": "./BondingCurve.code",
-      "line": 3624
+      "line": 3629
     },
     "240": {
       "filename": "./BondingCurve.code",
-      "line": 3625
+      "line": 3630
     },
     "248": {
       "filename": "./BondingCurve.code",
-      "line": 3626
+      "line": 3631
     },
     "264": {
       "filename": "./BondingCurve.code",
-      "line": 3627
+      "line": 3632
     },
     "272": {
       "filename": "./BondingCurve.code",
-      "line": 3628
+      "line": 3633
     },
     "280": {
       "filename": "./BondingCurve.code",
-      "line": 3629
+      "line": 3634
     },
     "296": {
       "filename": "./BondingCurve.code",
-      "line": 3631
+      "line": 3636
     },
     "304": {
       "filename": "./BondingCurve.code",
-      "line": 3632
+      "line": 3637
     }
   },
   "16c1c1e438650b129532c5a4d83510c2a8df43da2db8a0f4f98a9a860a3a6da7": {
     "0": {
       "filename": "./BondingCurve.code",
-      "line": 3998
+      "line": 4003
     },
     "8": {
       "filename": "./BondingCurve.code",
-      "line": 3999
+      "line": 4004
     },
     "56": {
       "filename": "./BondingCurve.code",
-      "line": 4000
+      "line": 4005
     },
     "64": {
       "filename": "./BondingCurve.code",
-      "line": 4001
+      "line": 4006
     },
     "80": {
       "filename": "./BondingCurve.code",
-      "line": 4044
+      "line": 4049
     },
     "88": {
       "filename": "./BondingCurve.code",
-      "line": 4045
+      "line": 4050
     },
     "136": {
       "filename": "./BondingCurve.code",
-      "line": 4046
+      "line": 4051
     },
     "144": {
       "filename": "./BondingCurve.code",
-      "line": 4047
+      "line": 4052
     },
     "160": {
       "filename": "./BondingCurve.code",
-      "line": 4073
+      "line": 4078
     },
     "168": {
       "filename": "./BondingCurve.code",
-      "line": 4074
+      "line": 4079
     },
     "216": {
       "filename": "./BondingCurve.code",
-      "line": 4075
+      "line": 4080
     },
     "224": {
       "filename": "./BondingCurve.code",
-      "line": 4076
+      "line": 4081
     },
     "240": {
       "filename": "./BondingCurve.code",
-      "line": 4096
+      "line": 4101
     },
     "248": {
       "filename": "./BondingCurve.code",
-      "line": 4097
+      "line": 4102
     },
     "296": {
       "filename": "./BondingCurve.code",
-      "line": 4098
+      "line": 4103
     },
     "304": {
       "filename": "./BondingCurve.code",
-      "line": 4099
+      "line": 4104
     }
   },
   "1855be896d27fce8259acb722fef05bd85436c897afb543843c976851c89cab0": {
@@ -531,7 +761,7 @@
     },
     "120": {
       "filename": "./BondingCurve.code",
-      "line": 3691
+      "line": 3696
     }
   },
   "1b8484b456af5cc9e3293c4e4d91faac172b00f1b7302f2857ee97f2611da957": {
@@ -543,63 +773,63 @@
   "1c2ac19774fed939fa1024f32fdad9677bb3a2473bf7f022f4d245ea8db5494a": {
     "0": {
       "filename": "BondingCurve.sol",
-      "line": 675
+      "line": 676
     },
     "8": {
       "filename": "BondingCurve.sol",
-      "line": 675
+      "line": 676
     },
     "24": {
       "filename": "BondingCurve.sol",
-      "line": 675
+      "line": 676
     },
     "40": {
       "filename": "BondingCurve.sol",
-      "line": 675
+      "line": 676
     },
     "56": {
       "filename": "BondingCurve.sol",
-      "line": 675
+      "line": 676
     },
     "80": {
       "filename": "BondingCurve.sol",
-      "line": 676
+      "line": 677
     },
     "88": {
       "filename": "BondingCurve.sol",
-      "line": 676
+      "line": 677
     },
     "104": {
       "filename": "BondingCurve.sol",
-      "line": 677
+      "line": 678
     },
     "120": {
       "filename": "BondingCurve.sol",
-      "line": 677
+      "line": 678
     },
     "280": {
       "filename": "BondingCurve.sol",
-      "line": 677
+      "line": 678
     },
     "288": {
       "filename": "BondingCurve.sol",
-      "line": 677
+      "line": 678
     },
     "296": {
       "filename": "BondingCurve.sol",
-      "line": 677
+      "line": 678
     },
     "304": {
       "filename": "BondingCurve.sol",
-      "line": 677
+      "line": 678
     },
     "312": {
       "filename": "BondingCurve.sol",
-      "line": 677
+      "line": 678
     },
     "320": {
       "filename": "BondingCurve.sol",
-      "line": 677
+      "line": 678
     }
   },
   "1f2ba6c3b909cce58d1055ba3f2d9a9b0ce501fa37ab49c56063b29a1b0b3fc9": {
@@ -919,63 +1149,63 @@
   "1f3a174d268598df1b9bdabd38a4205423894eca89082bc9c07c99a399a70bf6": {
     "0": {
       "filename": "./BondingCurve.code",
-      "line": 3300
+      "line": 3305
     },
     "8": {
       "filename": "./BondingCurve.code",
-      "line": 3301
+      "line": 3306
     },
     "16": {
       "filename": "./BondingCurve.code",
-      "line": 3302
+      "line": 3307
     },
     "32": {
       "filename": "./BondingCurve.code",
-      "line": 3305
+      "line": 3310
     },
     "48": {
       "filename": "./BondingCurve.code",
-      "line": 3306
+      "line": 3311
     },
     "56": {
       "filename": "./BondingCurve.code",
-      "line": 3307
+      "line": 3312
     },
     "72": {
       "filename": "./BondingCurve.code",
-      "line": 3308
+      "line": 3313
     },
     "232": {
       "filename": "./BondingCurve.code",
-      "line": 3309
+      "line": 3314
     },
     "240": {
       "filename": "./BondingCurve.code",
-      "line": 3310
+      "line": 3315
     },
     "248": {
       "filename": "./BondingCurve.code",
-      "line": 3311
+      "line": 3316
     },
     "256": {
       "filename": "./BondingCurve.code",
-      "line": 3312
+      "line": 3317
     },
     "264": {
       "filename": "./BondingCurve.code",
-      "line": 3313
+      "line": 3318
     },
     "272": {
       "filename": "./BondingCurve.code",
-      "line": 3314
+      "line": 3319
     },
     "288": {
       "filename": "./BondingCurve.code",
-      "line": 3316
+      "line": 3321
     },
     "296": {
       "filename": "./BondingCurve.code",
-      "line": 3317
+      "line": 3322
     }
   },
   "1f59d6506e5f43ec768236f546e01eac00f35acf64d157f4a64f7834277fb824": {
@@ -1040,372 +1270,418 @@
       "line": 140
     }
   },
-  "22351e2a8c6372c0651fbe5d72f922d33d1a8ca75d667f8f0ac6ae4167afcbea": {
+  "21a7443172f8ae0a2aea071bc453dfc803335827de556a4979c64c534162266e": {
     "0": {
       "filename": "./BondingCurve.code",
-      "line": 3757
+      "line": 4528
     },
     "8": {
       "filename": "./BondingCurve.code",
-      "line": 3758
+      "line": 4538
     },
-    "16": {
+    "24": {
       "filename": "./BondingCurve.code",
-      "line": 3759
+      "line": 4539
     },
     "32": {
       "filename": "./BondingCurve.code",
-      "line": 3762
+      "line": 4540
     },
     "48": {
       "filename": "./BondingCurve.code",
-      "line": 3763
+      "line": 4543
     },
     "56": {
       "filename": "./BondingCurve.code",
-      "line": 3764
+      "line": 4544
     },
     "72": {
       "filename": "./BondingCurve.code",
-      "line": 3765
+      "line": 4545
     },
-    "232": {
+    "88": {
       "filename": "./BondingCurve.code",
-      "line": 3766
+      "line": 4548
     },
-    "240": {
+    "96": {
+      "filename": "./BondingCurve.code",
+      "line": 4549
+    },
+    "112": {
+      "filename": "./BondingCurve.code",
+      "line": 4550
+    },
+    "128": {
+      "filename": "./BondingCurve.code",
+      "line": 4553
+    }
+  },
+  "22351e2a8c6372c0651fbe5d72f922d33d1a8ca75d667f8f0ac6ae4167afcbea": {
+    "0": {
+      "filename": "./BondingCurve.code",
+      "line": 3762
+    },
+    "8": {
+      "filename": "./BondingCurve.code",
+      "line": 3763
+    },
+    "16": {
+      "filename": "./BondingCurve.code",
+      "line": 3764
+    },
+    "32": {
       "filename": "./BondingCurve.code",
       "line": 3767
     },
-    "248": {
+    "48": {
       "filename": "./BondingCurve.code",
       "line": 3768
     },
-    "264": {
+    "56": {
       "filename": "./BondingCurve.code",
       "line": 3769
     },
-    "272": {
+    "72": {
       "filename": "./BondingCurve.code",
       "line": 3770
     },
-    "280": {
+    "232": {
       "filename": "./BondingCurve.code",
       "line": 3771
     },
-    "296": {
+    "240": {
+      "filename": "./BondingCurve.code",
+      "line": 3772
+    },
+    "248": {
       "filename": "./BondingCurve.code",
       "line": 3773
     },
-    "304": {
+    "264": {
       "filename": "./BondingCurve.code",
       "line": 3774
+    },
+    "272": {
+      "filename": "./BondingCurve.code",
+      "line": 3775
+    },
+    "280": {
+      "filename": "./BondingCurve.code",
+      "line": 3776
+    },
+    "296": {
+      "filename": "./BondingCurve.code",
+      "line": 3778
+    },
+    "304": {
+      "filename": "./BondingCurve.code",
+      "line": 3779
     }
   },
   "223635bd926731f743e9e97a868b60d4d9ed1b879a306a1ced0254d8e4fc4e05": {
     "0": {
       "filename": "./BondingCurve.code",
-      "line": 3133
+      "line": 3138
     },
     "8": {
       "filename": "./BondingCurve.code",
-      "line": 3134
+      "line": 3139
     },
     "24": {
       "filename": "./BondingCurve.code",
-      "line": 3135
+      "line": 3140
     },
     "48": {
       "filename": "./BondingCurve.code",
-      "line": 3136
+      "line": 3141
     },
     "64": {
       "filename": "./BondingCurve.code",
-      "line": 3137
+      "line": 3142
     },
     "72": {
       "filename": "./BondingCurve.code",
-      "line": 3138
+      "line": 3143
     },
     "88": {
       "filename": "BondingCurve.sol",
-      "line": 536
+      "line": 537
     },
     "96": {
       "filename": "BondingCurve.sol",
-      "line": 536
+      "line": 537
     },
     "104": {
       "filename": "BondingCurve.sol",
-      "line": 536
+      "line": 537
     },
     "112": {
       "filename": "BondingCurve.sol",
-      "line": 536
+      "line": 537
     },
     "120": {
       "filename": "BondingCurve.sol",
-      "line": 536
+      "line": 537
     },
     "128": {
       "filename": "BondingCurve.sol",
-      "line": 536
+      "line": 537
     },
     "136": {
       "filename": "BondingCurve.sol",
-      "line": 536
+      "line": 537
     },
     "152": {
       "filename": "BondingCurve.sol",
-      "line": 536
+      "line": 537
     },
     "160": {
       "filename": "./BondingCurve.code",
-      "line": 3152
+      "line": 3157
     },
     "176": {
       "filename": "./BondingCurve.code",
-      "line": 3155
+      "line": 3160
     },
     "192": {
       "filename": "./BondingCurve.code",
-      "line": 3158
+      "line": 3163
     }
   },
   "2728f7aaf6007564c6b6af89ddbbd2596342fd5b3ecb7517bf5f43612e6f6206": {
     "0": {
       "filename": "./BondingCurve.code",
-      "line": 3831
+      "line": 3836
     },
     "8": {
       "filename": "./BondingCurve.code",
-      "line": 3832
+      "line": 3837
     },
     "56": {
       "filename": "./BondingCurve.code",
-      "line": 3833
+      "line": 3838
     },
     "64": {
       "filename": "./BondingCurve.code",
-      "line": 3834
+      "line": 3839
     },
     "80": {
       "filename": "./BondingCurve.code",
-      "line": 3859
+      "line": 3864
     },
     "88": {
       "filename": "./BondingCurve.code",
-      "line": 3860
+      "line": 3865
     },
     "136": {
       "filename": "./BondingCurve.code",
-      "line": 3861
+      "line": 3866
     },
     "144": {
       "filename": "./BondingCurve.code",
-      "line": 3862
+      "line": 3867
     },
     "160": {
       "filename": "./BondingCurve.code",
-      "line": 3882
+      "line": 3887
     },
     "168": {
       "filename": "./BondingCurve.code",
-      "line": 3883
+      "line": 3888
     },
     "216": {
       "filename": "./BondingCurve.code",
-      "line": 3884
+      "line": 3889
     },
     "224": {
       "filename": "./BondingCurve.code",
-      "line": 3885
+      "line": 3890
     },
     "240": {
       "filename": "./BondingCurve.code",
-      "line": 3888
+      "line": 3893
     },
     "248": {
       "filename": "./BondingCurve.code",
-      "line": 3889
+      "line": 3894
     },
     "296": {
       "filename": "./BondingCurve.code",
-      "line": 3890
+      "line": 3895
     },
     "304": {
       "filename": "./BondingCurve.code",
-      "line": 3891
+      "line": 3896
     }
   },
   "2a82303e42c015305171c8aa5f9d384fa4de8685d9533b519b88c38e63527371": {
     "0": {
       "filename": "./BondingCurve.code",
-      "line": 3636
+      "line": 3641
     },
     "8": {
       "filename": "./BondingCurve.code",
-      "line": 3637
+      "line": 3642
     },
     "16": {
       "filename": "./BondingCurve.code",
-      "line": 3638
+      "line": 3643
     },
     "32": {
       "filename": "./BondingCurve.code",
-      "line": 3641
+      "line": 3646
     },
     "48": {
       "filename": "./BondingCurve.code",
-      "line": 3642
+      "line": 3647
     },
     "56": {
       "filename": "./BondingCurve.code",
-      "line": 3643
+      "line": 3648
     },
     "72": {
       "filename": "./BondingCurve.code",
-      "line": 3644
+      "line": 3649
     },
     "232": {
       "filename": "./BondingCurve.code",
-      "line": 3645
+      "line": 3650
     },
     "240": {
       "filename": "./BondingCurve.code",
-      "line": 3646
+      "line": 3651
     },
     "248": {
       "filename": "./BondingCurve.code",
-      "line": 3647
+      "line": 3652
     },
     "264": {
       "filename": "./BondingCurve.code",
-      "line": 3648
+      "line": 3653
     },
     "272": {
       "filename": "./BondingCurve.code",
-      "line": 3649
+      "line": 3654
     },
     "280": {
       "filename": "./BondingCurve.code",
-      "line": 3650
+      "line": 3655
     },
     "296": {
       "filename": "./BondingCurve.code",
-      "line": 3652
+      "line": 3657
     },
     "304": {
       "filename": "./BondingCurve.code",
-      "line": 3653
+      "line": 3658
     }
   },
   "2aafea6a021de0e1a03566afd788d15b960356d8c9369cbe6ea2afa51cf4ce0c": {
     "0": {
       "filename": "./BondingCurve.code",
-      "line": 4122
+      "line": 4127
     },
     "8": {
       "filename": "./BondingCurve.code",
-      "line": 4123
+      "line": 4128
     },
     "56": {
       "filename": "./BondingCurve.code",
-      "line": 4124
+      "line": 4129
     },
     "64": {
       "filename": "./BondingCurve.code",
-      "line": 4125
+      "line": 4130
     },
     "80": {
       "filename": "./BondingCurve.code",
-      "line": 4128
+      "line": 4133
     },
     "88": {
       "filename": "./BondingCurve.code",
-      "line": 4129
+      "line": 4134
     },
     "136": {
       "filename": "./BondingCurve.code",
-      "line": 4130
+      "line": 4135
     },
     "144": {
       "filename": "./BondingCurve.code",
-      "line": 4131
+      "line": 4136
     },
     "160": {
       "filename": "./BondingCurve.code",
-      "line": 4134
+      "line": 4139
     },
     "168": {
       "filename": "./BondingCurve.code",
-      "line": 4135
+      "line": 4140
     },
     "216": {
       "filename": "./BondingCurve.code",
-      "line": 4136
+      "line": 4141
     },
     "224": {
       "filename": "./BondingCurve.code",
-      "line": 4137
+      "line": 4142
     },
     "240": {
       "filename": "./BondingCurve.code",
-      "line": 4140
+      "line": 4145
     },
     "248": {
       "filename": "./BondingCurve.code",
-      "line": 4141
+      "line": 4146
     },
     "296": {
       "filename": "./BondingCurve.code",
-      "line": 4142
+      "line": 4147
     },
     "304": {
       "filename": "./BondingCurve.code",
-      "line": 4143
+      "line": 4148
     }
   },
   "2f28f80ec4b794124c8dd01efc9ffa79c668cecbf1f8a37e4133fdf8b4a27cc1": {
     "0": {
       "filename": "./BondingCurve.code",
-      "line": 3802
+      "line": 3807
     },
     "8": {
       "filename": "./BondingCurve.code",
-      "line": 3803
+      "line": 3808
     },
     "24": {
       "filename": "./BondingCurve.code",
-      "line": 3804
+      "line": 3809
     },
     "48": {
       "filename": "./BondingCurve.code",
-      "line": 3805
+      "line": 3810
     },
     "64": {
       "filename": "./BondingCurve.code",
-      "line": 3806
+      "line": 3811
     },
     "72": {
       "filename": "./BondingCurve.code",
-      "line": 3807
+      "line": 3812
     },
     "88": {
       "filename": "BondingCurve.sol",
-      "line": 674
+      "line": 675
     },
     "96": {
       "filename": "./BondingCurve.code",
-      "line": 3813
+      "line": 3818
     },
     "112": {
       "filename": "./BondingCurve.code",
-      "line": 3816
+      "line": 3821
     },
     "128": {
       "filename": "./BondingCurve.code",
-      "line": 3819
+      "line": 3824
     }
   },
   "2f898c8fce6a663e4410bd692e8512de85b317b7e1a811788fde6ed05dd73677": {
@@ -1637,63 +1913,63 @@
   "350b53aea3b09f461e8f592c765f2a8da06f22f99f75d2e7b1ec53c56a365a9f": {
     "0": {
       "filename": "BondingCurve.sol",
-      "line": 669
+      "line": 670
     },
     "8": {
       "filename": "BondingCurve.sol",
-      "line": 669
+      "line": 670
     },
     "24": {
       "filename": "BondingCurve.sol",
-      "line": 669
+      "line": 670
     },
     "40": {
       "filename": "BondingCurve.sol",
-      "line": 669
+      "line": 670
     },
     "56": {
       "filename": "BondingCurve.sol",
-      "line": 669
+      "line": 670
     },
     "80": {
       "filename": "BondingCurve.sol",
-      "line": 670
+      "line": 671
     },
     "88": {
       "filename": "BondingCurve.sol",
-      "line": 670
+      "line": 671
     },
     "104": {
       "filename": "BondingCurve.sol",
-      "line": 671
+      "line": 672
     },
     "120": {
       "filename": "BondingCurve.sol",
-      "line": 671
+      "line": 672
     },
     "280": {
       "filename": "BondingCurve.sol",
-      "line": 671
+      "line": 672
     },
     "288": {
       "filename": "BondingCurve.sol",
-      "line": 671
+      "line": 672
     },
     "296": {
       "filename": "BondingCurve.sol",
-      "line": 671
+      "line": 672
     },
     "304": {
       "filename": "BondingCurve.sol",
-      "line": 671
+      "line": 672
     },
     "312": {
       "filename": "BondingCurve.sol",
-      "line": 671
+      "line": 672
     },
     "320": {
       "filename": "BondingCurve.sol",
-      "line": 671
+      "line": 672
     }
   },
   "3581278e72792cf6954176789a43875f8f8aa6a249a76c4c6df214bd7036d27e": {
@@ -1855,237 +2131,7 @@
   "367023807fadf41a8de1eef88763a130e33e7d4bf8a9adfb395aac50f3cdbe5c": {
     "0": {
       "filename": "BondingCurve.sol",
-      "line": 555
-    }
-  },
-  "3844a269465daf2ffa285cb83af88f6919fb5764f887fdd5b0d0489de8bc33ae": {
-    "0": {
-      "filename": "./BondingCurve.code",
-      "line": 4243
-    },
-    "8": {
-      "filename": "./BondingCurve.code",
-      "line": 4246
-    },
-    "24": {
-      "filename": "./BondingCurve.code",
-      "line": 4247
-    },
-    "32": {
-      "filename": "./BondingCurve.code",
-      "line": 4248
-    },
-    "48": {
-      "filename": "./BondingCurve.code",
-      "line": 4251
-    },
-    "64": {
-      "filename": "./BondingCurve.code",
-      "line": 4252
-    },
-    "72": {
-      "filename": "./BondingCurve.code",
-      "line": 4253
-    },
-    "88": {
-      "filename": "./BondingCurve.code",
-      "line": 4254
-    },
-    "104": {
-      "filename": "./BondingCurve.code",
-      "line": 4255
-    },
-    "120": {
-      "filename": "./BondingCurve.code",
-      "line": 4256
-    },
-    "128": {
-      "filename": "./BondingCurve.code",
-      "line": 4257
-    },
-    "144": {
-      "filename": "./BondingCurve.code",
-      "line": 4258
-    },
-    "152": {
-      "filename": "./BondingCurve.code",
-      "line": 4259
-    },
-    "160": {
-      "filename": "./BondingCurve.code",
-      "line": 4260
-    },
-    "168": {
-      "filename": "./BondingCurve.code",
-      "line": 4261
-    },
-    "176": {
-      "filename": "./BondingCurve.code",
-      "line": 4262
-    },
-    "192": {
-      "filename": "./BondingCurve.code",
-      "line": 4263
-    },
-    "200": {
-      "filename": "./BondingCurve.code",
-      "line": 4264
-    },
-    "216": {
-      "filename": "./BondingCurve.code",
-      "line": 4265
-    },
-    "224": {
-      "filename": "./BondingCurve.code",
-      "line": 4266
-    },
-    "232": {
-      "filename": "./BondingCurve.code",
-      "line": 4267
-    },
-    "248": {
-      "filename": "./BondingCurve.code",
-      "line": 4268
-    },
-    "264": {
-      "filename": "./BondingCurve.code",
-      "line": 4270
-    },
-    "272": {
-      "filename": "./BondingCurve.code",
-      "line": 4271
-    },
-    "280": {
-      "filename": "./BondingCurve.code",
-      "line": 4272
-    },
-    "296": {
-      "filename": "./BondingCurve.code",
-      "line": 4274
-    },
-    "304": {
-      "filename": "./BondingCurve.code",
-      "line": 4275
-    },
-    "320": {
-      "filename": "./BondingCurve.code",
-      "line": 4276
-    },
-    "336": {
-      "filename": "./BondingCurve.code",
-      "line": 4278
-    },
-    "344": {
-      "filename": "./BondingCurve.code",
-      "line": 4279
-    },
-    "360": {
-      "filename": "./BondingCurve.code",
-      "line": 4280
-    },
-    "368": {
-      "filename": "./BondingCurve.code",
-      "line": 4281
-    },
-    "384": {
-      "filename": "./BondingCurve.code",
-      "line": 4283
-    },
-    "392": {
-      "filename": "./BondingCurve.code",
-      "line": 4284
-    },
-    "408": {
-      "filename": "./BondingCurve.code",
-      "line": 4285
-    },
-    "416": {
-      "filename": "stdlib.sol",
-      "line": 22
-    },
-    "432": {
-      "filename": "stdlib.sol",
-      "line": 22
-    },
-    "440": {
-      "filename": "stdlib.sol",
-      "line": 22
-    },
-    "448": {
-      "filename": "stdlib.sol",
-      "line": 22
-    },
-    "464": {
-      "filename": "stdlib.sol",
-      "line": 23
-    },
-    "472": {
-      "filename": "stdlib.sol",
-      "line": 23
-    },
-    "488": {
-      "filename": "stdlib.sol",
-      "line": 23
-    },
-    "512": {
-      "filename": "stdlib.sol",
-      "line": 23
-    },
-    "520": {
-      "filename": "stdlib.sol",
-      "line": 23
-    },
-    "560": {
-      "filename": "stdlib.sol",
-      "line": 23
-    },
-    "568": {
-      "filename": "stdlib.sol",
-      "line": 23
-    },
-    "576": {
-      "filename": "stdlib.sol",
-      "line": 23
-    },
-    "592": {
-      "filename": "stdlib.sol",
-      "line": 24
-    },
-    "608": {
-      "filename": "./BondingCurve.code",
-      "line": 4287
-    },
-    "624": {
-      "filename": "./BondingCurve.code",
-      "line": 4288
-    },
-    "632": {
-      "filename": "./BondingCurve.code",
-      "line": 4289
-    },
-    "648": {
-      "filename": "./BondingCurve.code",
-      "line": 4290
-    },
-    "656": {
-      "filename": "./BondingCurve.code",
-      "line": 4291
-    },
-    "672": {
-      "filename": "./BondingCurve.code",
-      "line": 4292
-    },
-    "688": {
-      "filename": "./BondingCurve.code",
-      "line": 4293
-    },
-    "696": {
-      "filename": "./BondingCurve.code",
-      "line": 4294
-    },
-    "712": {
-      "filename": "./BondingCurve.code",
-      "line": 4297
+      "line": 556
     }
   },
   "38d6df7f525509ab81cf50fd3c8880454355796023b748bdb94d2de927f0f072": {
@@ -2295,35 +2341,35 @@
   "3b73cd5ad3897d692ec587989c188787da77e819952b48bc17d32e30f1c81b00": {
     "0": {
       "filename": "./BondingCurve.code",
-      "line": 4174
+      "line": 4179
     },
     "8": {
       "filename": "./BondingCurve.code",
-      "line": 4175
+      "line": 4180
     },
     "56": {
       "filename": "./BondingCurve.code",
-      "line": 4176
+      "line": 4181
     },
     "64": {
       "filename": "./BondingCurve.code",
-      "line": 4177
+      "line": 4182
     },
     "80": {
       "filename": "./BondingCurve.code",
-      "line": 4180
+      "line": 4185
     },
     "88": {
       "filename": "./BondingCurve.code",
-      "line": 4181
+      "line": 4186
     },
     "136": {
       "filename": "./BondingCurve.code",
-      "line": 4182
+      "line": 4187
     },
     "144": {
       "filename": "./BondingCurve.code",
-      "line": 4183
+      "line": 4188
     }
   },
   "3ccd1a475593efea36102d976fdc981ecd1e1eedb1670c639c81d9b164273259": {
@@ -2421,7 +2467,7 @@
     },
     "296": {
       "filename": "./BondingCurve.code",
-      "line": 2810
+      "line": 2815
     }
   },
   "4136fd9fb8247b528c1b8840a21dd49eb2821d1d957c8f1d94f59a8cd386ecd7": {
@@ -2802,7 +2848,7 @@
   "44c26b4a44e6b33a0e7ec3cb3de4ca8768ce606a938a57576e0b7ed7afdfe1b0": {
     "0": {
       "filename": "BondingCurve.sol",
-      "line": 642
+      "line": 643
     }
   },
   "45d82864ab59a0c04938de85a437d798761e380d998a8bdf669547bacf078e9c": {
@@ -2850,75 +2896,75 @@
   "45d8a30f129e00aec6717a57917ca6f2ac6bf474ee90f927cb66d7fb4caaa863": {
     "0": {
       "filename": "./BondingCurve.code",
-      "line": 3585
+      "line": 3590
     },
     "8": {
       "filename": "./BondingCurve.code",
-      "line": 3586
+      "line": 3591
     },
     "24": {
       "filename": "./BondingCurve.code",
-      "line": 3587
+      "line": 3592
     },
     "48": {
       "filename": "./BondingCurve.code",
-      "line": 3588
+      "line": 3593
     },
     "64": {
       "filename": "./BondingCurve.code",
-      "line": 3589
+      "line": 3594
     },
     "72": {
       "filename": "./BondingCurve.code",
-      "line": 3590
+      "line": 3595
     },
     "88": {
       "filename": "BondingCurve.sol",
-      "line": 684
+      "line": 685
     },
     "96": {
       "filename": "BondingCurve.sol",
-      "line": 684
+      "line": 685
     },
     "104": {
       "filename": "BondingCurve.sol",
-      "line": 684
+      "line": 685
     },
     "112": {
       "filename": "BondingCurve.sol",
-      "line": 684
+      "line": 685
     },
     "120": {
       "filename": "BondingCurve.sol",
-      "line": 684
+      "line": 685
     },
     "128": {
       "filename": "BondingCurve.sol",
-      "line": 684
+      "line": 685
     },
     "136": {
       "filename": "BondingCurve.sol",
-      "line": 684
+      "line": 685
     },
     "152": {
       "filename": "BondingCurve.sol",
-      "line": 684
+      "line": 685
     },
     "168": {
       "filename": "BondingCurve.sol",
-      "line": 684
+      "line": 685
     },
     "176": {
       "filename": "./BondingCurve.code",
-      "line": 3605
+      "line": 3610
     },
     "192": {
       "filename": "./BondingCurve.code",
-      "line": 3608
+      "line": 3613
     },
     "208": {
       "filename": "./BondingCurve.code",
-      "line": 3611
+      "line": 3616
     }
   },
   "45e9a85d6976d55d972af94db788420c33bef8aec2efd463533f3e602dc0cb67": {
@@ -3046,33 +3092,33 @@
   "47977409fbda8114191f94c945863c8ffefbd15cba3d8cd73aeccd3ab1407e50": {
     "0": {
       "filename": "BondingCurve.sol",
-      "line": 708
+      "line": 709
     }
   },
   "47fbdd82faa4a0266bf21fed5c91c7ccc344140d6189f52da3f81b3e045d5421": {
     "0": {
       "filename": "./BondingCurve.code",
-      "line": 3044
+      "line": 3049
     },
     "8": {
       "filename": "./BondingCurve.code",
-      "line": 3045
+      "line": 3050
     },
     "24": {
       "filename": "./BondingCurve.code",
-      "line": 3046
+      "line": 3051
     },
     "48": {
       "filename": "./BondingCurve.code",
-      "line": 3047
+      "line": 3052
     },
     "64": {
       "filename": "./BondingCurve.code",
-      "line": 3048
+      "line": 3053
     },
     "72": {
       "filename": "./BondingCurve.code",
-      "line": 3049
+      "line": 3054
     },
     "88": {
       "filename": "BondingCurve.sol",
@@ -3120,240 +3166,240 @@
     },
     "200": {
       "filename": "./BondingCurve.code",
-      "line": 3066
+      "line": 3071
     },
     "216": {
       "filename": "./BondingCurve.code",
-      "line": 3069
+      "line": 3074
     },
     "232": {
       "filename": "./BondingCurve.code",
-      "line": 3072
+      "line": 3077
     }
   },
   "4a377d1640210f0c61abe6db3340d51f73897ee9dc6d9471f840e58d5933124c": {
     "0": {
       "filename": "BondingCurve.sol",
-      "line": 630
+      "line": 631
     },
     "8": {
       "filename": "BondingCurve.sol",
-      "line": 630
+      "line": 631
     },
     "24": {
       "filename": "BondingCurve.sol",
-      "line": 630
+      "line": 631
     },
     "40": {
       "filename": "BondingCurve.sol",
-      "line": 630
+      "line": 631
     },
     "56": {
       "filename": "BondingCurve.sol",
-      "line": 630
+      "line": 631
     },
     "64": {
       "filename": "BondingCurve.sol",
-      "line": 630
+      "line": 631
     },
     "80": {
       "filename": "BondingCurve.sol",
-      "line": 631
+      "line": 632
     },
     "88": {
       "filename": "BondingCurve.sol",
-      "line": 631
+      "line": 632
     },
     "104": {
       "filename": "BondingCurve.sol",
-      "line": 631
+      "line": 632
     },
     "120": {
       "filename": "BondingCurve.sol",
-      "line": 631
+      "line": 632
     },
     "136": {
       "filename": "BondingCurve.sol",
-      "line": 631
+      "line": 632
     },
     "144": {
       "filename": "BondingCurve.sol",
-      "line": 631
+      "line": 632
     },
     "160": {
       "filename": "BondingCurve.sol",
-      "line": 632
+      "line": 633
     },
     "168": {
       "filename": "BondingCurve.sol",
-      "line": 632
+      "line": 633
     },
     "184": {
       "filename": "BondingCurve.sol",
-      "line": 632
+      "line": 633
     },
     "200": {
       "filename": "BondingCurve.sol",
-      "line": 632
+      "line": 633
     },
     "216": {
       "filename": "BondingCurve.sol",
-      "line": 632
+      "line": 633
     },
     "224": {
       "filename": "BondingCurve.sol",
-      "line": 632
+      "line": 633
     },
     "240": {
       "filename": "BondingCurve.sol",
-      "line": 633
+      "line": 634
     },
     "248": {
       "filename": "BondingCurve.sol",
-      "line": 633
+      "line": 634
     },
     "264": {
       "filename": "BondingCurve.sol",
-      "line": 633
+      "line": 634
     },
     "280": {
       "filename": "BondingCurve.sol",
-      "line": 633
+      "line": 634
     },
     "296": {
       "filename": "BondingCurve.sol",
-      "line": 633
+      "line": 634
     },
     "304": {
       "filename": "BondingCurve.sol",
-      "line": 633
+      "line": 634
     },
     "320": {
       "filename": "BondingCurve.sol",
-      "line": 634
+      "line": 635
     },
     "336": {
       "filename": "BondingCurve.sol",
-      "line": 634
+      "line": 635
     },
     "352": {
       "filename": "BondingCurve.sol",
-      "line": 634
+      "line": 635
     },
     "368": {
       "filename": "BondingCurve.sol",
-      "line": 634
+      "line": 635
     },
     "384": {
       "filename": "BondingCurve.sol",
-      "line": 634
+      "line": 635
     },
     "392": {
       "filename": "BondingCurve.sol",
-      "line": 634
+      "line": 635
     },
     "408": {
       "filename": "BondingCurve.sol",
-      "line": 634
+      "line": 635
     }
   },
   "4ab20aaf38eee6d499cc4dda40798a73cc23b597194e8c2d710f8035fab26e43": {},
   "4adb2bff50fe5bae7504d46276306d10fb46f5ea60ba86777d411ccc4c420fad": {
     "0": {
       "filename": "BondingCurve.sol",
-      "line": 602
+      "line": 603
     },
     "16": {
       "filename": "BondingCurve.sol",
-      "line": 604
+      "line": 605
     },
     "32": {
       "filename": "BondingCurve.sol",
-      "line": 604
+      "line": 605
     },
     "40": {
       "filename": "BondingCurve.sol",
-      "line": 604
+      "line": 605
     },
     "48": {
       "filename": "BondingCurve.sol",
-      "line": 604
+      "line": 605
     },
     "64": {
       "filename": "BondingCurve.sol",
-      "line": 604
+      "line": 605
     },
     "80": {
       "filename": "BondingCurve.sol",
-      "line": 605
+      "line": 606
     },
     "96": {
       "filename": "BondingCurve.sol",
-      "line": 605
+      "line": 606
     },
     "104": {
       "filename": "BondingCurve.sol",
-      "line": 605
+      "line": 606
     },
     "112": {
       "filename": "BondingCurve.sol",
-      "line": 605
+      "line": 606
     },
     "128": {
       "filename": "BondingCurve.sol",
-      "line": 605
+      "line": 606
     },
     "144": {
       "filename": "BondingCurve.sol",
-      "line": 609
+      "line": 610
     },
     "160": {
       "filename": "BondingCurve.sol",
-      "line": 609
+      "line": 610
     },
     "176": {
       "filename": "BondingCurve.sol",
-      "line": 609
+      "line": 610
     },
     "248": {
       "filename": "BondingCurve.sol",
-      "line": 609
+      "line": 610
     },
     "256": {
       "filename": "BondingCurve.sol",
-      "line": 609
+      "line": 610
     },
     "264": {
       "filename": "BondingCurve.sol",
-      "line": 609
+      "line": 610
     },
     "272": {
       "filename": "BondingCurve.sol",
-      "line": 610
+      "line": 611
     },
     "280": {
       "filename": "BondingCurve.sol",
-      "line": 610
+      "line": 611
     },
     "296": {
       "filename": "BondingCurve.sol",
-      "line": 611
+      "line": 612
     },
     "304": {
       "filename": "BondingCurve.sol",
-      "line": 611
+      "line": 612
     },
     "320": {
       "filename": "BondingCurve.sol",
-      "line": 612
+      "line": 613
     },
     "328": {
       "filename": "BondingCurve.sol",
-      "line": 612
+      "line": 613
     },
     "344": {
       "filename": "BondingCurve.sol",
-      "line": 612
+      "line": 613
     },
     "360": {
       "filename": "./BondingCurve.code",
@@ -3361,127 +3407,127 @@
     },
     "368": {
       "filename": "BondingCurve.sol",
-      "line": 618
+      "line": 619
     },
     "392": {
       "filename": "BondingCurve.sol",
-      "line": 618
+      "line": 619
     },
     "552": {
       "filename": "BondingCurve.sol",
-      "line": 618
+      "line": 619
     },
     "560": {
       "filename": "BondingCurve.sol",
-      "line": 618
+      "line": 619
     },
     "568": {
       "filename": "BondingCurve.sol",
-      "line": 618
+      "line": 619
     },
     "584": {
       "filename": "BondingCurve.sol",
-      "line": 618
+      "line": 619
     },
     "592": {
       "filename": "BondingCurve.sol",
-      "line": 618
+      "line": 619
     },
     "608": {
       "filename": "BondingCurve.sol",
-      "line": 618
+      "line": 619
     },
     "616": {
       "filename": "BondingCurve.sol",
-      "line": 618
+      "line": 619
     },
     "624": {
       "filename": "BondingCurve.sol",
-      "line": 618
+      "line": 619
     },
     "640": {
       "filename": "BondingCurve.sol",
-      "line": 622
+      "line": 623
     },
     "648": {
       "filename": "BondingCurve.sol",
-      "line": 622
+      "line": 623
     },
     "664": {
       "filename": "BondingCurve.sol",
-      "line": 622
+      "line": 623
     },
     "672": {
       "filename": "BondingCurve.sol",
-      "line": 622
+      "line": 623
     },
     "680": {
       "filename": "BondingCurve.sol",
-      "line": 622
+      "line": 623
     },
     "688": {
       "filename": "BondingCurve.sol",
-      "line": 622
+      "line": 623
     },
     "704": {
       "filename": "BondingCurve.sol",
-      "line": 622
+      "line": 623
     },
     "720": {
       "filename": "BondingCurve.sol",
-      "line": 622
+      "line": 623
     },
     "728": {
       "filename": "BondingCurve.sol",
-      "line": 622
+      "line": 623
     },
     "744": {
       "filename": "BondingCurve.sol",
-      "line": 622
+      "line": 623
     },
     "760": {
       "filename": "BondingCurve.sol",
-      "line": 623
+      "line": 624
     },
     "768": {
       "filename": "BondingCurve.sol",
-      "line": 623
+      "line": 624
     },
     "776": {
       "filename": "BondingCurve.sol",
-      "line": 623
+      "line": 624
     },
     "800": {
       "filename": "BondingCurve.sol",
-      "line": 623
+      "line": 624
     },
     "808": {
       "filename": "BondingCurve.sol",
-      "line": 623
+      "line": 624
     },
     "864": {
       "filename": "BondingCurve.sol",
-      "line": 623
+      "line": 624
     },
     "880": {
       "filename": "BondingCurve.sol",
-      "line": 623
+      "line": 624
     },
     "896": {
       "filename": "BondingCurve.sol",
-      "line": 623
+      "line": 624
     },
     "912": {
       "filename": "BondingCurve.sol",
-      "line": 623
+      "line": 624
     },
     "920": {
       "filename": "BondingCurve.sol",
-      "line": 623
+      "line": 624
     },
     "928": {
       "filename": "BondingCurve.sol",
-      "line": 623
+      "line": 624
     },
     "944": {
       "filename": "./BondingCurve.code",
@@ -3489,11 +3535,11 @@
     },
     "952": {
       "filename": "BondingCurve.sol",
-      "line": 626
+      "line": 627
     },
     "968": {
       "filename": "BondingCurve.sol",
-      "line": 626
+      "line": 627
     }
   },
   "4ecc50804202db9bb6956d72a5d33a60c69ae8e25902f5fe6d553f3b3b708b83": {
@@ -3686,51 +3732,51 @@
   "55a0a1d8df2c0313abe1274ca6a9eb33cce6a2118e209f10c19fab108389f448": {
     "0": {
       "filename": "./BondingCurve.code",
-      "line": 4151
+      "line": 4156
     },
     "8": {
       "filename": "./BondingCurve.code",
-      "line": 4152
+      "line": 4157
     },
     "56": {
       "filename": "./BondingCurve.code",
-      "line": 4153
+      "line": 4158
     },
     "64": {
       "filename": "./BondingCurve.code",
-      "line": 4154
+      "line": 4159
     },
     "80": {
       "filename": "./BondingCurve.code",
-      "line": 4157
+      "line": 4162
     },
     "88": {
       "filename": "./BondingCurve.code",
-      "line": 4158
+      "line": 4163
     },
     "136": {
       "filename": "./BondingCurve.code",
-      "line": 4159
+      "line": 4164
     },
     "144": {
       "filename": "./BondingCurve.code",
-      "line": 4160
+      "line": 4165
     },
     "160": {
       "filename": "./BondingCurve.code",
-      "line": 4163
+      "line": 4168
     },
     "168": {
       "filename": "./BondingCurve.code",
-      "line": 4164
+      "line": 4169
     },
     "216": {
       "filename": "./BondingCurve.code",
-      "line": 4165
+      "line": 4170
     },
     "224": {
       "filename": "./BondingCurve.code",
-      "line": 4166
+      "line": 4171
     }
   },
   "55fec9310601e8cf4f4e4988fdc40d2624a0604c9071f2b138da6bfd565f83fe": {
@@ -3950,67 +3996,67 @@
   "56caba1f96cdaaa85e9421ab5690b6ce008b7fa14ac267dadcf3bbbba63ba9de": {
     "0": {
       "filename": "./BondingCurve.code",
-      "line": 3827
+      "line": 3832
     },
     "8": {
       "filename": "./BondingCurve.code",
-      "line": 3828
+      "line": 3833
     },
     "56": {
       "filename": "./BondingCurve.code",
-      "line": 3829
+      "line": 3834
     },
     "64": {
       "filename": "./BondingCurve.code",
-      "line": 3830
+      "line": 3835
     },
     "80": {
       "filename": "./BondingCurve.code",
-      "line": 3895
+      "line": 3900
     },
     "88": {
       "filename": "./BondingCurve.code",
-      "line": 3896
+      "line": 3901
     },
     "136": {
       "filename": "./BondingCurve.code",
-      "line": 3897
+      "line": 3902
     },
     "144": {
       "filename": "./BondingCurve.code",
-      "line": 3898
+      "line": 3903
     },
     "160": {
       "filename": "./BondingCurve.code",
-      "line": 3941
+      "line": 3946
     },
     "168": {
       "filename": "./BondingCurve.code",
-      "line": 3942
+      "line": 3947
     },
     "216": {
       "filename": "./BondingCurve.code",
-      "line": 3943
+      "line": 3948
     },
     "224": {
       "filename": "./BondingCurve.code",
-      "line": 3944
+      "line": 3949
     },
     "240": {
       "filename": "./BondingCurve.code",
-      "line": 3970
+      "line": 3975
     },
     "248": {
       "filename": "./BondingCurve.code",
-      "line": 3971
+      "line": 3976
     },
     "296": {
       "filename": "./BondingCurve.code",
-      "line": 3972
+      "line": 3977
     },
     "304": {
       "filename": "./BondingCurve.code",
-      "line": 3973
+      "line": 3978
     }
   },
   "573ae257f490e35e9a77169fe4312763cce057b2051ae320e1aabbdc0eda70b0": {
@@ -4364,57 +4410,57 @@
   "61ab4641fa30d9310391025086eec65d200d79268e1b7cd402565e01ba64be3c": {
     "0": {
       "filename": "./BondingCurve.code",
-      "line": 4244
+      "line": 4249
     }
   },
   "62236e158a001f7d09641163d5846191d72a046c610f935c31c3214ed36bb4db": {
     "0": {
       "filename": "./BondingCurve.code",
-      "line": 3903
+      "line": 3908
     },
     "8": {
       "filename": "./BondingCurve.code",
-      "line": 3904
+      "line": 3909
     },
     "56": {
       "filename": "./BondingCurve.code",
-      "line": 3905
+      "line": 3910
     },
     "64": {
       "filename": "./BondingCurve.code",
-      "line": 3906
+      "line": 3911
     },
     "80": {
       "filename": "./BondingCurve.code",
-      "line": 3909
+      "line": 3914
     },
     "88": {
       "filename": "./BondingCurve.code",
-      "line": 3910
+      "line": 3915
     },
     "136": {
       "filename": "./BondingCurve.code",
-      "line": 3911
+      "line": 3916
     },
     "144": {
       "filename": "./BondingCurve.code",
-      "line": 3912
+      "line": 3917
     },
     "160": {
       "filename": "./BondingCurve.code",
-      "line": 3915
+      "line": 3920
     },
     "168": {
       "filename": "./BondingCurve.code",
-      "line": 3916
+      "line": 3921
     },
     "216": {
       "filename": "./BondingCurve.code",
-      "line": 3917
+      "line": 3922
     },
     "224": {
       "filename": "./BondingCurve.code",
-      "line": 3918
+      "line": 3923
     }
   },
   "6342bc1d43f68ebf835621cfd43b62ac814f10da91cb8456c2be5ef2c1c94df3": {},
@@ -4445,7 +4491,7 @@
     },
     "48": {
       "filename": "BondingCurve.sol",
-      "line": 702
+      "line": 703
     },
     "56": {
       "filename": "./BondingCurve.code",
@@ -4543,73 +4589,7 @@
   "69e196e0f5fc6c6229933cab698f189f45b355263cffe66177ef2db7bb7debf1": {
     "0": {
       "filename": "BondingCurve.sol",
-      "line": 685
-    }
-  },
-  "6a19da6a8090faab884f553d308e4cd3b50a9190e963d7a4ee5733f70201b20c": {
-    "0": {
-      "filename": "./BondingCurve.code",
-      "line": 4198
-    },
-    "8": {
-      "filename": "./BondingCurve.code",
-      "line": 4199
-    },
-    "56": {
-      "filename": "./BondingCurve.code",
-      "line": 4200
-    },
-    "64": {
-      "filename": "./BondingCurve.code",
-      "line": 4201
-    },
-    "80": {
-      "filename": "./BondingCurve.code",
-      "line": 4221
-    },
-    "88": {
-      "filename": "./BondingCurve.code",
-      "line": 4222
-    },
-    "136": {
-      "filename": "./BondingCurve.code",
-      "line": 4223
-    },
-    "144": {
-      "filename": "./BondingCurve.code",
-      "line": 4224
-    },
-    "160": {
-      "filename": "./BondingCurve.code",
-      "line": 4227
-    },
-    "168": {
-      "filename": "./BondingCurve.code",
-      "line": 4228
-    },
-    "216": {
-      "filename": "./BondingCurve.code",
-      "line": 4229
-    },
-    "224": {
-      "filename": "./BondingCurve.code",
-      "line": 4230
-    },
-    "240": {
-      "filename": "./BondingCurve.code",
-      "line": 4233
-    },
-    "248": {
-      "filename": "./BondingCurve.code",
-      "line": 4234
-    },
-    "296": {
-      "filename": "./BondingCurve.code",
-      "line": 4235
-    },
-    "304": {
-      "filename": "./BondingCurve.code",
-      "line": 4236
+      "line": 686
     }
   },
   "6af0b5170bc1198be8bf1a24770dfbf1e35a6d0ce4f2d1c94a80febd5480d660": {
@@ -4618,172 +4598,70 @@
       "line": 194
     }
   },
-  "6c33bf13baef7dd475a0917c04733ccf2dc8494acbfb26bedb772a9adab35416": {
-    "0": {
-      "filename": "./BondingCurve.code",
-      "line": 4387
-    },
-    "16": {
-      "filename": "./BondingCurve.code",
-      "line": 4388
-    },
-    "24": {
-      "filename": "./BondingCurve.code",
-      "line": 4389
-    },
-    "48": {
-      "filename": "./BondingCurve.code",
-      "line": 4390
-    },
-    "64": {
-      "filename": "./BondingCurve.code",
-      "line": 4391
-    },
-    "88": {
-      "filename": "./BondingCurve.code",
-      "line": 4392
-    },
-    "104": {
-      "filename": "./BondingCurve.code",
-      "line": 4393
-    },
-    "112": {
-      "filename": "./BondingCurve.code",
-      "line": 4394
-    },
-    "120": {
-      "filename": "./BondingCurve.code",
-      "line": 4395
-    },
-    "136": {
-      "filename": "./BondingCurve.code",
-      "line": 4396
-    },
-    "152": {
-      "filename": "./BondingCurve.code",
-      "line": 4397
-    },
-    "160": {
-      "filename": "./BondingCurve.code",
-      "line": 4398
-    },
-    "176": {
-      "filename": "./BondingCurve.code",
-      "line": 4399
-    },
-    "200": {
-      "filename": "./BondingCurve.code",
-      "line": 4400
-    },
-    "216": {
-      "filename": "./BondingCurve.code",
-      "line": 4406
-    },
-    "224": {
-      "filename": "./BondingCurve.code",
-      "line": 4407
-    },
-    "240": {
-      "filename": "./BondingCurve.code",
-      "line": 4408
-    },
-    "256": {
-      "filename": "./BondingCurve.code",
-      "line": 4412
-    },
-    "264": {
-      "filename": "./BondingCurve.code",
-      "line": 4413
-    },
-    "288": {
-      "filename": "./BondingCurve.code",
-      "line": 4414
-    },
-    "304": {
-      "filename": "./BondingCurve.code",
-      "line": 4415
-    },
-    "312": {
-      "filename": "./BondingCurve.code",
-      "line": 4416
-    },
-    "328": {
-      "filename": "./BondingCurve.code",
-      "line": 4420
-    },
-    "336": {
-      "filename": "./BondingCurve.code",
-      "line": 4421
-    },
-    "352": {
-      "filename": "./BondingCurve.code",
-      "line": 4424
-    }
-  },
   "6cb5b0fdb8c8c8b59ac03e3f4b0b1f7cd3ad0a2183695487a797cd1bbd7b4202": {
     "0": {
       "filename": "./BondingCurve.code",
-      "line": 3899
+      "line": 3904
     },
     "8": {
       "filename": "./BondingCurve.code",
-      "line": 3900
+      "line": 3905
     },
     "56": {
       "filename": "./BondingCurve.code",
-      "line": 3901
+      "line": 3906
     },
     "64": {
       "filename": "./BondingCurve.code",
-      "line": 3902
+      "line": 3907
     },
     "80": {
       "filename": "./BondingCurve.code",
-      "line": 3922
+      "line": 3927
     },
     "88": {
       "filename": "./BondingCurve.code",
-      "line": 3923
+      "line": 3928
     },
     "136": {
       "filename": "./BondingCurve.code",
-      "line": 3924
+      "line": 3929
     },
     "144": {
       "filename": "./BondingCurve.code",
-      "line": 3925
+      "line": 3930
     },
     "160": {
       "filename": "./BondingCurve.code",
-      "line": 3928
+      "line": 3933
     },
     "168": {
       "filename": "./BondingCurve.code",
-      "line": 3929
+      "line": 3934
     },
     "216": {
       "filename": "./BondingCurve.code",
-      "line": 3930
+      "line": 3935
     },
     "224": {
       "filename": "./BondingCurve.code",
-      "line": 3931
+      "line": 3936
     },
     "240": {
       "filename": "./BondingCurve.code",
-      "line": 3934
+      "line": 3939
     },
     "248": {
       "filename": "./BondingCurve.code",
-      "line": 3935
+      "line": 3940
     },
     "296": {
       "filename": "./BondingCurve.code",
-      "line": 3936
+      "line": 3941
     },
     "304": {
       "filename": "./BondingCurve.code",
-      "line": 3937
+      "line": 3942
     }
   },
   "6d19994a32ad6b33598535e8f4df5f91601c50d1433113a1fec0eb72493df3cc": {
@@ -4963,63 +4841,63 @@
   "6d48a6cc883e1bdd5771242c092701d1cb5977ac1a25cff6d277786aebc0c349": {
     "0": {
       "filename": "./BondingCurve.code",
-      "line": 3429
+      "line": 3434
     },
     "8": {
       "filename": "./BondingCurve.code",
-      "line": 3430
+      "line": 3435
     },
     "16": {
       "filename": "./BondingCurve.code",
-      "line": 3431
+      "line": 3436
     },
     "32": {
       "filename": "./BondingCurve.code",
-      "line": 3434
+      "line": 3439
     },
     "48": {
       "filename": "./BondingCurve.code",
-      "line": 3435
+      "line": 3440
     },
     "56": {
       "filename": "./BondingCurve.code",
-      "line": 3436
+      "line": 3441
     },
     "72": {
       "filename": "./BondingCurve.code",
-      "line": 3437
+      "line": 3442
     },
     "232": {
       "filename": "./BondingCurve.code",
-      "line": 3438
+      "line": 3443
     },
     "240": {
       "filename": "./BondingCurve.code",
-      "line": 3439
+      "line": 3444
     },
     "248": {
       "filename": "./BondingCurve.code",
-      "line": 3440
+      "line": 3445
     },
     "264": {
       "filename": "./BondingCurve.code",
-      "line": 3441
+      "line": 3446
     },
     "272": {
       "filename": "./BondingCurve.code",
-      "line": 3442
+      "line": 3447
     },
     "280": {
       "filename": "./BondingCurve.code",
-      "line": 3443
+      "line": 3448
     },
     "296": {
       "filename": "./BondingCurve.code",
-      "line": 3445
+      "line": 3450
     },
     "304": {
       "filename": "./BondingCurve.code",
-      "line": 3446
+      "line": 3451
     }
   },
   "6f750f44fe797902f5743a0c3ed5b4ab4e735d19ab5e15b84b2b57c6a8f72925": {
@@ -5087,237 +4965,237 @@
   "70696c09cf26f2b6bc434268cd4ab306166c958d6bbae76d3529e34f147314ae": {
     "0": {
       "filename": "./BondingCurve.code",
-      "line": 4100
+      "line": 4105
     },
     "8": {
       "filename": "./BondingCurve.code",
-      "line": 4101
+      "line": 4106
     },
     "56": {
       "filename": "./BondingCurve.code",
-      "line": 4102
+      "line": 4107
     },
     "64": {
       "filename": "./BondingCurve.code",
-      "line": 4103
+      "line": 4108
     },
     "80": {
       "filename": "./BondingCurve.code",
-      "line": 4106
+      "line": 4111
     },
     "88": {
       "filename": "./BondingCurve.code",
-      "line": 4107
+      "line": 4112
     },
     "136": {
       "filename": "./BondingCurve.code",
-      "line": 4108
+      "line": 4113
     },
     "144": {
       "filename": "./BondingCurve.code",
-      "line": 4109
+      "line": 4114
     }
   },
   "7270aef4c12e1a94fcd5489d77fe909ee4d6df88c60d2725f59f6a72eb1d1651": {
     "0": {
       "filename": "BondingCurve.sol",
-      "line": 592
+      "line": 593
     },
     "8": {
       "filename": "BondingCurve.sol",
-      "line": 592
+      "line": 593
     },
     "24": {
       "filename": "BondingCurve.sol",
-      "line": 592
+      "line": 593
     },
     "40": {
       "filename": "BondingCurve.sol",
-      "line": 592
+      "line": 593
     },
     "56": {
       "filename": "BondingCurve.sol",
-      "line": 592
+      "line": 593
     },
     "72": {
       "filename": "BondingCurve.sol",
-      "line": 592
+      "line": 593
     },
     "80": {
       "filename": "BondingCurve.sol",
-      "line": 592
+      "line": 593
     },
     "96": {
       "filename": "BondingCurve.sol",
-      "line": 592
+      "line": 593
     },
     "104": {
       "filename": "BondingCurve.sol",
-      "line": 594
+      "line": 595
     },
     "112": {
       "filename": "BondingCurve.sol",
-      "line": 594
+      "line": 595
     },
     "128": {
       "filename": "BondingCurve.sol",
-      "line": 594
+      "line": 595
     },
     "144": {
       "filename": "BondingCurve.sol",
-      "line": 594
+      "line": 595
     },
     "160": {
       "filename": "BondingCurve.sol",
-      "line": 594
+      "line": 595
     },
     "176": {
       "filename": "BondingCurve.sol",
-      "line": 594
+      "line": 595
     },
     "184": {
       "filename": "BondingCurve.sol",
-      "line": 594
+      "line": 595
     },
     "208": {
       "filename": "BondingCurve.sol",
-      "line": 594
+      "line": 595
     },
     "216": {
       "filename": "BondingCurve.sol",
-      "line": 595
+      "line": 596
     },
     "224": {
       "filename": "BondingCurve.sol",
-      "line": 595
+      "line": 596
     },
     "240": {
       "filename": "BondingCurve.sol",
-      "line": 595
+      "line": 596
     },
     "256": {
       "filename": "BondingCurve.sol",
-      "line": 595
+      "line": 596
     },
     "272": {
       "filename": "BondingCurve.sol",
-      "line": 595
+      "line": 596
     },
     "288": {
       "filename": "BondingCurve.sol",
-      "line": 595
+      "line": 596
     },
     "296": {
       "filename": "BondingCurve.sol",
-      "line": 595
+      "line": 596
     },
     "320": {
       "filename": "BondingCurve.sol",
-      "line": 595
+      "line": 596
     },
     "328": {
       "filename": "BondingCurve.sol",
-      "line": 598
+      "line": 599
     },
     "336": {
       "filename": "BondingCurve.sol",
-      "line": 598
+      "line": 599
     },
     "352": {
       "filename": "BondingCurve.sol",
-      "line": 598
+      "line": 599
     },
     "368": {
       "filename": "BondingCurve.sol",
-      "line": 598
+      "line": 599
     },
     "384": {
       "filename": "BondingCurve.sol",
-      "line": 598
+      "line": 599
     },
     "400": {
       "filename": "BondingCurve.sol",
-      "line": 598
+      "line": 599
     },
     "408": {
       "filename": "BondingCurve.sol",
-      "line": 598
+      "line": 599
     },
     "432": {
       "filename": "BondingCurve.sol",
-      "line": 598
+      "line": 599
     },
     "440": {
       "filename": "BondingCurve.sol",
-      "line": 599
+      "line": 600
     },
     "448": {
       "filename": "BondingCurve.sol",
-      "line": 599
+      "line": 600
     },
     "464": {
       "filename": "BondingCurve.sol",
-      "line": 599
+      "line": 600
     },
     "480": {
       "filename": "BondingCurve.sol",
-      "line": 599
+      "line": 600
     },
     "496": {
       "filename": "BondingCurve.sol",
-      "line": 599
+      "line": 600
     },
     "512": {
       "filename": "BondingCurve.sol",
-      "line": 599
+      "line": 600
     },
     "520": {
       "filename": "BondingCurve.sol",
-      "line": 599
+      "line": 600
     },
     "544": {
       "filename": "BondingCurve.sol",
-      "line": 599
+      "line": 600
     },
     "552": {
       "filename": "BondingCurve.sol",
-      "line": 600
+      "line": 601
     },
     "568": {
       "filename": "BondingCurve.sol",
-      "line": 600
+      "line": 601
     },
     "576": {
       "filename": "BondingCurve.sol",
-      "line": 600
+      "line": 601
     },
     "584": {
       "filename": "BondingCurve.sol",
-      "line": 602
+      "line": 603
     },
     "592": {
       "filename": "BondingCurve.sol",
-      "line": 602
+      "line": 603
     },
     "608": {
       "filename": "BondingCurve.sol",
-      "line": 602
+      "line": 603
     },
     "616": {
       "filename": "BondingCurve.sol",
-      "line": 602
+      "line": 603
     },
     "624": {
       "filename": "BondingCurve.sol",
-      "line": 602
+      "line": 603
     },
     "640": {
       "filename": "BondingCurve.sol",
-      "line": 602
+      "line": 603
     },
     "648": {
       "filename": "BondingCurve.sol",
-      "line": 602
+      "line": 603
     }
   },
   "75c0eec80a2e587ca41653197aeff61c7f541128b1cd49c786916ca8631680ff": {
@@ -5377,409 +5255,409 @@
   "776d2babc974112a1ed394f41c06ffb4b71f929c1090dc798a3556ddb99a6436": {
     "0": {
       "filename": "./BondingCurve.code",
-      "line": 4401
+      "line": 4406
     },
     "8": {
       "filename": "./BondingCurve.code",
-      "line": 4402
+      "line": 4407
     },
     "24": {
       "filename": "./BondingCurve.code",
-      "line": 4403
+      "line": 4408
     },
     "32": {
       "filename": "./BondingCurve.code",
-      "line": 4301
+      "line": 4306
     },
     "48": {
       "filename": "./BondingCurve.code",
-      "line": 4302
+      "line": 4307
     },
     "72": {
       "filename": "./BondingCurve.code",
-      "line": 4303
+      "line": 4308
     },
     "88": {
       "filename": "./BondingCurve.code",
-      "line": 4304
+      "line": 4309
     },
     "96": {
       "filename": "./BondingCurve.code",
-      "line": 4305
+      "line": 4310
     },
     "112": {
       "filename": "./BondingCurve.code",
-      "line": 4308
+      "line": 4313
     },
     "128": {
       "filename": "BondingCurve.sol",
-      "line": 641
+      "line": 642
     },
     "144": {
       "filename": "BondingCurve.sol",
-      "line": 642
+      "line": 643
     },
     "152": {
       "filename": "BondingCurve.sol",
-      "line": 642
+      "line": 643
     },
     "168": {
       "filename": "BondingCurve.sol",
-      "line": 642
+      "line": 643
     },
     "184": {
       "filename": "BondingCurve.sol",
-      "line": 642
+      "line": 643
     },
     "200": {
       "filename": "BondingCurve.sol",
-      "line": 642
+      "line": 643
     },
     "224": {
       "filename": "BondingCurve.sol",
-      "line": 643
+      "line": 644
     },
     "232": {
       "filename": "BondingCurve.sol",
-      "line": 643
+      "line": 644
     },
     "248": {
       "filename": "BondingCurve.sol",
-      "line": 643
+      "line": 644
     },
     "264": {
       "filename": "BondingCurve.sol",
-      "line": 643
+      "line": 644
     },
     "272": {
       "filename": "BondingCurve.sol",
-      "line": 643
+      "line": 644
     },
     "280": {
       "filename": "BondingCurve.sol",
-      "line": 643
+      "line": 644
     },
     "288": {
       "filename": "BondingCurve.sol",
-      "line": 645
+      "line": 646
     },
     "304": {
       "filename": "BondingCurve.sol",
-      "line": 645
+      "line": 646
     },
     "320": {
       "filename": "BondingCurve.sol",
-      "line": 647
+      "line": 648
     },
     "368": {
       "filename": "BondingCurve.sol",
-      "line": 647
+      "line": 648
     },
     "376": {
       "filename": "BondingCurve.sol",
-      "line": 647
+      "line": 648
     },
     "392": {
       "filename": "BondingCurve.sol",
-      "line": 648
+      "line": 649
     },
     "400": {
       "filename": "BondingCurve.sol",
-      "line": 648
+      "line": 649
     },
     "416": {
       "filename": "BondingCurve.sol",
-      "line": 648
+      "line": 649
     },
     "424": {
       "filename": "BondingCurve.sol",
-      "line": 649
+      "line": 650
     },
     "440": {
       "filename": "BondingCurve.sol",
-      "line": 649
+      "line": 650
     },
     "456": {
       "filename": "BondingCurve.sol",
-      "line": 649
+      "line": 650
     },
     "472": {
       "filename": "BondingCurve.sol",
-      "line": 649
+      "line": 650
     },
     "480": {
       "filename": "BondingCurve.sol",
-      "line": 649
+      "line": 650
     },
     "528": {
       "filename": "BondingCurve.sol",
-      "line": 649
+      "line": 650
     },
     "536": {
       "filename": "BondingCurve.sol",
-      "line": 649
+      "line": 650
     },
     "552": {
       "filename": "BondingCurve.sol",
-      "line": 651
+      "line": 652
     },
     "560": {
       "filename": "BondingCurve.sol",
-      "line": 651
+      "line": 652
     },
     "576": {
       "filename": "BondingCurve.sol",
-      "line": 652
+      "line": 653
     },
     "592": {
       "filename": "BondingCurve.sol",
-      "line": 652
+      "line": 653
     },
     "600": {
       "filename": "BondingCurve.sol",
-      "line": 659
+      "line": 660
     },
     "608": {
       "filename": "BondingCurve.sol",
-      "line": 659
+      "line": 660
     },
     "768": {
       "filename": "BondingCurve.sol",
-      "line": 659
+      "line": 660
     },
     "776": {
       "filename": "BondingCurve.sol",
-      "line": 659
+      "line": 660
     },
     "784": {
       "filename": "BondingCurve.sol",
-      "line": 659
+      "line": 660
     },
     "800": {
       "filename": "BondingCurve.sol",
-      "line": 659
+      "line": 660
     },
     "816": {
       "filename": "BondingCurve.sol",
-      "line": 659
+      "line": 660
     },
     "824": {
       "filename": "BondingCurve.sol",
-      "line": 659
+      "line": 660
     },
     "832": {
       "filename": "BondingCurve.sol",
-      "line": 659
+      "line": 660
     },
     "848": {
       "filename": "BondingCurve.sol",
-      "line": 659
+      "line": 660
     },
     "856": {
       "filename": "BondingCurve.sol",
-      "line": 659
+      "line": 660
     },
     "864": {
       "filename": "BondingCurve.sol",
-      "line": 659
+      "line": 660
     },
     "912": {
       "filename": "BondingCurve.sol",
-      "line": 659
+      "line": 660
     },
     "920": {
       "filename": "BondingCurve.sol",
-      "line": 659
+      "line": 660
     },
     "928": {
       "filename": "BondingCurve.sol",
-      "line": 659
+      "line": 660
     },
     "936": {
       "filename": "BondingCurve.sol",
-      "line": 659
+      "line": 660
     },
     "944": {
       "filename": "./BondingCurve.code",
-      "line": 4376
+      "line": 4381
     },
     "952": {
       "filename": "BondingCurve.sol",
-      "line": 640
+      "line": 641
     },
     "960": {
       "filename": "./BondingCurve.code",
-      "line": 4381
+      "line": 4386
     }
   },
   "7a48aa1c116ac8c86e3329c6766f06cbedfb91eb1caf51e31ddcaa5890eea545": {
     "0": {
       "filename": "BondingCurve.sol",
-      "line": 537
+      "line": 538
     },
     "8": {
       "filename": "BondingCurve.sol",
-      "line": 537
+      "line": 538
     },
     "24": {
       "filename": "BondingCurve.sol",
-      "line": 537
+      "line": 538
     },
     "40": {
       "filename": "BondingCurve.sol",
-      "line": 537
+      "line": 538
     },
     "56": {
       "filename": "BondingCurve.sol",
-      "line": 537
+      "line": 538
     },
     "80": {
       "filename": "BondingCurve.sol",
-      "line": 540
+      "line": 541
     },
     "96": {
       "filename": "BondingCurve.sol",
-      "line": 541
+      "line": 542
     },
     "104": {
       "filename": "BondingCurve.sol",
-      "line": 541
+      "line": 542
     },
     "120": {
       "filename": "BondingCurve.sol",
-      "line": 542
+      "line": 543
     },
     "136": {
       "filename": "BondingCurve.sol",
-      "line": 542
+      "line": 543
     },
     "152": {
       "filename": "BondingCurve.sol",
-      "line": 543
+      "line": 544
     },
     "160": {
       "filename": "BondingCurve.sol",
-      "line": 543
+      "line": 544
     },
     "176": {
       "filename": "BondingCurve.sol",
-      "line": 545
+      "line": 546
     },
     "192": {
       "filename": "BondingCurve.sol",
-      "line": 545
+      "line": 546
     },
     "208": {
       "filename": "BondingCurve.sol",
-      "line": 545
+      "line": 546
     },
     "224": {
       "filename": "BondingCurve.sol",
-      "line": 545
+      "line": 546
     },
     "384": {
       "filename": "BondingCurve.sol",
-      "line": 545
+      "line": 546
     },
     "392": {
       "filename": "BondingCurve.sol",
-      "line": 545
+      "line": 546
     },
     "400": {
       "filename": "BondingCurve.sol",
-      "line": 545
+      "line": 546
     },
     "416": {
       "filename": "BondingCurve.sol",
-      "line": 545
+      "line": 546
     },
     "432": {
       "filename": "BondingCurve.sol",
-      "line": 545
+      "line": 546
     },
     "440": {
       "filename": "BondingCurve.sol",
-      "line": 545
+      "line": 546
     },
     "448": {
       "filename": "BondingCurve.sol",
-      "line": 545
+      "line": 546
     },
     "464": {
       "filename": "BondingCurve.sol",
-      "line": 548
+      "line": 549
     },
     "472": {
       "filename": "BondingCurve.sol",
-      "line": 548
+      "line": 549
     },
     "480": {
       "filename": "BondingCurve.sol",
-      "line": 548
+      "line": 549
     },
     "488": {
       "filename": "BondingCurve.sol",
-      "line": 548
+      "line": 549
     },
     "536": {
       "filename": "BondingCurve.sol",
-      "line": 549
+      "line": 550
     },
     "552": {
       "filename": "BondingCurve.sol",
-      "line": 549
+      "line": 550
     },
     "560": {
       "filename": "BondingCurve.sol",
-      "line": 549
+      "line": 550
     },
     "576": {
       "filename": "BondingCurve.sol",
-      "line": 549
+      "line": 550
     },
     "592": {
       "filename": "BondingCurve.sol",
-      "line": 550
+      "line": 551
     },
     "600": {
       "filename": "BondingCurve.sol",
-      "line": 550
+      "line": 551
     },
     "608": {
       "filename": "BondingCurve.sol",
-      "line": 550
+      "line": 551
     },
     "632": {
       "filename": "BondingCurve.sol",
-      "line": 550
+      "line": 551
     },
     "640": {
       "filename": "BondingCurve.sol",
-      "line": 550
+      "line": 551
     },
     "696": {
       "filename": "BondingCurve.sol",
-      "line": 550
+      "line": 551
     },
     "712": {
       "filename": "BondingCurve.sol",
-      "line": 550
+      "line": 551
     },
     "760": {
       "filename": "BondingCurve.sol",
-      "line": 550
+      "line": 551
     },
     "784": {
       "filename": "BondingCurve.sol",
-      "line": 550
+      "line": 551
     },
     "792": {
       "filename": "BondingCurve.sol",
-      "line": 550
+      "line": 551
     },
     "800": {
       "filename": "BondingCurve.sol",
-      "line": 550
+      "line": 551
     }
   },
   "7aa575ec1094910dda8d528c75e1a4e4319b83e15efd67113b053106fabfafdb": {
@@ -5798,7 +5676,7 @@
   "7da0be745b217b2b8909214a854bda7f68267be1de7e39746e0e7cd441779c49": {
     "0": {
       "filename": "BondingCurve.sol",
-      "line": 574
+      "line": 575
     }
   },
   "7e0cee7f050ec16b903d0c700619092aa867c43d3ca62aeff45a38091ef35679": {
@@ -5892,7 +5770,7 @@
     },
     "328": {
       "filename": "./BondingCurve.code",
-      "line": 2935
+      "line": 2940
     },
     "336": {
       "filename": "BondingCurve.sol",
@@ -6012,7 +5890,7 @@
     },
     "744": {
       "filename": "./BondingCurve.code",
-      "line": 2972
+      "line": 2977
     },
     "752": {
       "filename": "BondingCurve.sol",
@@ -6368,79 +6246,13 @@
   "7f9c3a7ca8eee29ff9e45d49eb427f9d36ecac844bf712046532aaa58a15654f": {
     "0": {
       "filename": "BondingCurve.sol",
-      "line": 554
+      "line": 555
     }
   },
   "82e2fdc0d69aacd0985e098391a6637df1e758e8e74959b67e8e6b35e9170b37": {
     "0": {
       "filename": "BondingCurve.sol",
-      "line": 689
-    }
-  },
-  "82f182b012e690db070f3041bf94b57a570cb70fa6ce5cea5ebc2dc846a11611": {
-    "0": {
-      "filename": "./BondingCurve.code",
-      "line": 3823
-    },
-    "8": {
-      "filename": "./BondingCurve.code",
-      "line": 3824
-    },
-    "56": {
-      "filename": "./BondingCurve.code",
-      "line": 3825
-    },
-    "64": {
-      "filename": "./BondingCurve.code",
-      "line": 3826
-    },
-    "80": {
-      "filename": "./BondingCurve.code",
-      "line": 3994
-    },
-    "88": {
-      "filename": "./BondingCurve.code",
-      "line": 3995
-    },
-    "136": {
-      "filename": "./BondingCurve.code",
-      "line": 3996
-    },
-    "144": {
-      "filename": "./BondingCurve.code",
-      "line": 3997
-    },
-    "160": {
-      "filename": "./BondingCurve.code",
-      "line": 4114
-    },
-    "168": {
-      "filename": "./BondingCurve.code",
-      "line": 4115
-    },
-    "216": {
-      "filename": "./BondingCurve.code",
-      "line": 4116
-    },
-    "224": {
-      "filename": "./BondingCurve.code",
-      "line": 4117
-    },
-    "240": {
-      "filename": "./BondingCurve.code",
-      "line": 4194
-    },
-    "248": {
-      "filename": "./BondingCurve.code",
-      "line": 4195
-    },
-    "296": {
-      "filename": "./BondingCurve.code",
-      "line": 4196
-    },
-    "304": {
-      "filename": "./BondingCurve.code",
-      "line": 4197
+      "line": 690
     }
   },
   "83b39e000285e5cb5da3ea12c62b064a6f8afb1b5f569dde4cc69afb77551451": {
@@ -6461,224 +6273,178 @@
       "line": 62
     }
   },
-  "84056de50e8cb67a294ccf7e363aedd64d96c006c95e953019eef6541d14d5a1": {
-    "0": {
-      "filename": "./BondingCurve.code",
-      "line": 4523
-    },
-    "8": {
-      "filename": "./BondingCurve.code",
-      "line": 4533
-    },
-    "24": {
-      "filename": "./BondingCurve.code",
-      "line": 4534
-    },
-    "32": {
-      "filename": "./BondingCurve.code",
-      "line": 4535
-    },
-    "48": {
-      "filename": "./BondingCurve.code",
-      "line": 4538
-    },
-    "56": {
-      "filename": "./BondingCurve.code",
-      "line": 4539
-    },
-    "72": {
-      "filename": "./BondingCurve.code",
-      "line": 4540
-    },
-    "88": {
-      "filename": "./BondingCurve.code",
-      "line": 4543
-    },
-    "96": {
-      "filename": "./BondingCurve.code",
-      "line": 4544
-    },
-    "112": {
-      "filename": "./BondingCurve.code",
-      "line": 4545
-    },
-    "128": {
-      "filename": "./BondingCurve.code",
-      "line": 4548
-    }
-  },
   "86d454b391c77e78a52f33059057626474b6e845d422d57ccc9c9e3648aa4a07": {
     "0": {
       "filename": "BondingCurve.sol",
-      "line": 574
+      "line": 575
     },
     "8": {
       "filename": "BondingCurve.sol",
-      "line": 578
+      "line": 579
     },
     "16": {
       "filename": "BondingCurve.sol",
-      "line": 578
+      "line": 579
     },
     "24": {
       "filename": "BondingCurve.sol",
-      "line": 578
+      "line": 579
     },
     "32": {
       "filename": "BondingCurve.sol",
-      "line": 578
+      "line": 579
     },
     "80": {
       "filename": "BondingCurve.sol",
-      "line": 579
+      "line": 580
     },
     "96": {
       "filename": "BondingCurve.sol",
-      "line": 579
+      "line": 580
     },
     "104": {
       "filename": "BondingCurve.sol",
-      "line": 579
+      "line": 580
     },
     "120": {
       "filename": "BondingCurve.sol",
-      "line": 579
+      "line": 580
     },
     "136": {
       "filename": "BondingCurve.sol",
-      "line": 580
+      "line": 581
     },
     "144": {
       "filename": "BondingCurve.sol",
-      "line": 580
+      "line": 581
     },
     "192": {
       "filename": "BondingCurve.sol",
-      "line": 580
+      "line": 581
     },
     "200": {
       "filename": "BondingCurve.sol",
-      "line": 580
+      "line": 581
     },
     "216": {
       "filename": "BondingCurve.sol",
-      "line": 580
+      "line": 581
     },
     "232": {
       "filename": "BondingCurve.sol",
-      "line": 580
+      "line": 581
     },
     "248": {
       "filename": "BondingCurve.sol",
-      "line": 580
+      "line": 581
     },
     "256": {
       "filename": "BondingCurve.sol",
-      "line": 580
+      "line": 581
     },
     "272": {
       "filename": "BondingCurve.sol",
-      "line": 580
+      "line": 581
     },
     "288": {
       "filename": "BondingCurve.sol",
-      "line": 580
+      "line": 581
     },
     "304": {
       "filename": "BondingCurve.sol",
-      "line": 580
+      "line": 581
     },
     "312": {
       "filename": "BondingCurve.sol",
-      "line": 580
+      "line": 581
     },
     "336": {
       "filename": "BondingCurve.sol",
-      "line": 580
+      "line": 581
     },
     "344": {
       "filename": "BondingCurve.sol",
-      "line": 580
+      "line": 581
     },
     "400": {
       "filename": "BondingCurve.sol",
-      "line": 580
+      "line": 581
     },
     "416": {
       "filename": "BondingCurve.sol",
-      "line": 580
+      "line": 581
     },
     "424": {
       "filename": "BondingCurve.sol",
-      "line": 580
+      "line": 581
     },
     "448": {
       "filename": "BondingCurve.sol",
-      "line": 580
+      "line": 581
     },
     "464": {
       "filename": "BondingCurve.sol",
-      "line": 580
+      "line": 581
     },
     "472": {
       "filename": "BondingCurve.sol",
-      "line": 580
+      "line": 581
     },
     "520": {
       "filename": "BondingCurve.sol",
-      "line": 580
+      "line": 581
     },
     "536": {
       "filename": "BondingCurve.sol",
-      "line": 580
+      "line": 581
     },
     "552": {
       "filename": "BondingCurve.sol",
-      "line": 580
+      "line": 581
     },
     "560": {
       "filename": "BondingCurve.sol",
-      "line": 580
+      "line": 581
     },
     "576": {
       "filename": "BondingCurve.sol",
-      "line": 580
+      "line": 581
     },
     "584": {
       "filename": "BondingCurve.sol",
-      "line": 580
+      "line": 581
     },
     "592": {
       "filename": "BondingCurve.sol",
-      "line": 580
+      "line": 581
     },
     "608": {
       "filename": "BondingCurve.sol",
-      "line": 580
+      "line": 581
     },
     "624": {
       "filename": "BondingCurve.sol",
-      "line": 580
+      "line": 581
     },
     "632": {
       "filename": "BondingCurve.sol",
-      "line": 580
+      "line": 581
     },
     "640": {
       "filename": "BondingCurve.sol",
-      "line": 580
+      "line": 581
     },
     "648": {
       "filename": "BondingCurve.sol",
-      "line": 580
+      "line": 581
     },
     "656": {
       "filename": "BondingCurve.sol",
-      "line": 580
+      "line": 581
     },
     "664": {
       "filename": "BondingCurve.sol",
-      "line": 580
+      "line": 581
     }
   },
   "89f1356374dc486b1f35c5875ca727eb099684e34d6139d5c3171a0a5cf778c0": {
@@ -6828,759 +6594,505 @@
   "8e439f787ef01d01d4615ef475f31c81a9847d7ba261012d76abd5ee7f0b2dcd": {
     "0": {
       "filename": "./BondingCurve.code",
-      "line": 4118
+      "line": 4123
     },
     "8": {
       "filename": "./BondingCurve.code",
-      "line": 4119
+      "line": 4124
     },
     "56": {
       "filename": "./BondingCurve.code",
-      "line": 4120
+      "line": 4125
     },
     "64": {
       "filename": "./BondingCurve.code",
-      "line": 4121
+      "line": 4126
     },
     "80": {
       "filename": "./BondingCurve.code",
-      "line": 4147
+      "line": 4152
     },
     "88": {
       "filename": "./BondingCurve.code",
-      "line": 4148
+      "line": 4153
     },
     "136": {
       "filename": "./BondingCurve.code",
-      "line": 4149
+      "line": 4154
     },
     "144": {
       "filename": "./BondingCurve.code",
-      "line": 4150
+      "line": 4155
     },
     "160": {
       "filename": "./BondingCurve.code",
-      "line": 4170
+      "line": 4175
     },
     "168": {
       "filename": "./BondingCurve.code",
-      "line": 4171
+      "line": 4176
     },
     "216": {
       "filename": "./BondingCurve.code",
-      "line": 4172
+      "line": 4177
     },
     "224": {
       "filename": "./BondingCurve.code",
-      "line": 4173
+      "line": 4178
     },
     "240": {
       "filename": "./BondingCurve.code",
-      "line": 4187
+      "line": 4192
     },
     "248": {
       "filename": "./BondingCurve.code",
-      "line": 4188
+      "line": 4193
     },
     "296": {
       "filename": "./BondingCurve.code",
-      "line": 4189
+      "line": 4194
     },
     "304": {
       "filename": "./BondingCurve.code",
-      "line": 4190
+      "line": 4195
     }
   },
   "914c1a4bdae26715162521f01fc5ee65814e8b43b135d1bd2cd9e802199e8071": {
     "0": {
       "filename": "./BondingCurve.code",
-      "line": 3408
+      "line": 3413
     },
     "8": {
       "filename": "./BondingCurve.code",
-      "line": 3409
+      "line": 3414
     },
     "16": {
       "filename": "./BondingCurve.code",
-      "line": 3410
+      "line": 3415
     },
     "32": {
       "filename": "./BondingCurve.code",
-      "line": 3413
+      "line": 3418
     },
     "48": {
       "filename": "./BondingCurve.code",
-      "line": 3414
+      "line": 3419
     },
     "56": {
       "filename": "./BondingCurve.code",
-      "line": 3415
+      "line": 3420
     },
     "72": {
       "filename": "./BondingCurve.code",
-      "line": 3416
+      "line": 3421
     },
     "232": {
       "filename": "./BondingCurve.code",
-      "line": 3417
+      "line": 3422
     },
     "240": {
       "filename": "./BondingCurve.code",
-      "line": 3418
+      "line": 3423
     },
     "248": {
       "filename": "./BondingCurve.code",
-      "line": 3419
+      "line": 3424
     },
     "264": {
       "filename": "./BondingCurve.code",
-      "line": 3420
+      "line": 3425
     },
     "272": {
       "filename": "./BondingCurve.code",
-      "line": 3421
+      "line": 3426
     },
     "280": {
       "filename": "./BondingCurve.code",
-      "line": 3422
+      "line": 3427
     },
     "296": {
       "filename": "./BondingCurve.code",
-      "line": 3424
+      "line": 3429
     },
     "304": {
       "filename": "./BondingCurve.code",
-      "line": 3425
+      "line": 3430
     }
   },
   "953a344076608ec87b3d02bcf0c03de1373580cb102fd185f2d033f4a8b6a3fc": {
     "0": {
       "filename": "BondingCurve.sol",
-      "line": 499
+      "line": 500
     },
     "16": {
       "filename": "BondingCurve.sol",
-      "line": 501
+      "line": 502
     },
     "24": {
       "filename": "BondingCurve.sol",
-      "line": 501
+      "line": 502
     },
     "40": {
       "filename": "BondingCurve.sol",
-      "line": 501
+      "line": 502
     },
     "48": {
       "filename": "BondingCurve.sol",
-      "line": 501
+      "line": 502
     },
     "56": {
       "filename": "BondingCurve.sol",
-      "line": 501
+      "line": 502
     },
     "64": {
       "filename": "BondingCurve.sol",
-      "line": 501
+      "line": 502
     },
     "80": {
       "filename": "BondingCurve.sol",
-      "line": 501
+      "line": 502
     },
     "96": {
       "filename": "BondingCurve.sol",
-      "line": 501
+      "line": 502
     },
     "104": {
       "filename": "BondingCurve.sol",
-      "line": 501
+      "line": 502
     },
     "120": {
       "filename": "BondingCurve.sol",
-      "line": 501
+      "line": 502
     },
     "136": {
       "filename": "BondingCurve.sol",
-      "line": 502
+      "line": 503
     },
     "152": {
       "filename": "BondingCurve.sol",
-      "line": 502
+      "line": 503
     },
     "160": {
       "filename": "BondingCurve.sol",
-      "line": 502
+      "line": 503
     },
     "184": {
       "filename": "BondingCurve.sol",
-      "line": 502
+      "line": 503
     },
     "192": {
       "filename": "BondingCurve.sol",
-      "line": 502
+      "line": 503
     },
     "248": {
       "filename": "BondingCurve.sol",
-      "line": 502
+      "line": 503
     },
     "264": {
       "filename": "BondingCurve.sol",
-      "line": 502
+      "line": 503
     },
     "280": {
       "filename": "BondingCurve.sol",
-      "line": 502
+      "line": 503
     },
     "296": {
       "filename": "BondingCurve.sol",
-      "line": 502
+      "line": 503
     },
     "304": {
       "filename": "BondingCurve.sol",
-      "line": 502
+      "line": 503
     },
     "312": {
       "filename": "BondingCurve.sol",
-      "line": 502
+      "line": 503
     },
     "328": {
       "filename": "./BondingCurve.code",
-      "line": 2646
+      "line": 2651
     },
     "336": {
       "filename": "BondingCurve.sol",
-      "line": 508
+      "line": 509
     },
     "344": {
       "filename": "BondingCurve.sol",
-      "line": 508
+      "line": 509
     },
     "352": {
       "filename": "BondingCurve.sol",
-      "line": 508
+      "line": 509
     },
     "368": {
       "filename": "BondingCurve.sol",
-      "line": 508
+      "line": 509
     },
     "384": {
       "filename": "BondingCurve.sol",
-      "line": 508
+      "line": 509
     },
     "400": {
       "filename": "BondingCurve.sol",
-      "line": 508
+      "line": 509
     },
     "416": {
       "filename": "BondingCurve.sol",
-      "line": 508
+      "line": 509
     },
     "424": {
       "filename": "BondingCurve.sol",
-      "line": 508
+      "line": 509
     },
     "440": {
       "filename": "BondingCurve.sol",
-      "line": 508
+      "line": 509
     },
     "448": {
       "filename": "BondingCurve.sol",
-      "line": 508
+      "line": 509
     },
     "456": {
       "filename": "BondingCurve.sol",
-      "line": 509
+      "line": 510
     },
     "464": {
       "filename": "BondingCurve.sol",
-      "line": 509
+      "line": 510
     },
     "480": {
       "filename": "BondingCurve.sol",
-      "line": 509
+      "line": 510
     },
     "496": {
       "filename": "BondingCurve.sol",
-      "line": 511
+      "line": 512
     },
     "504": {
       "filename": "BondingCurve.sol",
-      "line": 511
+      "line": 512
     },
     "520": {
       "filename": "BondingCurve.sol",
-      "line": 511
+      "line": 512
     },
     "528": {
       "filename": "BondingCurve.sol",
-      "line": 511
+      "line": 512
     },
     "536": {
       "filename": "BondingCurve.sol",
-      "line": 511
+      "line": 512
     },
     "544": {
       "filename": "BondingCurve.sol",
-      "line": 511
+      "line": 512
     },
     "560": {
       "filename": "BondingCurve.sol",
-      "line": 511
+      "line": 512
     },
     "576": {
       "filename": "BondingCurve.sol",
-      "line": 511
+      "line": 512
     },
     "584": {
       "filename": "BondingCurve.sol",
-      "line": 511
+      "line": 512
     },
     "600": {
       "filename": "BondingCurve.sol",
-      "line": 511
+      "line": 512
     },
     "616": {
       "filename": "BondingCurve.sol",
-      "line": 512
+      "line": 513
     },
     "624": {
       "filename": "BondingCurve.sol",
-      "line": 512
+      "line": 513
     },
     "632": {
       "filename": "BondingCurve.sol",
-      "line": 512
+      "line": 513
     },
     "656": {
       "filename": "BondingCurve.sol",
-      "line": 512
+      "line": 513
     },
     "664": {
       "filename": "BondingCurve.sol",
-      "line": 512
+      "line": 513
     },
     "720": {
       "filename": "BondingCurve.sol",
-      "line": 512
+      "line": 513
     },
     "736": {
       "filename": "BondingCurve.sol",
-      "line": 512
+      "line": 513
     },
     "752": {
       "filename": "BondingCurve.sol",
-      "line": 512
+      "line": 513
     },
     "768": {
       "filename": "BondingCurve.sol",
-      "line": 512
+      "line": 513
     },
     "776": {
       "filename": "BondingCurve.sol",
-      "line": 512
+      "line": 513
     },
     "784": {
       "filename": "BondingCurve.sol",
-      "line": 512
+      "line": 513
     },
     "800": {
       "filename": "./BondingCurve.code",
-      "line": 2708
+      "line": 2713
     },
     "808": {
       "filename": "BondingCurve.sol",
-      "line": 515
+      "line": 516
     },
     "816": {
       "filename": "BondingCurve.sol",
-      "line": 515
+      "line": 516
     }
   },
   "96328062d59a9fa5b07c55708574ee16648a7cb40d5b579dcdd3a267461482c2": {
     "0": {
       "filename": "BondingCurve.sol",
-      "line": 527
+      "line": 528
     },
     "8": {
       "filename": "BondingCurve.sol",
-      "line": 527
+      "line": 528
     },
     "24": {
       "filename": "BondingCurve.sol",
-      "line": 527
+      "line": 528
     },
     "32": {
       "filename": "BondingCurve.sol",
-      "line": 527
+      "line": 528
     },
     "56": {
       "filename": "BondingCurve.sol",
-      "line": 528
+      "line": 529
     },
     "72": {
       "filename": "BondingCurve.sol",
-      "line": 528
+      "line": 529
     },
     "80": {
       "filename": "BondingCurve.sol",
-      "line": 528
+      "line": 529
     },
     "88": {
       "filename": "BondingCurve.sol",
-      "line": 528
+      "line": 529
     },
     "112": {
       "filename": "BondingCurve.sol",
-      "line": 528
+      "line": 529
     },
     "128": {
       "filename": "BondingCurve.sol",
-      "line": 528
+      "line": 529
     },
     "152": {
       "filename": "BondingCurve.sol",
-      "line": 528
+      "line": 529
     },
     "160": {
       "filename": "BondingCurve.sol",
-      "line": 528
+      "line": 529
     },
     "328": {
       "filename": "BondingCurve.sol",
-      "line": 528
+      "line": 529
     },
     "344": {
       "filename": "BondingCurve.sol",
-      "line": 528
+      "line": 529
     },
     "360": {
       "filename": "BondingCurve.sol",
-      "line": 528
+      "line": 529
     },
     "368": {
       "filename": "BondingCurve.sol",
-      "line": 528
+      "line": 529
     },
     "416": {
       "filename": "BondingCurve.sol",
-      "line": 528
+      "line": 529
     },
     "424": {
       "filename": "BondingCurve.sol",
-      "line": 528
+      "line": 529
     },
     "440": {
       "filename": "BondingCurve.sol",
-      "line": 528
+      "line": 529
     },
     "448": {
       "filename": "BondingCurve.sol",
-      "line": 528
+      "line": 529
     },
     "456": {
       "filename": "BondingCurve.sol",
-      "line": 528
+      "line": 529
     },
     "464": {
       "filename": "BondingCurve.sol",
-      "line": 528
+      "line": 529
     },
     "472": {
       "filename": "BondingCurve.sol",
-      "line": 528
+      "line": 529
     },
     "480": {
       "filename": "BondingCurve.sol",
-      "line": 528
+      "line": 529
     },
     "488": {
       "filename": "BondingCurve.sol",
-      "line": 528
+      "line": 529
     },
     "504": {
       "filename": "BondingCurve.sol",
-      "line": 533
+      "line": 534
     },
     "520": {
       "filename": "BondingCurve.sol",
-      "line": 533
+      "line": 534
     },
     "680": {
       "filename": "BondingCurve.sol",
-      "line": 533
+      "line": 534
     },
     "688": {
       "filename": "BondingCurve.sol",
-      "line": 533
+      "line": 534
     },
     "696": {
       "filename": "BondingCurve.sol",
-      "line": 533
+      "line": 534
     },
     "712": {
       "filename": "BondingCurve.sol",
-      "line": 533
+      "line": 534
     },
     "720": {
       "filename": "BondingCurve.sol",
-      "line": 533
+      "line": 534
     },
     "728": {
       "filename": "BondingCurve.sol",
-      "line": 533
-    }
-  },
-  "96863e028aa074ea1a02cc9c8166ea700f5cacd5f9a97fe8dea9c15591c74c6f": {
-    "0": {
-      "filename": "BondingCurve.sol",
-      "line": 486
-    },
-    "16": {
-      "filename": "BondingCurve.sol",
-      "line": 487
-    },
-    "24": {
-      "filename": "BondingCurve.sol",
-      "line": 487
-    },
-    "40": {
-      "filename": "BondingCurve.sol",
-      "line": 487
-    },
-    "56": {
-      "filename": "BondingCurve.sol",
-      "line": 487
-    },
-    "72": {
-      "filename": "BondingCurve.sol",
-      "line": 487
-    },
-    "88": {
-      "filename": "BondingCurve.sol",
-      "line": 487
-    },
-    "96": {
-      "filename": "BondingCurve.sol",
-      "line": 487
-    },
-    "112": {
-      "filename": "BondingCurve.sol",
-      "line": 487
-    },
-    "120": {
-      "filename": "BondingCurve.sol",
-      "line": 488
-    },
-    "128": {
-      "filename": "BondingCurve.sol",
-      "line": 488
-    },
-    "136": {
-      "filename": "BondingCurve.sol",
-      "line": 488
-    },
-    "152": {
-      "filename": "BondingCurve.sol",
-      "line": 488
-    },
-    "160": {
-      "filename": "BondingCurve.sol",
-      "line": 488
-    },
-    "168": {
-      "filename": "BondingCurve.sol",
-      "line": 488
-    },
-    "176": {
-      "filename": "BondingCurve.sol",
-      "line": 490
-    },
-    "184": {
-      "filename": "BondingCurve.sol",
-      "line": 490
-    },
-    "200": {
-      "filename": "BondingCurve.sol",
-      "line": 490
-    },
-    "216": {
-      "filename": "BondingCurve.sol",
-      "line": 490
-    },
-    "232": {
-      "filename": "BondingCurve.sol",
-      "line": 490
-    },
-    "248": {
-      "filename": "BondingCurve.sol",
-      "line": 490
-    },
-    "256": {
-      "filename": "BondingCurve.sol",
-      "line": 490
-    },
-    "280": {
-      "filename": "BondingCurve.sol",
-      "line": 490
-    },
-    "288": {
-      "filename": "BondingCurve.sol",
-      "line": 491
-    },
-    "296": {
-      "filename": "BondingCurve.sol",
-      "line": 491
-    },
-    "312": {
-      "filename": "BondingCurve.sol",
-      "line": 491
-    },
-    "328": {
-      "filename": "BondingCurve.sol",
-      "line": 491
-    },
-    "344": {
-      "filename": "BondingCurve.sol",
-      "line": 491
-    },
-    "360": {
-      "filename": "BondingCurve.sol",
-      "line": 491
-    },
-    "368": {
-      "filename": "BondingCurve.sol",
-      "line": 491
-    },
-    "392": {
-      "filename": "BondingCurve.sol",
-      "line": 491
-    },
-    "400": {
-      "filename": "BondingCurve.sol",
-      "line": 493
-    },
-    "408": {
-      "filename": "BondingCurve.sol",
-      "line": 493
-    },
-    "424": {
-      "filename": "BondingCurve.sol",
-      "line": 493
-    },
-    "440": {
-      "filename": "BondingCurve.sol",
-      "line": 495
-    },
-    "448": {
-      "filename": "BondingCurve.sol",
-      "line": 495
-    },
-    "464": {
-      "filename": "BondingCurve.sol",
-      "line": 495
-    },
-    "472": {
-      "filename": "BondingCurve.sol",
-      "line": 495
-    },
-    "480": {
-      "filename": "BondingCurve.sol",
-      "line": 495
-    },
-    "488": {
-      "filename": "BondingCurve.sol",
-      "line": 495
-    },
-    "504": {
-      "filename": "BondingCurve.sol",
-      "line": 495
-    },
-    "520": {
-      "filename": "BondingCurve.sol",
-      "line": 495
-    },
-    "528": {
-      "filename": "BondingCurve.sol",
-      "line": 495
-    },
-    "544": {
-      "filename": "BondingCurve.sol",
-      "line": 495
-    },
-    "560": {
-      "filename": "BondingCurve.sol",
-      "line": 496
-    },
-    "576": {
-      "filename": "BondingCurve.sol",
-      "line": 496
-    },
-    "584": {
-      "filename": "BondingCurve.sol",
-      "line": 496
-    },
-    "608": {
-      "filename": "BondingCurve.sol",
-      "line": 496
-    },
-    "616": {
-      "filename": "BondingCurve.sol",
-      "line": 496
-    },
-    "672": {
-      "filename": "BondingCurve.sol",
-      "line": 496
-    },
-    "688": {
-      "filename": "BondingCurve.sol",
-      "line": 496
-    },
-    "704": {
-      "filename": "BondingCurve.sol",
-      "line": 496
-    },
-    "720": {
-      "filename": "BondingCurve.sol",
-      "line": 496
-    },
-    "728": {
-      "filename": "BondingCurve.sol",
-      "line": 496
-    },
-    "736": {
-      "filename": "BondingCurve.sol",
-      "line": 496
-    },
-    "752": {
-      "filename": "./BondingCurve.code",
-      "line": 2609
-    },
-    "760": {
-      "filename": "BondingCurve.sol",
-      "line": 499
-    },
-    "768": {
-      "filename": "BondingCurve.sol",
-      "line": 499
-    },
-    "784": {
-      "filename": "BondingCurve.sol",
-      "line": 499
-    },
-    "800": {
-      "filename": "BondingCurve.sol",
-      "line": 499
-    },
-    "808": {
-      "filename": "BondingCurve.sol",
-      "line": 499
-    },
-    "824": {
-      "filename": "BondingCurve.sol",
-      "line": 499
-    },
-    "832": {
-      "filename": "BondingCurve.sol",
-      "line": 499
+      "line": 534
     }
   },
   "96a296d224f285c67bee93c30f8a309157f0daa35dc5b87e410b78630a09cfc7": {},
@@ -7599,7 +7111,7 @@
     },
     "48": {
       "filename": "BondingCurve.sol",
-      "line": 707
+      "line": 708
     },
     "56": {
       "filename": "./BondingCurve.code",
@@ -7703,43 +7215,43 @@
   "9928209a17c124581cbd95e2981a092ef4b2706fc4af6ab0fc35a739cb38757f": {
     "0": {
       "filename": "./BondingCurve.code",
-      "line": 3345
+      "line": 3350
     },
     "8": {
       "filename": "./BondingCurve.code",
-      "line": 3346
+      "line": 3351
     },
     "24": {
       "filename": "./BondingCurve.code",
-      "line": 3347
+      "line": 3352
     },
     "48": {
       "filename": "./BondingCurve.code",
-      "line": 3348
+      "line": 3353
     },
     "64": {
       "filename": "./BondingCurve.code",
-      "line": 3349
+      "line": 3354
     },
     "72": {
       "filename": "./BondingCurve.code",
-      "line": 3350
+      "line": 3355
     },
     "88": {
       "filename": "BondingCurve.sol",
-      "line": 668
+      "line": 669
     },
     "96": {
       "filename": "./BondingCurve.code",
-      "line": 3356
+      "line": 3361
     },
     "112": {
       "filename": "./BondingCurve.code",
-      "line": 3359
+      "line": 3364
     },
     "128": {
       "filename": "./BondingCurve.code",
-      "line": 3362
+      "line": 3367
     }
   },
   "9a6e47601eaab1f71e27d56a44bc79f06aab9a0f86f147d87367b6642988415f": {},
@@ -7896,191 +7408,257 @@
   "9ae11233a9a281a80dadb46fefc54e88566085e4cce86d6d75949ce1c0bd17fd": {
     "0": {
       "filename": "BondingCurve.sol",
-      "line": 527
+      "line": 528
     }
   },
   "9b324e19a1873b0fe705e2f159ff605799cd601cb593a5771cd1986f89eb2f58": {
     "0": {
       "filename": "./BondingCurve.code",
-      "line": 3450
+      "line": 3455
     },
     "8": {
       "filename": "./BondingCurve.code",
-      "line": 3451
+      "line": 3456
     },
     "16": {
       "filename": "./BondingCurve.code",
-      "line": 3452
+      "line": 3457
     },
     "32": {
       "filename": "./BondingCurve.code",
-      "line": 3455
+      "line": 3460
     },
     "48": {
       "filename": "./BondingCurve.code",
-      "line": 3456
+      "line": 3461
     },
     "56": {
       "filename": "./BondingCurve.code",
-      "line": 3457
+      "line": 3462
     },
     "72": {
       "filename": "./BondingCurve.code",
-      "line": 3458
+      "line": 3463
     },
     "232": {
       "filename": "./BondingCurve.code",
-      "line": 3459
+      "line": 3464
     },
     "240": {
       "filename": "./BondingCurve.code",
-      "line": 3460
+      "line": 3465
     },
     "248": {
       "filename": "./BondingCurve.code",
-      "line": 3461
+      "line": 3466
     },
     "264": {
       "filename": "./BondingCurve.code",
-      "line": 3462
+      "line": 3467
     },
     "272": {
       "filename": "./BondingCurve.code",
-      "line": 3463
+      "line": 3468
     },
     "280": {
       "filename": "./BondingCurve.code",
-      "line": 3464
+      "line": 3469
     },
     "296": {
       "filename": "./BondingCurve.code",
-      "line": 3466
+      "line": 3471
     },
     "304": {
       "filename": "./BondingCurve.code",
-      "line": 3467
+      "line": 3472
     }
   },
   "9c65c788482f8622ec5c867edb69075892c5cfdb975abf66b5af0bd4bf792dde": {
     "0": {
       "filename": "BondingCurve.sol",
-      "line": 521
+      "line": 522
     }
   },
   "9d01973b8a14b9f23b97d23a313ef524a2e9d84b920692ccacb9b060bc301448": {
     "0": {
       "filename": "./BondingCurve.code",
-      "line": 4048
+      "line": 4053
     },
     "8": {
       "filename": "./BondingCurve.code",
-      "line": 4049
+      "line": 4054
     },
     "56": {
       "filename": "./BondingCurve.code",
-      "line": 4050
+      "line": 4055
     },
     "64": {
       "filename": "./BondingCurve.code",
-      "line": 4051
+      "line": 4056
     },
     "80": {
       "filename": "./BondingCurve.code",
-      "line": 4054
+      "line": 4059
     },
     "88": {
       "filename": "./BondingCurve.code",
-      "line": 4055
+      "line": 4060
     },
     "136": {
       "filename": "./BondingCurve.code",
-      "line": 4056
+      "line": 4061
     },
     "144": {
       "filename": "./BondingCurve.code",
-      "line": 4057
+      "line": 4062
     },
     "160": {
       "filename": "./BondingCurve.code",
-      "line": 4060
+      "line": 4065
     },
     "168": {
       "filename": "./BondingCurve.code",
-      "line": 4061
+      "line": 4066
     },
     "216": {
       "filename": "./BondingCurve.code",
-      "line": 4062
+      "line": 4067
     },
     "224": {
       "filename": "./BondingCurve.code",
-      "line": 4063
+      "line": 4068
     },
     "240": {
       "filename": "./BondingCurve.code",
-      "line": 4066
+      "line": 4071
     },
     "248": {
       "filename": "./BondingCurve.code",
-      "line": 4067
+      "line": 4072
     },
     "296": {
       "filename": "./BondingCurve.code",
-      "line": 4068
+      "line": 4073
     },
     "304": {
       "filename": "./BondingCurve.code",
-      "line": 4069
+      "line": 4074
     }
   },
   "9e5255da456f70b00780e6fefac46cf4a91a2b7820afbbc17336918ac3abf12f": {
     "0": {
       "filename": "./BondingCurve.code",
-      "line": 4006
+      "line": 4011
     },
     "8": {
       "filename": "./BondingCurve.code",
-      "line": 4007
+      "line": 4012
     },
     "56": {
       "filename": "./BondingCurve.code",
-      "line": 4008
+      "line": 4013
     },
     "64": {
       "filename": "./BondingCurve.code",
-      "line": 4009
+      "line": 4014
     },
     "80": {
       "filename": "./BondingCurve.code",
-      "line": 4012
+      "line": 4017
     },
     "88": {
       "filename": "./BondingCurve.code",
-      "line": 4013
+      "line": 4018
     },
     "136": {
       "filename": "./BondingCurve.code",
-      "line": 4014
+      "line": 4019
     },
     "144": {
       "filename": "./BondingCurve.code",
-      "line": 4015
+      "line": 4020
     },
     "160": {
       "filename": "./BondingCurve.code",
-      "line": 4018
+      "line": 4023
     },
     "168": {
       "filename": "./BondingCurve.code",
-      "line": 4019
+      "line": 4024
     },
     "216": {
       "filename": "./BondingCurve.code",
-      "line": 4020
+      "line": 4025
     },
     "224": {
       "filename": "./BondingCurve.code",
-      "line": 4021
+      "line": 4026
+    }
+  },
+  "a0116fc4cc58df4325777cab61b1cd5093e229ab6db4f074f9173bbe88b3ca43": {
+    "0": {
+      "filename": "./BondingCurve.code",
+      "line": 4203
+    },
+    "8": {
+      "filename": "./BondingCurve.code",
+      "line": 4204
+    },
+    "56": {
+      "filename": "./BondingCurve.code",
+      "line": 4205
+    },
+    "64": {
+      "filename": "./BondingCurve.code",
+      "line": 4206
+    },
+    "80": {
+      "filename": "./BondingCurve.code",
+      "line": 4226
+    },
+    "88": {
+      "filename": "./BondingCurve.code",
+      "line": 4227
+    },
+    "136": {
+      "filename": "./BondingCurve.code",
+      "line": 4228
+    },
+    "144": {
+      "filename": "./BondingCurve.code",
+      "line": 4229
+    },
+    "160": {
+      "filename": "./BondingCurve.code",
+      "line": 4232
+    },
+    "168": {
+      "filename": "./BondingCurve.code",
+      "line": 4233
+    },
+    "216": {
+      "filename": "./BondingCurve.code",
+      "line": 4234
+    },
+    "224": {
+      "filename": "./BondingCurve.code",
+      "line": 4235
+    },
+    "240": {
+      "filename": "./BondingCurve.code",
+      "line": 4238
+    },
+    "248": {
+      "filename": "./BondingCurve.code",
+      "line": 4239
+    },
+    "296": {
+      "filename": "./BondingCurve.code",
+      "line": 4240
+    },
+    "304": {
+      "filename": "./BondingCurve.code",
+      "line": 4241
     }
   },
   "a17d86043e9b16072964649896b502f5f31d47d7f0df4e355552ed1d350e61c8": {
@@ -8287,88 +7865,136 @@
       "line": 333
     }
   },
-  "a3e2e3c289c67d6e7f5b7998588d8f7bf3aa2dc161b8fedc5bb8c9c43662e0c0": {
-    "0": {
-      "filename": "./BondingCurve.code",
-      "line": 4519
-    },
-    "1": {
-      "filename": "./BondingCurve.code",
-      "line": 4520
-    },
-    "2": {
-      "filename": "./BondingCurve.code",
-      "line": 4521
-    },
-    "3": {
-      "filename": "./BondingCurve.code",
-      "line": 4550
-    },
-    "4": {
-      "filename": "./BondingCurve.code",
-      "line": 4554
-    }
-  },
   "a68290d890f73879700a1788a52246c3a85f2c168cdc5efba91eb963a875bd9c": {
     "0": {
       "filename": "./BondingCurve.code",
-      "line": 3835
+      "line": 3840
     },
     "8": {
       "filename": "./BondingCurve.code",
-      "line": 3836
+      "line": 3841
     },
     "24": {
       "filename": "./BondingCurve.code",
-      "line": 3837
+      "line": 3842
     },
     "40": {
       "filename": "./BondingCurve.code",
-      "line": 3840
+      "line": 3845
     },
     "48": {
       "filename": "./BondingCurve.code",
-      "line": 3841
+      "line": 3846
     },
     "88": {
       "filename": "./BondingCurve.code",
-      "line": 3842
+      "line": 3847
     },
     "96": {
       "filename": "./BondingCurve.code",
-      "line": 3843
+      "line": 3848
     },
     "112": {
       "filename": "./BondingCurve.code",
-      "line": 3846
+      "line": 3851
     },
     "120": {
       "filename": "./BondingCurve.code",
-      "line": 3847
+      "line": 3852
     },
     "168": {
       "filename": "./BondingCurve.code",
-      "line": 3848
+      "line": 3853
     },
     "176": {
       "filename": "./BondingCurve.code",
-      "line": 3849
+      "line": 3854
     },
     "192": {
       "filename": "./BondingCurve.code",
-      "line": 3852
+      "line": 3857
     },
     "200": {
       "filename": "./BondingCurve.code",
-      "line": 3853
+      "line": 3858
     },
     "248": {
       "filename": "./BondingCurve.code",
-      "line": 3854
+      "line": 3859
     },
     "256": {
       "filename": "./BondingCurve.code",
-      "line": 3855
+      "line": 3860
+    }
+  },
+  "a79c1a42c07c67135f27b3cae5faaa1e00c90ce0e54f3198a7bb1002ca3a0320": {
+    "0": {
+      "filename": "./BondingCurve.code",
+      "line": 2723
+    },
+    "8": {
+      "filename": "./BondingCurve.code",
+      "line": 2724
+    },
+    "24": {
+      "filename": "./BondingCurve.code",
+      "line": 2725
+    },
+    "48": {
+      "filename": "./BondingCurve.code",
+      "line": 2726
+    },
+    "64": {
+      "filename": "./BondingCurve.code",
+      "line": 2727
+    },
+    "72": {
+      "filename": "./BondingCurve.code",
+      "line": 2728
+    },
+    "88": {
+      "filename": "BondingCurve.sol",
+      "line": 485
+    },
+    "96": {
+      "filename": "BondingCurve.sol",
+      "line": 485
+    },
+    "104": {
+      "filename": "BondingCurve.sol",
+      "line": 485
+    },
+    "112": {
+      "filename": "BondingCurve.sol",
+      "line": 485
+    },
+    "120": {
+      "filename": "BondingCurve.sol",
+      "line": 485
+    },
+    "128": {
+      "filename": "BondingCurve.sol",
+      "line": 485
+    },
+    "136": {
+      "filename": "BondingCurve.sol",
+      "line": 485
+    },
+    "152": {
+      "filename": "BondingCurve.sol",
+      "line": 485
+    },
+    "160": {
+      "filename": "./BondingCurve.code",
+      "line": 2742
+    },
+    "176": {
+      "filename": "./BondingCurve.code",
+      "line": 2745
+    },
+    "192": {
+      "filename": "./BondingCurve.code",
+      "line": 2748
     }
   },
   "a826007ea2a061f2bbcb5f140bc645e2c56136278141cd052979a622e76ffb42": {
@@ -8464,7 +8090,7 @@
   "a8706c6358fecfba3c31d885dcf337fed67609c22ebf972396a9aca8faf7a108": {
     "0": {
       "filename": "./BondingCurve.code",
-      "line": 4530
+      "line": 4535
     }
   },
   "ad0968c4f62e37581f199fba58aa7febe41650160e01cd21f058689429810ea1": {
@@ -8627,7 +8253,29 @@
   "af099fdf26db768d9fb516cfd1930e47c18f964fecc161433416d4bbfb157f34": {
     "0": {
       "filename": "BondingCurve.sol",
-      "line": 675
+      "line": 676
+    }
+  },
+  "b1d99395bf3cca6b24773be2ed55dfcc09ad49e54eccda19c29083fbb9cb97cb": {
+    "0": {
+      "filename": "./BondingCurve.code",
+      "line": 4524
+    },
+    "1": {
+      "filename": "./BondingCurve.code",
+      "line": 4525
+    },
+    "2": {
+      "filename": "./BondingCurve.code",
+      "line": 4526
+    },
+    "3": {
+      "filename": "./BondingCurve.code",
+      "line": 4555
+    },
+    "4": {
+      "filename": "./BondingCurve.code",
+      "line": 4559
     }
   },
   "b31e8dc04db3dba73de99c3684d74c81f0fe9c75c9841ddcb0890a13e1c82c09": {
@@ -8909,7 +8557,7 @@
     },
     "592": {
       "filename": "./BondingCurve.code",
-      "line": 3036
+      "line": 3041
     },
     "608": {
       "filename": "BondingCurve.sol",
@@ -9192,166 +8840,162 @@
       "line": 2181
     }
   },
+  "b81173bbe4db0b406e6f140bbfc42fe7ef76ba7b11d4dcffd46c9c09e022b4a0": {
+    "0": {
+      "filename": "./BondingCurve.code",
+      "line": 3828
+    },
+    "8": {
+      "filename": "./BondingCurve.code",
+      "line": 3829
+    },
+    "56": {
+      "filename": "./BondingCurve.code",
+      "line": 3830
+    },
+    "64": {
+      "filename": "./BondingCurve.code",
+      "line": 3831
+    },
+    "80": {
+      "filename": "./BondingCurve.code",
+      "line": 3999
+    },
+    "88": {
+      "filename": "./BondingCurve.code",
+      "line": 4000
+    },
+    "136": {
+      "filename": "./BondingCurve.code",
+      "line": 4001
+    },
+    "144": {
+      "filename": "./BondingCurve.code",
+      "line": 4002
+    },
+    "160": {
+      "filename": "./BondingCurve.code",
+      "line": 4119
+    },
+    "168": {
+      "filename": "./BondingCurve.code",
+      "line": 4120
+    },
+    "216": {
+      "filename": "./BondingCurve.code",
+      "line": 4121
+    },
+    "224": {
+      "filename": "./BondingCurve.code",
+      "line": 4122
+    },
+    "240": {
+      "filename": "./BondingCurve.code",
+      "line": 4199
+    },
+    "248": {
+      "filename": "./BondingCurve.code",
+      "line": 4200
+    },
+    "296": {
+      "filename": "./BondingCurve.code",
+      "line": 4201
+    },
+    "304": {
+      "filename": "./BondingCurve.code",
+      "line": 4202
+    }
+  },
   "b85d7b5ee51cce02a0e084f339af195a3f7cc792e7920b5020f63f574bb5e15f": {
     "0": {
       "filename": "BondingCurve.sol",
       "line": 134
     }
   },
-  "b9b1c6eeb810dae909fe6173ee365d886fce32e9edf9f4484cd28f9fa215f70b": {
-    "0": {
-      "filename": "./BondingCurve.code",
-      "line": 2718
-    },
-    "8": {
-      "filename": "./BondingCurve.code",
-      "line": 2719
-    },
-    "24": {
-      "filename": "./BondingCurve.code",
-      "line": 2720
-    },
-    "48": {
-      "filename": "./BondingCurve.code",
-      "line": 2721
-    },
-    "64": {
-      "filename": "./BondingCurve.code",
-      "line": 2722
-    },
-    "72": {
-      "filename": "./BondingCurve.code",
-      "line": 2723
-    },
-    "88": {
-      "filename": "BondingCurve.sol",
-      "line": 485
-    },
-    "96": {
-      "filename": "BondingCurve.sol",
-      "line": 485
-    },
-    "104": {
-      "filename": "BondingCurve.sol",
-      "line": 485
-    },
-    "112": {
-      "filename": "BondingCurve.sol",
-      "line": 485
-    },
-    "120": {
-      "filename": "BondingCurve.sol",
-      "line": 485
-    },
-    "128": {
-      "filename": "BondingCurve.sol",
-      "line": 485
-    },
-    "136": {
-      "filename": "BondingCurve.sol",
-      "line": 485
-    },
-    "152": {
-      "filename": "BondingCurve.sol",
-      "line": 485
-    },
-    "160": {
-      "filename": "./BondingCurve.code",
-      "line": 2737
-    },
-    "176": {
-      "filename": "./BondingCurve.code",
-      "line": 2740
-    },
-    "192": {
-      "filename": "./BondingCurve.code",
-      "line": 2743
-    }
-  },
   "ba43bce83f9942d6b33dc896a165bba44bdba46627f88429521d07a2b1016776": {
     "0": {
       "filename": "BondingCurve.sol",
-      "line": 685
+      "line": 686
     },
     "8": {
       "filename": "BondingCurve.sol",
-      "line": 685
+      "line": 686
     },
     "24": {
       "filename": "BondingCurve.sol",
-      "line": 685
+      "line": 686
     },
     "40": {
       "filename": "BondingCurve.sol",
-      "line": 685
+      "line": 686
     },
     "56": {
       "filename": "BondingCurve.sol",
-      "line": 685
+      "line": 686
     },
     "80": {
       "filename": "BondingCurve.sol",
-      "line": 686
+      "line": 687
     },
     "88": {
       "filename": "BondingCurve.sol",
-      "line": 686
+      "line": 687
     },
     "96": {
       "filename": "BondingCurve.sol",
-      "line": 686
+      "line": 687
     },
     "104": {
       "filename": "BondingCurve.sol",
-      "line": 686
+      "line": 687
     },
     "120": {
       "filename": "BondingCurve.sol",
-      "line": 686
+      "line": 687
     },
     "128": {
       "filename": "BondingCurve.sol",
-      "line": 686
+      "line": 687
     },
     "152": {
       "filename": "BondingCurve.sol",
-      "line": 688
+      "line": 689
     },
     "160": {
       "filename": "BondingCurve.sol",
-      "line": 688
+      "line": 689
     },
     "176": {
       "filename": "BondingCurve.sol",
-      "line": 688
+      "line": 689
     },
     "192": {
       "filename": "BondingCurve.sol",
-      "line": 688
+      "line": 689
     },
     "208": {
       "filename": "BondingCurve.sol",
-      "line": 688
+      "line": 689
     },
     "224": {
       "filename": "BondingCurve.sol",
-      "line": 688
+      "line": 689
     },
     "240": {
       "filename": "BondingCurve.sol",
-      "line": 688
+      "line": 689
     },
     "248": {
       "filename": "BondingCurve.sol",
-      "line": 688
+      "line": 689
     },
     "264": {
       "filename": "BondingCurve.sol",
-      "line": 688
+      "line": 689
     },
     "272": {
       "filename": "BondingCurve.sol",
-      "line": 688
+      "line": 689
     }
   },
   "bd5d9086e4d9334c9041c0520672a57c83f575007c3a50bd6c12d184de7f0e9f": {
@@ -9415,7 +9059,7 @@
   "bf3d8d6a0202f56df5a4fdca0268591c405c9b1468bc3c42f454ac0d64ad2b4b": {
     "0": {
       "filename": "BondingCurve.sol",
-      "line": 686
+      "line": 687
     }
   },
   "c22df6b57c6bfead64384612c2925846a75825a41d0fe8efee85729885104355": {
@@ -9583,27 +9227,27 @@
   "c412117dcbd5214b98b29f62f0f4b642261e687ce3043bf3dc02f59f8b789ead": {
     "0": {
       "filename": "./BondingCurve.code",
-      "line": 3695
+      "line": 3700
     },
     "8": {
       "filename": "./BondingCurve.code",
-      "line": 3696
+      "line": 3701
     },
     "24": {
       "filename": "./BondingCurve.code",
-      "line": 3697
+      "line": 3702
     },
     "48": {
       "filename": "./BondingCurve.code",
-      "line": 3698
+      "line": 3703
     },
     "64": {
       "filename": "./BondingCurve.code",
-      "line": 3699
+      "line": 3704
     },
     "72": {
       "filename": "./BondingCurve.code",
-      "line": 3700
+      "line": 3705
     },
     "88": {
       "filename": "BondingCurve.sol",
@@ -9679,15 +9323,15 @@
     },
     "272": {
       "filename": "./BondingCurve.code",
-      "line": 3725
+      "line": 3730
     },
     "288": {
       "filename": "./BondingCurve.code",
-      "line": 3728
+      "line": 3733
     },
     "304": {
       "filename": "./BondingCurve.code",
-      "line": 3731
+      "line": 3736
     }
   },
   "c46ead7fa19aaa4e4687349485b428bf24c8965118ae179e9035e6debc720264": {
@@ -9699,51 +9343,51 @@
   "c63b8778da5418d8aaa1dedcff34dd29591f3b526136d01937c86791e6d5780e": {
     "0": {
       "filename": "./BondingCurve.code",
-      "line": 3863
+      "line": 3868
     },
     "8": {
       "filename": "./BondingCurve.code",
-      "line": 3864
+      "line": 3869
     },
     "56": {
       "filename": "./BondingCurve.code",
-      "line": 3865
+      "line": 3870
     },
     "64": {
       "filename": "./BondingCurve.code",
-      "line": 3866
+      "line": 3871
     },
     "80": {
       "filename": "./BondingCurve.code",
-      "line": 3869
+      "line": 3874
     },
     "88": {
       "filename": "./BondingCurve.code",
-      "line": 3870
+      "line": 3875
     },
     "136": {
       "filename": "./BondingCurve.code",
-      "line": 3871
+      "line": 3876
     },
     "144": {
       "filename": "./BondingCurve.code",
-      "line": 3872
+      "line": 3877
     },
     "160": {
       "filename": "./BondingCurve.code",
-      "line": 3875
+      "line": 3880
     },
     "168": {
       "filename": "./BondingCurve.code",
-      "line": 3876
+      "line": 3881
     },
     "216": {
       "filename": "./BondingCurve.code",
-      "line": 3877
+      "line": 3882
     },
     "224": {
       "filename": "./BondingCurve.code",
-      "line": 3878
+      "line": 3883
     }
   },
   "c6e53d775cf663a31e2d2f437d83a979f2ea49bd2d32905ef56d28b6b9c8be26": {
@@ -9913,7 +9557,7 @@
   "cbc4c29499643a15af6aca1d0f91a9c9a43b4d8e8c8faa6bf448193e777fc495": {
     "0": {
       "filename": "BondingCurve.sol",
-      "line": 537
+      "line": 538
     }
   },
   "ccfd444eca3ce98b1c78a470f40425895539b6e862362a069f6ce250aaaf43f9": {
@@ -10065,443 +9709,443 @@
   "d479aa50595ea31c11b6a0ce24699d6ca7a66f5b9444b5aaad26839ad7d86e71": {
     "0": {
       "filename": "BondingCurve.sol",
-      "line": 562
+      "line": 563
     }
   },
   "d5261a47ce785bc3a854b46551d338139884905792822e1108c2d11e2fa679c8": {
     "0": {
       "filename": "./BondingCurve.code",
-      "line": 3974
+      "line": 3979
     },
     "8": {
       "filename": "./BondingCurve.code",
-      "line": 3975
+      "line": 3980
     },
     "56": {
       "filename": "./BondingCurve.code",
-      "line": 3976
+      "line": 3981
     },
     "64": {
       "filename": "./BondingCurve.code",
-      "line": 3977
+      "line": 3982
     },
     "80": {
       "filename": "./BondingCurve.code",
-      "line": 3980
+      "line": 3985
     },
     "88": {
       "filename": "./BondingCurve.code",
-      "line": 3981
+      "line": 3986
     },
     "136": {
       "filename": "./BondingCurve.code",
-      "line": 3982
+      "line": 3987
     },
     "144": {
       "filename": "./BondingCurve.code",
-      "line": 3983
+      "line": 3988
     },
     "160": {
       "filename": "./BondingCurve.code",
-      "line": 3986
+      "line": 3991
     },
     "168": {
       "filename": "./BondingCurve.code",
-      "line": 3987
+      "line": 3992
     },
     "216": {
       "filename": "./BondingCurve.code",
-      "line": 3988
+      "line": 3993
     },
     "224": {
       "filename": "./BondingCurve.code",
-      "line": 3989
+      "line": 3994
     }
   },
   "d641465d72b05490b4c6e69be33649fa4116c3e3a4160237f5571c8e3d4c483b": {
     "0": {
       "filename": "BondingCurve.sol",
-      "line": 520
+      "line": 521
     },
     "16": {
       "filename": "BondingCurve.sol",
-      "line": 520
+      "line": 521
     },
     "32": {
       "filename": "BondingCurve.sol",
-      "line": 521
+      "line": 522
     },
     "40": {
       "filename": "BondingCurve.sol",
-      "line": 521
+      "line": 522
     },
     "48": {
       "filename": "BondingCurve.sol",
-      "line": 521
+      "line": 522
     },
     "64": {
       "filename": "BondingCurve.sol",
-      "line": 521
+      "line": 522
     },
     "80": {
       "filename": "BondingCurve.sol",
-      "line": 521
+      "line": 522
     },
     "88": {
       "filename": "BondingCurve.sol",
-      "line": 521
+      "line": 522
     },
     "104": {
       "filename": "BondingCurve.sol",
-      "line": 521
+      "line": 522
     },
     "120": {
       "filename": "BondingCurve.sol",
-      "line": 521
+      "line": 522
     },
     "128": {
       "filename": "BondingCurve.sol",
-      "line": 521
+      "line": 522
     },
     "152": {
       "filename": "BondingCurve.sol",
-      "line": 524
+      "line": 525
     },
     "168": {
       "filename": "BondingCurve.sol",
-      "line": 524
+      "line": 525
     },
     "184": {
       "filename": "BondingCurve.sol",
-      "line": 524
+      "line": 525
     },
     "192": {
       "filename": "BondingCurve.sol",
-      "line": 524
+      "line": 525
     },
     "208": {
       "filename": "BondingCurve.sol",
-      "line": 525
+      "line": 526
     },
     "216": {
       "filename": "BondingCurve.sol",
-      "line": 525
+      "line": 526
     },
     "232": {
       "filename": "BondingCurve.sol",
-      "line": 525
+      "line": 526
     },
     "248": {
       "filename": "BondingCurve.sol",
-      "line": 525
+      "line": 526
     },
     "256": {
       "filename": "BondingCurve.sol",
-      "line": 525
+      "line": 526
     },
     "264": {
       "filename": "BondingCurve.sol",
-      "line": 525
+      "line": 526
     },
     "272": {
       "filename": "BondingCurve.sol",
-      "line": 525
+      "line": 526
     },
     "280": {
       "filename": "BondingCurve.sol",
-      "line": 525
+      "line": 526
     },
     "296": {
       "filename": "BondingCurve.sol",
-      "line": 525
+      "line": 526
     },
     "312": {
       "filename": "BondingCurve.sol",
-      "line": 525
+      "line": 526
     },
     "328": {
       "filename": "BondingCurve.sol",
-      "line": 525
+      "line": 526
     },
     "336": {
       "filename": "BondingCurve.sol",
-      "line": 525
+      "line": 526
     },
     "344": {
       "filename": "BondingCurve.sol",
-      "line": 525
+      "line": 526
     },
     "368": {
       "filename": "BondingCurve.sol",
-      "line": 527
+      "line": 528
     },
     "376": {
       "filename": "BondingCurve.sol",
-      "line": 527
+      "line": 528
     },
     "384": {
       "filename": "BondingCurve.sol",
-      "line": 527
+      "line": 528
     }
   },
   "d6d18433c96a4f845a8505b2d16f1522c78ce16f4ef1f90828d773aabc8c9e2c": {
     "0": {
       "filename": "BondingCurve.sol",
-      "line": 554
+      "line": 555
     },
     "8": {
       "filename": "BondingCurve.sol",
-      "line": 554
+      "line": 555
     },
     "24": {
       "filename": "BondingCurve.sol",
-      "line": 554
+      "line": 555
     },
     "40": {
       "filename": "BondingCurve.sol",
-      "line": 554
+      "line": 555
     },
     "56": {
       "filename": "BondingCurve.sol",
-      "line": 554
+      "line": 555
     },
     "80": {
       "filename": "BondingCurve.sol",
-      "line": 555
+      "line": 556
     },
     "88": {
       "filename": "BondingCurve.sol",
-      "line": 555
+      "line": 556
     },
     "104": {
       "filename": "BondingCurve.sol",
-      "line": 555
+      "line": 556
     },
     "120": {
       "filename": "BondingCurve.sol",
-      "line": 555
+      "line": 556
     },
     "128": {
       "filename": "BondingCurve.sol",
-      "line": 555
+      "line": 556
     },
     "152": {
       "filename": "BondingCurve.sol",
-      "line": 557
+      "line": 558
     },
     "168": {
       "filename": "BondingCurve.sol",
-      "line": 558
+      "line": 559
     },
     "176": {
       "filename": "BondingCurve.sol",
-      "line": 558
+      "line": 559
     },
     "192": {
       "filename": "BondingCurve.sol",
-      "line": 558
+      "line": 559
     },
     "208": {
       "filename": "BondingCurve.sol",
-      "line": 562
+      "line": 563
     },
     "216": {
       "filename": "BondingCurve.sol",
-      "line": 562
+      "line": 563
     },
     "232": {
       "filename": "BondingCurve.sol",
-      "line": 562
+      "line": 563
     },
     "288": {
       "filename": "BondingCurve.sol",
-      "line": 562
+      "line": 563
     },
     "296": {
       "filename": "BondingCurve.sol",
-      "line": 562
+      "line": 563
     },
     "320": {
       "filename": "BondingCurve.sol",
-      "line": 563
+      "line": 564
     },
     "336": {
       "filename": "BondingCurve.sol",
-      "line": 563
+      "line": 564
     },
     "352": {
       "filename": "BondingCurve.sol",
-      "line": 563
+      "line": 564
     },
     "408": {
       "filename": "BondingCurve.sol",
-      "line": 563
+      "line": 564
     },
     "416": {
       "filename": "BondingCurve.sol",
-      "line": 563
+      "line": 564
     },
     "432": {
       "filename": "BondingCurve.sol",
-      "line": 564
+      "line": 565
     },
     "448": {
       "filename": "BondingCurve.sol",
-      "line": 564
+      "line": 565
     },
     "464": {
       "filename": "BondingCurve.sol",
-      "line": 564
+      "line": 565
     },
     "472": {
       "filename": "BondingCurve.sol",
-      "line": 564
+      "line": 565
     },
     "488": {
       "filename": "BondingCurve.sol",
-      "line": 568
+      "line": 569
     },
     "496": {
       "filename": "BondingCurve.sol",
-      "line": 568
+      "line": 569
     },
     "504": {
       "filename": "BondingCurve.sol",
-      "line": 568
+      "line": 569
     },
     "512": {
       "filename": "BondingCurve.sol",
-      "line": 568
+      "line": 569
     },
     "520": {
       "filename": "BondingCurve.sol",
-      "line": 568
+      "line": 569
     },
     "536": {
       "filename": "BondingCurve.sol",
-      "line": 568
+      "line": 569
     },
     "552": {
       "filename": "BondingCurve.sol",
-      "line": 568
+      "line": 569
     },
     "560": {
       "filename": "BondingCurve.sol",
-      "line": 568
+      "line": 569
     },
     "576": {
       "filename": "BondingCurve.sol",
-      "line": 568
+      "line": 569
     },
     "592": {
       "filename": "BondingCurve.sol",
-      "line": 569
+      "line": 570
     },
     "608": {
       "filename": "BondingCurve.sol",
-      "line": 569
+      "line": 570
     },
     "616": {
       "filename": "BondingCurve.sol",
-      "line": 569
+      "line": 570
     },
     "640": {
       "filename": "BondingCurve.sol",
-      "line": 569
+      "line": 570
     },
     "648": {
       "filename": "BondingCurve.sol",
-      "line": 569
+      "line": 570
     },
     "704": {
       "filename": "BondingCurve.sol",
-      "line": 569
+      "line": 570
     },
     "720": {
       "filename": "BondingCurve.sol",
-      "line": 569
+      "line": 570
     },
     "768": {
       "filename": "BondingCurve.sol",
-      "line": 569
+      "line": 570
     },
     "792": {
       "filename": "BondingCurve.sol",
-      "line": 569
+      "line": 570
     },
     "800": {
       "filename": "BondingCurve.sol",
-      "line": 569
+      "line": 570
     },
     "808": {
       "filename": "BondingCurve.sol",
-      "line": 569
+      "line": 570
     }
   },
   "d70ff566dfd6f3b6388f8d96a69aa5f19f68bde8c6d5b06ea25d8b59b5a2ed25": {
     "0": {
       "filename": "./BondingCurve.code",
-      "line": 3735
+      "line": 3740
     },
     "8": {
       "filename": "./BondingCurve.code",
-      "line": 3736
+      "line": 3741
     },
     "16": {
       "filename": "./BondingCurve.code",
-      "line": 3737
+      "line": 3742
     },
     "32": {
       "filename": "./BondingCurve.code",
-      "line": 3740
+      "line": 3745
     },
     "48": {
       "filename": "./BondingCurve.code",
-      "line": 3741
+      "line": 3746
     },
     "64": {
       "filename": "./BondingCurve.code",
-      "line": 3742
+      "line": 3747
     },
     "72": {
       "filename": "./BondingCurve.code",
-      "line": 3743
+      "line": 3748
     },
     "88": {
       "filename": "./BondingCurve.code",
-      "line": 3744
+      "line": 3749
     },
     "248": {
       "filename": "./BondingCurve.code",
-      "line": 3745
+      "line": 3750
     },
     "256": {
       "filename": "./BondingCurve.code",
-      "line": 3746
+      "line": 3751
     },
     "264": {
       "filename": "./BondingCurve.code",
-      "line": 3747
+      "line": 3752
     },
     "280": {
       "filename": "./BondingCurve.code",
-      "line": 3748
+      "line": 3753
     },
     "288": {
       "filename": "./BondingCurve.code",
-      "line": 3749
+      "line": 3754
     },
     "296": {
       "filename": "./BondingCurve.code",
-      "line": 3750
+      "line": 3755
     },
     "312": {
       "filename": "./BondingCurve.code",
-      "line": 3752
+      "line": 3757
     },
     "320": {
       "filename": "./BondingCurve.code",
-      "line": 3753
+      "line": 3758
     }
   },
   "d7564e09ef73efe8b9c91225772042d75f8a1e92cbea8804e972e6b9b8b736bc": {
@@ -10569,63 +10213,63 @@
   "d76b471119ba2cfa3f7a09356191de278a16c0182f9e41e518c472266c612cfa": {
     "0": {
       "filename": "./BondingCurve.code",
-      "line": 3387
+      "line": 3392
     },
     "8": {
       "filename": "./BondingCurve.code",
-      "line": 3388
+      "line": 3393
     },
     "16": {
       "filename": "./BondingCurve.code",
-      "line": 3389
+      "line": 3394
     },
     "32": {
       "filename": "./BondingCurve.code",
-      "line": 3392
+      "line": 3397
     },
     "48": {
       "filename": "./BondingCurve.code",
-      "line": 3393
+      "line": 3398
     },
     "56": {
       "filename": "./BondingCurve.code",
-      "line": 3394
+      "line": 3399
     },
     "72": {
       "filename": "./BondingCurve.code",
-      "line": 3395
+      "line": 3400
     },
     "232": {
       "filename": "./BondingCurve.code",
-      "line": 3396
+      "line": 3401
     },
     "240": {
       "filename": "./BondingCurve.code",
-      "line": 3397
+      "line": 3402
     },
     "248": {
       "filename": "./BondingCurve.code",
-      "line": 3398
+      "line": 3403
     },
     "264": {
       "filename": "./BondingCurve.code",
-      "line": 3399
+      "line": 3404
     },
     "272": {
       "filename": "./BondingCurve.code",
-      "line": 3400
+      "line": 3405
     },
     "280": {
       "filename": "./BondingCurve.code",
-      "line": 3401
+      "line": 3406
     },
     "296": {
       "filename": "./BondingCurve.code",
-      "line": 3403
+      "line": 3408
     },
     "304": {
       "filename": "./BondingCurve.code",
-      "line": 3404
+      "line": 3409
     }
   },
   "d8efa817d7db372778a59660d7a211150de812869258f8bae117acfe8950d924": {
@@ -11023,63 +10667,63 @@
   "e27f2c6212cb274725f14318ab1771c2439aa2ae0873b485b9224a720a82e0a1": {
     "0": {
       "filename": "./BondingCurve.code",
-      "line": 3657
+      "line": 3662
     },
     "8": {
       "filename": "./BondingCurve.code",
-      "line": 3658
+      "line": 3663
     },
     "16": {
       "filename": "./BondingCurve.code",
-      "line": 3659
+      "line": 3664
     },
     "32": {
       "filename": "./BondingCurve.code",
-      "line": 3662
+      "line": 3667
     },
     "48": {
       "filename": "./BondingCurve.code",
-      "line": 3663
+      "line": 3668
     },
     "56": {
       "filename": "./BondingCurve.code",
-      "line": 3664
+      "line": 3669
     },
     "72": {
       "filename": "./BondingCurve.code",
-      "line": 3665
+      "line": 3670
     },
     "232": {
       "filename": "./BondingCurve.code",
-      "line": 3666
+      "line": 3671
     },
     "240": {
       "filename": "./BondingCurve.code",
-      "line": 3667
+      "line": 3672
     },
     "248": {
       "filename": "./BondingCurve.code",
-      "line": 3668
+      "line": 3673
     },
     "256": {
       "filename": "./BondingCurve.code",
-      "line": 3669
+      "line": 3674
     },
     "264": {
       "filename": "./BondingCurve.code",
-      "line": 3670
+      "line": 3675
     },
     "272": {
       "filename": "./BondingCurve.code",
-      "line": 3671
+      "line": 3676
     },
     "288": {
       "filename": "./BondingCurve.code",
-      "line": 3673
+      "line": 3678
     },
     "296": {
       "filename": "./BondingCurve.code",
-      "line": 3674
+      "line": 3679
     }
   },
   "e2b7aa6e42e546f76ca5953f16358d34955f6ca8e436aa9ff53ae85ed10e1929": {
@@ -11619,7 +11263,7 @@
   "e6b82458d31e4500359703201eb1d923bdeaffc524b0813eb296d767d0642421": {
     "0": {
       "filename": "BondingCurve.sol",
-      "line": 669
+      "line": 670
     }
   },
   "e7b466b0a3ea81985961559fac8675c9701b88f4c5edb2001bbe0f630ed138e1": {
@@ -11699,58 +11343,58 @@
   "e8da797a1a70beecf6d4cc82a851ed5d3b18dbde5cb9482f0fb4b2582a62b02e": {
     "0": {
       "filename": "./BondingCurve.code",
-      "line": 3279
+      "line": 3284
     },
     "8": {
       "filename": "./BondingCurve.code",
-      "line": 3280
+      "line": 3285
     },
     "24": {
       "filename": "./BondingCurve.code",
-      "line": 3281
+      "line": 3286
     },
     "48": {
       "filename": "./BondingCurve.code",
-      "line": 3282
+      "line": 3287
     },
     "64": {
       "filename": "./BondingCurve.code",
-      "line": 3283
+      "line": 3288
     },
     "72": {
       "filename": "./BondingCurve.code",
-      "line": 3284
+      "line": 3289
     },
     "88": {
       "filename": "BondingCurve.sol",
-      "line": 553
+      "line": 554
     },
     "96": {
       "filename": "./BondingCurve.code",
-      "line": 3290
+      "line": 3295
     },
     "112": {
       "filename": "./BondingCurve.code",
-      "line": 3293
+      "line": 3298
     },
     "128": {
       "filename": "./BondingCurve.code",
-      "line": 3296
+      "line": 3301
     }
   },
   "e9c25781b224a55074bdb03aeffe1ad7f3278aa0086269c5502a94e32d9ec3b6": {},
   "e9e5b08e673e611d8c08a9e26ee041127b0214182769f41d2f307b6369752fb3": {
     "0": {
       "filename": "./BondingCurve.code",
-      "line": 4524
+      "line": 4529
     },
     "24": {
       "filename": "./BondingCurve.code",
-      "line": 4525
+      "line": 4530
     },
     "40": {
       "filename": "./BondingCurve.code",
-      "line": 4526
+      "line": 4531
     }
   },
   "eb7dc0ac541f66995a12a1a4590781a48890b275b51f5bda9481c28eb579928c": {
@@ -11972,261 +11616,363 @@
   "ed37e3db1d5df3d802f5f3f0af19aece698a826b1e891a6d95cf17b60e89b19a": {
     "0": {
       "filename": "BondingCurve.sol",
-      "line": 508
+      "line": 509
     },
     "8": {
       "filename": "BondingCurve.sol",
-      "line": 508
+      "line": 509
     },
     "24": {
       "filename": "BondingCurve.sol",
-      "line": 508
+      "line": 509
     },
     "32": {
       "filename": "BondingCurve.sol",
-      "line": 508
+      "line": 509
     },
     "40": {
       "filename": "BondingCurve.sol",
-      "line": 508
+      "line": 509
     },
     "48": {
       "filename": "BondingCurve.sol",
-      "line": 508
+      "line": 509
     },
     "64": {
       "filename": "BondingCurve.sol",
-      "line": 508
+      "line": 509
     },
     "72": {
       "filename": "BondingCurve.sol",
-      "line": 508
+      "line": 509
     },
     "88": {
       "filename": "BondingCurve.sol",
-      "line": 508
+      "line": 509
     },
     "96": {
       "filename": "BondingCurve.sol",
-      "line": 508
+      "line": 509
     },
     "104": {
       "filename": "BondingCurve.sol",
-      "line": 508
+      "line": 509
     },
     "120": {
       "filename": "BondingCurve.sol",
-      "line": 508
+      "line": 509
     },
     "136": {
       "filename": "BondingCurve.sol",
-      "line": 508
+      "line": 509
     },
     "152": {
       "filename": "BondingCurve.sol",
-      "line": 508
+      "line": 509
     },
     "168": {
       "filename": "BondingCurve.sol",
-      "line": 508
+      "line": 509
     },
     "184": {
       "filename": "BondingCurve.sol",
-      "line": 508
+      "line": 509
     },
     "200": {
       "filename": "BondingCurve.sol",
-      "line": 508
+      "line": 509
+    }
+  },
+  "ee391ba95ea518824c00ff1d5b957fa51200e99373c9904f65180ce52a9d1278": {
+    "0": {
+      "filename": "./BondingCurve.code",
+      "line": 4392
+    },
+    "16": {
+      "filename": "./BondingCurve.code",
+      "line": 4393
+    },
+    "24": {
+      "filename": "./BondingCurve.code",
+      "line": 4394
+    },
+    "48": {
+      "filename": "./BondingCurve.code",
+      "line": 4395
+    },
+    "64": {
+      "filename": "./BondingCurve.code",
+      "line": 4396
+    },
+    "88": {
+      "filename": "./BondingCurve.code",
+      "line": 4397
+    },
+    "104": {
+      "filename": "./BondingCurve.code",
+      "line": 4398
+    },
+    "112": {
+      "filename": "./BondingCurve.code",
+      "line": 4399
+    },
+    "120": {
+      "filename": "./BondingCurve.code",
+      "line": 4400
+    },
+    "136": {
+      "filename": "./BondingCurve.code",
+      "line": 4401
+    },
+    "152": {
+      "filename": "./BondingCurve.code",
+      "line": 4402
+    },
+    "160": {
+      "filename": "./BondingCurve.code",
+      "line": 4403
+    },
+    "176": {
+      "filename": "./BondingCurve.code",
+      "line": 4404
+    },
+    "200": {
+      "filename": "./BondingCurve.code",
+      "line": 4405
+    },
+    "216": {
+      "filename": "./BondingCurve.code",
+      "line": 4411
+    },
+    "224": {
+      "filename": "./BondingCurve.code",
+      "line": 4412
+    },
+    "240": {
+      "filename": "./BondingCurve.code",
+      "line": 4413
+    },
+    "256": {
+      "filename": "./BondingCurve.code",
+      "line": 4417
+    },
+    "264": {
+      "filename": "./BondingCurve.code",
+      "line": 4418
+    },
+    "288": {
+      "filename": "./BondingCurve.code",
+      "line": 4419
+    },
+    "304": {
+      "filename": "./BondingCurve.code",
+      "line": 4420
+    },
+    "312": {
+      "filename": "./BondingCurve.code",
+      "line": 4421
+    },
+    "328": {
+      "filename": "./BondingCurve.code",
+      "line": 4425
+    },
+    "336": {
+      "filename": "./BondingCurve.code",
+      "line": 4426
+    },
+    "352": {
+      "filename": "./BondingCurve.code",
+      "line": 4429
     }
   },
   "eeea5290d9e4ec8830aa171eab540e517303995a32ae9ce96c7bd3171b0045b9": {
     "0": {
       "filename": "BondingCurve.sol",
-      "line": 689
+      "line": 690
     },
     "8": {
       "filename": "BondingCurve.sol",
-      "line": 689
+      "line": 690
     },
     "16": {
       "filename": "BondingCurve.sol",
-      "line": 689
+      "line": 690
     },
     "32": {
       "filename": "BondingCurve.sol",
-      "line": 689
+      "line": 690
     },
     "40": {
       "filename": "BondingCurve.sol",
-      "line": 689
+      "line": 690
     },
     "64": {
       "filename": "BondingCurve.sol",
-      "line": 690
+      "line": 691
     },
     "80": {
       "filename": "BondingCurve.sol",
-      "line": 690
+      "line": 691
     },
     "88": {
       "filename": "BondingCurve.sol",
-      "line": 690
+      "line": 691
     },
     "104": {
       "filename": "BondingCurve.sol",
-      "line": 691
+      "line": 692
     },
     "112": {
       "filename": "BondingCurve.sol",
-      "line": 691
+      "line": 692
     },
     "120": {
       "filename": "BondingCurve.sol",
-      "line": 691
+      "line": 692
     },
     "128": {
       "filename": "BondingCurve.sol",
-      "line": 691
+      "line": 692
     },
     "144": {
       "filename": "BondingCurve.sol",
-      "line": 693
+      "line": 694
     },
     "152": {
       "filename": "BondingCurve.sol",
-      "line": 693
+      "line": 694
     },
     "168": {
       "filename": "BondingCurve.sol",
-      "line": 693
+      "line": 694
     },
     "184": {
       "filename": "BondingCurve.sol",
-      "line": 695
+      "line": 696
     },
     "192": {
       "filename": "BondingCurve.sol",
-      "line": 695
+      "line": 696
     },
     "208": {
       "filename": "BondingCurve.sol",
-      "line": 695
+      "line": 696
     },
     "216": {
       "filename": "BondingCurve.sol",
-      "line": 695
+      "line": 696
     },
     "224": {
       "filename": "BondingCurve.sol",
-      "line": 695
+      "line": 696
     },
     "232": {
       "filename": "BondingCurve.sol",
-      "line": 695
+      "line": 696
     },
     "248": {
       "filename": "BondingCurve.sol",
-      "line": 695
+      "line": 696
     },
     "264": {
       "filename": "BondingCurve.sol",
-      "line": 695
+      "line": 696
     },
     "272": {
       "filename": "BondingCurve.sol",
-      "line": 695
+      "line": 696
     },
     "288": {
       "filename": "BondingCurve.sol",
-      "line": 695
+      "line": 696
     },
     "304": {
       "filename": "BondingCurve.sol",
-      "line": 696
+      "line": 697
     },
     "312": {
       "filename": "BondingCurve.sol",
-      "line": 696
+      "line": 697
     },
     "320": {
       "filename": "BondingCurve.sol",
-      "line": 696
+      "line": 697
     },
     "344": {
       "filename": "BondingCurve.sol",
-      "line": 696
+      "line": 697
     },
     "352": {
       "filename": "BondingCurve.sol",
-      "line": 696
+      "line": 697
     },
     "408": {
       "filename": "BondingCurve.sol",
-      "line": 696
+      "line": 697
     },
     "424": {
       "filename": "BondingCurve.sol",
-      "line": 696
+      "line": 697
     },
     "440": {
       "filename": "BondingCurve.sol",
-      "line": 696
+      "line": 697
     },
     "456": {
       "filename": "BondingCurve.sol",
-      "line": 696
+      "line": 697
     },
     "464": {
       "filename": "BondingCurve.sol",
-      "line": 696
+      "line": 697
     },
     "472": {
       "filename": "BondingCurve.sol",
-      "line": 696
+      "line": 697
     },
     "488": {
       "filename": "BondingCurve.sol",
-      "line": 697
+      "line": 698
     },
     "504": {
       "filename": "BondingCurve.sol",
-      "line": 697
+      "line": 698
     },
     "664": {
       "filename": "BondingCurve.sol",
-      "line": 697
+      "line": 698
     },
     "672": {
       "filename": "BondingCurve.sol",
-      "line": 697
+      "line": 698
     },
     "680": {
       "filename": "BondingCurve.sol",
-      "line": 697
+      "line": 698
     },
     "688": {
       "filename": "BondingCurve.sol",
-      "line": 697
+      "line": 698
     },
     "704": {
       "filename": "BondingCurve.sol",
-      "line": 697
+      "line": 698
     },
     "712": {
       "filename": "BondingCurve.sol",
-      "line": 697
+      "line": 698
     },
     "720": {
       "filename": "BondingCurve.sol",
-      "line": 697
+      "line": 698
     },
     "736": {
       "filename": "./BondingCurve.code",
-      "line": 3579
+      "line": 3584
     },
     "744": {
       "filename": "./BondingCurve.code",
-      "line": 3581
+      "line": 3586
     }
   },
   "f20c003db4db2dbcd6c3f2d23aa307b6ac7f7ae4b7315baa3ae44378388ddbba": {
@@ -12238,11 +11984,11 @@
   "f24e1e7aa04d89aad2945816b6e9b921f2b3892da9ba53e2383c148351b96d0c": {
     "0": {
       "filename": "./BondingCurve.code",
-      "line": 4409
+      "line": 4414
     },
     "16": {
       "filename": "./BondingCurve.code",
-      "line": 4410
+      "line": 4415
     }
   },
   "f2e176d69869d94aad7a9ec6a4c142f31c0392098f0477bb8ed90120279c5cb0": {
@@ -12428,51 +12174,51 @@
   "f54fc57ad63c4015520221933378a1c75606e85d755a6d8aa52c394b6eb8a503": {
     "0": {
       "filename": "./BondingCurve.code",
-      "line": 4202
+      "line": 4207
     },
     "8": {
       "filename": "./BondingCurve.code",
-      "line": 4203
+      "line": 4208
     },
     "56": {
       "filename": "./BondingCurve.code",
-      "line": 4204
+      "line": 4209
     },
     "64": {
       "filename": "./BondingCurve.code",
-      "line": 4205
+      "line": 4210
     },
     "80": {
       "filename": "./BondingCurve.code",
-      "line": 4208
+      "line": 4213
     },
     "88": {
       "filename": "./BondingCurve.code",
-      "line": 4209
+      "line": 4214
     },
     "136": {
       "filename": "./BondingCurve.code",
-      "line": 4210
+      "line": 4215
     },
     "144": {
       "filename": "./BondingCurve.code",
-      "line": 4211
+      "line": 4216
     },
     "160": {
       "filename": "./BondingCurve.code",
-      "line": 4214
+      "line": 4219
     },
     "168": {
       "filename": "./BondingCurve.code",
-      "line": 4215
+      "line": 4220
     },
     "216": {
       "filename": "./BondingCurve.code",
-      "line": 4216
+      "line": 4221
     },
     "224": {
       "filename": "./BondingCurve.code",
-      "line": 4217
+      "line": 4222
     }
   },
   "f7cacfc659512c1758f148972498dc5f7a55c3ca2fed5eccfc8f281b14aa655f": {
@@ -12532,129 +12278,399 @@
   "f7cec790a74f559930d64128d04c822635c9c43be7d1d18ebb57d100dd369346": {
     "0": {
       "filename": "./BondingCurve.code",
-      "line": 4002
+      "line": 4007
     },
     "8": {
       "filename": "./BondingCurve.code",
-      "line": 4003
+      "line": 4008
     },
     "56": {
       "filename": "./BondingCurve.code",
-      "line": 4004
+      "line": 4009
     },
     "64": {
       "filename": "./BondingCurve.code",
-      "line": 4005
+      "line": 4010
     },
     "80": {
       "filename": "./BondingCurve.code",
-      "line": 4025
+      "line": 4030
     },
     "88": {
       "filename": "./BondingCurve.code",
-      "line": 4026
+      "line": 4031
     },
     "136": {
       "filename": "./BondingCurve.code",
-      "line": 4027
+      "line": 4032
     },
     "144": {
       "filename": "./BondingCurve.code",
-      "line": 4028
+      "line": 4033
     },
     "160": {
       "filename": "./BondingCurve.code",
-      "line": 4031
+      "line": 4036
     },
     "168": {
       "filename": "./BondingCurve.code",
-      "line": 4032
+      "line": 4037
     },
     "216": {
       "filename": "./BondingCurve.code",
-      "line": 4033
+      "line": 4038
     },
     "224": {
       "filename": "./BondingCurve.code",
-      "line": 4034
+      "line": 4039
     },
     "240": {
       "filename": "./BondingCurve.code",
-      "line": 4037
+      "line": 4042
     },
     "248": {
       "filename": "./BondingCurve.code",
-      "line": 4038
+      "line": 4043
     },
     "296": {
       "filename": "./BondingCurve.code",
-      "line": 4039
+      "line": 4044
     },
     "304": {
       "filename": "./BondingCurve.code",
-      "line": 4040
+      "line": 4045
+    }
+  },
+  "f8761a0f51f158018bacbaf5aa1664e62df82296a6ae78d5c5c2b7f0095afc0e": {
+    "0": {
+      "filename": "BondingCurve.sol",
+      "line": 486
+    },
+    "16": {
+      "filename": "BondingCurve.sol",
+      "line": 486
+    },
+    "32": {
+      "filename": "BondingCurve.sol",
+      "line": 486
+    },
+    "48": {
+      "filename": "BondingCurve.sol",
+      "line": 486
+    },
+    "72": {
+      "filename": "BondingCurve.sol",
+      "line": 487
+    },
+    "88": {
+      "filename": "BondingCurve.sol",
+      "line": 488
+    },
+    "96": {
+      "filename": "BondingCurve.sol",
+      "line": 488
+    },
+    "112": {
+      "filename": "BondingCurve.sol",
+      "line": 488
+    },
+    "128": {
+      "filename": "BondingCurve.sol",
+      "line": 488
+    },
+    "144": {
+      "filename": "BondingCurve.sol",
+      "line": 488
+    },
+    "160": {
+      "filename": "BondingCurve.sol",
+      "line": 488
+    },
+    "168": {
+      "filename": "BondingCurve.sol",
+      "line": 488
+    },
+    "184": {
+      "filename": "BondingCurve.sol",
+      "line": 488
+    },
+    "192": {
+      "filename": "BondingCurve.sol",
+      "line": 489
+    },
+    "200": {
+      "filename": "BondingCurve.sol",
+      "line": 489
+    },
+    "208": {
+      "filename": "BondingCurve.sol",
+      "line": 489
+    },
+    "224": {
+      "filename": "BondingCurve.sol",
+      "line": 489
+    },
+    "232": {
+      "filename": "BondingCurve.sol",
+      "line": 489
+    },
+    "240": {
+      "filename": "BondingCurve.sol",
+      "line": 489
+    },
+    "248": {
+      "filename": "BondingCurve.sol",
+      "line": 491
+    },
+    "256": {
+      "filename": "BondingCurve.sol",
+      "line": 491
+    },
+    "272": {
+      "filename": "BondingCurve.sol",
+      "line": 491
+    },
+    "288": {
+      "filename": "BondingCurve.sol",
+      "line": 491
+    },
+    "304": {
+      "filename": "BondingCurve.sol",
+      "line": 491
+    },
+    "320": {
+      "filename": "BondingCurve.sol",
+      "line": 491
+    },
+    "328": {
+      "filename": "BondingCurve.sol",
+      "line": 491
+    },
+    "352": {
+      "filename": "BondingCurve.sol",
+      "line": 491
+    },
+    "360": {
+      "filename": "BondingCurve.sol",
+      "line": 492
+    },
+    "368": {
+      "filename": "BondingCurve.sol",
+      "line": 492
+    },
+    "384": {
+      "filename": "BondingCurve.sol",
+      "line": 492
+    },
+    "400": {
+      "filename": "BondingCurve.sol",
+      "line": 492
+    },
+    "416": {
+      "filename": "BondingCurve.sol",
+      "line": 492
+    },
+    "432": {
+      "filename": "BondingCurve.sol",
+      "line": 492
+    },
+    "440": {
+      "filename": "BondingCurve.sol",
+      "line": 492
+    },
+    "464": {
+      "filename": "BondingCurve.sol",
+      "line": 492
+    },
+    "472": {
+      "filename": "BondingCurve.sol",
+      "line": 494
+    },
+    "480": {
+      "filename": "BondingCurve.sol",
+      "line": 494
+    },
+    "496": {
+      "filename": "BondingCurve.sol",
+      "line": 494
+    },
+    "512": {
+      "filename": "BondingCurve.sol",
+      "line": 496
+    },
+    "520": {
+      "filename": "BondingCurve.sol",
+      "line": 496
+    },
+    "536": {
+      "filename": "BondingCurve.sol",
+      "line": 496
+    },
+    "544": {
+      "filename": "BondingCurve.sol",
+      "line": 496
+    },
+    "552": {
+      "filename": "BondingCurve.sol",
+      "line": 496
+    },
+    "560": {
+      "filename": "BondingCurve.sol",
+      "line": 496
+    },
+    "576": {
+      "filename": "BondingCurve.sol",
+      "line": 496
+    },
+    "592": {
+      "filename": "BondingCurve.sol",
+      "line": 496
+    },
+    "600": {
+      "filename": "BondingCurve.sol",
+      "line": 496
+    },
+    "616": {
+      "filename": "BondingCurve.sol",
+      "line": 496
+    },
+    "632": {
+      "filename": "BondingCurve.sol",
+      "line": 497
+    },
+    "648": {
+      "filename": "BondingCurve.sol",
+      "line": 497
+    },
+    "656": {
+      "filename": "BondingCurve.sol",
+      "line": 497
+    },
+    "680": {
+      "filename": "BondingCurve.sol",
+      "line": 497
+    },
+    "688": {
+      "filename": "BondingCurve.sol",
+      "line": 497
+    },
+    "744": {
+      "filename": "BondingCurve.sol",
+      "line": 497
+    },
+    "760": {
+      "filename": "BondingCurve.sol",
+      "line": 497
+    },
+    "776": {
+      "filename": "BondingCurve.sol",
+      "line": 497
+    },
+    "792": {
+      "filename": "BondingCurve.sol",
+      "line": 497
+    },
+    "800": {
+      "filename": "BondingCurve.sol",
+      "line": 497
+    },
+    "808": {
+      "filename": "BondingCurve.sol",
+      "line": 497
+    },
+    "824": {
+      "filename": "./BondingCurve.code",
+      "line": 2614
+    },
+    "832": {
+      "filename": "BondingCurve.sol",
+      "line": 500
+    },
+    "840": {
+      "filename": "BondingCurve.sol",
+      "line": 500
+    },
+    "856": {
+      "filename": "BondingCurve.sol",
+      "line": 500
+    },
+    "872": {
+      "filename": "BondingCurve.sol",
+      "line": 500
+    },
+    "880": {
+      "filename": "BondingCurve.sol",
+      "line": 500
+    },
+    "896": {
+      "filename": "BondingCurve.sol",
+      "line": 500
+    },
+    "904": {
+      "filename": "BondingCurve.sol",
+      "line": 500
     }
   },
   "fa0a8b772d04bd2a433cf968f6e3bda1b0bed3571aab01424a4a9bf694b0beec": {
     "0": {
       "filename": "./BondingCurve.code",
-      "line": 3366
+      "line": 3371
     },
     "8": {
       "filename": "./BondingCurve.code",
-      "line": 3367
+      "line": 3372
     },
     "16": {
       "filename": "./BondingCurve.code",
-      "line": 3368
+      "line": 3373
     },
     "32": {
       "filename": "./BondingCurve.code",
-      "line": 3371
+      "line": 3376
     },
     "48": {
       "filename": "./BondingCurve.code",
-      "line": 3372
+      "line": 3377
     },
     "56": {
       "filename": "./BondingCurve.code",
-      "line": 3373
+      "line": 3378
     },
     "72": {
       "filename": "./BondingCurve.code",
-      "line": 3374
+      "line": 3379
     },
     "232": {
       "filename": "./BondingCurve.code",
-      "line": 3375
+      "line": 3380
     },
     "240": {
       "filename": "./BondingCurve.code",
-      "line": 3376
+      "line": 3381
     },
     "248": {
       "filename": "./BondingCurve.code",
-      "line": 3377
+      "line": 3382
     },
     "264": {
       "filename": "./BondingCurve.code",
-      "line": 3378
+      "line": 3383
     },
     "272": {
       "filename": "./BondingCurve.code",
-      "line": 3379
+      "line": 3384
     },
     "280": {
       "filename": "./BondingCurve.code",
-      "line": 3380
+      "line": 3385
     },
     "296": {
       "filename": "./BondingCurve.code",
-      "line": 3382
+      "line": 3387
     },
     "304": {
       "filename": "./BondingCurve.code",
-      "line": 3383
+      "line": 3388
     }
   },
   "fa3d493dbe1b4bdb0b796c3b3d26989e08255d815423590e66b828e70a49161b": {
@@ -12798,63 +12814,63 @@
   "fae6dc7923750e93fc8c7feefa778ac028f9a857b9d7a74d86dfdb8fc6e292bc": {
     "0": {
       "filename": "./BondingCurve.code",
-      "line": 3471
+      "line": 3476
     },
     "8": {
       "filename": "./BondingCurve.code",
-      "line": 3472
+      "line": 3477
     },
     "16": {
       "filename": "./BondingCurve.code",
-      "line": 3473
+      "line": 3478
     },
     "32": {
       "filename": "./BondingCurve.code",
-      "line": 3476
+      "line": 3481
     },
     "48": {
       "filename": "./BondingCurve.code",
-      "line": 3477
+      "line": 3482
     },
     "56": {
       "filename": "./BondingCurve.code",
-      "line": 3478
+      "line": 3483
     },
     "72": {
       "filename": "./BondingCurve.code",
-      "line": 3479
+      "line": 3484
     },
     "232": {
       "filename": "./BondingCurve.code",
-      "line": 3480
+      "line": 3485
     },
     "240": {
       "filename": "./BondingCurve.code",
-      "line": 3481
+      "line": 3486
     },
     "248": {
       "filename": "./BondingCurve.code",
-      "line": 3482
+      "line": 3487
     },
     "264": {
       "filename": "./BondingCurve.code",
-      "line": 3483
+      "line": 3488
     },
     "272": {
       "filename": "./BondingCurve.code",
-      "line": 3484
+      "line": 3489
     },
     "280": {
       "filename": "./BondingCurve.code",
-      "line": 3485
+      "line": 3490
     },
     "296": {
       "filename": "./BondingCurve.code",
-      "line": 3487
+      "line": 3492
     },
     "304": {
       "filename": "./BondingCurve.code",
-      "line": 3488
+      "line": 3493
     }
   },
   "fb0a436fbda390aa0cfdb21525d3736821d5f23a155ec686f79a19204bbc008b": {

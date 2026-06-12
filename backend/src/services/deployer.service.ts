@@ -548,8 +548,10 @@ export async function deployTokenEcosystem({
     const trAbi = loadContractFiles("TokenRoot").abi;
     const trTvc = loadContractFiles("TokenRoot").tvc;
     
-    // Predizer TokenRoot
-    const factoryAddress = process.env.LAUNCH_FACTORY_ADDRESS || "0:0000000000000000000000000000000000000000000000000000000000000000";
+    const factoryAddress = process.env.LAUNCH_FACTORY_ADDRESS;
+    if (!factoryAddress || isPlaceholder(factoryAddress)) {
+      throw new Error("LAUNCH_FACTORY_ADDRESS ausente ou inválido no .env. Impossível calcular endereços e realizar deploy.");
+    }
     const { address: predictedTokenRootAddress } = await client.abi.encode_message({
       abi: abiContract(trAbi),
       deploy_set: {
@@ -585,10 +587,6 @@ export async function deployTokenEcosystem({
 
     // ── Passo 2: Interagir com a LaunchFactory ───────────────────────────────
     if (ENABLE_ONCHAIN_DEPLOY) {
-      const factoryAddress = process.env.LAUNCH_FACTORY_ADDRESS;
-      if (!factoryAddress || isPlaceholder(factoryAddress)) {
-        throw new Error("LAUNCH_FACTORY_ADDRESS ausente no .env. Impossível realizar deploy via Factory.");
-      }
 
       console.log(`[Deployer] Acionando LaunchFactory (${factoryAddress}) para deploy unificado do Dapp ID...`);
       markChainAttempted();

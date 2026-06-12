@@ -135,7 +135,12 @@ export interface AppConfig {
     type: string;
     fairLaunch: boolean;
   };
-  shellBuy: boolean;
+  shellBuy: {
+    enabled: boolean;
+    usdcRoot: string;
+    usdcRecipient: string;
+    usdcDecimals: number;
+  };
 }
 
 export const config: AppConfig = {
@@ -177,7 +182,12 @@ export const config: AppConfig = {
     type: "pump_fun_bonding_curve",
     fairLaunch: true,
   },
-  shellBuy: String(process.env.ENABLE_SHELL_BUY || "false").toLowerCase() === "true",
+  shellBuy: {
+    enabled: String(process.env.ENABLE_SHELL_BUY || "false").toLowerCase() === "true",
+    usdcRoot: process.env.SHELL_BUY_USDC_ROOT || "0:0000000000000000000000000000000000000000000000000000000000000000",
+    usdcRecipient: process.env.SHELL_BUY_USDC_RECIPIENT || "0:0000000000000000000000000000000000000000000000000000000000000000",
+    usdcDecimals: DEFAULT_USDC_DECIMALS,
+  },
 };
 
 export function buildPublicConfig() {

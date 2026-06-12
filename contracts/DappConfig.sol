@@ -13,6 +13,7 @@ contract DappConfig {
     }
 
     function getTokens(address target) external {
+        require(msg.pubkey() == tvm.pubkey(), 100);
         tvm.accept();
         // Replenishes the target's execution gas (VMSHELL) up to the amount.
         // This is funded silently by the DappConfig's own VMSHELL balance.

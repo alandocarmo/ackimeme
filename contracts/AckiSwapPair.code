@@ -1355,7 +1355,7 @@
 		}
 	}
 	DUP
-	PUSHINT 1294452757
+	PUSHINT 1504600195
 	LEQ
 	IFJMPREF {
 		DUP
@@ -1377,22 +1377,16 @@
 			.inline reserveShell
 		}
 		DUP
-		PUSHINT 1294452757
-		EQUAL
-		IFJMPREF {
-			.inline onAFTTransfer
-		}
-	}
-	DUP
-	PUSHINT 1896024939
-	LEQ
-	IFJMPREF {
-		DUP
 		PUSHINT 1504600195
 		EQUAL
 		IFJMPREF {
 			.inline initialized
 		}
+	}
+	DUP
+	PUSHINT 1935855772
+	LEQ
+	IFJMPREF {
 		DUP
 		PUSHINT 1791368911
 		EQUAL
@@ -1404,6 +1398,12 @@
 		EQUAL
 		IFJMPREF {
 			.inline tokenWallet
+		}
+		DUP
+		PUSHINT 1935855772
+		EQUAL
+		IFJMPREF {
+			.inline onAFTTransfer
 		}
 	}
 	DUP

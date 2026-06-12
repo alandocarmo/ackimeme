@@ -112,7 +112,7 @@ contract AckiSwapPair is IAFTWalletAddressReceiver {
         uint128 amount,
         address sender,
         TvmCell forwardPayload
-    ) external {
+    ) external functionID(0x7362d09c) {
         require(tokenWallet != address(0), 102);
         require(msg.sender == tokenWallet, 102);
 

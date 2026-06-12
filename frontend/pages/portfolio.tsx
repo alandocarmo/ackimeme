@@ -352,13 +352,13 @@ export default function PortfolioPage() {
                   <p className={createStyles['form-subtitle']}>You haven't launched any tokens yet. Launch a token to earn a Genesis Badge!</p>
                 ) : (
                   launches.filter(l => l.creatorWallet === session.walletAddress).map((launch) => {
-                    const rBalance = launch.onchainData?.reserveBalance || 0;
+                    const rBalance = Number(launch.onchainData?.reserveBalance || 0);
                     let badgeLevel = "Bronze";
                     let badgeColor = "linear-gradient(135deg, #cd7f32, #8b5a2b)";
                     let badgeText = "🥉 Bronze Badge (New Token)";
                     let textColor = "#cd7f32";
 
-                    if (rBalance >= 6900000) {
+                    if (rBalance >= 6900000000000000) {
                       badgeLevel = "Gold";
                       badgeColor = "linear-gradient(135deg, #fbbf24, #f59e0b)";
                       badgeText = "🥇 Gold Badge (Token migrated to AckiSwap!)";

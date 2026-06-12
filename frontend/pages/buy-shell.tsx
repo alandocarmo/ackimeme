@@ -123,6 +123,7 @@ function SwapPanel(): React.JSX.Element {
       const { Address } = await import('everscale-inpage-provider');
       const { accountInteraction } = await ever.requestPermissions({ permissions: ['basic', 'accountInteraction'] });
       if (!accountInteraction) throw new Error("Conexão com a carteira negada.");
+      if (!config.shellBuy || !config.shellBuy.usdcRoot) throw new Error("Configuração de compra de SHELL ausente.");
 
       const rootContract = new ever.Contract(TokenRootAbi, new Address(config.shellBuy.usdcRoot));
       const walletResult = await (rootContract.methods as any).getWalletAddress({
