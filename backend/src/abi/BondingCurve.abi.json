@@ -441,6 +441,14 @@
 			"outputs": [
 				{"name":"thresholdReachedAt","type":"uint32"}
 			]
+		},
+		{
+			"name": "liquiditySent",
+			"inputs": [
+			],
+			"outputs": [
+				{"name":"liquiditySent","type":"bool"}
+			]
 		}
 	],
 	"events": [
@@ -558,6 +566,7 @@
 		{"init":false,"name":"_mintSeqno","type":"uint32"},
 		{"init":false,"name":"myAftWallet","type":"address"},
 		{"init":false,"name":"lastBuyTimestamp","type":"map(address,uint32)"},
-		{"init":false,"name":"thresholdReachedAt","type":"uint32"}
+		{"init":false,"name":"thresholdReachedAt","type":"uint32"},
+		{"init":false,"name":"liquiditySent","type":"bool"}
 	]
 }

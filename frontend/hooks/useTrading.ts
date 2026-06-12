@@ -134,7 +134,12 @@ export function useTrading(session: Session | null, token: Launch | null, onchai
         const finalFeeNano = (finalBaseCostNano * currentFeeBps) / BigInt("10000");
         const mintGasShell = BigInt(6 * 10**9); // 6 SHELL for AFT minting
         const gasToConvert = BigInt(1 * 10**9); // 1 SHELL to convert to VMSHELL
-        const maxShellNano = finalBaseCostNano + finalFeeNano + mintGasShell + gasToConvert;
+        // Slippage buffer on the SHELL ceiling: without it any concurrent buy
+        // raises the on-chain price above this quote and the contract reverts
+        // (203/208). Unused excess is refunded on-chain (immediateExcess path).
+        const safeSlippagePct = Number.isFinite(slippagePct) ? Math.min(Math.max(slippagePct, 0), 50) : 5;
+        const slippageBufferNano = ((finalBaseCostNano + finalFeeNano) * BigInt(Math.round(safeSlippagePct * 100))) / BigInt("10000");
+        const maxShellNano = finalBaseCostNano + finalFeeNano + slippageBufferNano + mintGasShell + gasToConvert;
 
         const tx = await bcContract.methods.buy({
           tokenAmount: expectedNanoTokens.toString(),

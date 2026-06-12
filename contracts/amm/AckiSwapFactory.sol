@@ -69,7 +69,9 @@ contract AckiSwapFactory {
         emit PairCreated(tokenRoot, pair, uint64(block.timestamp));
         
         if (callbackTarget != address(0)) {
-            IFactoryCallback(callbackTarget).onPairDeployed{value: 0, flag: 64}(pair);
+            // R7-C1: flag 64 would forward the inbound value, which arrives
+            // zeroed cross-Dapp-ID — send an explicit non-zero value instead.
+            IFactoryCallback(callbackTarget).onPairDeployed{value: 0.1 ton, flag: 1}(pair);
         }
     }
 

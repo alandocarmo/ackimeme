@@ -33,6 +33,15 @@ contract BondingCurve is IAFTReceiver, IAFTExcesses, IAFTWalletAddressReceiver {
     uint64 private constant GAS_TOP_UP = 2_000_000_000; // 2 VMSHELL in nano
     uint128 private constant MIN_EXECUTION_GAS = 1 ton;
 
+    // R7-C1: SHELL fuel for AMM migration plumbing, held back from the pool.
+    // MIGRATION_TOKEN_GAS_SHELL is attached to the token-liquidity transfer and
+    // covers the wallet entry conversion (~0.6), a possible cold-form deploy of
+    // the pair's AFT wallet (5) and the op=1 notification forward (0.5).
+    // MIGRATION_GAS_RESERVE_SHELL additionally covers the 2.5 SHELL discovery
+    // sent in onPairDeployed plus margin for in-flight duplicate migrations.
+    uint128 private constant MIGRATION_TOKEN_GAS_SHELL = 8_000_000_000;    // 8 SHELL
+    uint128 private constant MIGRATION_GAS_RESERVE_SHELL = 20_000_000_000; // 20 SHELL
+
     // M-01: Minimum buy amount to prevent dust/zero-cost purchases
     uint256 public constant MIN_BUY_AMOUNT = 1_000_000; // 0.001 tokens minimum
 
@@ -113,6 +122,9 @@ contract BondingCurve is IAFTReceiver, IAFTExcesses, IAFTWalletAddressReceiver {
     // M-06: Track when migration threshold was first reached
     uint32 public thresholdReachedAt;
 
+    // R7-C1: one-shot guard — liquidity must only ever be pushed to the pair once
+    bool public liquiditySent;
+
     // ─── Modifiers ────────────────────────────────────────────────────────────
     // ─── AFT Wallet Discovery ─────────────────────────────────────────────────
     function initAftWallet() public {
@@ -166,8 +178,8 @@ contract BondingCurve is IAFTReceiver, IAFTExcesses, IAFTWalletAddressReceiver {
     event BurnFailed(uint64 queryId, uint128 amount);
 
     // ─── Constructor ──────────────────────────────────────────────────────────
-    // BondingCurve is deployed via internal message from TokenRoot.
-    // msg.sender == address(TokenRoot) == _tokenRoot (stateInit static var).
+    // BondingCurve is deployed via internal message from the LaunchFactory.
+    // msg.sender == _factory (stateInit static var) — enforced below.
     constructor(
         address _owner,
         address _tokenRootAddr,
@@ -523,15 +535,15 @@ contract BondingCurve is IAFTReceiver, IAFTExcesses, IAFTWalletAddressReceiver {
 
     function onPairDeployed(address pair) external {
         require(msg.sender == ammFactory, 103, "Only factory");
+        // R7-C1: the AMM factory lives in another Dapp ID — msg.value arrives
+        // zeroed cross-dapp, so execution gas must come from our own balance.
+        tvm.accept();
         isAmm = true;
         migratedAt = uint32(block.timestamp);
         ammPairAddress = pair;
-        
-        uint128 shellLiquidity = uint128(reserveBalance);
-        uint128 tokensToMove = uint128(_supplyCap - totalSupply);
 
-        emit MigratedToInternalAmm(shellLiquidity, migratedAt);
-        
+        emit MigratedToInternalAmm(uint128(reserveBalance), migratedAt);
+
         // 1. Initialize Pair's Wallet Discovery
         mapping(uint32 => varuint32) ccInit;
         ccInit[SHELL_CURRENCY_ID] = varuint32(2_500_000_000); // 2.5 SHELL
@@ -540,8 +552,15 @@ contract BondingCurve is IAFTReceiver, IAFTExcesses, IAFTWalletAddressReceiver {
 
     function onPairReady() external {
         require(msg.sender == ammPairAddress, 103, "Only pair");
-        
-        uint128 shellLiquidity = uint128(reserveBalance);
+        require(!liquiditySent, 237, "Liquidity already sent");
+        // R7-C1: cross-Dapp-ID callback — msg.value arrives zeroed; self-fund.
+        tvm.accept();
+        liquiditySent = true;
+
+        // Hold back a slice of the SHELL as fuel: 2.5 already spent on the
+        // discovery in onPairDeployed + 8 attached to the token transfer below.
+        require(reserveBalance > uint256(MIGRATION_GAS_RESERVE_SHELL), 238, "Reserve too small to migrate");
+        uint128 shellLiquidity = uint128(reserveBalance) - MIGRATION_GAS_RESERVE_SHELL;
         uint128 tokensToMove = uint128(_supplyCap - totalSupply);
 
         // 2. Send SHELL liquidity
@@ -549,13 +568,16 @@ contract BondingCurve is IAFTReceiver, IAFTExcesses, IAFTWalletAddressReceiver {
         ccLiq[SHELL_CURRENCY_ID] = varuint32(shellLiquidity);
         IAckiSwapPair(ammPairAddress).provideInitialShell{value: 0.1 ton, currencies: ccLiq, flag: 1}();
 
-        // 3. Send Tokens liquidity
+        // 3. Send Tokens liquidity — the AFT wallet hops self-fund from the
+        // attached SHELL (entry conversion + cold wallet deploy + notification).
         TvmBuilder builder;
         builder.store(uint32(1)); // op = 1 (Add Liquidity)
         TvmCell payload = builder.toCell();
         TvmCell empty;
-        
-        IAFTWallet(myAftWallet).transfer{value: 1 ton, flag: 1}(
+
+        mapping(uint32 => varuint32) ccGas;
+        ccGas[SHELL_CURRENCY_ID] = varuint32(MIGRATION_TOKEN_GAS_SHELL);
+        IAFTWallet(myAftWallet).transfer{value: 1 ton, currencies: ccGas, flag: 1}(
             0,
             tokensToMove,
             ammPairAddress, // destinationOwner (Pair)

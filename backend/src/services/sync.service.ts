@@ -85,8 +85,9 @@ export async function syncOnchainData(): Promise<void> {
         const bcState = await getAccountState(launch.bondingCurveAddress);
         
         if (bcState.isDeployed && bcState.boc) {
-          // Fallbacks
-          let reserveBalance = "0"; // H-32: Fallback corrected to ZERO, not gas balance
+          // Fallbacks — R7: preserve the last known reserve when the local getter
+          // fails transiently (H-32 still holds: never fall back to gas balance).
+          let reserveBalance = launch.onchainData?.reserveBalance || "0";
           let tokenSupply: string | null = null; // Audit #23: Do not default to cap if getter fails, use null to indicate sync gap
           let lockedLiquidity = launch.onchainData?.lockedLiquidity || false;
 

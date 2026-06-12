@@ -72,6 +72,9 @@ contract LaunchFactory {
         uint256 slopeDivisor
     ) external {
         require(msg.pubkey() == tvm.pubkey(), 100, "Only the factory platform can launch tokens");
+        // R7: without an AMM factory the curve deploys with ammFactory=0 and can
+        // never migrate (and the approve below would burn value at address(0)).
+        require(ammFactory != address(0), 103, "AMM factory not set (call setAmmFactory)");
         tvm.accept();
 
         // Assume gas is provided via prefunding (address(this).balance). We need enough VMSHELL for two deployments + messages.

@@ -1,20 +1,71 @@
 .fragment _refundTokens_dcf72b0a_internal, {
-	.loc amm/AckiSwapPair.sol, 194
+	.loc amm/AckiSwapPair.sol, 267
+	PUSHINT 2
+	CALLREF {
+		DEPTH
+		ADDCONST -5
+		PICK
+		PUSHCONT {
+			NULL
+		}
+		PUSHCONT {
+			DEPTH
+			ADDCONST -3
+			PICK
+			CTOS
+			LDU 4
+			LDMSGADDR
+			LDMSGADDR
+			LDGRAMS
+			PLDDICT
+			BLKDROP2 4, 1
+		}
+		IFELSE
+	}
+	PUSHINT 32
+	DICTUGET
+	ZEROSWAPIFNOT
+	PUSHCONT {
+		LDVARUINT32
+		DROP
+	}
+	IF
+	UFITS 128
+	.loc amm/AckiSwapPair.sol, 268
 	NULL
-	PUSHINT 0
+	.loc amm/AckiSwapPair.sol, 269
+	OVER
+	GTINT 0
+	PUSHCONT {
+		.loc amm/AckiSwapPair.sol, 270
+		OVER
+		PUSHINT 2
+		ROTREV
+		NEWC
+		SWAP
+		STVARUINT32
+		ROTREV
+		PUSHINT 32
+		DICTUSETB
+		.loc amm/AckiSwapPair.sol, 0
+	}
+	IF
+	.loc amm/AckiSwapPair.sol, 272
 	PUSHREF {
 	}
-	.loc amm/AckiSwapPair.sol, 195
-	REVERSE 7, 0
 	PUSHINT 0
+	NULL
+	BLKSWAP 4, 5
+	REVERSE 4, 0
+	ROLL 7
 	GETGLOB 9
 	NEWC
 	STSLICECONST x62_
 	STSLICE
-	SWAP
-	STGRAMS
+	STSLICECONST x405f5e100
+	STDICT
 	PUSHINT 1
-	STUR 111
+	STUR 110
 	ROLLREV 7
 	NEWC
 	STSLICECONST x0f8a7ea5
@@ -30,66 +81,120 @@
 	STBREFR
 	STBREFR
 	ENDC
-	PUSHINT 64
+	PUSHINT 1
 	SENDRAWMSG
 	.loc amm/AckiSwapPair.sol, 0
+	DROP
 }
 
 .fragment _swapTokenForShell_17108e67_internal, {
-	.loc amm/AckiSwapPair.sol, 157
-	PUSH S3
+	.loc amm/AckiSwapPair.sol, 213
+	PUSHINT 2
+	CALLREF {
+		DEPTH
+		ADDCONST -5
+		PICK
+		PUSHCONT {
+			NULL
+		}
+		PUSHCONT {
+			DEPTH
+			ADDCONST -3
+			PICK
+			CTOS
+			LDU 4
+			LDMSGADDR
+			LDMSGADDR
+			LDGRAMS
+			PLDDICT
+			BLKDROP2 4, 1
+		}
+		IFELSE
+	}
+	PUSHINT 32
+	DICTUGET
+	ZEROSWAPIFNOT
+	PUSHCONT {
+		LDVARUINT32
+		DROP
+	}
+	IF
+	UFITS 128
+	.loc amm/AckiSwapPair.sol, 214
+	DUP
+	PUSHINT 1000000000
+	LESS
+	OVER
+	PUSHINT 1000000000
+	CONDSEL
+	.loc amm/AckiSwapPair.sol, 215
+	DUP
+	GTINT 0
+	PUSHCONT {
+		.loc amm/AckiSwapPair.sol, 216
+		DUP
+		UFITS 64
+		CNVRTSHELLQ
+		.loc amm/AckiSwapPair.sol, 0
+	}
+	IF
+	.loc amm/AckiSwapPair.sol, 218
+	SUB
+	UFITS 128
+	.loc amm/AckiSwapPair.sol, 221
+	PUSH S4
 	MULCONST 5
 	UFITS 128
 	PUSHINT 10000
 	DIV
-	.loc amm/AckiSwapPair.sol, 158
-	PUSH2 S4, S0
+	.loc amm/AckiSwapPair.sol, 222
+	PUSH2 S5, S0
 	SUB
 	UFITS 128
-	.loc amm/AckiSwapPair.sol, 161
+	.loc amm/AckiSwapPair.sol, 225
 	DUP
 	PUSHINT 9975
 	MUL
-	.loc amm/AckiSwapPair.sol, 162
+	.loc amm/AckiSwapPair.sol, 226
 	DUP
 	GETGLOB 13
 	MUL
-	.loc amm/AckiSwapPair.sol, 163
+	.loc amm/AckiSwapPair.sol, 227
 	GETGLOB 14
 	PUSHINT 10000
 	MUL
 	ROT
 	ADD
-	.loc amm/AckiSwapPair.sol, 164
+	.loc amm/AckiSwapPair.sol, 228
 	DIV
 	UFITS 128
-	.loc amm/AckiSwapPair.sol, 166
+	.loc amm/AckiSwapPair.sol, 230
 	DUP
-	ROLL 5
+	ROLL 6
 	GEQ
 	THROWIFNOT 105
-	.loc amm/AckiSwapPair.sol, 167
+	.loc amm/AckiSwapPair.sol, 231
 	DUP
 	GETGLOB 13
 	LESS
 	THROWIFNOT 106
-	.loc amm/AckiSwapPair.sol, 169
+	.loc amm/AckiSwapPair.sol, 233
 	GETGLOB 14
 	ROT
 	ADD
 	UFITS 128
 	SETGLOB 14
-	.loc amm/AckiSwapPair.sol, 170
+	.loc amm/AckiSwapPair.sol, 234
 	GETGLOB 13
 	OVER
 	SUB
 	UFITS 128
 	SETGLOB 13
-	.loc amm/AckiSwapPair.sol, 172
+	.loc amm/AckiSwapPair.sol, 236
 	DUP
-	ROLL 5
-	PUSHINT 0
 	ROLL 6
+	PUSHINT 0
+	ROLL 7
 	PUSHSLICE xc0000000000000000000000001
 	NEWC
 	STSLICE
@@ -108,40 +213,62 @@
 	ENDC
 	PUSHINT 0
 	SENDRAWMSG
-	.loc amm/AckiSwapPair.sol, 176
-	PUSHREF {
+	.loc amm/AckiSwapPair.sol, 241
+	OVER
+	GTINT 0
+	ROLL 3
+	PUSHINT 2000000000
+	GEQ
+	AND
+	PUSHCONT {
+		.loc amm/AckiSwapPair.sol, 244
+		PUSHINT 2
+		NULL
+		NEWC
+		PUSHINT 2000000000
+		.loc amm/AckiSwapPair.sol, 245
+		STVARUINT32
+		ROTREV
+		PUSHINT 32
+		DICTUSETB
+		.loc amm/AckiSwapPair.sol, 246
+		PUSHREF {
+		}
+		PUSHINT 0
+		NULL
+		GETGLOB 12
+		PUSH2 S0, S6
+		PUSHINT 0
+		ROLL 7
+		GETGLOB 15
+		NEWC
+		STSLICECONST x62_
+		STSLICE
+		STSLICECONST x405f5e100
+		STDICT
+		PUSHINT 1
+		STUR 110
+		ROLLREV 7
+		NEWC
+		STSLICECONST x0f8a7ea5
+		STU 64
+		STU 128
+		STSLICE
+		ROLLREV 4
+		NEWC
+		STSLICE
+		STDICT
+		STU 128
+		STREF
+		STBREFR
+		STBREFR
+		ENDC
+		PUSHINT 1
+		SENDRAWMSG
+		.loc amm/AckiSwapPair.sol, 0
 	}
-	.loc amm/AckiSwapPair.sol, 177
-	PUSHINT 0
-	NULL
-	GETGLOB 12
-	DUP
-	ROLL 6
-	PUSHINT 0
-	GETGLOB 15
-	NEWC
-	STSLICECONST x62_
-	STSLICE
-	PUSHSLICE x402faf0800000000000000000000000000003_
-	STSLICER
-	ROLLREV 7
-	NEWC
-	STSLICECONST x0f8a7ea5
-	STU 64
-	STU 128
-	STSLICE
-	ROLLREV 4
-	NEWC
-	STSLICE
-	STDICT
-	STU 128
-	STREF
-	STBREFR
-	STBREFR
-	ENDC
-	PUSHINT 0
-	SENDRAWMSG
-	.loc amm/AckiSwapPair.sol, 188
+	IF
+	.loc amm/AckiSwapPair.sol, 258
 	PUSHINT 2
 	NULL
 	NEWC
@@ -150,21 +277,20 @@
 	ROTREV
 	PUSHINT 32
 	DICTUSETB
-	.loc amm/AckiSwapPair.sol, 189
-	PUSHINT 0
+	.loc amm/AckiSwapPair.sol, 260
 	ROT
 	NEWC
 	STSLICECONST x42_
 	STSLICE
-	SWAP
-	STGRAMS
+	STSLICECONST x402faf080
 	STDICT
 	PUSHINT 110
 	STZEROES
 	ENDC
-	PUSHINT 64
+	PUSHINT 1
 	SENDRAWMSG
 	.loc amm/AckiSwapPair.sol, 0
+	DROP
 }
 
 .fragment c4_to_c7, {
@@ -287,14 +413,14 @@
 	IF
 	LDMSGADDR
 	ENDS
-	.loc amm/AckiSwapPair.sol, 30
+	.loc amm/AckiSwapPair.sol, 38
 	GETGLOB 9
 	GETGLOB 10
 	SDEQ
 	THROWIFNOT 101
-	.loc amm/AckiSwapPair.sol, 31
+	.loc amm/AckiSwapPair.sol, 39
 	ACCEPT
-	.loc amm/AckiSwapPair.sol, 32
+	.loc amm/AckiSwapPair.sol, 40
 	SETGLOB 16
 	.loc amm/AckiSwapPair.sol, 0
 	CALLREF {
@@ -304,7 +430,7 @@
 }
 
 .fragment initAftWallet_1870549f_internal, {
-	.loc amm/AckiSwapPair.sol, 46
+	.loc amm/AckiSwapPair.sol, 57
 	PUSHREF {
 		.blob x4f6e6c7920626f6e64696e67206375727665
 	}
@@ -312,14 +438,16 @@
 	GETGLOB 16
 	SDEQ
 	THROWARGIFNOT 105
-	.loc amm/AckiSwapPair.sol, 47
+	.loc amm/AckiSwapPair.sol, 58
 	GETGLOB 15
 	PUSHREFSLICE {
 		.blob x8000000000000000000000000000000000000000000000000000000000000000001_
 	}
 	SDEQ
 	THROWIFNOT 102
-	.loc amm/AckiSwapPair.sol, 49
+	.loc amm/AckiSwapPair.sol, 60
+	ACCEPT
+	.loc amm/AckiSwapPair.sol, 62
 	PUSHINT 2
 	CALLREF {
 		DEPTH
@@ -350,12 +478,12 @@
 		DROP
 	}
 	IF
-	.loc amm/AckiSwapPair.sol, 50
+	.loc amm/AckiSwapPair.sol, 63
 	DUP
 	PUSHINT 2000000000
 	GEQ
 	THROWIFNOT 203
-	.loc amm/AckiSwapPair.sol, 53
+	.loc amm/AckiSwapPair.sol, 66
 	UFITS 248
 	PUSHINT 2
 	NULL
@@ -365,7 +493,7 @@
 	ROTREV
 	PUSHINT 32
 	DICTUSETB
-	.loc amm/AckiSwapPair.sol, 55
+	.loc amm/AckiSwapPair.sol, 68
 	FALSE
 	MYADDR
 	PUSHINT 0
@@ -400,7 +528,7 @@
 	IFREF {
 		.inline c4_to_c7
 	}
-	.loc amm/AckiSwapPair.sol, 45
+	.loc amm/AckiSwapPair.sol, 56
 	ENDS
 	.loc amm/AckiSwapPair.sol, 0
 	CALLREF {
@@ -434,30 +562,30 @@
 }
 
 .fragment onAFTTransfer_7475637a_internal, {
-	.loc amm/AckiSwapPair.sol, 78
+	.loc amm/AckiSwapPair.sol, 116
 	GETGLOB 15
 	PUSHREFSLICE {
 		.blob x8000000000000000000000000000000000000000000000000000000000000000001_
 	}
 	SDEQ
 	THROWIF 102
-	.loc amm/AckiSwapPair.sol, 79
+	.loc amm/AckiSwapPair.sol, 117
 	GETGLOB 9
 	GETGLOB 15
 	SDEQ
 	THROWIFNOT 102
-	.loc amm/AckiSwapPair.sol, 81
+	.loc amm/AckiSwapPair.sol, 119
 	ACCEPT
-	.loc amm/AckiSwapPair.sol, 83
+	.loc amm/AckiSwapPair.sol, 121
 	CTOS
-	.loc amm/AckiSwapPair.sol, 84
+	.loc amm/AckiSwapPair.sol, 122
 	PUSHINT 0
-	.loc amm/AckiSwapPair.sol, 85
+	.loc amm/AckiSwapPair.sol, 123
 	OVER
 	SBITS
 	GTINT 31
 	PUSHCONT {
-		.loc amm/AckiSwapPair.sol, 86
+		.loc amm/AckiSwapPair.sol, 124
 		OVER
 		LDU 32
 		POP S3
@@ -465,20 +593,64 @@
 		.loc amm/AckiSwapPair.sol, 0
 	}
 	IF
-	.loc amm/AckiSwapPair.sol, 89
+	.loc amm/AckiSwapPair.sol, 127
 	GETGLOB 17
 	NOT
 	OVER
 	EQINT 1
 	AND
 	PUSHCONT {
-		.loc amm/AckiSwapPair.sol, 92
+		.loc amm/AckiSwapPair.sol, 130
 		PUSH S3
 		SETGLOB 14
-		.loc amm/AckiSwapPair.sol, 93
+		.loc amm/AckiSwapPair.sol, 131
 		TRUE
 		SETGLOB 17
-		.loc amm/AckiSwapPair.sol, 95
+		.loc amm/AckiSwapPair.sol, 134
+		PUSHINT 2
+		CALLREF {
+			DEPTH
+			ADDCONST -5
+			PICK
+			PUSHCONT {
+				NULL
+			}
+			PUSHCONT {
+				DEPTH
+				ADDCONST -3
+				PICK
+				CTOS
+				LDU 4
+				LDMSGADDR
+				LDMSGADDR
+				LDGRAMS
+				PLDDICT
+				BLKDROP2 4, 1
+			}
+			IFELSE
+		}
+		PUSHINT 32
+		DICTUGET
+		ZEROSWAPIFNOT
+		PUSHCONT {
+			LDVARUINT32
+			DROP
+		}
+		IF
+		UFITS 128
+		.loc amm/AckiSwapPair.sol, 135
+		DUP
+		GTINT 0
+		PUSHCONT {
+			.loc amm/AckiSwapPair.sol, 136
+			DUP
+			UFITS 64
+			CNVRTSHELLQ
+			.loc amm/AckiSwapPair.sol, 0
+		}
+		IF
+		.loc amm/AckiSwapPair.sol, 139
+		DROP
 		PUSHINT 0
 		GETGLOB 14
 		GETGLOB 13
@@ -491,28 +663,22 @@
 		ENDC
 		PUSHINT 0
 		SENDRAWMSG
-		.loc amm/AckiSwapPair.sol, 97
+		.loc amm/AckiSwapPair.sol, 141
 		PUSH S2
 		PUSHREFSLICE {
 			.blob x8000000000000000000000000000000000000000000000000000000000000000001_
 		}
 		SDEQ
 		PUSHCONT {
-			.loc amm/AckiSwapPair.sol, 98
-			NULL
-			.loc amm/AckiSwapPair.sol, 99
-			PUSHINT 0
-			PUSH S4
+			.loc amm/AckiSwapPair.sol, 144
+			PUSH S2
 			NEWC
 			STSLICECONST x42_
 			STSLICE
-			SWAP
-			STGRAMS
-			STDICT
-			PUSHINT 110
-			STZEROES
+			PUSHSLICE x402faf0800000000000000000000000000001_
+			STSLICER
 			ENDC
-			PUSHINT 64
+			PUSHINT 1
 			SENDRAWMSG
 			.loc amm/AckiSwapPair.sol, 0
 		}
@@ -524,7 +690,7 @@
 		EQINT 2
 		AND
 		PUSHCONT {
-			.loc amm/AckiSwapPair.sol, 103
+			.loc amm/AckiSwapPair.sol, 148
 			OVER
 			SBITS
 			GTINT 127
@@ -535,7 +701,7 @@
 				POP S3
 			}
 			IF
-			.loc amm/AckiSwapPair.sol, 104
+			.loc amm/AckiSwapPair.sol, 149
 			PU2XC S4, S3, S-2
 			PUSH S5
 			CALLREF {
@@ -543,7 +709,7 @@
 			}
 		}
 		PUSHCONT {
-			.loc amm/AckiSwapPair.sol, 107
+			.loc amm/AckiSwapPair.sol, 152
 			BLKPUSH 3, 4
 			PUSH S5
 			CALLREF {
@@ -566,7 +732,7 @@
 	IFREF {
 		.inline c4_to_c7
 	}
-	.loc amm/AckiSwapPair.sol, 72
+	.loc amm/AckiSwapPair.sol, 110
 	OVER
 	PUSHCONT {
 		LDREF
@@ -589,16 +755,20 @@
 	THROW 0
 }
 
-.fragment provideInitialShell_e07dec79_internal, {
-	.loc amm/AckiSwapPair.sol, 40
-	PUSHREF {
-		.blob x4f6e6c7920626f6e64696e67206375727665
+.fragment pokeBondingCurve_1740d549_internal, {
+	.loc amm/AckiSwapPair.sol, 100
+	GETGLOB 15
+	PUSHREFSLICE {
+		.blob x8000000000000000000000000000000000000000000000000000000000000000001_
 	}
-	GETGLOB 9
-	GETGLOB 16
 	SDEQ
-	THROWARGIFNOT 105
-	.loc amm/AckiSwapPair.sol, 41
+	THROWIF 102
+	.loc amm/AckiSwapPair.sol, 101
+	GETGLOB 17
+	THROWIF 103
+	.loc amm/AckiSwapPair.sol, 102
+	ACCEPT
+	.loc amm/AckiSwapPair.sol, 103
 	PUSHINT 2
 	CALLREF {
 		DEPTH
@@ -629,7 +799,96 @@
 		DROP
 	}
 	IF
-	.loc amm/AckiSwapPair.sol, 42
+	UFITS 128
+	.loc amm/AckiSwapPair.sol, 104
+	DUP
+	GTINT 0
+	PUSHCONT {
+		.loc amm/AckiSwapPair.sol, 105
+		DUP
+		UFITS 64
+		CNVRTSHELLQ
+		.loc amm/AckiSwapPair.sol, 0
+	}
+	IF
+	.loc amm/AckiSwapPair.sol, 107
+	DROP
+	GETGLOB 16
+	NEWC
+	STSLICECONST x62_
+	STSLICE
+	PUSHSLICE x405f5e100000000000000000000000000000076dc9c35_
+	STSLICER
+	ENDC
+	PUSHINT 1
+	SENDRAWMSG
+	.loc amm/AckiSwapPair.sol, 0
+}
+
+.fragment pokeBondingCurve, {
+	DROP
+	GETGLOB 6
+	THROWIFNOT 76
+	GETGLOB 2
+	ISNULL
+	IFREF {
+		.inline c4_to_c7
+	}
+	.loc amm/AckiSwapPair.sol, 99
+	ENDS
+	.loc amm/AckiSwapPair.sol, 0
+	CALLREF {
+		.inline pokeBondingCurve_1740d549_internal
+	}
+	CALLREF {
+		.inline c7_to_c4
+	}
+	THROW 0
+}
+
+.fragment provideInitialShell_e07dec79_internal, {
+	.loc amm/AckiSwapPair.sol, 48
+	PUSHREF {
+		.blob x4f6e6c7920626f6e64696e67206375727665
+	}
+	GETGLOB 9
+	GETGLOB 16
+	SDEQ
+	THROWARGIFNOT 105
+	.loc amm/AckiSwapPair.sol, 51
+	ACCEPT
+	.loc amm/AckiSwapPair.sol, 52
+	PUSHINT 2
+	CALLREF {
+		DEPTH
+		ADDCONST -5
+		PICK
+		PUSHCONT {
+			NULL
+		}
+		PUSHCONT {
+			DEPTH
+			ADDCONST -3
+			PICK
+			CTOS
+			LDU 4
+			LDMSGADDR
+			LDMSGADDR
+			LDGRAMS
+			PLDDICT
+			BLKDROP2 4, 1
+		}
+		IFELSE
+	}
+	PUSHINT 32
+	DICTUGET
+	ZEROSWAPIFNOT
+	PUSHCONT {
+		LDVARUINT32
+		DROP
+	}
+	IF
+	.loc amm/AckiSwapPair.sol, 53
 	UFITS 128
 	GETGLOB 13
 	ADD
@@ -647,7 +906,7 @@
 	IFREF {
 		.inline c4_to_c7
 	}
-	.loc amm/AckiSwapPair.sol, 39
+	.loc amm/AckiSwapPair.sol, 47
 	ENDS
 	.loc amm/AckiSwapPair.sol, 0
 	CALLREF {
@@ -702,10 +961,10 @@
 }
 
 .fragment swapShellForToken_27e8a222_internal, {
-	.loc amm/AckiSwapPair.sol, 113
+	.loc amm/AckiSwapPair.sol, 161
 	GETGLOB 17
 	THROWIFNOT 103
-	.loc amm/AckiSwapPair.sol, 114
+	.loc amm/AckiSwapPair.sol, 162
 	PUSHINT 2
 	CALLREF {
 		DEPTH
@@ -737,62 +996,70 @@
 	}
 	IF
 	UFITS 128
-	.loc amm/AckiSwapPair.sol, 115
-	DUP
-	GTINT 0
+	.loc amm/AckiSwapPair.sol, 163
+	PUSHINT 7000000000
+	.loc amm/AckiSwapPair.sol, 164
+	DUP2
+	GREATER
 	THROWIFNOT 104
-	.loc amm/AckiSwapPair.sol, 117
+	.loc amm/AckiSwapPair.sol, 166
 	ACCEPT
-	.loc amm/AckiSwapPair.sol, 120
+	.loc amm/AckiSwapPair.sol, 167
+	PUSHINT 1000000000
+	CNVRTSHELLQ
+	.loc amm/AckiSwapPair.sol, 168
+	SUB
+	UFITS 128
+	.loc amm/AckiSwapPair.sol, 171
 	DUP
 	MULCONST 5
 	UFITS 128
 	PUSHINT 10000
 	DIV
-	.loc amm/AckiSwapPair.sol, 121
+	.loc amm/AckiSwapPair.sol, 172
 	DUP2
 	SUB
 	UFITS 128
-	.loc amm/AckiSwapPair.sol, 124
+	.loc amm/AckiSwapPair.sol, 175
 	DUP
 	PUSHINT 9975
 	MUL
-	.loc amm/AckiSwapPair.sol, 125
+	.loc amm/AckiSwapPair.sol, 176
 	DUP
 	GETGLOB 14
 	MUL
-	.loc amm/AckiSwapPair.sol, 126
+	.loc amm/AckiSwapPair.sol, 177
 	GETGLOB 13
 	PUSHINT 10000
 	MUL
 	ROT
 	ADD
-	.loc amm/AckiSwapPair.sol, 127
+	.loc amm/AckiSwapPair.sol, 178
 	DIV
 	UFITS 128
-	.loc amm/AckiSwapPair.sol, 129
+	.loc amm/AckiSwapPair.sol, 180
 	DUP
 	ROLL 6
 	GEQ
 	THROWIFNOT 105
-	.loc amm/AckiSwapPair.sol, 130
+	.loc amm/AckiSwapPair.sol, 181
 	DUP
 	GETGLOB 14
 	LESS
 	THROWIFNOT 106
-	.loc amm/AckiSwapPair.sol, 132
+	.loc amm/AckiSwapPair.sol, 183
 	GETGLOB 13
 	ROT
 	ADD
 	UFITS 128
 	SETGLOB 13
-	.loc amm/AckiSwapPair.sol, 133
+	.loc amm/AckiSwapPair.sol, 184
 	GETGLOB 14
 	OVER
 	SUB
 	UFITS 128
 	SETGLOB 14
-	.loc amm/AckiSwapPair.sol, 135
+	.loc amm/AckiSwapPair.sol, 186
 	DUP
 	PUSHINT 0
 	DUP
@@ -816,7 +1083,7 @@
 	ENDC
 	PUSHINT 0
 	SENDRAWMSG
-	.loc amm/AckiSwapPair.sol, 139
+	.loc amm/AckiSwapPair.sol, 190
 	SWAP
 	PUSHINT 2
 	NULL
@@ -826,7 +1093,7 @@
 	ROTREV
 	PUSHINT 32
 	DICTUSETB
-	.loc amm/AckiSwapPair.sol, 140
+	.loc amm/AckiSwapPair.sol, 191
 	GETGLOB 12
 	NEWC
 	STSLICECONST x42_
@@ -838,25 +1105,34 @@
 	ENDC
 	PUSHINT 0
 	SENDRAWMSG
-	.loc amm/AckiSwapPair.sol, 143
+	.loc amm/AckiSwapPair.sol, 197
+	PUSHINT 2
+	NULL
+	NEWC
+	PUSHINT 6000000000
+	.loc amm/AckiSwapPair.sol, 198
+	STVARUINT32
+	ROTREV
+	PUSHINT 32
+	DICTUSETB
+	.loc amm/AckiSwapPair.sol, 199
 	PUSHREF {
 	}
-	.loc amm/AckiSwapPair.sol, 144
 	PUSHINT 0
 	NULL
-	ROLL 4
-	GETGLOB 9
 	ROLL 5
+	GETGLOB 9
+	ROLL 6
 	PUSHINT 0
-	DUP
+	ROLL 7
 	GETGLOB 15
 	NEWC
 	STSLICECONST x62_
 	STSLICE
-	SWAP
-	STGRAMS
+	STSLICECONST x405f5e100
+	STDICT
 	PUSHINT 1
-	STUR 111
+	STUR 110
 	ROLLREV 7
 	NEWC
 	STSLICECONST x0f8a7ea5
@@ -872,7 +1148,7 @@
 	STBREFR
 	STBREFR
 	ENDC
-	PUSHINT 64
+	PUSHINT 1
 	SENDRAWMSG
 	.loc amm/AckiSwapPair.sol, 0
 }
@@ -886,7 +1162,7 @@
 	IFREF {
 		.inline c4_to_c7
 	}
-	.loc amm/AckiSwapPair.sol, 112
+	.loc amm/AckiSwapPair.sol, 160
 	OVER
 	PUSHCONT {
 		LDREF
@@ -908,26 +1184,84 @@
 }
 
 .fragment takeWalletAddress_eb326a67_internal, {
-	.loc amm/AckiSwapPair.sol, 67
+	.loc amm/AckiSwapPair.sol, 80
 	DROP
 	GETGLOB 9
 	GETGLOB 11
 	SDEQ
 	THROWIFNOT 103
-	.loc amm/AckiSwapPair.sol, 68
-	SETGLOB 15
-	.loc amm/AckiSwapPair.sol, 69
+	.loc amm/AckiSwapPair.sol, 83
+	ACCEPT
+	.loc amm/AckiSwapPair.sol, 84
+	PUSHINT 2
+	CALLREF {
+		DEPTH
+		ADDCONST -5
+		PICK
+		PUSHCONT {
+			NULL
+		}
+		PUSHCONT {
+			DEPTH
+			ADDCONST -3
+			PICK
+			CTOS
+			LDU 4
+			LDMSGADDR
+			LDMSGADDR
+			LDGRAMS
+			PLDDICT
+			BLKDROP2 4, 1
+		}
+		IFELSE
+	}
+	PUSHINT 32
+	DICTUGET
+	ZEROSWAPIFNOT
+	PUSHCONT {
+		LDVARUINT32
+		DROP
+	}
+	IF
+	UFITS 128
+	.loc amm/AckiSwapPair.sol, 85
+	DUP
+	GTINT 0
+	PUSHCONT {
+		.loc amm/AckiSwapPair.sol, 86
+		DUP
+		UFITS 64
+		CNVRTSHELLQ
+		.loc amm/AckiSwapPair.sol, 0
+	}
+	IF
+	.loc amm/AckiSwapPair.sol, 88
 	DROP
-	GETGLOB 16
-	NEWC
-	STSLICECONST x62_
-	STSLICE
-	PUSHSLICE x405f5e100000000000000000000000000000076dc9c35_
-	STSLICER
-	ENDC
-	PUSHINT 1
-	SENDRAWMSG
+	GETGLOB 15
+	PUSHREFSLICE {
+		.blob x8000000000000000000000000000000000000000000000000000000000000000001_
+	}
+	SDEQ
+	.loc amm/AckiSwapPair.sol, 89
+	SWAP
+	SETGLOB 15
+	.loc amm/AckiSwapPair.sol, 90
+	PUSHCONT {
+		.loc amm/AckiSwapPair.sol, 91
+		GETGLOB 16
+		NEWC
+		STSLICECONST x62_
+		STSLICE
+		PUSHSLICE x405f5e100000000000000000000000000000076dc9c35_
+		STSLICER
+		ENDC
+		PUSHINT 1
+		SENDRAWMSG
+		.loc amm/AckiSwapPair.sol, 0
+	}
+	IF
 	.loc amm/AckiSwapPair.sol, 0
+	DROP
 }
 
 .fragment takeWalletAddress, {
@@ -939,7 +1273,7 @@
 	IFREF {
 		.inline c4_to_c7
 	}
-	.loc amm/AckiSwapPair.sol, 62
+	.loc amm/AckiSwapPair.sol, 75
 	OVER
 	PUSHCONT {
 		LDREF
@@ -993,24 +1327,19 @@
 
 .fragment public_function_selector, {
 	DUP
-	PUSHINT 1171441216
+	PUSHINT 729713869
 	LEQ
 	IFJMPREF {
 		DUP
-		PUSHINT 184190283
-		LEQ
+		EQINT 1
 		IFJMPREF {
-			DUP
-			EQINT 1
-			IFJMPREF {
-				.inline constructor
-			}
-			DUP
-			PUSHINT 184190283
-			EQUAL
-			IFJMPREF {
-				.inline reserveToken
-			}
+			.inline constructor
+		}
+		DUP
+		PUSHINT 184190283
+		EQUAL
+		IFJMPREF {
+			.inline reserveToken
 		}
 		DUP
 		PUSHINT 621546355
@@ -1024,17 +1353,23 @@
 		IFJMPREF {
 			.inline swapShellForToken
 		}
+	}
+	DUP
+	PUSHINT 1294452757
+	LEQ
+	IFJMPREF {
+		DUP
+		PUSHINT 1114977266
+		EQUAL
+		IFJMPREF {
+			.inline pokeBondingCurve
+		}
 		DUP
 		PUSHINT 1171441216
 		EQUAL
 		IFJMPREF {
 			.inline initAftWallet
 		}
-	}
-	DUP
-	PUSHINT 1504600195
-	LEQ
-	IFJMPREF {
 		DUP
 		PUSHINT 1259910852
 		EQUAL
@@ -1047,17 +1382,17 @@
 		IFJMPREF {
 			.inline onAFTTransfer
 		}
+	}
+	DUP
+	PUSHINT 1896024939
+	LEQ
+	IFJMPREF {
 		DUP
 		PUSHINT 1504600195
 		EQUAL
 		IFJMPREF {
 			.inline initialized
 		}
-	}
-	DUP
-	PUSHINT 1896024939
-	LEQ
-	IFJMPREF {
 		DUP
 		PUSHINT 1791368911
 		EQUAL

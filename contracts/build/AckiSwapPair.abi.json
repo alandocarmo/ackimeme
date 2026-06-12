@@ -37,6 +37,13 @@
 			]
 		},
 		{
+			"name": "pokeBondingCurve",
+			"inputs": [
+			],
+			"outputs": [
+			]
+		},
+		{
 			"name": "onAFTTransfer",
 			"inputs": [
 				{"name":"queryId","type":"uint64"},

@@ -316,20 +316,20 @@
 	}
 	SDEQ
 	PUSHCONT {
-		.loc amm/AckiSwapFactory.sol, 72
+		.loc amm/AckiSwapFactory.sol, 74
 		PUSH2 S0, S1
 		NEWC
 		STSLICECONST x62_
 		STSLICE
-		PUSHINT 1
-		STUR 115
+		PUSHSLICE x405f5e1000000000000000000000000000003_
+		STSLICER
 		SWAP
 		NEWC
 		STSLICECONST x43804c89
 		STSLICE
 		STBREFR
 		ENDC
-		PUSHINT 64
+		PUSHINT 1
 		SENDRAWMSG
 		.loc amm/AckiSwapFactory.sol, 0
 	}
@@ -393,7 +393,7 @@
 }
 
 .fragment getPairAddress_85e694b6_internal, {
-	.loc amm/AckiSwapFactory.sol, 77
+	.loc amm/AckiSwapFactory.sol, 79
 	PUSHINT 0
 	PUSHSLICE x2_
 	DUP
@@ -433,7 +433,7 @@
 	STDICT
 	STZERO
 	ENDC
-	.loc amm/AckiSwapFactory.sol, 86
+	.loc amm/AckiSwapFactory.sol, 88
 	HASHCU
 	NEWC
 	STSLICECONST x801_
@@ -468,7 +468,7 @@
 	IFREF {
 		.inline c4_to_c7
 	}
-	.loc amm/AckiSwapFactory.sol, 76
+	.loc amm/AckiSwapFactory.sol, 78
 	OVER
 	PUSHCONT {
 		LDREF
