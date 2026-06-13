@@ -521,11 +521,9 @@ const I18nContext = createContext<I18nContextType>({ t: (k) => k, lang: "en", se
 
 export function I18nProvider({ children }: { children: ReactNode }) {
   const [lang, setLangState] = useState("en");
-  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
     setLangState(detectLanguage());
-    setMounted(true);
   }, []);
 
   const setLang = useCallback((newLang: string) => {
@@ -540,10 +538,6 @@ export function I18nProvider({ children }: { children: ReactNode }) {
   const t = useCallback((key: string): string => {
     return translations[lang]?.[key] || translations.en[key] || key;
   }, [lang]);
-
-  if (!mounted) {
-    return null;
-  }
 
   return (
     <I18nContext.Provider value={{ t, lang, setLang }}>

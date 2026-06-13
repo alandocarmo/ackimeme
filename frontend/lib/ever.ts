@@ -1,4 +1,5 @@
 import { ProviderRpcClient } from "everscale-inpage-provider";
+import { EverscaleStandaloneClient } from "everscale-standalone-client";
 
 let everInstance: ProviderRpcClient | null = null;
 let initializationPromise: Promise<ProviderRpcClient> | null = null;
@@ -26,10 +27,16 @@ export async function getEver(): Promise<ProviderRpcClient> {
   if (!initializationPromise) {
     initializationPromise = (async () => {
       try {
-        const provider = new ProviderRpcClient();
-        if (!(await provider.hasProvider())) {
-          throw new Error("error_install_wallet");
-        }
+        const provider = new ProviderRpcClient({
+          fallback: () => EverscaleStandaloneClient.create({
+            connection: {
+              id: 1,
+              type: 'graphql',
+              data: { endpoints: [process.env.NEXT_PUBLIC_GRAPHQL_URL || 'https://shellnet.ackinacki.org/graphql'] }
+            },
+          }),
+        } as any);
+        
         await provider.ensureInitialized();
         everInstance = provider;
         return everInstance;
@@ -41,4 +48,9 @@ export async function getEver(): Promise<ProviderRpcClient> {
   }
 
   return initializationPromise;
+}
+
+export async function hasExtension(): Promise<boolean> {
+  const provider = new ProviderRpcClient();
+  return await provider.hasProvider();
 }

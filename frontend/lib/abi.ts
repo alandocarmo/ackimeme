@@ -1,7 +1,7 @@
 /**
  * ABI definitions for on-chain contract interaction.
  *
- * A-06: Updated to ABI version 2.3 with "pubkey" header to match
+ * A-06: Updated to ABI version 2.4 with "pubkey" header to match
  * contracts compiled with pragma AbiHeader pubkey (tvm-solidity >= 0.76.1).
  *
  * BondingCurve: buy/sell/getters — used in the trade widget

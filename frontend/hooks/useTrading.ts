@@ -96,7 +96,7 @@ export function useTrading(session: Session | null, token: Launch | null, onchai
     };
   }, [token?.onchainData?.bondingCurveAddress, token?.onchainData?.deployStatus, tradeMode, tradeAmount]);
 
-  async function handleTrade(currentPrice: number | null) {
+  async function handleTrade(currentPrice: number | null, amountOverride?: string, modeOverride?: "buy" | "sell") {
     if (!session) return router.push(`/auth?from=/token/${token?.id}`);
     setError("");
     setIsTrading(true);
@@ -106,16 +106,18 @@ export function useTrading(session: Session | null, token: Launch | null, onchai
         throw new Error("Contrato Bonding Curve não disponível. Aguarde o deploy on-chain.");
       }
       
-      const { getEver } = await import('../lib/ever');
+      const { getEver, hasExtension } = await import('../lib/ever');
       const { Address } = await import('everscale-inpage-provider');
+      if (!(await hasExtension())) throw new Error(t("error_install_wallet"));
       const ever = await getEver();
       const { accountInteraction } = await ever.requestPermissions({ permissions: ['basic', 'accountInteraction'] });
       if (!accountInteraction) throw new Error(t("error_denied"));
 
-      const rawAmount = parseFloat(tradeAmount);
-      if (!tradeAmount || !Number.isFinite(rawAmount) || rawAmount <= 0) throw new Error(t("error_invalid_value"));
+      const activeAmount = amountOverride !== undefined ? amountOverride : tradeAmount;
+      const rawAmount = parseFloat(activeAmount);
+      if (!activeAmount || !Number.isFinite(rawAmount) || rawAmount <= 0) throw new Error(t("error_invalid_value"));
 
-      const isBuy = tradeMode === "buy";
+      const isBuy = (modeOverride !== undefined ? modeOverride : tradeMode) === "buy";
       const slippagePct = parseFloat(slippage);
 
       if (isBuy) {
@@ -123,7 +125,7 @@ export function useTrading(session: Session | null, token: Launch | null, onchai
 
         const bcContract = new ever.Contract(BondingCurveAbi, new Address(token.onchainData.bondingCurveAddress)) as unknown as TypedContract<BondingCurveMethods>;
 
-        const { expectedNanoTokens, baseCostNano } = await calculateExactBuyAmount(tradeAmount, currentPrice, slippagePct, bcContract);
+        const { expectedNanoTokens, baseCostNano } = await calculateExactBuyAmount(activeAmount, currentPrice, slippagePct, bcContract);
         
         if (expectedNanoTokens === BigInt("0")) throw new Error("Valor muito baixo para comprar ao menos uma fração do token.");
 
@@ -184,7 +186,7 @@ export function useTrading(session: Session | null, token: Launch | null, onchai
         const minShellOutNano = grossReturnForSlippage * BigInt(Math.round(100 - slippagePct)) / BigInt("100");
 
         const walletContract = new ever.Contract(TokenWalletAbi, userWalletAddress) as unknown as TypedContract<TokenWalletMethods>;
-        const tokensToSellNano = toNano(tradeAmount);
+        const tokensToSellNano = toNano(activeAmount);
         
         // Encode minShellOut in the forward payload for slippage protection during the sell
         const packed = await ever.packIntoCell({

@@ -14,21 +14,6 @@ interface TokenChatProps {
   onCommentPosted: (comment: CommentType) => void;
 }
 
-/** Sanitize user-generated text to prevent XSS injection */
-function sanitizeText(text: string): string {
-  const div = typeof document !== 'undefined' ? document.createElement('div') : null;
-  if (div) {
-    div.textContent = text;
-    return div.innerHTML;
-  }
-  return text
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;')
-    .replace(/'/g, '&#x27;');
-}
-
 export function TokenChat({ launchId, comments, session, onCommentPosted }: TokenChatProps): React.JSX.Element {
   const { t } = useI18n();
   const router = useRouter();
@@ -72,7 +57,7 @@ export function TokenChat({ launchId, comments, session, onCommentPosted }: Toke
               return (
                 <div key={c.id} style={{ background: 'linear-gradient(90deg, rgba(16,185,129,0.1), transparent)', padding: '12px', borderRadius: '8px', borderLeft: `2px solid #10b981` }}>
                    <span style={{ fontSize: '13px', color: '#10b981', fontWeight: 700 }}>🚨 SYSTEM WHALE ALERT:</span>
-                   <span style={{ fontSize: '13px', color: '#fff', marginLeft: '8px' }}>{sanitizeText(c.content)}</span>
+                   <span style={{ fontSize: '13px', color: '#fff', marginLeft: '8px' }}>{c.content}</span>
                 </div>
               );
             }
@@ -95,7 +80,7 @@ export function TokenChat({ launchId, comments, session, onCommentPosted }: Toke
                   </span>
                 </div>
                 <p style={{ margin: 0, fontSize: '13px', color: isWhale ? '#fef3c7' : 'var(--ink)', lineHeight: 1.5, wordBreak: 'break-word' }}>
-                  {sanitizeText(c.content)}
+                  {c.content}
                 </p>
               </div>
             );

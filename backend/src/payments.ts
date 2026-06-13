@@ -122,7 +122,10 @@ export async function verifyPayment({
   if (rawShellAmount.startsWith("-")) {
     throw new Error("Valor de pagamento inválido (negativo). Transação potencialmente malformada.");
   }
-  const receivedNano = BigInt(rawShellAmount.replace(/\D/g, "") || "0");
+  if (!/^\d+$/.test(rawShellAmount)) {
+    throw new Error("Formato numérico inválido para o valor do pagamento.");
+  }
+  const receivedNano = BigInt(rawShellAmount);
   
   // Launch Boost: +500 SHELL if boosted
   const baseFee = BigInt(requirement.minimumAmount);

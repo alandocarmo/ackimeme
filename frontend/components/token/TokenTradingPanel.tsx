@@ -13,7 +13,7 @@ interface TokenTradingPanelProps {
   slippage: string;
   setSlippage: (s: string) => void;
   isTrading: boolean;
-  onTrade: () => void;
+  onTrade: (amountOverride?: string, modeOverride?: "buy" | "sell") => void;
   tradeSuccess: string;
   userShellEccBalance: number | null;
   userTokenBalance: number | null;
@@ -40,6 +40,7 @@ export function TokenTradingPanel({
 }: TokenTradingPanelProps): React.JSX.Element {
   const { t } = useI18n();
   const [payCurrency, setPayCurrency] = useState("SHELL");
+  const [degenMode, setDegenMode] = useState(false);
 
   // Premium UI Inline Styles
   const panelStyle: React.CSSProperties = {
@@ -121,17 +122,73 @@ export function TokenTradingPanel({
           </div>
         )}
 
-        <div style={tabContainer}>
-          <div style={getTabStyle(tradeMode === "buy", "buy")} onClick={() => setTradeMode("buy")}>
-            {t("detail_buy")}
+        {!degenMode && (
+          <div style={tabContainer}>
+            <div style={getTabStyle(tradeMode === "buy", "buy")} onClick={() => setTradeMode("buy")}>
+              {t("detail_buy")}
+            </div>
+            <div style={getTabStyle(tradeMode === "sell", "sell")} onClick={() => setTradeMode("sell")}>
+              {t("detail_sell")}
+            </div>
           </div>
-          <div style={getTabStyle(tradeMode === "sell", "sell")} onClick={() => setTradeMode("sell")}>
-            {t("detail_sell")}
-          </div>
+        )}
+
+        {/* Degen Mode Toggle */}
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
+          <span style={{ fontSize: '12px', color: degenMode ? '#f59e0b' : 'rgba(255,255,255,0.6)', fontWeight: degenMode ? 'bold' : 'normal', transition: 'all 0.3s' }}>
+            ⚡ Degen Mode
+          </span>
+          <label style={{ position: 'relative', display: 'inline-block', width: '40px', height: '20px' }}>
+            <input type="checkbox" checked={degenMode} onChange={(e) => setDegenMode(e.target.checked)} style={{ opacity: 0, width: 0, height: 0 }} />
+            <span style={{
+              position: 'absolute', cursor: 'pointer', top: 0, left: 0, right: 0, bottom: 0,
+              backgroundColor: degenMode ? '#f59e0b' : 'rgba(255,255,255,0.1)', borderRadius: '20px', transition: '0.4s'
+            }}>
+              <span style={{
+                position: 'absolute', content: '""', height: '16px', width: '16px', left: degenMode ? '22px' : '2px', bottom: '2px',
+                backgroundColor: '#fff', borderRadius: '50%', transition: '0.4s'
+              }} />
+            </span>
+          </label>
         </div>
 
-        <div>
-          <div style={inputContainer}>
+        {degenMode ? (
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', marginBottom: '24px' }}>
+            <div style={{ fontSize: '11px', color: 'rgba(255,255,255,0.5)', textAlign: 'center' }}>
+              1 Click Buy (Slippage: {slippage}%) • $1 USD = 100 SHELL
+            </div>
+            <div style={{ display: 'flex', gap: '8px' }}>
+              {[
+                { label: "$10", shell: 1000 },
+                { label: "$50", shell: 5000 },
+                { label: "$100", shell: 10000 }
+              ].map(btn => (
+                <button
+                  key={btn.label}
+                  onClick={() => {
+                    setTradeMode("buy");
+                    setPayCurrency("SHELL");
+                    setTradeAmount(btn.shell.toString());
+                    // Fire immediately with modeOverride
+                    onTrade(btn.shell.toString(), "buy");
+                  }}
+                  disabled={isTrading || token.onchainData?.deployStatus !== 'deployed'}
+                  style={{
+                    flex: 1, padding: '16px 0', background: 'linear-gradient(135deg, #f59e0b 0%, #d97706 100%)',
+                    border: 'none', borderRadius: '12px', color: '#fff', fontSize: '18px', fontWeight: 800,
+                    cursor: (isTrading || token.onchainData?.deployStatus !== 'deployed') ? 'not-allowed' : 'pointer',
+                    opacity: (isTrading || token.onchainData?.deployStatus !== 'deployed') ? 0.5 : 1,
+                    boxShadow: '0 4px 12px rgba(245, 158, 11, 0.4)', transition: 'transform 0.1s'
+                  }}
+                >
+                  {btn.label}
+                </button>
+              ))}
+            </div>
+          </div>
+        ) : (
+          <div>
+            <div style={inputContainer}>
             <input 
               type="number" 
               style={inputStyle}
@@ -216,8 +273,8 @@ export function TokenTradingPanel({
             </div>
             
             <div style={{ display: "flex", justifyContent: "space-between" }}>
-              <span style={{ color: "rgba(255,255,255,0.6)", fontSize: "12px" }}>Protocol Fee (0.3%)</span>
-              <span style={{ color: "#10b981", fontSize: "12px", fontWeight: 600 }}>0.25% Pool | 0.05% DEX</span>
+              <span style={{ color: "rgba(255,255,255,0.6)", fontSize: "12px" }}>Protocol Fee (1%)</span>
+              <span style={{ color: "#10b981", fontSize: "12px", fontWeight: 600 }}>1% DEX</span>
             </div>
           </div>
 
@@ -231,7 +288,7 @@ export function TokenTradingPanel({
               transition: "transform 0.1s",
               boxShadow: "0 4px 14px 0 rgba(0, 0, 0, 0.25)"
             }}
-            onClick={onTrade}
+            onClick={() => onTrade()}
             disabled={isTrading || token.onchainData?.deployStatus !== 'deployed'}
           >
             {isTrading 
@@ -247,8 +304,9 @@ export function TokenTradingPanel({
               ✅ {tradeSuccess}
             </p>
           )}
+          </div>
+        )}
 
-        </div>
       </div>
 
       {!session && (

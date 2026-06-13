@@ -12,7 +12,7 @@ export function BubbleMap({ holders, totalSupply }: { holders: Holder[], totalSu
     const placed = [];
 
     const sortedNodes = [...holders].map((h, i) => {
-      const pct = (h.balance / totalSupply) * 100;
+      const pct = totalSupply > 0 ? (h.balance / totalSupply) * 100 : 0;
       const r = Math.max(8, Math.sqrt(pct) * 12);
       return { ...h, pct, r, id: i };
     }).sort((a, b) => b.balance - a.balance).slice(0, 50);

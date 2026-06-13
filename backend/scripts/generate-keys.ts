@@ -1,3 +1,8 @@
+if (process.env.NODE_ENV === "production") {
+  console.error("ERRO: Este script não deve ser executado em produção para evitar o vazamento de chaves no terminal.");
+  process.exit(1);
+}
+
 import { getTvmClient, sdkAvailable } from "../src/services/tvm-client";
 
 async function main(): Promise<void> {

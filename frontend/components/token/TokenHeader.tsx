@@ -1,4 +1,5 @@
 import React from "react";
+import Image from "next/image";
 import { isSafeUrl, hashColor } from "../../lib/utils";
 import type { Launch } from "../../types";
 import styles from "../../styles/Token.module.css";
@@ -25,7 +26,7 @@ export function TokenHeader({ token, isFavorite, onToggleFavorite }: TokenHeader
         borderRadius: '16px'
       }}>
         {isSafeUrl(token.coin?.logoUrl) ? (
-          <img src={token.coin.logoUrl} alt="" referrerPolicy="no-referrer" style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '16px' }} />
+          <Image src={token.coin.logoUrl || ""} alt="" width={80} height={80} style={{ objectFit: 'cover', borderRadius: '16px' }} unoptimized />
         ) : (
           <span style={{ color: '#fff', fontWeight: 700 }}>
             {(token.coin?.symbol || "?")[0]}

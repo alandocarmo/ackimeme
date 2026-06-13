@@ -32,7 +32,7 @@ import {
   getLaunchById,
   getWalletLastLaunch,
   checkAndUpdateWalletRateLimit,
-  updateWalletLastLaunch,
+  resetWalletRateLimit,
   listLaunchesByWallet,
   listPublicLaunches,
   cleanupExpiredAuthData,
@@ -53,7 +53,6 @@ import {
 import { createTreasuryPaymentRecord } from "./treasury";
 import {
   getAccountBalance,
-  getAccountPublicKey,
 } from "./services/graphql.service";
 import { uploadToIPFS, createTokenMetadata } from "./services/ipfs.service";
 import { deployTokenEcosystem, assertOnchainDeployReady } from "./services/deployer.service";
@@ -158,10 +157,13 @@ const RATE_LIMIT_WINDOW_MS = 60 * 60 * 1000; // 1 hour
 const hasWildcardOrigin = config.allowedOrigins.includes("*");
 
 async function checkWalletRateLimit(walletAddress: string): Promise<void> {
-  const result = await checkAndUpdateWalletRateLimit(walletAddress, RATE_LIMIT_WINDOW_MS);
-  if (!result.success && result.timeSinceLastLaunch !== undefined) {
-    const waitMinutes = Math.ceil((RATE_LIMIT_WINDOW_MS - result.timeSinceLastLaunch) / 60000);
-    throw new Error(`Rate limit: aguarde ${waitMinutes} minuto(s) para criar outro token.`);
+  const lastLaunch = await getWalletLastLaunch(walletAddress);
+  if (lastLaunch) {
+    const timeSince = Date.now() - lastLaunch.getTime();
+    if (timeSince < RATE_LIMIT_WINDOW_MS) {
+      const waitMinutes = Math.ceil((RATE_LIMIT_WINDOW_MS - timeSince) / 60000);
+      throw new Error(`Rate limit: aguarde ${waitMinutes} minuto(s) para criar outro token.`);
+    }
   }
 }
 
@@ -242,6 +244,7 @@ const globalLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,
   max: 100,
   store: getRateLimitStore(),
+  passOnStoreError: true,
   standardHeaders: true,
   legacyHeaders: false,
   message: { error: "Too many requests from this IP, please try again later." }
@@ -253,6 +256,7 @@ const authLimiter = rateLimit({
   windowMs: 60 * 1000,
   max: 10,
   store: getRateLimitStore(),
+  passOnStoreError: true,
   standardHeaders: true,
   legacyHeaders: false,
   message: { error: "Too many auth requests. Please wait before trying again." }
@@ -262,6 +266,7 @@ const paymentLimiter = rateLimit({
   windowMs: 60 * 1000,
   max: 5,
   store: getRateLimitStore(),
+  passOnStoreError: true,
   standardHeaders: true,
   legacyHeaders: false,
   message: { error: "Too many payment verification requests. Please wait." }
@@ -271,6 +276,7 @@ const apiLimiter = rateLimit({
   windowMs: 60 * 1000,
   max: 30,
   store: getRateLimitStore(),
+  passOnStoreError: true,
   standardHeaders: true,
   legacyHeaders: false,
   message: { error: "Too many requests. Please wait." }
@@ -399,7 +405,7 @@ function signAdminJwt(walletAddress: string): string {
 
 function verifyAdminJwt(token: string): any {
   try {
-    return jwt.verify(token, JWT_SIGNING_SECRET);
+    return jwt.verify(token, JWT_SIGNING_SECRET, { algorithms: ["HS256"] });
   } catch { 
     return null; 
   }
@@ -411,7 +417,7 @@ async function requireSecurityAdmin(req: Request, res: Response, next: NextFunct
   const token = authCookie || authHeader;
   
   const data = verifyAdminJwt(token);
-  if (data) {
+  if (data && config.adminWallets.includes(String(data.w || "").toLowerCase())) {
     req.admin = { authMode: "admin_jwt", walletAddress: data.w };
     return next();
   }
@@ -702,6 +708,8 @@ app.post("/launch-request", requireSession, validate(CreateLaunchSchema), async 
   let txHashReserved = false;
   let reservedTxHash = "";
   let chainDeployAttempted = false;
+  let creatorWallet = "";
+  let rateLimitAcquired = false;
 
   try {
     if (config.isProduction && !config.feeWalletConfigured) {
@@ -711,8 +719,9 @@ app.post("/launch-request", requireSession, validate(CreateLaunchSchema), async 
     }
 
     const launchRequest = normalizeLaunchRequest(req.body, req.session);
+    creatorWallet = launchRequest.creator.wallet;
 
-    await checkWalletRateLimit(launchRequest.creator.wallet);
+    await checkWalletRateLimit(creatorWallet);
 
     const reserved = await reserveTxHash(
       launchRequest.payment.txHash,
@@ -761,6 +770,13 @@ app.post("/launch-request", requireSession, validate(CreateLaunchSchema), async 
         isBoosted,
       });
     }
+    
+    // Agora que o pagamento e txHash estão OK, aplicar o lock de rate limit
+    const rateLimitCheck = await checkAndUpdateWalletRateLimit(launchRequest.creator.wallet, RATE_LIMIT_WINDOW_MS);
+    if (!rateLimitCheck.success) {
+      throw new Error("Rate limit alcançado inesperadamente. Aguarde o prazo exigido.");
+    }
+    rateLimitAcquired = true;
 
     await ensureCreatorHasShellBalance(launchRequest.creator.wallet);
 
@@ -851,7 +867,7 @@ app.post("/launch-request", requireSession, validate(CreateLaunchSchema), async 
     } else {
       await updateLaunchOnchainState(launchTicket.id, {
          reserveBalance: "0",
-         tokenSupply: launchRequest.coin.totalSupply,
+         tokenSupply: String(BigInt(launchRequest.coin.totalSupply) * 1000000000n),
          lockedLiquidity: false,
          status: "deploy_failed",
          deployStatus: deployResult.status,
@@ -863,7 +879,7 @@ app.post("/launch-request", requireSession, validate(CreateLaunchSchema), async 
     try {
       await updateLaunchOnchainState(launchTicket.id, {
         reserveBalance: "0",
-        tokenSupply: launchRequest.coin.totalSupply,
+        tokenSupply: String(BigInt(launchRequest.coin.totalSupply) * 1000000000n),
         lockedLiquidity: false,
         status: launchTicket.status,
         deployStatus: deployResult.status,
@@ -882,7 +898,7 @@ app.post("/launch-request", requireSession, validate(CreateLaunchSchema), async 
       throw bundleErr;
     }
 
-    await updateWalletLastLaunch(launchRequest.creator.wallet);
+
 
     if (io) {
       io.emit("new_launch", {
@@ -904,6 +920,9 @@ app.post("/launch-request", requireSession, validate(CreateLaunchSchema), async 
   } catch (error: any) {
     if (txHashReserved && reservedTxHash && !chainDeployAttempted) {
       await releaseTxHashReservation(reservedTxHash).catch(() => {});
+      if (rateLimitAcquired && creatorWallet) {
+        await resetWalletRateLimit(creatorWallet).catch(() => {});
+      }
     } else if (txHashReserved && reservedTxHash && chainDeployAttempted) {
       console.warn(
         `[Launch] Preservando reserva do txHash ${reservedTxHash} porque uma tentativa on-chain já foi iniciada.`,
@@ -1193,8 +1212,8 @@ app.get("/launches/:id/holders", requireValidUUID, async (req: Request, res: Res
 
     const holders: any[] = await getTopHoldersByLaunchId(req.params.id, 20);
     
-    const rawSupply = launch.onchainData?.tokenSupply || launch.launchRequest?.coin?.totalSupply || "1000000000";
-    const isNano = Boolean(launch.onchainData?.tokenSupply);
+    const isNano = Boolean(launch.onchainData?.tokenSupply && launch.onchainData.tokenSupply !== "0");
+    const rawSupply = isNano ? launch.onchainData!.tokenSupply! : String(launch.launchRequest?.coin?.totalSupply || "1000000000");
     const totalSupply = isNano ? BigInt(rawSupply) : BigInt(rawSupply) * 1000000000n;
     
     const circulating = holders.reduce((acc: bigint, h: any) => acc + BigInt(h.balance), 0n);
@@ -1257,8 +1276,8 @@ async function start() {
   }, 60000);
 
   io.use((socket, next) => {
-    const rawIp = socket.handshake.headers["x-forwarded-for"] || socket.handshake.address;
-    const ip = Array.isArray(rawIp) ? rawIp[0] : (typeof rawIp === 'string' ? rawIp.split(',')[0].trim() : "unknown");
+    const rawIp = socket.handshake.headers["x-forwarded-for"];
+    const ip = rawIp ? (typeof rawIp === 'string' ? rawIp.split(',').pop()!.trim() : rawIp[rawIp.length - 1].trim()) : socket.handshake.address;
     const now = Date.now();
     const limit = socketRateLimit.get(ip);
     
@@ -1278,6 +1297,11 @@ async function start() {
     socket.on("join_token", (tokenId) => {
       if (typeof tokenId !== "string" || !UUID_REGEX.test(tokenId)) return;
       socket.join(`token_${tokenId}`);
+    });
+    
+    socket.on("leave_token", (tokenId) => {
+      if (typeof tokenId !== "string" || !UUID_REGEX.test(tokenId)) return;
+      socket.leave(`token_${tokenId}`);
     });
   });
 

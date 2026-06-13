@@ -150,10 +150,11 @@ export default function AuthPage() {
     try {
       setLoading(true);
       setError("");
-      const { getEver } = await import('../lib/ever');
+      const { getEver, hasExtension } = await import('../lib/ever');
+      if (!(await hasExtension())) throw new Error(t("error_install_wallet"));
       const ever = await getEver();
       const { accountInteraction } = await ever.requestPermissions({ permissions: ['basic', 'accountInteraction'] });
-      if (!accountInteraction) throw new Error("Acesso à carteira negado.");
+      if (!accountInteraction) throw new Error(t("error_denied"));
       
       const walletAddress = accountInteraction.address.toString();
       

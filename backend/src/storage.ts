@@ -660,11 +660,12 @@ export async function getWalletLastLaunch(walletAddress: any) {
   return result.rows.length > 0 ? new Date(result.rows[0].last_launch_at) : null;
 }
 
-export async function updateWalletLastLaunch(walletAddress: any) {
+
+
+export async function resetWalletRateLimit(walletAddress: any) {
   await query(
-    `INSERT INTO wallet_rate_limits (wallet_address, last_launch_at) VALUES ($1, NOW())
-     ON CONFLICT (wallet_address) DO UPDATE SET last_launch_at = NOW()`,
-    [String(walletAddress || "").toLowerCase()],
+    `UPDATE wallet_rate_limits SET last_launch_at = '1970-01-01 00:00:00' WHERE wallet_address = $1`,
+    [String(walletAddress || "").toLowerCase()]
   );
 }
 
@@ -832,6 +833,7 @@ export async function searchLaunches(q: any, limit: any = 30, offset: any = 0) {
       launch_request->'coin'->>'tagline' ILIKE $1 OR
       wallet_address ILIKE $1
     ) AND status IN ('on_chain_deployed', 'payment_verified_waiting_blockchain_integration', 'deployment_queued')
+      AND is_public = TRUE
     ORDER BY created_at DESC
     LIMIT $2 OFFSET $3;
   `;
@@ -887,7 +889,7 @@ export async function getPriceHistoryByLaunchId(launchId: any, intervalMinutes: 
       SUM(shell_amount::NUMERIC) AS volume
     FROM (
       SELECT
-        date_trunc('minute', created_at) - (EXTRACT(minute FROM created_at)::INTEGER % $2) * interval '1 minute' AS time_bucket,
+        to_timestamp(floor(extract('epoch' from created_at) / ($2 * 60)) * ($2 * 60)) AS time_bucket,
         price,
         shell_amount,
         created_at
@@ -914,7 +916,9 @@ export async function getGlobalStats() {
       (SELECT COUNT(*) FROM launches) AS total_tokens,
       (SELECT COALESCE(SUM(reserve_balance::NUMERIC), 0) FROM launches) AS total_reserve,
       (SELECT COUNT(DISTINCT wallet_address) FROM trades) AS active_wallets,
-      (SELECT COUNT(*) FROM trades) AS total_trades
+      (SELECT COUNT(*) FROM trades) AS total_trades,
+      (SELECT COUNT(*) FROM launches WHERE status IN ('on_chain_deployed', 'deployment_queued')) AS projects_launched,
+      (SELECT SUM(shell_amount) FROM trades) AS total_volume_nano
     FROM (SELECT 1) dummy;
   `;
   const result = await query(sql);
@@ -924,7 +928,18 @@ export async function getGlobalStats() {
     totalReserveShell: (Number(row.total_reserve || 0) / 1e9).toFixed(1),
     activeWallets: parseInt(row.active_wallets || 0),
     totalTrades: parseInt(row.total_trades || 0),
+    projectsLaunched: parseInt(row.projects_launched || 0),
+    totalVolume: Number(row.total_volume_nano || 0) / 1e9,
   };
+}
+
+export async function getLaunchCursor(launchId: string): Promise<string | null> {
+  const result = await query(`SELECT sync_cursor FROM launches WHERE id = $1`, [launchId]);
+  return result.rows.length > 0 ? result.rows[0].sync_cursor : null;
+}
+
+export async function updateLaunchCursor(launchId: string, cursor: string) {
+  await query(`UPDATE launches SET sync_cursor = $1 WHERE id = $2`, [cursor, launchId]);
 }
 
 

@@ -1,9 +1,11 @@
 import Head from "next/head";
 import Link from "next/link";
+import Image from "next/image";
 import { useRouter } from "next/router";
 import { useEffect, useState, useCallback } from "react";
 import { getSession, getPublicLaunches } from "../lib/api";
 import { TokenRootAbi, TokenWalletAbi } from "../lib/abi";
+import { TypedContract, TokenRootMethods, TokenWalletMethods } from "../types/contracts";
 import { useI18n } from "../lib/i18n";
 import { formatNum, compactWallet, isSafeUrl, nanoToDecimal } from "../lib/utils";
 import { Session } from "../types";
@@ -74,11 +76,11 @@ export default function PortfolioPage() {
           let userWalletAddress = localStorage.getItem(cacheKey);
 
           if (!userWalletAddress) {
-            const rootContract = new ever.Contract(TokenRootAbi, new Address((launch.onchainData?.tokenRootAddress || "")));
-            const walletResult = await (rootContract.methods as any).getWalletAddress({
-              ownerAddress: address
+            const rootContract = new ever.Contract(TokenRootAbi, new Address((launch.onchainData?.tokenRootAddress || ""))) as unknown as TypedContract<TokenRootMethods>;
+            const walletResult = await rootContract.methods.getWalletAddress({
+              ownerAddress: new Address(address)
             }).call();
-            userWalletAddress = walletResult.value0.toString();
+            userWalletAddress = walletResult.walletAddress.toString();
             
             if (userWalletAddress && userWalletAddress !== "0:0000000000000000000000000000000000000000000000000000000000000000") {
                localStorage.setItem(cacheKey, JSON.stringify({ address: userWalletAddress, timestamp: Date.now() }));
@@ -91,22 +93,22 @@ export default function PortfolioPage() {
                 userWalletAddress = parsedCache.address;
               } else {
                 userWalletAddress = null; // Expired, will re-fetch next time or if we structured the loop differently. Actually, let's just re-fetch right away.
-                const rootContract = new ever.Contract(TokenRootAbi, new Address((launch.onchainData?.tokenRootAddress || "")));
-                const walletResult = await (rootContract.methods as any).getWalletAddress({
-                  ownerAddress: address
+                const rootContract = new ever.Contract(TokenRootAbi, new Address((launch.onchainData?.tokenRootAddress || ""))) as unknown as TypedContract<TokenRootMethods>;
+                const walletResult = await rootContract.methods.getWalletAddress({
+                  ownerAddress: new Address(address)
                 }).call();
-                userWalletAddress = walletResult.value0.toString();
+                userWalletAddress = walletResult.walletAddress.toString();
                 if (userWalletAddress && userWalletAddress !== "0:0000000000000000000000000000000000000000000000000000000000000000") {
                    localStorage.setItem(cacheKey, JSON.stringify({ address: userWalletAddress, timestamp: Date.now() }));
                 }
               }
             } catch (e) {
                // Old format (just the address string) or corrupted
-               const rootContract = new ever.Contract(TokenRootAbi, new Address((launch.onchainData?.tokenRootAddress || "")));
-               const walletResult = await (rootContract.methods as any).getWalletAddress({
-                 ownerAddress: address
+               const rootContract = new ever.Contract(TokenRootAbi, new Address((launch.onchainData?.tokenRootAddress || ""))) as unknown as TypedContract<TokenRootMethods>;
+               const walletResult = await rootContract.methods.getWalletAddress({
+                 ownerAddress: new Address(address)
                }).call();
-               userWalletAddress = walletResult.value0.toString();
+               userWalletAddress = walletResult.walletAddress.toString();
                if (userWalletAddress && userWalletAddress !== "0:0000000000000000000000000000000000000000000000000000000000000000") {
                   localStorage.setItem(cacheKey, JSON.stringify({ address: userWalletAddress, timestamp: Date.now() }));
                }
@@ -117,8 +119,8 @@ export default function PortfolioPage() {
             return null;
           }
 
-          const walletContract = new ever.Contract(TokenWalletAbi, new Address(userWalletAddress));
-          const balanceResult = await (walletContract.methods as any).balance({}).call();
+          const walletContract = new ever.Contract(TokenWalletAbi, new Address(userWalletAddress)) as unknown as TypedContract<TokenWalletMethods>;
+          const balanceResult = await walletContract.methods.getDetails({}).call();
           const balanceNano = balanceResult.balance;
           
           if (BigInt(String(balanceNano || "0")) > 0n) {
@@ -270,7 +272,7 @@ export default function PortfolioPage() {
                   <Link href={`/token/${token.id}`} key={token.id} className={`card ${styles['portfolio-item-card']}`} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', textDecoration: 'none', transition: 'transform 0.2s' }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
                       <div className="token-avatar" style={{ width: '48px', height: '48px', borderRadius: '12px', background: 'var(--bg-deep)', display: 'flex', justifyContent: 'center', alignItems: 'center', fontSize: '20px' }}>
-                        {isSafeUrl(token.coin.logoUrl) ? <img src={token.coin.logoUrl} alt="" referrerPolicy="no-referrer" style={{ width: '100%', height: '100%', borderRadius: '12px' }} /> : token.coin.symbol[0]}
+                        {isSafeUrl(token.coin.logoUrl) ? <Image src={token.coin.logoUrl} alt="" width={48} height={48} style={{ borderRadius: '12px', objectFit: 'cover' }} unoptimized /> : token.coin.symbol[0]}
                       </div>
                       <div>
                         <h3 style={{ margin: 0, fontSize: '16px', color: 'var(--ink)' }}>{token.coin.name}</h3>
@@ -280,7 +282,7 @@ export default function PortfolioPage() {
 
                     <div style={{ textAlign: 'right' }}>
                       <p className={styles['stat-label']}>Balance</p>
-                      <p className={styles['stat-value']} style={{ margin: 0, color: 'var(--ink)' }}>{formatNum(token.balance.toFixed(2))}</p>
+                      <p className={styles['stat-value']} style={{ margin: 0, color: 'var(--ink)' }}>{formatNum(token.balance)}</p>
                     </div>
                   </Link>
                 ))}
@@ -302,7 +304,7 @@ export default function PortfolioPage() {
                   <Link href={`/token/${token.id}`} key={token.id} className={`card ${styles['portfolio-item-card']}`} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', textDecoration: 'none', transition: 'transform 0.2s' }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
                       <div className="token-avatar" style={{ width: '48px', height: '48px', borderRadius: '12px', background: 'var(--bg-deep)', display: 'flex', justifyContent: 'center', alignItems: 'center', fontSize: '20px' }}>
-                        {isSafeUrl(token.coin.logoUrl) ? <img src={token.coin.logoUrl} alt="" referrerPolicy="no-referrer" style={{ width: '100%', height: '100%', borderRadius: '12px' }} /> : token.coin.symbol[0]}
+                        {isSafeUrl(token.coin.logoUrl) ? <Image src={token.coin.logoUrl} alt="" width={48} height={48} style={{ borderRadius: '12px', objectFit: 'cover' }} unoptimized /> : token.coin.symbol[0]}
                       </div>
                       <div>
                         <h3 style={{ margin: 0, fontSize: '16px', color: 'var(--ink)' }}>{token.coin.name}</h3>
@@ -377,7 +379,7 @@ export default function PortfolioPage() {
                       <div key={`nft-${launch.id}`} className="card" style={{ border: `1px solid ${textColor}40`, display: 'flex', alignItems: 'center', gap: '16px', background: `rgba(0,0,0,0.2)` }}>
                         <div style={{ width: '64px', height: '64px', borderRadius: '12px', background: badgeColor, display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: `0 0 15px ${textColor}40` }}>
                           {isSafeUrl(launch.coin.logoUrl) ? (
-                            <img src={launch.coin.logoUrl} alt="" style={{ width: '48px', height: '48px', borderRadius: '8px' }} />
+                            <Image src={launch.coin.logoUrl || ""} alt="" width={48} height={48} style={{ borderRadius: '8px' }} unoptimized />
                           ) : (
                             <span style={{ fontSize: '24px' }}>{launch.coin.symbol[0]}</span>
                           )}

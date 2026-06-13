@@ -1,6 +1,8 @@
 import Head from "next/head";
 import Link from "next/link";
+import Image from "next/image";
 import { useDeferredValue, useEffect, useState } from "react";
+import useSWR, { mutate } from "swr";
 import { getPublicLaunches, getSocket, searchLaunches, getGlobalStats } from "../lib/api";
 import { formatNum, formatSupply, compactWallet, isSafeUrl, calcBondingStats, hashColor, MIGRATION_THRESHOLD_NANO } from "../lib/utils";
 import { useI18n } from "../lib/i18n";
@@ -56,60 +58,76 @@ function computeAggregateStats(launches: Launch[]) {
 
 export default function Home() {
   const { t } = useI18n();
-  const [launches, setLaunches] = useState<Launch[]>([]);
+  const { data: launchesData, error: launchesError } = useSWR('public_launches', () => getPublicLaunches());
+  const launches = launchesData?.launches || [];
+  const isLoading = !launchesData && !launchesError;
+  const error = launchesError ? launchesError.message : "";
+  
+  const { data: statsData } = useSWR('global_stats', () => getGlobalStats());
+  const stats = statsData?.stats;
+
   const [searchResults, setSearchResults] = useState<Launch[] | null>(null);
-  const [stats, setStats] = useState<any>(null);
-  const [error, setError] = useState<string>("");
-  const [isLoading, setIsLoading] = useState<boolean>(true);
   const [search, setSearch] = useState<string>("");
+  const [tickerEvents, setTickerEvents] = useState<any[]>([]);
   const [filter, setFilter] = useState<string>("new"); // new | trending | finishing | hall_of_fame
   const deferredSearch = useDeferredValue(search);
 
   useEffect(() => {
-    getPublicLaunches()
-      .then((r) => { setLaunches(r.launches || []); setError(""); setIsLoading(false); })
-      .catch((e) => { setError(e.message); setIsLoading(false); });
-
     const socket = getSocket();
     if (!socket) return;
 
     const handleNewLaunch = (launch: Launch) => {
-      setLaunches((prev) => {
-        // Prevent duplicates
-        if (prev.find((l) => l.id === launch.id)) return prev;
-        return [launch, ...prev];
-      });
+      mutate('public_launches', (current: any) => {
+        if (!current) return { launches: [launch] };
+        if (current.launches.find((l: Launch) => l.id === launch.id)) return current;
+        return { ...current, launches: [launch, ...current.launches] };
+      }, false);
+      setTickerEvents((prev) => [{ type: "launch", data: launch, timestamp: Date.now() }, ...prev].slice(0, 30));
+    };
+
+    const handleNewTrade = (trade: any) => {
+      if (trade.shellAmount > 0 || trade.tokenAmount > 0) {
+        setTickerEvents((prev) => [{ type: "trade", data: trade, timestamp: Date.now() }, ...prev].slice(0, 30));
+      }
     };
 
     const handleTokenUpdated = (update: Partial<import("../types").Launch>) => {
-      setLaunches((prev) =>
-        prev.map((l) => {
-          if (l.id === update.id) {
-            return {
-              ...l,
-              status: update.status || l.status,
-              onchainData: {
-                ...l.onchainData,
-                reserveBalance: update.onchainData?.reserveBalance ?? l.onchainData?.reserveBalance,
-                tokenSupply: update.onchainData?.tokenSupply ?? l.onchainData?.tokenSupply,
-                lockedLiquidity: update.onchainData?.lockedLiquidity ?? l.onchainData?.lockedLiquidity,
-                updatedAt: update.onchainData?.updatedAt ?? l.onchainData?.updatedAt,
-              },
-            };
-          }
-          return l;
-        })
-      );
+      mutate('public_launches', (current: any) => {
+        if (!current) return current;
+        return {
+          ...current,
+          launches: current.launches.map((l: Launch) => {
+            if (l.id === update.id) {
+              return {
+                ...l,
+                status: update.status || l.status,
+                onchainData: {
+                  ...l.onchainData,
+                  reserveBalance: update.onchainData?.reserveBalance ?? l.onchainData?.reserveBalance,
+                  tokenSupply: update.onchainData?.tokenSupply ?? l.onchainData?.tokenSupply,
+                  lockedLiquidity: update.onchainData?.lockedLiquidity ?? l.onchainData?.lockedLiquidity,
+                  updatedAt: update.onchainData?.updatedAt ?? l.onchainData?.updatedAt,
+                },
+              };
+            }
+            return l;
+          })
+        };
+      }, false);
     };
 
     socket.on("new_launch", handleNewLaunch);
     socket.on("token_updated", handleTokenUpdated);
+    socket.on("new_trade_global", handleNewTrade);
 
     return () => {
       socket.off("new_launch", handleNewLaunch);
       socket.off("token_updated", handleTokenUpdated);
+      socket.off("new_trade_global", handleNewTrade);
     };
   }, []);
+
+
 
   // Server-side search logic
   useEffect(() => {
@@ -127,16 +145,18 @@ export default function Home() {
       });
   }, [deferredSearch]);
 
-  // Global stats fetch — runs once on mount, not on every launch update
-  useEffect(() => {
-    getGlobalStats()
-      .then((r) => setStats(r.stats))
-      .catch((e) => console.error("Global stats error", e));
-  }, []);
+
 
   let filtered = searchResults !== null
     ? searchResults
     : launches.filter((l) => matchesSearch(l, deferredSearch));
+
+  // Initialize ticker events with initial launches once
+  useEffect(() => {
+    if (launches.length > 0 && tickerEvents.length === 0) {
+      setTickerEvents(launches.slice(0, 20).map(l => ({ type: "launch", data: l, timestamp: new Date(l.createdAt || Date.now()).getTime() })));
+    }
+  }, [launches]);
 
   const isBoostedActive = (l: Launch) => l.protocol?.isBoosted && (Date.now() - new Date(l.createdAt || Date.now()).getTime() < 24 * 60 * 60 * 1000);
 
@@ -192,7 +212,12 @@ export default function Home() {
 
         {/* Live Stats Banner */}
         {(stats || launches.length > 0) && (() => {
-          const agg = stats || computeAggregateStats(launches);
+          const agg = stats ? {
+            totalTokens: stats.totalLaunches || 0,
+            totalReserveShell: stats.volume24h ? (stats.volume24h).toFixed(1) : "0",
+            activeTrading: stats.activeTraders || 0,
+            activeWallets: stats.activeTraders || 0
+          } : computeAggregateStats(launches);
           return (
             <div className="container">
               <div className={styles['stats-banner']}>
@@ -202,7 +227,7 @@ export default function Home() {
                 </div>
                 <div className={styles['stats-banner-item']}>
                   <span className={styles['stats-banner-value']}><span className={styles.cyan}>{agg.totalReserveShell}</span></span>
-                  <span className={styles['stats-banner-label']}>{t("stats_shell_locked")}</span>
+                  <span className={styles['stats-banner-label']}>{stats ? "24h Volume (SHELL)" : t("stats_shell_locked")}</span>
                 </div>
                 <div className={styles['stats-banner-item']}>
                   <span className={styles['stats-banner-value']}><span className={styles.warm}>{stats ? agg.activeWallets : agg.activeTrading}</span></span>
@@ -218,18 +243,36 @@ export default function Home() {
         })()}
 
         {/* Activity Ticker */}
-        {launches.length > 0 && (
+        {tickerEvents.length > 0 && (
           <div className={styles['activity-ticker']}>
             <div className={styles['ticker-track']}>
-              {/* Duplicate items for seamless loop */}
-              {[...launches, ...launches].slice(0, 20).map((l, i) => (
-                <span className={styles['ticker-item']} key={`tick-${l.id}-${i}`}>
-                  <span className={styles['ticker-dot']} />
-                  <span className={`${styles['ticker-action']} ${styles['ticker-launch']}`}>LAUNCHED</span>
-                  <span>${l.coin?.symbol}</span>
-                  <span style={{ color: 'var(--ink-muted)' }}>{formatTimeAgo(l.createdAt || "", t)}</span>
-                </span>
-              ))}
+              {[...tickerEvents, ...tickerEvents].map((evt, i) => {
+                if (evt.type === "launch") {
+                  const l = evt.data;
+                  return (
+                    <span className={styles['ticker-item']} key={`tick-l-${l.id}-${i}`}>
+                      <span className={styles['ticker-dot']} />
+                      <span className={`${styles['ticker-action']} ${styles['ticker-launch']}`}>LAUNCHED</span>
+                      <span>${l.coin?.symbol}</span>
+                      <span style={{ color: 'var(--ink-muted)' }}>{formatTimeAgo(l.createdAt || "", t)}</span>
+                    </span>
+                  );
+                } else {
+                  const tr = evt.data;
+                  const isBuy = tr.type === 'buy';
+                  const usdVal = ((Math.abs(tr.shellAmount) / 1e9) / 100).toFixed(2); // assuming 1 USDC = 100 SHELL
+                  return (
+                    <span className={styles['ticker-item']} key={`tick-t-${tr.id || ('idx-' + i)}-${i}`}>
+                      <span className={styles['ticker-dot']} style={{ background: isBuy ? '#10b981' : '#ef4444', boxShadow: `0 0 10px ${isBuy ? '#10b981' : '#ef4444'}` }} />
+                      <span className={styles['ticker-action']} style={{ color: isBuy ? '#10b981' : '#ef4444' }}>
+                        {isBuy ? "BOUGHT" : "SOLD"}
+                      </span>
+                      <span>${usdVal}</span>
+                      <span style={{ color: 'var(--ink-muted)' }}>{formatTimeAgo(new Date(evt.timestamp).toISOString(), t)}</span>
+                    </span>
+                  );
+                }
+              })}
             </div>
           </div>
         )}
@@ -299,7 +342,7 @@ export default function Home() {
                     <div className={styles['token-card-header']}>
                       <div className={styles['token-avatar']} style={{ background: `linear-gradient(135deg, ${color}, ${color}44)` }}>
                         {isSafeUrl(launch.coin?.logoUrl) ? (
-                          <img src={launch.coin!.logoUrl!} alt="" referrerPolicy="no-referrer" />
+                          <Image src={launch.coin!.logoUrl!} alt="" width={48} height={48} style={{ borderRadius: '12px' }} unoptimized />
                         ) : (
                           <span style={{ color: '#fff', fontSize: '18px', fontWeight: 700 }}>
                             {(launch.coin?.symbol || "?")[0]}

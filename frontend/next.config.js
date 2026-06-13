@@ -51,7 +51,7 @@ const nextConfig = {
                 `script-src 'self' 'wasm-unsafe-eval' ${process.env.NODE_ENV === 'development' ? "'unsafe-eval'" : ""} https://va.vercel-scripts.com https://telegram.org`,
                 "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
                 "font-src 'self' https://fonts.gstatic.com",
-                "img-src 'self' data: https://gateway.pinata.cloud https://ipfs.io https://cloudflare-ipfs.com https://nftstorage.link https://arweave.net",
+                "img-src 'self' data: https:",
                 `connect-src 'self' https://shellnet.ackinacki.org https://mainnet.ackinacki.org https://api.pinata.cloud https://api.ackimeme.fun wss://api.ackimeme.fun ${apiBase} ${apiWs} https://va.vercel-scripts.com${process.env.NODE_ENV === 'development' ? ' http://localhost:* ws://localhost:*' : ''}`.trim(),
                 "frame-ancestors 'self' https://web.telegram.org https://*.telegram.org",
               ].join("; ");

@@ -13,6 +13,7 @@ import {
 } from "./storage";
 import { verifyTelegramInitData } from "./telegram";
 import { redisClient } from "./redis";
+import { WatchError } from "redis";
 
 const ED25519_SPKI_PREFIX = Buffer.from(
   "302a300506032b6570032100",
@@ -147,7 +148,10 @@ export async function createWalletChallenge({ walletAddress, telegramInitData }:
   const initDataProvided =
     typeof telegramInitData === "string" && telegramInitData.trim().length > 0;
 
-  if (initDataProvided && config.telegramBotToken) {
+  if (initDataProvided) {
+    if (!config.telegramBotToken) {
+      throw new Error("Telegram Bot Token não configurado no servidor.");
+    }
     if (!telegram.isVerified) {
       throw new Error("Falha ao validar o Telegram Mini App.");
     }
@@ -402,10 +406,13 @@ export async function processQrWebhook({ sessionId, walletAddress, publicKey, si
   
   const multi = redisClient.multi();
   multi.setEx(sessionKey, 5 * 60, JSON.stringify(sessionData));
-  const results = await multi.exec();
-  
-  if (!results) {
-    throw new Error("Conflito de concorrência no QR Code. Tente novamente.");
+  try {
+    await multi.exec();
+  } catch (err: any) {
+    if (err instanceof WatchError) {
+      throw new Error("Conflito de concorrência no QR Code. Tente novamente.");
+    }
+    throw err;
   }
 
   try {

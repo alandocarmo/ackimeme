@@ -71,7 +71,7 @@ export function verifyTelegramInitData(initData: any): TelegramVerificationResul
     return {
       isVerified: false,
       status: "bot_token_not_configured",
-      user: parsed.user,
+      user: null,
     };
   }
 

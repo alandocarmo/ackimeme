@@ -58,7 +58,11 @@ export default function CreatePage() {
     } else if (field === "logoUrl") {
       // Allow empty or valid https URLs only
       const url = String(value || "").trim();
-      v = url && !isSafeUrl(url) && url.length > 8 ? v : url;
+      if (url.length > 8 && !isSafeUrl(url)) {
+        v = form.logoUrl;
+      } else {
+        v = url;
+      }
     }
     setForm((prev) => ({ ...prev, [field]: v }));
   }

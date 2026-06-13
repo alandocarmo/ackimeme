@@ -58,7 +58,7 @@ if (isTvmSdkAvailable) {
 }
 
 export function isWasmDecoderAvailable() {
-  return Boolean(tvmClient && typeof tvmClient.decodeInput === "function");
+  return Boolean(tvmClient && typeof tvmClient.decodeEvent === "function");
 }
 
 /**
@@ -89,8 +89,8 @@ export async function gql(query: any, variables = {}, retries = 3) {
     } catch (err: any) {
       lastError = err;
 
-      // Não fazer retry para erros de lógica GraphQL (422, 400)
-      if (err.response && err.response.status >= 400 && err.response.status < 500) {
+      // Não fazer retry para erros de lógica GraphQL (422, 400) ou erros na resposta da API
+      if ((err.response && err.response.status >= 400 && err.response.status < 500) || (!err.response && err.message && err.message.startsWith("GraphQL error:"))) {
         throw err;
       }
 
@@ -180,7 +180,11 @@ export async function getTransaction(hash: any) {
     node.in_message?.currencies,
     SHELL_CURRENCY_ID,
   );
-  const shellNano = BigInt(String(shellFromCurrencies || "0").replace(/\D/g, "") || "0");
+  const rawShellStr = String(shellFromCurrencies || "0");
+  if (!/^-?\d+$/.test(rawShellStr) && rawShellStr !== "0") {
+    throw new Error("Formato numérico inválido na fee de produto da Acki Nacki.");
+  }
+  const shellNano = BigInt(rawShellStr);
   const vmshellAmount = nanoToDecimal(vmshellNanoAmount);
   const shellAmount = nanoToDecimal(shellFromCurrencies);
   const paymentSource = shellNano > 0n ? "shell_ecc" : "vmshell_value";
@@ -561,7 +565,7 @@ export async function getRecentBondingCurveTrades(address: any, afterCursor: str
     query getTrades($address: String!, $after: String) {
       blockchain {
         account(address: $address) {
-          transactions(first: 20, after: $after) {
+          transactions(first: 50, after: $after) {
             pageInfo {
               endCursor
               hasNextPage
@@ -595,15 +599,15 @@ export async function getRecentBondingCurveTrades(address: any, afterCursor: str
       for (const msg of outMsgs) {
         if (msg.msg_type_name === "extOut" && msg.body && isWasmDecoderAvailable()) {
           try {
-            const decodedBuy = tvmClient.decodeEvent(msg.body, BONDING_CURVE_ABI, "TokensPurchaseInitiated");
-            if (decodedBuy) {
+            const decodedBuy = tvmClient.decodeEvent(msg.body, JSON.stringify(BONDING_CURVE_ABI), "TokensPurchaseInitiated");
+            if (decodedBuy && decodedBuy.data) {
               trades.push({
                 txHash: `${tx.id}_${msg.id}`,
-                walletAddress: normalizeAddress(decodedBuy.buyer),
+                walletAddress: normalizeAddress(decodedBuy.data.buyer),
                 type: "buy",
-                tokenAmount: String(decodedBuy.tokensOut),
-                shellAmount: String(decodedBuy.shellIn),
-                price: Number(decodedBuy.tokensOut) > 0 ? Number(decodedBuy.shellIn) / Number(decodedBuy.tokensOut) : 0,
+                tokenAmount: String(decodedBuy.data.tokensOut),
+                shellAmount: String(decodedBuy.data.shellIn),
+                price: Number(decodedBuy.data.tokensOut) > 0 ? Number(decodedBuy.data.shellIn) / Number(decodedBuy.data.tokensOut) : 0,
                 createdAt: new Date(tx.now * 1000).toISOString()
               });
               continue;
@@ -613,15 +617,15 @@ export async function getRecentBondingCurveTrades(address: any, afterCursor: str
           }
           
           try {
-            const decodedSell = tvmClient.decodeEvent(msg.body, BONDING_CURVE_ABI, "TokensSold");
-            if (decodedSell) {
+            const decodedSell = tvmClient.decodeEvent(msg.body, JSON.stringify(BONDING_CURVE_ABI), "TokensSold");
+            if (decodedSell && decodedSell.data) {
               trades.push({
                 txHash: `${tx.id}_${msg.id}`,
-                walletAddress: normalizeAddress(decodedSell.seller),
+                walletAddress: normalizeAddress(decodedSell.data.seller),
                 type: "sell",
-                tokenAmount: String(decodedSell.tokensIn),
-                shellAmount: String(decodedSell.shellOut),
-                price: Number(decodedSell.tokensIn) > 0 ? Number(decodedSell.shellOut) / Number(decodedSell.tokensIn) : 0,
+                tokenAmount: String(decodedSell.data.tokensIn),
+                shellAmount: String(decodedSell.data.shellOut),
+                price: Number(decodedSell.data.tokensIn) > 0 ? Number(decodedSell.data.shellOut) / Number(decodedSell.data.tokensIn) : 0,
                 createdAt: new Date(tx.now * 1000).toISOString()
               });
             }

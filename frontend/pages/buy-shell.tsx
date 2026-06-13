@@ -4,7 +4,9 @@ import { useRouter } from "next/router";
 import { useMemo, useState, useEffect } from "react";
 import { formatNum as formatNumber, toNano } from "../lib/utils";
 import { getConfig } from "../lib/api";
+import { useI18n } from "../lib/i18n";
 import { TokenRootAbi, TokenWalletAbi } from "../lib/abi";
+import { TypedContract, TokenRootMethods, TokenWalletMethods } from "../types/contracts";
 import type { AppConfig } from "../types";
 
 // Official Acki Nacki Shell Buyer — supports card (Stripe) and crypto (NOWPayments)
@@ -20,6 +22,7 @@ function sanitizeReturnTo(url: string | string[] | undefined): string {
 
 export default function BuyShellPage() {
   const router = useRouter();
+  const { t } = useI18n();
   const returnTo = useMemo(() => sanitizeReturnTo(router.query.from as string | undefined), [router.query.from]);
 
   return (
@@ -93,6 +96,7 @@ export default function BuyShellPage() {
 
 
 function SwapPanel(): React.JSX.Element {
+  const { t } = useI18n();
   const [amount, setAmount] = useState<string>('');
   const [config, setConfig] = useState<AppConfig | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
@@ -109,7 +113,7 @@ function SwapPanel(): React.JSX.Element {
 
   async function handleSwap(): Promise<void> {
     if (!config || !config.shellBuy || !config.shellBuy.enabled) {
-      setError("Swap de USDC não está habilitado na rede.");
+      setError(t("error_swap_disabled"));
       return;
     }
     
@@ -118,20 +122,20 @@ function SwapPanel(): React.JSX.Element {
     setLoading(true);
 
     try {
-      const { getEver } = await import('../lib/ever');
+      const { getEver, hasExtension } = await import('../lib/ever');
+      if (!(await hasExtension())) throw new Error(t("error_install_wallet"));
       const ever = await getEver();
       const { Address } = await import('everscale-inpage-provider');
       const { accountInteraction } = await ever.requestPermissions({ permissions: ['basic', 'accountInteraction'] });
       if (!accountInteraction) throw new Error("Conexão com a carteira negada.");
       if (!config.shellBuy || !config.shellBuy.usdcRoot) throw new Error("Configuração de compra de SHELL ausente.");
 
-      const rootContract = new ever.Contract(TokenRootAbi, new Address(config.shellBuy.usdcRoot));
-      const walletResult = await (rootContract.methods as any).getWalletAddress({
-        ownerAddress: accountInteraction.address,
-        answerId: 0
+      const rootContract = new ever.Contract(TokenRootAbi, new Address(config.shellBuy.usdcRoot)) as unknown as TypedContract<TokenRootMethods>;
+      const walletResult = await rootContract.methods.getWalletAddress({
+        ownerAddress: new Address(accountInteraction.address.toString())
       }).call();
       
-      const userWalletAddress = walletResult.value0;
+      const userWalletAddress = walletResult.walletAddress;
       if (!userWalletAddress || userWalletAddress.toString() === "0:0000000000000000000000000000000000000000000000000000000000000000") {
         throw new Error("Você não possui carteira USDC ou o saldo é nulo.");
       }
@@ -141,17 +145,29 @@ function SwapPanel(): React.JSX.Element {
          throw new Error("Saldo de SHELL insuficiente para o gas da transação.");
       }
 
-      const walletContract = new ever.Contract(TokenWalletAbi, new Address(userWalletAddress.toString()));
+      const walletContract = new ever.Contract(TokenWalletAbi, new Address(userWalletAddress.toString())) as unknown as TypedContract<TokenWalletMethods>;
       
-      const tokensToSellNano = toNano(amount);
+      const dec = config.shellBuy.usdcDecimals ?? 6;
+      const usdcUnits = BigInt(Math.round(parsedAmount * 10 ** dec)).toString();
 
-      const tx = await (walletContract.methods as any).transfer({
-        recipientOwner: config.shellBuy.usdcRecipient,
-        amount: tokensToSellNano.toString(),
+      const emptyCell = await ever.packIntoCell({
+        structure: [] as const,
+        data: {}
+      }).then((p: any) => p.boc).catch(() => "te6ccgEBAQEAAgAAAA==");
+
+      const tx = await walletContract.methods.transfer({
+        queryId: "0",
+        amount: usdcUnits,
+        destinationOwner: new Address(config.shellBuy.usdcRecipient),
+        responseDestination: accountInteraction.address,
+        customPayload: null,
+        forwardShellAmount: "2000000000",
+        forwardPayload: emptyCell
       }).send({
         from: accountInteraction.address,
         amount: "500000000",
-        bounce: true
+        bounce: true,
+        currencies: { 2: "2500000000" }
       });
       
       setSuccess(`Swap iniciado com sucesso! Tx: ${(tx as any)?.transaction?.id?.hash?.slice(0, 8) || 'confirmada'}`);

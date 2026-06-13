@@ -2,7 +2,7 @@ import * as fs from "fs";
 import * as path from "path";
 import * as crypto from "crypto";
 import { config } from "../config";
-import { getAccountPublicKey, getAccountBalanceNano, getAccountState, getAccountEccBalanceNano } from "./graphql.service";
+import { getAccountBalanceNano } from "./graphql.service";
 import { parseSlopeDivisor } from "../launches";
 import { getTvmClient, getTvmCore, sdkAvailable as isTvmSdkAvailable } from "./tvm-client";
 
@@ -211,15 +211,15 @@ async function resolveDeployerKeyPair(): Promise<{ public: string; secret: strin
 
   return {
     public: keyConfig.publicKey || keyPair.public,
-    secret: keyConfig.secretKey,
+    secret: keyPair.secret,
   };
 }
 
-async function waitForFutureAddressFunding(address: string, minGasBalanceNano: string): Promise<boolean> {
+async function waitForFutureAddressFunding(address: string, expectedGasBalanceNano: bigint): Promise<boolean> {
   const attempts = Number(process.env.DEPLOY_FUNDING_CONFIRM_ATTEMPTS || DEFAULT_DEPLOY_FUNDING_ATTEMPTS);
   for (let i = 0; i < attempts; i += 1) {
     const gasBalanceNano = await getAccountBalanceNano(address);
-    if (gasBalanceNano >= BigInt(minGasBalanceNano)) {
+    if (gasBalanceNano >= expectedGasBalanceNano) {
       return true;
     }
     await new Promise((res) => setTimeout(res, 3000));
@@ -249,8 +249,11 @@ async function prefundFutureContractAddress(address: string, signer: any, onChai
   const walletAbi = loadContractFiles("UpdateCustodianMultisigWallet").abi;
   const payload = await buildEmptyPayloadCell();
 
+  const currentBalance = await getAccountBalanceNano(address);
+  const expectedBalance = currentBalance + (BigInt(messageValueNano) * 90n) / 100n;
+
   console.log(
-    `[Deployer] Pré-financiando endereço futuro ${address} com ${prefundShellNano} nanoSHELL ECC...`,
+    `[Deployer] Pré-financiando endereço futuro ${address} com ${prefundShellNano} nanoSHELL ECC e ${messageValueNano} nanoVMSHELL...`,
   );
   if (typeof onChainAttempt === "function") {
     onChainAttempt();
@@ -276,8 +279,8 @@ async function prefundFutureContractAddress(address: string, signer: any, onChai
     send_events: false,
   });
 
-  // Audit #2: Wait for gas funding (VMSHELL), not ECC balance.
-  const funded = await waitForFutureAddressFunding(address, prefundShellNano);
+  // Audit #2: Wait for gas funding (VMSHELL), not ECC balance, and account for previous balance
+  const funded = await waitForFutureAddressFunding(address, expectedBalance);
   if (!funded) {
     throw new Error(
       `Timeout aguardando pré-financiamento do endereço futuro ${address}. ` +
@@ -335,64 +338,7 @@ export function assertOnchainDeployReady(): void {
   }
 }
 
-interface DeployContractParams {
-  contractName: string;
-  constructorInput: any;
-  initialData?: any;
-  signer: any;
-  label: string;
-  onAddressPredicted?: (address: string) => void;
-  onChainAttempt?: () => void;
-}
 
-/**
- * Prepara os parâmetros de deploy e opcionalmente executa o deploy.
- * Retorna o endereço do contrato (predito ou real).
- */
-async function deployContract({
-  contractName,
-  constructorInput,
-  initialData,
-  signer,
-  label,
-  onAddressPredicted,
-  onChainAttempt,
-}: DeployContractParams): Promise<string> {
-  const { abi, tvc } = loadContractFiles(contractName);
-
-  const deployParams = {
-    abi: abiContract(abi),
-    deploy_set: {
-      tvc,
-      initial_data: initialData || {},
-    },
-    call_set: {
-      function_name: "constructor",
-      input: constructorInput,
-    },
-    signer,
-  };
-
-  // Calcular endereço predito
-  const { address } = await client.abi.encode_message(deployParams);
-  if (typeof onAddressPredicted === "function") {
-    onAddressPredicted(address);
-  }
-
-  if (ENABLE_ONCHAIN_DEPLOY) {
-    await prefundFutureContractAddress(address, signer, onChainAttempt);
-    console.log(`[Deployer] ${label}: Enviando deploy para a blockchain...`);
-    await client.processing.process_message({
-      message_encode_params: deployParams,
-      send_events: false,
-    });
-    console.log(`[Deployer] ${label}: Deploy confirmed! Address: ${address}`);
-  } else {
-    console.log(`[Deployer] ${label}: Predicted address: ${address} (ENABLE_ONCHAIN_DEPLOY=false)`);
-  }
-
-  return address;
-}
 
 interface DeployTokenEcosystemParams {
   name: string;
@@ -569,7 +515,6 @@ export async function deployTokenEcosystem({
 
     // Predizer BondingCurve
     const { abi: bcAbi, tvc: bcTvc } = loadContractFiles("BondingCurve");
-    const feeRecipient = String(config.feeWallet || "").trim();
     
     const { address: predictedBondingCurveAddress } = await client.abi.encode_message({
       abi: abiContract(bcAbi),

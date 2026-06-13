@@ -1,6 +1,8 @@
 import React from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { useI18n } from "../../lib/i18n";
+import { isSafeUrl } from "../../lib/utils";
 import type { Launch } from "../../types";
 
 interface KingOfTheHillProps {
@@ -20,15 +22,26 @@ export function KingOfTheHill({ kingToken }: KingOfTheHillProps) {
     <div style={{
       width: "100%",
       background: "linear-gradient(135deg, rgba(239, 68, 68, 0.1) 0%, rgba(249, 115, 22, 0.1) 100%)",
-      border: "1px solid rgba(249, 115, 22, 0.3)",
+      border: "1px solid rgba(249, 115, 22, 0.5)",
       borderRadius: "24px",
       padding: "24px",
       marginBottom: "32px",
       position: "relative",
       overflow: "hidden",
-      boxShadow: "0 0 40px rgba(249, 115, 22, 0.2)"
+      boxShadow: "0 0 40px rgba(249, 115, 22, 0.2)",
+      animation: "kingGlow 2s infinite alternate"
     }}>
-      <div style={{ position: "absolute", top: -20, right: -20, fontSize: "100px", opacity: 0.1, pointerEvents: "none" }}>👑</div>
+      <style>{`
+        @keyframes kingGlow {
+          0% { box-shadow: 0 0 20px rgba(249, 115, 22, 0.2); border-color: rgba(249, 115, 22, 0.3); }
+          100% { box-shadow: 0 0 60px rgba(249, 115, 22, 0.6), inset 0 0 20px rgba(239, 68, 68, 0.2); border-color: rgba(251, 191, 36, 0.8); }
+        }
+        @keyframes crownFloat {
+          0% { transform: translateY(0px) rotate(15deg); }
+          100% { transform: translateY(-10px) rotate(25deg); filter: drop-shadow(0 0 10px rgba(251,191,36,0.8)); }
+        }
+      `}</style>
+      <div style={{ position: "absolute", top: -20, right: -20, fontSize: "100px", opacity: 0.2, pointerEvents: "none", animation: "crownFloat 3s infinite alternate ease-in-out" }}>👑</div>
       
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: "16px" }}>
         <div>
@@ -36,9 +49,9 @@ export function KingOfTheHill({ kingToken }: KingOfTheHillProps) {
             👑 King of the Hill
           </div>
           <h2 style={{ fontSize: "28px", margin: 0, display: "flex", alignItems: "center", gap: "12px" }}>
-            {kingToken.coin.logoUrl && (
-              <img src={kingToken.coin.logoUrl} alt={kingToken.coin.symbol} style={{ width: "40px", height: "40px", borderRadius: "50%" }} />
-            )}
+            {isSafeUrl(kingToken.coin.logoUrl) ? (
+              <Image src={kingToken.coin.logoUrl!} alt={kingToken.coin.symbol} width={40} height={40} style={{ borderRadius: "50%" }} unoptimized />
+            ) : null}
             {kingToken.coin.name} <span style={{ color: "rgba(255,255,255,0.5)", fontSize: "18px" }}>${kingToken.coin.symbol}</span>
           </h2>
         </div>

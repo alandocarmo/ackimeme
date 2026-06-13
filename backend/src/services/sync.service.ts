@@ -1,8 +1,8 @@
 import * as crypto from "crypto";
 import * as fs from "fs";
 import * as path from "path";
-import { listLaunchesForSync, updateLaunchOnchainState, insertTrade } from "../storage";
-import { getAccountState, getRecentBondingCurveTrades } from "./graphql.service";
+import { listLaunchesForSync, updateLaunchOnchainState, insertTrade, getLaunchCursor, updateLaunchCursor } from "../storage";
+import { getAccountState, getRecentBondingCurveTrades, isWasmDecoderAvailable } from "./graphql.service";
 import { getTvmClient, getTvmCore, sdkAvailable } from "./tvm-client";
 
 let tvmCore: any = null;
@@ -151,20 +151,27 @@ export async function syncOnchainData(): Promise<void> {
           
           // [New] Index Recent Trades
           try {
-            // Paginação: Usando apenas a primeira página para o sync recorrente
-            const { trades } = await getRecentBondingCurveTrades(launch.bondingCurveAddress);
-            // Prepare trades (oldest first for chronological ordering)
-            const preparedTrades = trades.reverse().map((trade: any) => ({
-              ...trade,
-              launchId: launch.id,
-              id: crypto.randomUUID(),
-            }));
-            const insertedTrades = await Promise.all(
-              preparedTrades.map((trade: any) => insertTrade(trade))
-            );
-            for (const newTrade of insertedTrades) {
-              if (newTrade && ioInstance) {
-                ioInstance.to(`token_${launch.id}`).emit("new_trade", newTrade);
+            if (isWasmDecoderAvailable()) {
+              // Paginação: Usando cursor salvo na DB para fazer forward pagination real
+              const cursor = await getLaunchCursor(launch.id);
+              const { trades, pageInfo } = await getRecentBondingCurveTrades(launch.bondingCurveAddress, cursor);
+              // Prepare trades (oldest first for chronological ordering since we use first/after now)
+              const preparedTrades = trades.map((trade: any) => ({
+                ...trade,
+                launchId: launch.id,
+                id: crypto.randomUUID(),
+              }));
+              const insertedTrades = await Promise.all(
+                preparedTrades.map((trade: any) => insertTrade(trade))
+              );
+              if (pageInfo?.endCursor) {
+                await updateLaunchCursor(launch.id, pageInfo.endCursor);
+              }
+              for (const newTrade of insertedTrades) {
+                if (newTrade && ioInstance) {
+                  ioInstance.to(`token_${launch.id}`).emit("new_trade", newTrade);
+                  ioInstance.emit("new_trade_global", newTrade);
+                }
               }
             }
           } catch (err: any) {

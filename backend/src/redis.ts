@@ -9,10 +9,6 @@ if (process.env.REDIS_URL) {
       tls: process.env.REDIS_URL.startsWith('rediss://'),
       // PERF-05: Reconnect strategy with exponential backoff (max 30s)
       reconnectStrategy: (retries: number) => {
-        if (retries > 20) {
-          console.error("[Redis] Max reconnection attempts exceeded.");
-          return new Error("Redis max retries");
-        }
         return Math.min(retries * 500, 30000);
       }
     } as any

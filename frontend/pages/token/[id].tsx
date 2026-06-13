@@ -10,8 +10,9 @@ import styles from "../../styles/Token.module.css";
 import type { Session, Launch } from "../../types";
 
 import { PriceChart } from "../../components/PriceChart";
-import { BubbleMap } from "../../components/BubbleMap";
-import { TradingChart } from "../../components/TradingChart";
+import dynamic from 'next/dynamic';
+const TradingChart = dynamic(() => import('../../components/TradingChart').then(mod => mod.TradingChart), { ssr: false });
+const BubbleMap = dynamic(() => import('../../components/BubbleMap').then(mod => mod.BubbleMap), { ssr: false });
 import { TokenHeader } from "../../components/token/TokenHeader";
 import { TokenChat } from "../../components/token/TokenChat";
 import { TokenTradingPanel } from "../../components/token/TokenTradingPanel";
@@ -212,13 +213,25 @@ export default function TokenPage() {
                     <span className={styles.tokenTime}>Acki Nacki · Fair Launch</span>
                   </div>
                   
-                  <div className={styles.progressTrack} style={{ height: '12px', marginBottom: '20px' }}>
+                  <div className={styles.progressTrack} style={{ height: '12px', marginBottom: '20px', position: 'relative', overflow: 'hidden' }}>
                     <div className={styles.progressFill} style={{
                       width: (stats!.progressPct as string) === null ? "0%" : `${(stats!.progressPct as string)}%`,
                       background: parseFloat((stats!.progressPct as string) || "0") > 80
                         ? "linear-gradient(90deg, #f97316, #ef4444)"
                         : "linear-gradient(90deg, #00ff88, #00cc6d)",
+                      boxShadow: parseFloat((stats!.progressPct as string) || "0") > 80 
+                        ? '0 0 16px rgba(239, 68, 68, 0.8), 0 0 8px rgba(249, 115, 22, 0.6)' 
+                        : 'none',
+                      transition: 'width 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
+                      animation: parseFloat((stats!.progressPct as string) || "0") > 80 ? 'pulseGlow 1.5s infinite alternate' : 'none',
                     }} />
+                    {/* Add global keyframes for pulseGlow inline to ensure it works */}
+                    <style>{`
+                      @keyframes pulseGlow {
+                        0% { opacity: 0.8; filter: brightness(1); }
+                        100% { opacity: 1; filter: brightness(1.3); }
+                      }
+                    `}</style>
                   </div>
 
                   <div className={styles.tokenStats} style={{ borderTop: 'none', paddingTop: 0, marginBottom: '20px' }}>
@@ -356,9 +369,9 @@ export default function TokenPage() {
               {/* Links */}
               {(token.links?.website || token.links?.xUrl || token.links?.telegramUrl) && (
                 <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap' }}>
-                  {token.links.website && <a href={token.links.website} target="_blank" rel="noreferrer" className={`filter-btn`}>🌐 Website</a>}
-                  {token.links.xUrl && <a href={token.links.xUrl} target="_blank" rel="noreferrer" className={`filter-btn`}>𝕏 Twitter</a>}
-                  {token.links.telegramUrl && <a href={token.links.telegramUrl} target="_blank" rel="noreferrer" className={`filter-btn`}>✈ Telegram</a>}
+                  {token.links.website && <a href={isSafeUrl(token.links.website) ? token.links.website : "#"} target="_blank" rel="noreferrer" className={`filter-btn`}>🌐 Website</a>}
+                  {token.links.xUrl && <a href={isSafeUrl(token.links.xUrl) ? token.links.xUrl : "#"} target="_blank" rel="noreferrer" className={`filter-btn`}>𝕏 Twitter</a>}
+                  {token.links.telegramUrl && <a href={isSafeUrl(token.links.telegramUrl) ? token.links.telegramUrl : "#"} target="_blank" rel="noreferrer" className={`filter-btn`}>✈ Telegram</a>}
                 </div>
               )}
 
@@ -376,7 +389,7 @@ export default function TokenPage() {
                           <span style={{ fontSize: '12px', color: hashColor(trade.walletAddress) }}>{compactWallet(trade.walletAddress)}</span>
                         </div>
                         <div style={{ textAlign: 'right' }}>
-                          <span style={{ display: 'block', fontSize: '13px', fontWeight: 'bold' }}>{formatNum(nanoToDecimal(trade.tokenAmount).toFixed(2))} {token!.coin?.symbol}</span>
+                          <span style={{ display: 'block', fontSize: '13px', fontWeight: 'bold' }}>{formatNum(nanoToDecimal(trade.tokenAmount))} {token!.coin?.symbol}</span>
                           <span style={{ display: 'block', fontSize: '11px', color: 'var(--ink-soft)' }}>{nanoToDecimal(trade.shellAmount).toFixed(4)} SHELL</span>
                         </div>
                       </div>
@@ -394,7 +407,7 @@ export default function TokenPage() {
                     <p className={styles.tokenTime} style={{ textAlign: 'center', padding: '20px' }}>{t("holders_empty")}</p>
                   ) : (
                     holders.map((h, idx) => {
-                      const pct = (h.balance / totalSupply) * 100;
+                      const pct = totalSupply > 0 ? (h.balance / totalSupply) * 100 : 0;
                       return (
                         <div key={idx} style={{ position: 'relative', background: 'var(--bg-deep)', borderRadius: '6px', padding: '8px', overflow: 'hidden' }}>
                           {/* Barra de Progresso no fundo */}
@@ -442,7 +455,7 @@ export default function TokenPage() {
               slippage={slippage}
               setSlippage={setSlippage}
               isTrading={isTrading}
-              onTrade={handleTrade as any}
+              onTrade={(amountOverride, modeOverride) => handleTrade(onchainPrice, amountOverride, modeOverride)}
               tradeSuccess={tradeSuccess}
               userShellEccBalance={userShellEccBalance}
               userTokenBalance={userTokenBalance}

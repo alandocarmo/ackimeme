@@ -7,7 +7,7 @@
   "scripts": {
     "db:migrate": "tsx src/migrate.ts",
     "db:seed:demo": "tsx scripts/seed-demo.ts",
-    "build": "tsc && node -e \"const fs = require('fs'); fs.mkdirSync('dist/migrations', { recursive: true }); fs.cpSync('src/migrations', 'dist/migrations', { recursive: true }); fs.mkdirSync('dist/abi', { recursive: true }); fs.cpSync('src/abi', 'dist/abi', { recursive: true })\"",
+    "build": "node -e \"const fs = require('fs'); fs.rmSync('dist', { recursive: true, force: true });\" && tsc && node -e \"const fs = require('fs'); fs.mkdirSync('dist/migrations', { recursive: true }); fs.cpSync('src/migrations', 'dist/migrations', { recursive: true }); fs.mkdirSync('dist/abi', { recursive: true }); fs.cpSync('src/abi', 'dist/abi', { recursive: true })\"",
     "start": "node dist/migrate.js && node dist/main.js",
     "dev": "tsx watch src/main.ts",
     "dev:wallet:init": "tsx scripts/dev-wallet.ts init",
