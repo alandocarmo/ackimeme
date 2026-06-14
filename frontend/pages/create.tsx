@@ -24,7 +24,6 @@ export default function CreatePage() {
   const { t } = useI18n();
   const router = useRouter();
   const [session, setSession] = useState<Session | null>(null);
-  const [token, setToken] = useState<string>("");
   const [config, setConfig] = useState<any>(null);
   const [step, setStep] = useState<number>(1); // 1=info, 2=pay, 3=confirm
   const [form, setForm] = useState({

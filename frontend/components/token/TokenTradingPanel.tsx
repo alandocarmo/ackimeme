@@ -19,6 +19,7 @@ interface TokenTradingPanelProps {
   userTokenBalance: number | null;
   onchainPrice: number | null;
   estimate: { value: string; fee: string | null; impact: number | null };
+  tradeFeeBps: number;
 }
 
 export function TokenTradingPanel({
@@ -37,6 +38,7 @@ export function TokenTradingPanel({
   userTokenBalance,
   onchainPrice,
   estimate,
+  tradeFeeBps,
 }: TokenTradingPanelProps): React.JSX.Element {
   const { t } = useI18n();
   const [payCurrency, setPayCurrency] = useState("SHELL");
@@ -272,10 +274,21 @@ export function TokenTradingPanel({
               </span>
             </div>
             
-            <div style={{ display: "flex", justifyContent: "space-between" }}>
-              <span style={{ color: "rgba(255,255,255,0.6)", fontSize: "12px" }}>Protocol Fee (1%)</span>
-              <span style={{ color: "#10b981", fontSize: "12px", fontWeight: 600 }}>1% DEX</span>
+            <div style={{ display: "flex", justifyContent: "space-between", marginBottom: estimate.impact !== null ? "8px" : "0" }}>
+              <span style={{ color: "rgba(255,255,255,0.6)", fontSize: "12px" }}>Protocol Fee ({(tradeFeeBps / 100).toFixed(1)}%)</span>
+              <span style={{ color: "#10b981", fontSize: "12px", fontWeight: 600 }}>
+                {estimate.fee ? `${estimate.fee} SHELL` : `${(tradeFeeBps / 100).toFixed(1)}%`}
+              </span>
             </div>
+            
+            {estimate.impact !== null && estimate.impact > 0 && (
+              <div style={{ display: "flex", justifyContent: "space-between" }}>
+                <span style={{ color: "rgba(255,255,255,0.6)", fontSize: "12px" }}>{t("detail_price_impact") || "Price Impact"}</span>
+                <span style={{ color: estimate.impact > 5 ? "#ef4444" : "#f59e0b", fontSize: "12px", fontWeight: 600 }}>
+                  {estimate.impact.toFixed(2)}%
+                </span>
+              </div>
+            )}
           </div>
 
           <button 

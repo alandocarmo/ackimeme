@@ -461,6 +461,7 @@ export default function TokenPage() {
               userTokenBalance={userTokenBalance}
               onchainPrice={onchainPrice}
               estimate={memoizedEstimate as any}
+              tradeFeeBps={TRADE_FEE_BPS}
             />
 
           </div>
